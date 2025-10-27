@@ -1,0 +1,89 @@
+# .circleci/config.yml
+version: 2.1
+
+jobs:
+  install-dependencies:
+    docker:
+      - image: cimg/python:3.10
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: |
+            pip install --upgrade pip
+            pip install -r requirements.txt
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+
+  # Job to run smoke tests
+  run-smoke-tests:
+    docker:
+      - image: cimg/python:3.10
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Run smoke tests
+          command: python scripts/run_scheduled_tests.py --suite smoke
+      - run:
+          name: Cleanup old test artifacts
+          command: python scripts/cleanup.py --days 30
+          when: always  # Run cleanup even if tests fail
+
+  # Job to run regression tests (commented out for now)
+  # run-regression-tests:
+  #   docker:
+  #     - image: cimg/python:3.10
+  #   steps:
+  #     - attach_workspace:
+  #         at: .
+  #     - run:
+  #         name: Run regression tests
+  #         command: python scripts/run_scheduled_tests.py --suite regression
+  #     - run:
+  #         name: Cleanup old test artifacts
+  #         command: python scripts/cleanup.py --days 7
+  #         when: always
+
+# Define workflows for scheduling daily smoke tests and weekly regression tests
+workflows:
+  # Daily smoke tests - runs every day at 7:00 UTC (8:00 AM Nigeria Time)
+  daily-smoke:
+    triggers:
+      - schedule:
+          cron: "0 7 * * *"   # 7:00 UTC = 8:00 AM Nigeria Time (WAT)
+          filters:
+            branches:
+              only: main
+    jobs:
+      - install-dependencies
+      - run-smoke-tests:
+          requires:
+            - install-dependencies
+
+  # Weekly regression tests - runs every Sunday at 7:00 UTC (commented out)
+  # weekly-regression:
+  #   triggers:
+  #     - schedule:
+  #         cron: "0 7 * * 0"   # Sunday 7:00 UTC = 8:00 AM Nigeria Time
+  #         filters:
+  #           branches:
+  #             only: main
+  #   jobs:
+  #     - install-dependencies
+  #     - run-regression-tests:
+  #         requires:
+  #           - install-dependencies
+
+  # Manual cleanup workflow - for on-demand cleanup operations
+  manual-cleanup:
+    jobs:
+      - install-dependencies
+      - run:
+          name: Dry run cleanup (see what would be deleted)
+          command: python scripts/cleanup.py --days 30 --dry-run --stats
+      - run:
+          name: Perform cleanup
+          command: python scripts/cleanup.py --days 30
