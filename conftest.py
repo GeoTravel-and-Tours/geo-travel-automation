@@ -14,6 +14,9 @@ from configs.environment import EnvironmentConfig
 from src.utils.notifications import slack_notifier
 from src.utils.logger import GeoLogger
 
+from src.pages.api.auth_api import AuthAPI
+from src.pages.api.flight_api import FlightAPI
+
 logger = GeoLogger("conftest")
 
 
@@ -263,3 +266,19 @@ def pytest_runtest_makereport(item, call):
 
     except Exception:
         logger.exception("Unhandled exception in pytest_runtest_makereport")
+        
+@pytest.fixture
+def auth_api():
+    return AuthAPI()
+
+@pytest.fixture
+def flight_api():
+    return FlightAPI()
+
+@pytest.fixture
+def authenticated_api(auth_api):
+    """Fixture that provides authenticated API session"""
+    # Use your test credentials
+    response = auth_api.login("test_user@example.com", "test_password")
+    assert response.status_code == 200, "Login failed for API tests"
+    return auth_api

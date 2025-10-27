@@ -2,7 +2,7 @@
 
 from selenium.webdriver.common.by import By
 from src.core.base_page import BasePage
-from src.pages.auth_flow import AuthFlow
+from src.pages.ui.auth_flow import AuthFlow
 
 
 class DashboardPage(BasePage):

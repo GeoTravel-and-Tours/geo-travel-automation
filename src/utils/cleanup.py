@@ -171,6 +171,16 @@ class CleanupManager:
             "recursive": recursive
         }
         return self._cleanup_target(config, dry_run)
+    
+    def _cleanup_directory(self, directory, patterns=None, recursive=False, dry_run=False):
+        """
+        Alias method for backward compatibility with reporting module
+        """
+        if patterns is None:
+            patterns = ["*"]
+
+        return self.cleanup_old_files(directory, patterns, recursive, dry_run)
+    
 
 
 # Factory function to avoid circular imports

@@ -7,7 +7,7 @@ from pathlib import Path
 from .notifications import slack_notifier, email_notifier
 from src.utils.html_templates import get_html_report_template, get_error_report_template
 from .logger import GeoLogger
-from src.utils.cleanup import CleanupManager
+from src.utils.cleanup import get_cleanup_manager
 
 
 # ====== REPORT UTILITIES ======
@@ -167,17 +167,24 @@ class GeoReporter:
 
         return report
     
-    def _cleanup_old_reports(self, retention_days=30):
-        """Use centralized cleanup for reports"""
-        manager = CleanupManager(retention_days=retention_days)
-        deleted_count = manager._cleanup_directory(
-            self.report_dir,
-            ["*.json", "*.html", "*.xml"],
-            dry_run=False
-        )
-        
-        if deleted_count > 0:
-            self.logger.info(f"Report cleanup: {deleted_count} files removed")
+    def _cleanup_old_reports(self):
+        """Clean up old report files"""
+        try:
+            manager = get_cleanup_manager()
+
+            # FIX: Use the correct method name
+            deleted_count = manager.cleanup_old_files(
+                directory="reports",
+                patterns=["*.json", "*.html"],
+                recursive=False,
+                dry_run=False
+            )
+
+            if deleted_count > 0:
+                self.logger.info(f"Cleaned up {deleted_count} old report files")
+
+        except Exception as e:
+            self.logger.error(f"Report cleanup error: {e}")
 
     # Then call it in your _save_report_to_file method:
     def _save_report_to_file(self, report):
@@ -293,6 +300,7 @@ class GeoReporter:
     def _get_test_context(self, test_name):
         """Provide context about what the test was doing"""
         context_map = {
+            #============================ UI Tests ============================#
             # Homepage Tests
             "test_homepage_loads_successfully": "Homepage loading and basic validation",
             "test_basic_homepage_elements_exist": "Checking page structure and elements",
@@ -316,6 +324,16 @@ class GeoReporter:
             "test_complete_package_booking_flow": "End-to-end package booking process",
             "test_package_search_functionality": "Searching for travel packages",
             "test_booking_form_validation": "Validating package booking form",
+            
+            
+            #============================ API Tests ============================#
+            # Auth API Tests
+            "test_login_success": "User login API endpoint",
+            "test_login_invalid_credentials": "Handling invalid login attempts via API",
+            # Flight API Tests
+            "test_flight_search_request": "Creating flight search requests via API",
+            "test_get_flight_search_results": "Retrieving flight search results via API",
+            "test_get_booked_flights": "Fetching user's booked flights via API",
         }
 
         return context_map.get(test_name, "Functional test")

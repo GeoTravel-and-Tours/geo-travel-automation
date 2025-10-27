@@ -3,7 +3,7 @@
 import pytest
 import time
 from selenium.webdriver.common.by import By
-from src.pages.home_page import HomePage
+from src.pages.ui.home_page import HomePage
 from src.core.test_base import TestBase
 
 

@@ -3,10 +3,12 @@
 import pytest
 import time
 from src.utils.screenshot import ScreenshotUtils
-from pages.home_page import HomePage
-from src.pages.package_booking_flow import PackageBookingFlow
+from pages.ui.home_page import HomePage
+from src.pages.ui.package_booking_flow import PackageBookingFlow
+from src.core.test_base import TestBase
 
-class TestPackageBookingSmoke:
+
+class TestPackageBookingSmoke(TestBase):
     """Test suite for package booking flow"""
     
     @pytest.fixture(autouse=True)

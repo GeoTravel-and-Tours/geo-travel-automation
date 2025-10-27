@@ -23,7 +23,7 @@ from src.utils.logger import GeoLogger
 load_dotenv()
 
 
-def run_tests(suite_name, skip_env_check=False):
+def run_tests(suite_name, pytest_args=None, skip_env_check=False):
     """Run selected test suite with comprehensive reporting"""
     logger = GeoLogger("TestRunner")
 
@@ -32,6 +32,7 @@ def run_tests(suite_name, skip_env_check=False):
         "smoke": "src/tests/smoke_tests/",
         "regression": "src/tests/regression_tests/",
         "sanity": "src/tests/sanity_tests/",
+        "api": "src/tests/api_tests/",
     }
 
     # Validate suite name
@@ -47,29 +48,68 @@ def run_tests(suite_name, skip_env_check=False):
 
     logger.info(f"Running {suite_name.upper()} tests from {test_path}")
 
+    # Environment check - ONLY for UI tests, skip for API tests
+    if not skip_env_check and suite_name != "api":
+        logger.info("Checking UI environment availability...")
+        if not EnvironmentConfig.is_environment_accessible():
+            logger.error("UI environment is not accessible. Skipping UI tests.")
+            smoke_reporting.start_test_suite()
+            smoke_reporting.add_test_result(
+                test_name="Environment Check",
+                status="SKIP",
+                error_message="UI environment is not accessible"
+            )
+            smoke_reporting.end_test_suite()
+            return 0
+        else:
+            logger.success("UI environment is accessible - proceeding with tests")
+
+    # API-specific environment check
+    if not skip_env_check and suite_name == "api":
+        logger.info("Checking API environment availability...")
+        if EnvironmentConfig.should_skip_api_tests():
+            logger.warning("API environment is not accessible. Skipping API tests.")
+            smoke_reporting.start_test_suite()
+            smoke_reporting.add_test_result(
+                test_name="API Environment Check",
+                status="SKIP", 
+                error_message="API environment is not accessible"
+            )
+            smoke_reporting.end_test_suite()
+            return 0
+        else:
+            logger.success("API environment is accessible - proceeding with tests")
+            # SKIP UI CHECK FOR API TESTS - DON'T CHECK UI ENVIRONMENT
+            pass
+
     # Start reporting
     smoke_reporting.start_test_suite()
 
     try:
-        # Pytest arguments
+        # Base pytest arguments
         pytest_args = [
             test_path,
             "-v",
-            "--html=reports/{}_test_report.html".format(suite_name),
+            f"--html=reports/{suite_name}_test_report.html",
             "--self-contained-html",
-            "--json-report",
-            "--json-report-file=reports/{}_test_report.json".format(suite_name),
-            "-m",
-            suite_name,  # pytest marker
+            f"--json-report-file=reports/{suite_name}_test_report.json",
             "--capture=tee-sys",  # capture and show logs
             "--log-cli-level=INFO",  # include logging output
             "--log-cli-format=%(asctime)s [%(levelname)s] %(message)s",
             "--log-cli-date-format=%Y-%m-%d %H:%M:%S",
         ]
 
-        # Add skip env check flag if requested
-        if skip_env_check:
-            pytest_args.append("--skip-env-check")
+        # Add markers for specific suites
+        if suite_name in ["smoke", "regression", "sanity"]:
+            pytest_args.extend(["-m", suite_name])
+        
+        # API-specific configurations
+        if suite_name == "api":
+            pytest_args.extend([
+                "--log-cli-level=DEBUG",  # More verbose for API debugging
+                "-o", "log_cli=true",  # Ensure CLI logging
+                "-m", "api"  # Use api marker for API tests
+            ])
 
         exit_code = pytest.main(pytest_args)
         
@@ -101,20 +141,51 @@ def run_tests(suite_name, skip_env_check=False):
         raise
 
 
+def run_api_tests_with_config():
+    """Specialized function for running API tests with proper configuration"""
+    logger = GeoLogger("APITestRunner")
+    
+    # Set environment variables for API testing
+    os.environ["TEST_TYPE"] = "API"
+    
+    # Use environment-specific API URL with proper debugging
+    api_base_url = EnvironmentConfig.get_api_base_url()
+    current_env = EnvironmentConfig.TEST_ENV
+    
+    logger.info(f"Running API tests - Environment: {current_env}")
+    logger.info(f"API Base URL: {api_base_url}")
+    
+    # Run comprehensive API health check
+    health_status = EnvironmentConfig.check_api_health_comprehensive()
+    
+    # Run all API tests
+    return run_tests("api")
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="Run test suites dynamically (smoke, regression, sanity)"
+        description="Run test suites dynamically (smoke, regression, sanity, api)"
     )
     parser.add_argument(
         "--suite",
         required=True,
-        help="Specify test suite to run (smoke, regression, sanity)",
+        choices=["smoke", "regression", "sanity", "api"],
+        help="Specify test suite to run"
     )
     parser.add_argument(
         "--skip-env-check",
         action="store_true",
         help="Skip environment availability check (use with caution)"
     )
+    parser.add_argument(
+        "--api-only",
+        action="store_true",
+        help="Run only API tests with specialized configuration"
+    )
     args = parser.parse_args()
 
-    run_tests(args.suite, args.skip_env_check)
+    if args.api_only:
+        # Force API suite regardless of --suite argument
+        run_api_tests_with_config()
+    else:
+        run_tests(args.suite, args.skip_env_check)
