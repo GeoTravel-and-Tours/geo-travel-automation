@@ -158,6 +158,19 @@ class EnvironmentConfig:
             options.set_preference("browser.cache.memory.enable", False)
 
         return options
+    
+    @classmethod
+    def get_environment_metadata(cls):
+        """Get comprehensive environment metadata for reporting"""
+        return {
+            "environment": cls.TEST_ENV.upper(),
+            "browser": cls.BROWSER.upper(),
+            "headless": cls.HEADLESS,
+            "window_size": cls.WINDOW_SIZE,
+            "timeout": cls.TIMEOUT,
+            "base_url": cls.get_base_url(),
+            "api_base_url": cls.get_api_base_url()
+        }
 
     # ========== API-SPECIFIC METHODS ==========
     @classmethod

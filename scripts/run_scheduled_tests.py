@@ -18,6 +18,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 # Import your custom reporters
 from src.utils.reporting import smoke_reporting, regression_reporting, sanity_reporting, api_reporting, unified_reporter
 from src.utils.notifications import slack_notifier
+from src.utils.git_utils import setup_git_metadata
 from configs.environment import EnvironmentConfig
 from src.utils.logger import GeoLogger
 
@@ -35,9 +36,59 @@ def get_suite_reporter(suite_name):
     }
     return reporters.get(suite_name, smoke_reporting)
 
+def _setup_environment_metadata():
+    """Setup and collect all environment metadata for reporting"""
+    # Get git metadata FIRST (highest priority)
+    git_info = setup_git_metadata()
+    
+    if not os.getenv("BRANCH"):
+        os.environ["BRANCH"] = git_info["branch"]
+    
+    if not os.getenv("BUILD_ID"):
+        # Generate build ID from timestamp and commit
+        commit_suffix = f".{git_info['commit_hash'][:7]}" if git_info['commit_hash'] != 'UNKNOWN' else ""
+        build_id = f"#{datetime.now().strftime('%Y.%m.%d.%H%M')}{commit_suffix}"
+        os.environ["BUILD_ID"] = build_id
+    
+    if not os.getenv("BROWSER"):
+        os.environ["BROWSER"] = EnvironmentConfig.BROWSER.upper()
+    
+    # Log the metadata being used
+    logger = GeoLogger("MetadataSetup")
+    logger.info(f"Branch: {os.getenv('BRANCH')}")
+    logger.info(f"Build ID: {os.getenv('BUILD_ID')}")
+    logger.info(f"Browser: {os.getenv('BROWSER')}")
+    logger.info(f"Environment: {EnvironmentConfig.TEST_ENV.upper()}")
+    
+def _send_environment_unavailable_notification(environment, url, check_type="UI"):
+    """Send environment unavailable notification to Slack"""
+    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    
+    message_lines = [
+        "🚫 *Environment Unavailable - Tests Skipped*",
+        "------------------------------------------------------",
+        f"*Environment:* {environment.upper()}",
+        f"*URL:* {url}",
+        f"*Time:* {timestamp}",
+        f"*Check Type:* {check_type}",
+        f"*Status:* All tests will be skipped",
+        "------------------------------------------------------",
+        "⚠️ *Recommended Actions:*",
+        "• Check if the environment is running",
+        "• Verify network connectivity", 
+        "• Contact DevOps team if issue persists",
+        "• Retry when environment is available"
+    ]
+    
+    message = "\n".join(message_lines)
+    slack_notifier.send_webhook_message(message)
+
 def run_tests(suite_name, pytest_args=None, skip_env_check=False, is_unified_run=False):
     """Run selected test suite with comprehensive reporting"""
     logger = GeoLogger("TestRunner")
+    
+    # Setup metadata before running tests
+    _setup_environment_metadata()
     
     # Get the appropriate reporter for this suite
     suite_reporter = get_suite_reporter(suite_name)
@@ -77,16 +128,14 @@ def run_tests(suite_name, pytest_args=None, skip_env_check=False, is_unified_run
         logger.info("Checking UI environment availability...")
         if not EnvironmentConfig.is_environment_accessible():
             logger.error("UI environment is not accessible. Skipping UI tests.")
+            base_url = EnvironmentConfig.get_base_url()
+            _send_environment_unavailable_notification(
+                environment=EnvironmentConfig.TEST_ENV,
+                url=base_url,
+                check_type="UI"
+            )
             if not is_unified_run:
-                suite_reporter.start_test_suite()
-                suite_reporter.add_test_result(
-                    test_name="Environment Check",
-                    status="SKIP",
-                    error_message="UI environment is not accessible"
-                )
-                report = suite_reporter.end_test_suite()
-                if report:
-                    suite_reporter.send_individual_slack_report(report)
+                logger.info("UI Environment unavailable - tests skipped. Slack notification sent by conftest.py")
             return 0
         else:
             logger.success("UI environment is accessible - proceeding with tests")
@@ -96,16 +145,14 @@ def run_tests(suite_name, pytest_args=None, skip_env_check=False, is_unified_run
         logger.info("Checking API environment availability...")
         if EnvironmentConfig.should_skip_api_tests():
             logger.warning("API environment is not accessible. Skipping API tests.")
+            api_base_url = EnvironmentConfig.get_api_base_url()
+            _send_environment_unavailable_notification(
+                environment=EnvironmentConfig.TEST_ENV,
+                url=api_base_url,
+                check_type="API"
+            )
             if not is_unified_run:
-                suite_reporter.start_test_suite()
-                suite_reporter.add_test_result(
-                    test_name="API Environment Check",
-                    status="SKIP", 
-                    error_message="API environment is not accessible"
-                )
-                report = suite_reporter.end_test_suite()
-                if report:
-                    suite_reporter.send_individual_slack_report(report)
+                logger.info("API Environment unavailable - tests skipped. Slack notification sent by conftest.py")
             return 0
         else:
             logger.success("API environment is accessible - proceeding with tests")
@@ -190,6 +237,9 @@ def run_multiple_suites(suite_names, skip_env_check=False):
     logger = GeoLogger("TestRunner")
     overall_exit_code = 0
     
+    # Setup metadata before running tests
+    _setup_environment_metadata()
+    
     # Start unified reporting
     unified_reporter.start_unified_test_run(suite_names)
     
@@ -228,6 +278,10 @@ def run_api_tests_with_config():
 
 
 if __name__ == "__main__":
+    git_info = setup_git_metadata()
+    default_branch = git_info["branch"]
+    default_build_id = f"#{datetime.now().strftime('%Y.%m.%d.%H%M')}.{git_info['commit_hash'][:7]}" if git_info['commit_hash'] != 'UNKNOWN' else f"#{datetime.now().strftime('%Y.%m.%d.%H%M')}"
+    
     parser = argparse.ArgumentParser(
         description="Run test suites dynamically (smoke, regression, sanity, api)"
     )
@@ -253,7 +307,30 @@ if __name__ == "__main__":
         nargs="*",
         help="Additional arguments to pass to pytest (e.g., -k 'test_login')"
     )
+    
+    # NEW: Add metadata collection arguments
+    parser.add_argument(
+        "--branch",
+        default=os.getenv("BRANCH", "MAIN"),
+        help="Specify branch name for reporting"
+    )
+    parser.add_argument(
+        "--build-id", 
+        default=os.getenv("BUILD_ID", f"#{datetime.now().strftime('%Y.%m.%d.%H%M')}"),
+        help="Specify build ID for reporting"
+    )
+    parser.add_argument(
+        "--browser",
+        default=os.getenv("BROWSER", "CHROME"),
+        help="Specify browser for reporting"
+    )
+    
     args = parser.parse_args()
+
+    # NEW: Set metadata from command line arguments
+    os.environ["BRANCH"] = args.branch
+    os.environ["BUILD_ID"] = args.build_id
+    os.environ["BROWSER"] = args.browser.upper()
 
     if args.api_only:
         run_api_tests_with_config()

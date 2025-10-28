@@ -1,6 +1,5 @@
 ## 🧭 `CHANGELOG.md`
 
-
 # Changelog
 
 This file documents notable updates or changes made to the automation framework.  
@@ -14,6 +13,35 @@ It helps track improvements, fixes, and added features over time.
 - Regression test suites for major features
 - Enhanced API test coverage for booking flows
 - Performance monitoring integration
+
+---
+
+## [1.3.0] - 2025-10-28
+### Added
+- **Enhanced Slack Reporting** with modern formatting and demarcation lines
+- **Dynamic test suite reporting** supporting both unified (API+UI) and individual suite runs
+- **Comprehensive metadata collection** including Branch, Build ID, Browser, and Environment
+- **Automated git branch detection** for accurate branch information in reports
+- **Test failure categorization** with specific types (Functional, Wait Condition, API Timeout, etc.)
+- **Fix suggestions** for common test failure scenarios
+- **Environment unavailable handling** with proper Slack notifications and test skipping
+- **Status emojis and motivational messages** for test results
+- **Human-readable duration formatting** (Xm Ys) in reports
+
+### Changed
+- **Complete Slack message redesign** with emojis, sections, and clear demarcation
+- **Improved environment check logic** to prevent false test failures
+- **Enhanced test name formatting** for better readability in reports
+- **Updated pytest-html integration** to use modern `report.extras` API
+- **Restructured environment configuration** with better organization and documentation
+
+### Fixed
+- **Environment down scenarios** now properly skip tests without marking as failed
+- **TypeError in duration logging** when duration is None
+- **Duplicate git metadata collection** in test execution
+- **Missing branch and build ID** in Slack reports
+- **Deprecation warnings** from pytest-html plugin
+- **Test execution flow** when environment checks fail early
 
 ---
 

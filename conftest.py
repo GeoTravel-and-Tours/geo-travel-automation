@@ -22,9 +22,23 @@ from src.pages.api.flight_api import FlightAPI
 
 logger = GeoLogger("conftest")
 
+# NEW: Global flag to track environment status
+environment_available = True
+environment_skip_info = None
 
+def pytest_addoption(parser):
+    """Add command line option to skip environment check"""
+    parser.addoption(
+        "--skip-env-check",
+        action="store_true",
+        default=False,
+        help="Skip environment availability check"
+    )
+    
 def pytest_configure(config):
     """Check environment availability before test session starts"""
+    global environment_available, environment_skip_info
+    
     # Check if we should skip environment check
     skip_env_check = config.getoption("--skip-env-check") or False
     
@@ -36,72 +50,105 @@ def pytest_configure(config):
         if not EnvironmentConfig.is_environment_accessible():
             # Environment is down - set up skipping mechanism
             config.environment_down = True
-            config.environment_name = environment
-            config.environment_url = base_url
+            environment_available = False
+            
+            # Store skip info for reporting
+            environment_skip_info = {
+                'environment': environment,
+                'url': base_url,
+                'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                'check_type': 'UI'  # Default to UI environment check
+            }
             
             logger.error(f"Environment {environment} ({base_url}) is not accessible after multiple attempts")
             logger.info("Tests will be skipped due to environment unavailability")
             
         else:
             config.environment_down = False
+            environment_available = True
             logger.success("Environment is accessible - proceeding with tests")
     else:
         config.environment_down = False
+        environment_available = True
         logger.info("Environment check skipped")
 
 
 def pytest_collection_modifyitems(config, items):
-    """Skip all tests if environment is down"""
-    if getattr(config, 'environment_down', False):
-        skip_env = pytest.mark.skip(reason=f"Environment {config.environment_name} is not accessible")
+    """Skip all tests if environment is down with proper reporting"""
+    global environment_available, environment_skip_info
+    
+    if getattr(config, 'environment_down', False) and not environment_available:
+        skip_env = pytest.mark.skip(reason=f"Environment {environment_skip_info['environment']} is not accessible")
         
         for item in items:
             item.add_marker(skip_env)
         
         # Store test count for reporting
         config.skipped_tests_count = len(items)
-        config.environment_skip_info = {
-            'environment': config.environment_name,
-            'url': config.environment_url,
-            'skipped_tests': len(items),
-            'test_names': [item.nodeid for item in items]
-        }
+        config.environment_skip_info = environment_skip_info.copy()
+        config.environment_skip_info['skipped_tests'] = len(items)
+        config.environment_skip_info['test_names'] = [item.nodeid for item in items]
         
-        # Send Slack notification with test count
-        message = (
-            f"🚫 *Environment Unavailable - Tests Skipped*\n"
-            f"*Environment:* {config.environment_name}\n"
-            f"*URL:* {config.environment_url}\n"
-            f"*Skipped Tests:* {len(items)}\n"
-            f"*Status:* All tests skipped due to environment unavailability\n\n"
-            f"⚠️ Please check the environment status and try again later."
-        )
-        
-        slack_notifier.send_webhook_message(message)
-        logger.info(f"Sent Slack notification about {len(items)} skipped tests")
+        logger.info(f"Marked {len(items)} tests as skipped due to environment unavailability")
 
 
 def pytest_sessionfinish(session, exitstatus):
     """Handle session finish - only send success report if tests actually ran"""
+    global environment_available
+    
     # Don't send any success/failure report if all tests were skipped due to environment
-    if getattr(session.config, 'environment_down', False):
+    if getattr(session.config, 'environment_down', False) and not environment_available:
         logger.info("All tests skipped due to environment unavailability - no test report sent")
         return
+    
+    # NEW: Handle cases where some tests might have run despite environment issues
+    environment_skip_info = getattr(session.config, 'environment_skip_info', None)
+    if environment_skip_info and environment_skip_info.get('skipped_tests', 0) > 0:
+        logger.info(f"Session finished with {environment_skip_info['skipped_tests']} tests skipped due to environment")
 
 
-def pytest_addoption(parser):
-    """Add command line option to skip environment check"""
-    parser.addoption(
-        "--skip-env-check",
-        action="store_true",
-        default=False,
-        help="Skip environment availability check"
-    )
+def pytest_runtest_setup(item):
+    """Handle test setup - skip if environment is down"""
+    global environment_available
+    
+    if not environment_available:
+        # NEW: Provide detailed skip reason
+        pytest.skip(f"Environment {environment_skip_info['environment']} is not accessible - {environment_skip_info['url']}")
+
+
+# NEW: API-specific environment check
+def check_api_environment():
+    """Check API environment availability separately"""
+    global environment_available, environment_skip_info
+    
+    logger.info("Checking API environment availability...")
+    api_base_url = EnvironmentConfig.get_api_base_url()
+    
+    if not EnvironmentConfig.is_api_accessible():
+        environment_available = False
+        environment_skip_info = {
+            'environment': EnvironmentConfig.TEST_ENV,
+            'url': api_base_url,
+            'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+            'check_type': 'API'
+        }
+        
+        logger.error(f"API Environment ({api_base_url}) is not accessible")
+        return False
+    
+    environment_available = True
+    logger.success("API Environment is accessible")
+    return True
 
 
 @pytest.fixture
 def driver():
     """Provides WebDriver instance to tests"""
+    # NEW: Check environment before creating driver
+    global environment_available
+    if not environment_available:
+        pytest.skip(f"Environment unavailable - skipping test")
+    
     driver_instance = driver_factory.create_driver()
     yield driver_instance
     try:
@@ -119,6 +166,7 @@ def browser(driver):
 
 def _handle_skipped_test(item, report):
     """Handle skipped tests from setup phase"""
+    # ENHANCED: Better handling of environment-related skips
     nodeid = getattr(item, "nodeid", item.name if hasattr(item, "name") else str(item))
     
     # Extract skip reason
@@ -128,8 +176,12 @@ def _handle_skipped_test(item, report):
     else:
         skip_reason = str(report.longrepr) if getattr(report, "longrepr", None) else "Skipped"
 
+    # NEW: Check if this is an environment-related skip
+    is_environment_skip = "environment" in skip_reason.lower() or "unavailable" in skip_reason.lower()
+    
     logger.info(f"🔍 DEBUG: Processing SKIPPED test in setup: {nodeid}")
     logger.info(f"🔍 DEBUG: Skip reason: {skip_reason}")
+    logger.info(f"🔍 DEBUG: Environment-related skip: {is_environment_skip}")
 
     # Get the appropriate suite reporter
     suite_reporter = None
@@ -153,7 +205,7 @@ def _handle_skipped_test(item, report):
             status="SKIP",
             error_message=skip_reason,
             screenshot_path=None,
-            duration=0.0,  # Setup skips have minimal duration
+            duration=0.0,
             skip_reason=skip_reason,
         )
         logger.info(f"Added SKIPPED test result to {suite_reporter.test_suite_name}: {nodeid}")
@@ -172,7 +224,7 @@ def pytest_runtest_makereport(item, call):
     if report.when == "setup":
         item.start_time = time.time()
         
-        # 🔥 CRITICAL FIX: Handle skipped tests in setup phase
+        
         if report.skipped:
             _handle_skipped_test(item, report)
         return
@@ -239,17 +291,17 @@ def pytest_runtest_makereport(item, call):
                     html_path = result.get("html")
 
                     # attach screenshot and html to pytest-html via report.extra
-                    extra = getattr(report, "extra", [])
+                    extras_list = getattr(report, "extras", [])
                     if screenshot_path and os.path.exists(screenshot_path):
-                        extra.append(extras.image(screenshot_path))
+                        extras_list.append(extras.image(screenshot_path))
                     if html_path and os.path.exists(html_path):
                         try:
                             with open(html_path, "r", encoding="utf-8") as f:
                                 html_content = f.read()
-                            extra.append(extras.html(f"<details><summary>Error HTML</summary>{html_content}</details>"))
+                            extras_list.append(extras.html(f"<details><summary>Error HTML</summary>{html_content}</details>"))
                         except Exception:
                             logger.exception("Failed reading html_path for attachment")
-                    report.extra = extra
+                    report.extras = extras_list
 
                     # also store on item so other hooks or reporters can reuse
                     setattr(item, "_screenshot_path", screenshot_path)
@@ -316,11 +368,11 @@ def pytest_runtest_makereport(item, call):
                         latest_log_path = latest_log
 
             if latest_log_path and latest_log_path.exists():
-                extra = getattr(report, "extra", [])
+                extras_list = getattr(report, "extras", [])
                 rel_path = os.path.relpath(latest_log_path, start=reports_dir) if reports_dir.exists() else str(latest_log_path)
                 # Add a download link
                 link_html = f'<p><a href="{rel_path}" download>Download latest test log ({Path(rel_path).name})</a></p>'
-                extra.append(extras.html(link_html))
+                extras_list.append(extras.html(link_html))
 
                 # Add a tail preview (last ~2000 chars) inside a collapsible <details>
                 try:
@@ -339,10 +391,10 @@ def pytest_runtest_makereport(item, call):
                         f"<details><summary>Latest log preview ({Path(rel_path).name})</summary>"
                         f"<pre style='white-space:pre-wrap;max-height:400px;overflow:auto'>{safe_preview}</pre></details>"
                     )
-                    extra.append(extras.html(preview_html))
+                    extras_list.append(extras.html(preview_html))
                 except Exception:
                     logger.exception("Failed to read/attach log preview")
-                report.extra = extra
+                report.extras = extras_list
                 setattr(item, "_latest_log_path", str(latest_log_path))
         except Exception:
             logger.exception("Failed to attach latest log to pytest-html")

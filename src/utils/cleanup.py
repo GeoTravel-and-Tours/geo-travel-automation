@@ -13,7 +13,7 @@ class CleanupManager:
     Centralized cleanup utility for the entire framework.
     Simple, robust, and easy to maintain.
     """
-    
+
     def __init__(self, retention_days=30, logger=None, base_dir=None):
         self.retention_days = retention_days
         self.logger = logger or self._setup_logger()

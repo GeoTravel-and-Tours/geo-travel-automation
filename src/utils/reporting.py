@@ -78,7 +78,7 @@ class ReportUtils:
         }
 
         return report
-
+    
     
     def _generate_error_html(self, test_name, error_message, driver=None, additional_info=None):
         """Generate enhanced HTML error report using template"""
@@ -119,7 +119,22 @@ class GeoReporter:
             self.env = "UNKNOWN"
         else:
             self.env = EnvironmentConfig.TEST_ENV.upper()
+        
+        self.branch = os.getenv("BRANCH") or os.getenv("GIT_BRANCH") or "MAIN"
+        self.build_id = os.getenv("BUILD_ID") or f"#{datetime.now().strftime('%Y.%m.%d.%H%M')}"
+        self.browser = os.getenv("BROWSER", "CHROME").upper()
+        self.test_type = self._determine_test_type()
             
+    def _determine_test_type(self):
+        """Determine if this is API, UI, or mixed test suite"""
+        suite_lower = self.test_suite_name.lower()
+        if "api" in suite_lower:
+            return "API"
+        elif any(ui_type in suite_lower for ui_type in ["smoke", "regression", "sanity", "ui"]):
+            return "UI"
+        else:
+            return "MIXED"
+
     def start_test_suite(self):
         """Start tracking test suite"""
         self.suite_start_time = datetime.now()
@@ -130,11 +145,12 @@ class GeoReporter:
         """Start unified test run for multiple suites"""
         self.overall_start_time = datetime.now()
         self.suite_results = {}
-        self.test_suite_name = f"Combined {', '.join(suite_names).upper()} Tests"
+        self.test_suite_name = f"Unified {self._format_suite_names(suite_names)} Test Report"
+        self.test_type = "MIXED" if len(suite_names) > 1 else self._determine_test_type()
 
         self.logger.info(f"Starting unified test run for: {', '.join(suite_names)}")
 
-        # Send start notification
+        # Send start notification (keeping the original rocket message)
         slack_notifier.send_webhook_message(
             f"🚀 Hey Team, GEO-Bot here! 🤖\n"
             f"✨ *[{self.env}] {self.test_suite_name}* suite has officially *launched*!\n"
@@ -146,14 +162,17 @@ class GeoReporter:
         self, test_name, status, error_message=None, screenshot_path=None, duration=None, skip_reason=None
     ):
         """Add individual test result with comprehensive metadata"""
+        actual_duration = duration or 0.0
+        
         test_result = {
             "test_name": test_name,
             "status": status,
             "error_message": error_message,
             "screenshot_path": screenshot_path,
-            "duration": duration or 0.0,  # Ensure duration is never None
+            "duration": actual_duration,
             "timestamp": datetime.now().strftime("%H:%M:%S"),
-            "skip_reason": skip_reason,  # Store skip reason for reporting
+            "skip_reason": skip_reason,
+            "category": self._get_test_category(test_name, error_message) if status == "FAIL" else None,
         }
         self.test_results.append(test_result)
         self.logger.info(f"Test result added: {test_name} - {status} (Duration: {duration:.2f}s)")
@@ -174,10 +193,9 @@ class GeoReporter:
         # If no test results were manually added, create a basic report
         if not self.test_results:
             self.logger.warning("No test results were manually recorded. Creating basic report...")
-            # Create a basic report indicating tests ran but weren't tracked
             report = {
                 "test_suite_name": self.test_suite_name,
-                "total_tests": 0,  # Will be updated by pytest results
+                "total_tests": 0,
                 "passed_tests": 0,
                 "failed_tests": 0,
                 "skipped_tests": 0,
@@ -186,6 +204,7 @@ class GeoReporter:
                 "start_time": self.suite_start_time.strftime("%Y-%m-%d %H:%M:%S"),
                 "end_time": self.suite_end_time.strftime("%Y-%m-%d %H:%M:%S"),
                 "failed_tests_details": [],
+                "skipped_tests_details": [],
             }
             return report
         
@@ -229,7 +248,7 @@ class GeoReporter:
                 failed_test["suite"] = suite_name
                 all_failed_tests.append(failed_test)
 
-            # Collect Skipped tests too
+            # Collect skipped tests with suite context
             skipped_tests = report.get("skipped_tests_details", [])
             for skipped_test in skipped_tests:
                 skipped_test["suite"] = suite_name
@@ -257,216 +276,244 @@ class GeoReporter:
         return unified_report
 
     def send_unified_slack_report(self):
-        """Send unified report to Slack"""
+        """Send enhanced unified report to Slack with new formatting"""
         unified_report = self.generate_unified_report()
         if not unified_report:
             self.logger.warning("No test results to report")
             return
 
-        summary = {
-            "total_tests": unified_report["total_tests"],
-            "passed_tests": unified_report["passed_tests"],
-            "failed_tests": unified_report["failed_tests"], 
-            "skipped_tests": unified_report["skipped_tests"],
-            "success_rate": unified_report["success_rate"],
-            "duration": unified_report["duration"],
-            "start_time": unified_report["start_time"],
-            "end_time": unified_report["end_time"],
-            "suites_run": unified_report["suites_run"]
-        }
-
-        all_failed_tests = unified_report["all_failed_tests"]
-
-        # Collect all skipped tests from all suites
-        all_skipped_tests = []
-        for suite_name, suite_data in self.suite_results.items():
-            report = suite_data["report"]
-            skipped_tests = report.get("skipped_tests_details", [])
-            for skipped_test in skipped_tests:
-                skipped_test["suite"] = suite_name
-                all_skipped_tests.append(skipped_test)
-
+        # Calculate duration in minutes and seconds
+        total_seconds = unified_report["duration"]
+        minutes = int(total_seconds // 60)
+        seconds = int(total_seconds % 60)
+        duration_formatted = f"{total_seconds:.1f}s ({minutes}m {seconds}s)" if minutes > 0 else f"{total_seconds:.1f}s"
+        
         # Determine overall status
-        if summary["failed_tests"] == 0:
+        if unified_report["failed_tests"] == 0:
             status_emoji = "✅✅✅"
             status_message = "🎉 Great news team! All tests passed. GEO-Bot is proud 🤖✨"
         else:
             status_emoji = "❌❌❌" 
             status_message = "⚠️ Uh-oh, GEO-Bot spotted some issues! Please check the details below 🐞🔧"
 
-        # Build the main message
-        message = (
-            f"*{status_emoji}* *[{self.env}]* *{unified_report['test_suite_name']}* - Test Report *{status_emoji}*\n\n"
-            f"{status_message}\n\n"
-            f"*📊 Summary*\n"
-            f"• Total Tests: {summary['total_tests']}\n"
-            f"• Passed: {summary['passed_tests']} ✅\n"
-            f"• Failed: {summary['failed_tests']} ❌\n"
-            f"• Skipped: {summary['skipped_tests']} ⚠️\n"
-            f"• Success Rate: {summary['success_rate']:.1f}%\n"
-            f"• Duration: {summary['duration']:.2f}s\n\n"
-            f"*🕐 Execution Time*\n"
-            f"• Start: {summary['start_time']}\n"
-            f"• End: {summary['end_time']}\n"
-        )
+        # Build the enhanced message
+        message_lines = [
+            f"🧪 {unified_report['test_suite_name']}",
+            f"🕓 Executed: {unified_report['end_time']}",
+            f"🧑‍💻 Environment: {self.env}",
+            f"🧩 Branch: {self.branch}",
+            f"🌐 Browser: {self.browser}",
+            f"🧰 Build ID: {self.build_id}",
+            "------------------------------------------------------",
+            f"{status_emoji} {status_message}",
+            "------------------------------------------------------",
+            "📊 Summary",
+            "",
+            f"• Total Tests: {unified_report['total_tests']}",
+            f"• ✅ Passed: {unified_report['passed_tests']}",
+            f"• ⚠️ Skipped: {unified_report['skipped_tests']}",
+            f"• ❌ Failed: {unified_report['failed_tests']}",
+            f"• 🧮 Success Rate: {unified_report['success_rate']:.1f}%",
+            f"• 🕒 Duration: {duration_formatted}",
+            "------------------------------------------------------",
+            "🧠 Suite Breakdown",
+            ""
+        ]
 
         # Add suite breakdown
-        message += f"\n*📋 Suite Breakdown:*\n"
         for suite_name, suite_data in self.suite_results.items():
             report = suite_data["report"]
-            suite_emoji = "✅" if report.get("failed_tests", 0) == 0 else "❌"
-            message += f"• {suite_emoji} {suite_name.upper()}: {report.get('passed_tests', 0)}/{report.get('total_tests', 0)} passed\n"
+            total = report.get('total_tests', 0)
+            passed = report.get('passed_tests', 0)
+            success_rate = (passed / total * 100) if total > 0 else 0
+            suite_display = self._format_suite_display_name(suite_name)
+            message_lines.append(f"{suite_display}: {passed}/{total} Passed ({success_rate:.0f}%)")
 
-        # Add failed tests section if any
+        message_lines.append("------------------------------------------------------")
+
+        # Add failed tests section
+        all_failed_tests = unified_report["all_failed_tests"]
         if all_failed_tests:
-            message += f"\n*❌ Failed Tests ({len(all_failed_tests)}):*\n"
+            message_lines.append(f"❌ Failed Tests({len(all_failed_tests)})")
+            message_lines.append("")
+
             for i, test in enumerate(all_failed_tests[:8], 1):  # Limit to first 8
-                suite = test.get('suite', 'Unknown').upper()
+                suite = test.get('suite', 'Unknown')
                 test_name = test.get('test_name', 'Unknown Test')
                 error = self._clean_error_message(test.get('error_message', 'Unknown error'))
-                message += f"\n{i}. *[{suite}]* {test_name}\n   Error: {error}\n"
+                category = test.get('category') or self._get_test_category(test_name, error)
+                context = self._get_test_context(test_name, error)
+                duration = test.get('duration', 0)
+                
+                # Format test name to be more readable
+                readable_test_name = self._format_test_name(test_name)
+                suite_display = self._format_suite_display_name(suite)
+                
+                message_lines.append(f"{i}️⃣ [{suite_display}] {readable_test_name}")
+                message_lines.append(f"‣ Error: {error}")
+                message_lines.append(f"‣ Type: {category}")
+                message_lines.append(f"‣ Context: {context}")
+                
+                # Add fix suggestion for specific categories
+                fix_suggestion = self._get_fix_suggestion(category, test_name)
+                if fix_suggestion:
+                    message_lines.append(f"‣ Fix Suggestion: {fix_suggestion}")
+                
+                if duration > 0:
+                    message_lines.append(f"‣ Duration: {duration:.2f}s")
+                
+                message_lines.append("")  # Empty line between tests
 
-            if len(all_failed_tests) > 8:
-                message += f"\n... and {len(all_failed_tests) - 8} more failures"
-
-        # Add Skipped Tests section
+        # Add skipped tests section
+        all_skipped_tests = unified_report.get("all_skipped_tests", [])
         if all_skipped_tests:
-            message += f"\n*⚠️ Skipped Tests ({len(all_skipped_tests)}):*\n"
-            for i, test in enumerate(all_skipped_tests[:5], 1):  # Limit to first 5
-                suite = test.get('suite', 'Unknown').upper()
-                test_name = test.get('test_name', 'Unknown Test')
-                skip_reason = self._clean_error_message(test.get('skip_reason', 'Skipped'))
-                message += f"\n{i}. *[{suite}]* {test_name}\n   Reason: {skip_reason}\n"
+            if not all_failed_tests:  # Add separator only if no failed tests section
+                message_lines.append("------------------------------------------------------")
+            message_lines.append(f"⚠️ Skipped Tests({len(all_skipped_tests)})")
+            message_lines.append("")
 
-            if len(all_skipped_tests) > 5:
-                message += f"\n... and {len(all_skipped_tests) - 5} more skipped tests"
+            for skipped_test in all_skipped_tests[:5]:  # Limit to first 5
+                suite = skipped_test.get('suite', 'Unknown')
+                test_name = skipped_test.get('test_name', 'Unknown Test')
+                skip_reason = self._clean_error_message(skipped_test.get('skip_reason', 'Skipped'))
+                readable_test_name = self._format_test_name(test_name)
+                suite_display = self._format_suite_display_name(suite)
+                
+                message_lines.append(f"• [{suite_display}] {readable_test_name} → Reason: \"{skip_reason}\"")
 
-        slack_notifier.send_webhook_message(message)
+        # Join all lines and send
+        final_message = "\n".join(message_lines)
+        slack_notifier.send_webhook_message(final_message)
         self._save_unified_report(unified_report)
 
     def send_individual_slack_report(self, report):
-        """Send individual suite report to Slack"""
+        """Send enhanced individual suite report to Slack"""
         if not report:
             return
 
-        all_passed = report["failed_tests"] == 0
-
-        if all_passed:
+        # Calculate duration
+        total_seconds = report["duration"]
+        minutes = int(total_seconds // 60)
+        seconds = int(total_seconds % 60)
+        duration_formatted = f"{total_seconds:.1f}s ({minutes}m {seconds}s)" if minutes > 0 else f"{total_seconds:.1f}s"
+        
+        # Determine overall status
+        if report["failed_tests"] == 0:
             status_emoji = "✅✅✅"
-            intro_message = (
-                f"*{status_emoji}* *[{self.env}]* *{report['test_suite_name']}* - Test Report {status_emoji}\n\n"
-                f"🎉 Great news team! All tests passed. GEO-Bot is proud 🤖✨\n"
-            )
+            status_message = "🎉 Great news team! All tests passed. GEO-Bot is proud 🤖✨"
         else:
-            status_emoji = "❌❌❌"
-            intro_message = (
-                f"*{status_emoji}* *[{self.env}]* *{report['test_suite_name']}* - Test Report {status_emoji}\n\n"
-                f"⚠️ Uh-oh, GEO-Bot spotted some issues! Please check the details below 🐞🔧\n"
-            )
+            status_emoji = "❌❌❌" 
+            status_message = "⚠️ Uh-oh, GEO-Bot spotted some issues! Please check the details below 🐞🔧"
 
-        message = (
-            intro_message
-            + f"""
+        # Determine header based on test type
+        if self.test_type == "API":
+            header = f"🧪 API Test Report"
+        elif self.test_type == "UI":
+            header = f"🧪 UI {self.test_suite_name} Report"
+        else:
+            header = f"🧪 {self.test_suite_name} Report"
+        
+        message_lines = [
+            header,
+            f"🕓 Executed: {report['end_time']}",
+            f"🧑‍💻 Environment: {self.env}",
+            f"🧩 Branch: {self.branch}",
+            f"🌐 Browser: {self.browser}",
+            f"🧰 Build ID: {self.build_id}",
+            "------------------------------------------------------",
+            f"{status_emoji} {status_message}",
+            "------------------------------------------------------",
+            "📊 Summary",
+            "",
+            f"• Total Tests: {report['total_tests']}",
+            f"• ✅ Passed: {report['passed_tests']}",
+            f"• ⚠️ Skipped: {report['skipped_tests']}",
+            f"• ❌ Failed: {report['failed_tests']}",
+            f"• 🧮 Success Rate: {report['success_rate']:.1f}%",
+            f"• 🕒 Duration: {duration_formatted}",
+            "------------------------------------------------------"
+        ]
 
-    *📊 Summary*
-    • Total Tests: {report['total_tests']}
-    • Passed: {report['passed_tests']} ✅  
-    • Failed: {report['failed_tests']} ❌
-    • Skipped: {report['skipped_tests']} ⚠️
-    • Success Rate: {report['success_rate']:.1f}%
-    • Duration: {report['duration']:.2f}s
-
-    *🕐 Execution Time*
-    • Start: {report['start_time']}
-    • End: {report['end_time']}
-    """
-        )
-
-        # ENHANCED FAILURE DETAILS
+        # Add failed tests section
         if report["failed_tests"] > 0:
-            message += f"\n*❌ Failed Tests ({report['failed_tests']}):*\n"
+            message_lines.append(f"❌ Failed Tests({report['failed_tests']})")
+            message_lines.append("")
 
             for i, failed_test in enumerate(report["failed_tests_details"], 1):
-                message += f"\n*{i}. {failed_test['test_name']}*\n"
+                test_name = failed_test['test_name']
+                error = self._clean_error_message(failed_test['error_message'])
+                category = failed_test.get('category') or self._get_test_category(test_name, error)
+                context = self._get_test_context(test_name, error)
+                duration = failed_test.get('duration', 0)
+                readable_test_name = self._format_test_name(test_name)
+                
+                message_lines.append(f"{i}️⃣ {readable_test_name}")
+                message_lines.append(f"‣ Error: {error}")
+                message_lines.append(f"‣ Type: {category}")
+                message_lines.append(f"‣ Context: {context}")
 
-                # Error message
-                if failed_test["error_message"]:
-                    error_msg = self._clean_error_message(failed_test["error_message"])
-                    message += f"   *Error:* {error_msg}\n"
+                # Add fix suggestion
+                fix_suggestion = self._get_fix_suggestion(category, test_name)
+                if fix_suggestion:
+                    message_lines.append(f"‣ Fix Suggestion: {fix_suggestion}")
+                
+                if duration > 0:
+                    message_lines.append(f"‣ Duration: {duration:.2f}s")
+                
+                message_lines.append("")
 
-                # Test duration - use actual duration from test result
-                actual_duration = failed_test.get("duration")
-                if actual_duration is not None:
-                    message += f"   *Duration:* {actual_duration:.2f}s\n"
-                else:
-                    message += f"   *Duration:* 0.00s\n"
+        # Add skipped tests section
+        if report.get("skipped_tests_details"):
+            if report["failed_tests"] == 0:  # Add separator only if no failed tests
+                message_lines.append("------------------------------------------------------")
+            message_lines.append(f"⚠️ Skipped Tests({report['skipped_tests']})")
+            message_lines.append("")
 
-                # Screenshot info
-                if failed_test.get("screenshot_path"):
-                    message += f"   *Screenshot:* `{failed_test['screenshot_path']}`\n"
+            for skipped_test in report["skipped_tests_details"][:5]:
+                test_name = skipped_test['test_name']
+                skip_reason = self._clean_error_message(skipped_test.get('skip_reason', 'Skipped'))
+                readable_test_name = self._format_test_name(test_name)
+                
+                message_lines.append(f"• {readable_test_name} → Reason: \"{skip_reason}\"")
 
-                # Additional context based on test type
-                context = self._get_test_context(failed_test["test_name"])
-                if context:
-                    message += f"   *Context:* {context}\n"
-
-        # Add Skipped Tests section
-        if report["skipped_tests"] > 0:
-            message += f"\n*⚠️ Skipped Tests ({report['skipped_tests']}):*\n"
-
-            for i, skipped_test in enumerate(report.get("skipped_tests_details", []), 1):
-                message += f"\n*{i}. {skipped_test['test_name']}*\n"
-
-                # Skip reason
-                skip_reason = skipped_test.get("skip_reason", "Skipped")
-                clean_reason = self._clean_error_message(skip_reason)
-                message += f"   *Reason:* {clean_reason}\n"
-
-                # Test duration
-                actual_duration = skipped_test.get("duration")
-                if actual_duration is not None:
-                    message += f"   *Duration:* {actual_duration:.2f}s\n"
-                else:
-                    message += f"   *Duration:* 0.00s\n"
-
-                # Context
-                context = self._get_test_context(skipped_test["test_name"])
-                if context:
-                    message += f"   *Context:* {context}\n"
-
-        slack_notifier.send_webhook_message(message)
+        final_message = "\n".join(message_lines)
+        slack_notifier.send_webhook_message(final_message)
         self._save_report_to_file(report)
 
-    def _clean_error_message(self, error_message):
-        """Clean and format error message for Slack"""
-        lines = error_message.split("\n")
-        clean_lines = []
+    # ====== HELPER METHODS ======
+    def _format_suite_names(self, suite_names):
+        """Format suite names for the report header"""
+        formatted_names = []
+        for name in suite_names:
+            formatted_names.append(self._format_suite_display_name(name))
+        return " + ".join(formatted_names)
 
-        for line in lines:
-            line = line.strip()
-            if (
-                line.startswith('File "')
-                or line.startswith("self = <")
-                or "object at 0x" in line
-                or line.startswith("E   ")
-                or not line
-            ):
-                continue
+    def _format_suite_display_name(self, suite_name):
+        """Format individual suite name for display"""
+        name_map = {
+            "api": "API",
+            "smoke": "UI Smoke", 
+            "regression": "UI Regression",
+            "sanity": "UI Sanity"
+        }
+        return name_map.get(suite_name, suite_name.upper())
 
-            if (
-                "AssertionError" in line
-                or "Failed:" in line
-                or "Error:" in line
-                or "Exception:" in line
-            ):
-                clean_lines.append(line)
+    def _format_test_name(self, test_name):
+        """Format test name to be more readable"""
+        if "::" in test_name:
+            parts = test_name.split("::")
+            if len(parts) >= 3:
+                class_name = parts[1].replace("Test", "").strip()
+                method_name = parts[2]
+                return f"{class_name}.{method_name}"
+            elif len(parts) == 2:
+                file_name = parts[0].split("/")[-1].replace(".py", "").replace("test_", "")
+                method_name = parts[1]
+                return f"{file_name}.{method_name}"
+        return test_name
 
-        if clean_lines:
-            return " | ".join(clean_lines[:3])
-        return error_message[:150] + ("..." if len(error_message) > 150 else "")
-
-    def _get_test_context(self, test_name):
-        """Provide context about what the test was doing"""
+    def _get_test_context(self, test_name, error_message):
+        """Categorize test failures for better reporting"""
         method_name = test_name.split("::")[-1] if "::" in test_name else test_name
         context_map = {
             #============================ UI Tests ============================#
@@ -509,6 +556,82 @@ class GeoReporter:
         }
 
         return context_map.get(method_name, "Functional test")
+    
+    def _get_test_category(self, test_name, error_message):
+        """Categorize test failures based on error messages and test names"""
+        if not error_message:
+            return "Unknown"
+            
+        error_lower = error_message.lower()
+        test_lower = test_name.lower()
+        
+        # API Test Categories
+        if "api" in test_lower:
+            if "assertionerror" in error_lower or "expected" in error_lower:
+                return "Functional"
+            elif "dependency" in error_lower or "login failed" in error_lower:
+                return "Dependency Failure"
+            elif "timeout" in error_lower:
+                return "API Timeout"
+            else:
+                return "API Error"
+        
+        # UI Test Categories  
+        elif "elementclickintercepted" in error_lower:
+            return "Wait Condition Issue"
+        elif "timeout" in error_lower:
+            if "loader" in error_lower or "page load" in error_lower:
+                return "Slow Page Load / Loader Interference"
+            return "Timeout Exception"
+        elif "nosuchelement" in error_lower:
+            return "Element Not Found"
+        elif "staleelement" in error_lower:
+            return "Stale Element Reference"
+        else:
+            return "Functional"
+
+    def _get_fix_suggestion(self, category, test_name):
+        """Provide fix suggestions based on failure category"""
+        suggestions = {
+            "Wait Condition Issue": "Add EC.element_to_be_clickable() with explicit wait",
+            "Slow Page Load / Loader Interference": "Increase timeout or add loader wait condition",
+            "Element Not Found": "Check element locator or add explicit wait",
+            "Stale Element Reference": "Re-locate element before interaction",
+            "API Timeout": "Increase API timeout or check endpoint responsiveness",
+            "Dependency Failure": "Check prerequisite test steps or data setup"
+        }
+        return suggestions.get(category, "")
+
+    def _clean_error_message(self, error_message):
+        """Clean and format error message for Slack"""
+        if not error_message:
+            return "No error message"
+            
+        lines = error_message.split("\n")
+        clean_lines = []
+
+        for line in lines:
+            line = line.strip()
+            if (
+                line.startswith('File "')
+                or line.startswith("self = <")
+                or "object at 0x" in line
+                or line.startswith("E   ")
+                or not line
+            ):
+                continue
+
+            if (
+                "AssertionError" in line
+                or "Failed:" in line
+                or "Error:" in line
+                or "Exception:" in line
+            ):
+                clean_lines.append(line)
+
+        if clean_lines:
+            return " | ".join(clean_lines[:3])
+        return error_message[:150] + ("..." if len(error_message) > 150 else "")
 
     def _cleanup_old_reports(self):
         """Clean up old report files"""
@@ -549,7 +672,7 @@ regression_reporting = GeoReporter("Regression Tests")
 sanity_reporting = GeoReporter("Sanity Tests")
 api_reporting = GeoReporter("API Tests")
 
-# Unified reporter instance (reuses one of the instances)
+# Unified reporter instance
 unified_reporter = smoke_reporting
 
 def get_suite_reporter(suite_name):
