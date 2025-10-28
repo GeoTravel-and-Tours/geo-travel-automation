@@ -22,7 +22,7 @@ class TestFlightAPI:
         
         # If login fails, skip the test
         if response.status_code != 200:
-            pytest.skip("Login failed - cannot run flight tests")
+            pytest.skip(f"Login failed with status {response.status_code} - cannot run flight tests")
             
         flight_api = FlightAPI()
         flight_api.set_auth_token(auth_api.auth_token)

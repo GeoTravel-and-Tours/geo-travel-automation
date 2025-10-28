@@ -10,12 +10,14 @@ import argparse
 import traceback
 import pytest
 from dotenv import load_dotenv
+from datetime import datetime
 
 # Add parent directory to path
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
-# Import your custom reporter
-from src.utils.reporting import smoke_reporting
+# Import your custom reporters
+from src.utils.reporting import smoke_reporting, regression_reporting, sanity_reporting, api_reporting, unified_reporter
+from src.utils.notifications import slack_notifier
 from configs.environment import EnvironmentConfig
 from src.utils.logger import GeoLogger
 
@@ -23,15 +25,28 @@ from src.utils.logger import GeoLogger
 load_dotenv()
 
 
-def run_tests(suite_name, pytest_args=None, skip_env_check=False):
+def get_suite_reporter(suite_name):
+    """Get the appropriate reporter for the test suite"""
+    reporters = {
+        "smoke": smoke_reporting,
+        "regression": regression_reporting, 
+        "sanity": sanity_reporting,
+        "api": api_reporting
+    }
+    return reporters.get(suite_name, smoke_reporting)
+
+def run_tests(suite_name, pytest_args=None, skip_env_check=False, is_unified_run=False):
     """Run selected test suite with comprehensive reporting"""
     logger = GeoLogger("TestRunner")
+    
+    # Get the appropriate reporter for this suite
+    suite_reporter = get_suite_reporter(suite_name)
 
     # Map suite names to directories
     test_suites = {
         "smoke": "src/tests/smoke_tests/",
         "regression": "src/tests/regression_tests/",
-        "sanity": "src/tests/sanity_tests/",
+        "sanity": "src/tests/sanity_tests/", 
         "api": "src/tests/api_tests/",
     }
 
@@ -48,18 +63,30 @@ def run_tests(suite_name, pytest_args=None, skip_env_check=False):
 
     logger.info(f"Running {suite_name.upper()} tests from {test_path}")
 
+    # Send start notification for single suite runs
+    if not is_unified_run:
+        slack_notifier.send_webhook_message(
+            f"🚀 Hey Team, GEO-Bot here! 🤖\n"
+            f"✨ *[{suite_reporter.env}] {suite_reporter.test_suite_name}* suite has officially *launched*!\n"
+            f"🕒 *Start Time:* {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
+            f"Let's squash some bugs! 🐛🔨"
+        )
+
     # Environment check - ONLY for UI tests, skip for API tests
     if not skip_env_check and suite_name != "api":
         logger.info("Checking UI environment availability...")
         if not EnvironmentConfig.is_environment_accessible():
             logger.error("UI environment is not accessible. Skipping UI tests.")
-            smoke_reporting.start_test_suite()
-            smoke_reporting.add_test_result(
-                test_name="Environment Check",
-                status="SKIP",
-                error_message="UI environment is not accessible"
-            )
-            smoke_reporting.end_test_suite()
+            if not is_unified_run:
+                suite_reporter.start_test_suite()
+                suite_reporter.add_test_result(
+                    test_name="Environment Check",
+                    status="SKIP",
+                    error_message="UI environment is not accessible"
+                )
+                report = suite_reporter.end_test_suite()
+                if report:
+                    suite_reporter.send_individual_slack_report(report)
             return 0
         else:
             logger.success("UI environment is accessible - proceeding with tests")
@@ -69,25 +96,26 @@ def run_tests(suite_name, pytest_args=None, skip_env_check=False):
         logger.info("Checking API environment availability...")
         if EnvironmentConfig.should_skip_api_tests():
             logger.warning("API environment is not accessible. Skipping API tests.")
-            smoke_reporting.start_test_suite()
-            smoke_reporting.add_test_result(
-                test_name="API Environment Check",
-                status="SKIP", 
-                error_message="API environment is not accessible"
-            )
-            smoke_reporting.end_test_suite()
+            if not is_unified_run:
+                suite_reporter.start_test_suite()
+                suite_reporter.add_test_result(
+                    test_name="API Environment Check",
+                    status="SKIP", 
+                    error_message="API environment is not accessible"
+                )
+                report = suite_reporter.end_test_suite()
+                if report:
+                    suite_reporter.send_individual_slack_report(report)
             return 0
         else:
             logger.success("API environment is accessible - proceeding with tests")
-            # SKIP UI CHECK FOR API TESTS - DON'T CHECK UI ENVIRONMENT
-            pass
 
-    # Start reporting
-    smoke_reporting.start_test_suite()
+    # Start individual suite reporting
+    suite_reporter.start_test_suite()
 
     try:
         # Base pytest arguments
-        pytest_args = [
+        base_pytest_args = [
             test_path,
             "-v",
             f"--html=reports/{suite_name}_test_report.html",
@@ -101,44 +129,84 @@ def run_tests(suite_name, pytest_args=None, skip_env_check=False):
 
         # Add markers for specific suites
         if suite_name in ["smoke", "regression", "sanity"]:
-            pytest_args.extend(["-m", suite_name])
+            base_pytest_args.extend(["-m", suite_name])
         
         # API-specific configurations
         if suite_name == "api":
-            pytest_args.extend([
+            base_pytest_args.extend([
                 "--log-cli-level=DEBUG",  # More verbose for API debugging
                 "-o", "log_cli=true",  # Ensure CLI logging
                 "-m", "api"  # Use api marker for API tests
             ])
 
-        exit_code = pytest.main(pytest_args)
+        # Add any additional pytest arguments
+        if pytest_args:
+            base_pytest_args.extend(pytest_args)
+
+        exit_code = pytest.main(base_pytest_args)
         
-        if smoke_reporting.test_results:
-            report = smoke_reporting.end_test_suite()
-            
-            if report["failed_tests"] == 0:
-                logger.success(f"All {report['total_tests']} {suite_name} tests passed!")
+        # Get the individual suite report
+        suite_report = suite_reporter.end_test_suite()
+        
+        if suite_report:
+            # Add to unified reporter if this is part of a unified run
+            if is_unified_run:
+                unified_reporter.add_suite_result(suite_name, suite_report)
             else:
-                logger.error(f"{report['failed_tests']} of {report['total_tests']} {suite_name} tests failed")
+                # Send individual report for single suite runs
+                suite_reporter.send_individual_slack_report(suite_report)
+            
+            if suite_report["failed_tests"] == 0:
+                logger.success(f"All {suite_report['total_tests']} {suite_name} tests passed!")
+            else:
+                logger.error(f"{suite_report['failed_tests']} of {suite_report['total_tests']} {suite_name} tests failed")
         else:
-            # Tests were all skipped due to environment - don't send success report
+            # Tests were all skipped due to environment
             logger.info("All tests were skipped due to environment unavailability")
-            # Clear the test suite without sending success report
-            smoke_reporting.test_results = []
-            smoke_reporting.suite_start_time = None
+            suite_reporter.test_results = []
+            suite_reporter.suite_start_time = None
             
         return exit_code
     
     except Exception as e:
         error_message = "".join(traceback.format_exception_only(type(e), e)).strip()
-        smoke_reporting.add_test_result(
+        suite_reporter.add_test_result(
             test_name=f"{suite_name} suite execution",
             status="FAIL",
             error_message=f"Suite execution failed: {error_message}",
         )
-        smoke_reporting.end_test_suite()
+        suite_report = suite_reporter.end_test_suite()
+        if is_unified_run and suite_report:
+            unified_reporter.add_suite_result(suite_name, suite_report)
+        else:
+            if suite_report:
+                suite_reporter.send_individual_slack_report(suite_report)
         logger.error(f"Test suite execution failed: {error_message}")
         raise
+
+
+def run_multiple_suites(suite_names, skip_env_check=False):
+    """Run multiple test suites sequentially with unified reporting"""
+    logger = GeoLogger("TestRunner")
+    overall_exit_code = 0
+    
+    # Start unified reporting
+    unified_reporter.start_unified_test_run(suite_names)
+    
+    for suite_name in suite_names:
+        logger.info(f"🚀 Starting {suite_name.upper()} test suite...")
+        exit_code = run_tests(suite_name, skip_env_check=skip_env_check, is_unified_run=True)
+        
+        # If any suite fails, overall result should be failure
+        if exit_code != 0:
+            overall_exit_code = exit_code
+            
+        logger.info(f"✅ Completed {suite_name.upper()} test suite")
+    
+    # Send unified report
+    unified_reporter.send_unified_slack_report()
+    
+    return overall_exit_code
 
 
 def run_api_tests_with_config():
@@ -148,12 +216,9 @@ def run_api_tests_with_config():
     # Set environment variables for API testing
     os.environ["TEST_TYPE"] = "API"
     
-    # Use environment-specific API URL with proper debugging
+    # Use environment-specific API URL
     api_base_url = EnvironmentConfig.get_api_base_url()
-    current_env = EnvironmentConfig.TEST_ENV
-    
-    logger.info(f"Running API tests - Environment: {current_env}")
-    logger.info(f"API Base URL: {api_base_url}")
+    logger.info(f"Running API tests against: {api_base_url}")
     
     # Run comprehensive API health check
     health_status = EnvironmentConfig.check_api_health_comprehensive()
@@ -168,9 +233,10 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--suite",
+        nargs="+",
         required=True,
         choices=["smoke", "regression", "sanity", "api"],
-        help="Specify test suite to run"
+        help="Specify test suite(s) to run (one or more of: smoke, regression, sanity, api)"
     )
     parser.add_argument(
         "--skip-env-check",
@@ -182,10 +248,18 @@ if __name__ == "__main__":
         action="store_true",
         help="Run only API tests with specialized configuration"
     )
+    parser.add_argument(
+        "--pytest-args",
+        nargs="*",
+        help="Additional arguments to pass to pytest (e.g., -k 'test_login')"
+    )
     args = parser.parse_args()
 
     if args.api_only:
-        # Force API suite regardless of --suite argument
         run_api_tests_with_config()
+    elif len(args.suite) == 1:
+        # Single suite - use individual reporting
+        run_tests(args.suite[0], args.pytest_args, args.skip_env_check, is_unified_run=False)
     else:
-        run_tests(args.suite, args.skip_env_check)
+        # Multiple suites - use unified reporting
+        run_multiple_suites(args.suite, args.skip_env_check)

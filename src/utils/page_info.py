@@ -144,10 +144,10 @@ class PageInfoUtils:
             try:
                 self.find_element((element_type, selector), driver=driver)
                 validation_results[f"element_{selector}"] = True
-                self.logger.debug(f"✅ Found {selector} element")
+                self.logger.debug(f"Found {selector} element")
             except:
                 validation_results[f"element_{selector}"] = False
-                self.logger.warning(f"⚠️ Missing {selector} element")
+                self.logger.warning(f"Missing {selector} element")
 
         # Validate content keywords
         self.logger.info("Validating page content keywords...")

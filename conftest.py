@@ -1,3 +1,5 @@
+# conftest.py
+
 import os
 import time
 import shutil
@@ -9,6 +11,7 @@ from pytest_html import extras
 
 from src.core.driver_factory import driver_factory
 from src.utils.reporting import smoke_reporting
+from src.utils.reporting import get_suite_reporter
 from src.utils.screenshot import ScreenshotUtils
 from configs.environment import EnvironmentConfig
 from src.utils.notifications import slack_notifier
@@ -114,13 +117,67 @@ def browser(driver):
     return EnvironmentConfig.BROWSER
 
 
+def _handle_skipped_test(item, report):
+    """Handle skipped tests from setup phase"""
+    nodeid = getattr(item, "nodeid", item.name if hasattr(item, "name") else str(item))
+    
+    # Extract skip reason
+    skip_reason = None
+    if hasattr(report, 'wasxfail'):
+        skip_reason = f"Expected failure: {report.wasxfail}"
+    else:
+        skip_reason = str(report.longrepr) if getattr(report, "longrepr", None) else "Skipped"
+
+    logger.info(f"🔍 DEBUG: Processing SKIPPED test in setup: {nodeid}")
+    logger.info(f"🔍 DEBUG: Skip reason: {skip_reason}")
+
+    # Get the appropriate suite reporter
+    suite_reporter = None
+    test_path = str(item.fspath)
+    
+    if "smoke_tests" in test_path:
+        suite_reporter = get_suite_reporter("smoke")
+    elif "regression_tests" in test_path:
+        suite_reporter = get_suite_reporter("regression")
+    elif "sanity_tests" in test_path:
+        suite_reporter = get_suite_reporter("sanity")
+    elif "api_tests" in test_path:
+        suite_reporter = get_suite_reporter("api")
+    else:
+        suite_reporter = get_suite_reporter("smoke")
+    
+    # Add the skipped test to reporting
+    if suite_reporter:
+        suite_reporter.add_test_result(
+            test_name=nodeid,
+            status="SKIP",
+            error_message=skip_reason,
+            screenshot_path=None,
+            duration=0.0,  # Setup skips have minimal duration
+            skip_reason=skip_reason,
+        )
+        logger.info(f"Added SKIPPED test result to {suite_reporter.test_suite_name}: {nodeid}")
+
+
 @pytest.hookimpl(hookwrapper=True)
 def pytest_runtest_makereport(item, call):
     """Capture test results for reporting, attach screenshots/html and latest log to pytest-html"""
     outcome = yield
     report = outcome.get_result()
 
-    # only interested in the call phase
+    # Debug all phases to see what's happening
+    logger.info(f"🔍 DEBUG: Test phase - {report.when} for {item.nodeid} - Skipped: {report.skipped}")
+    
+    # Set start time for duration calculation
+    if report.when == "setup":
+        item.start_time = time.time()
+        
+        # 🔥 CRITICAL FIX: Handle skipped tests in setup phase
+        if report.skipped:
+            _handle_skipped_test(item, report)
+        return
+
+    # Only process call phase for test results
     if report.when != "call":
         return
 
@@ -130,13 +187,21 @@ def pytest_runtest_makereport(item, call):
 
     status = "UNKNOWN"
     error_message = None
+    skip_reason = None
 
     try:
         if report.passed:
             status = "PASS"
         elif report.skipped:
-            status = "SKIPPED"
-            error_message = str(report.longrepr) if getattr(report, "longrepr", None) else "Skipped"
+            status = "SKIP"
+            # Extract skip reason properly
+            if hasattr(report, 'wasxfail'):
+                skip_reason = f"Expected failure: {report.wasxfail}"
+            else:
+                skip_reason = str(report.longrepr) if getattr(report, "longrepr", None) else "Skipped"
+            error_message = skip_reason
+            logger.info(f"🔍 DEBUG: Processing SKIPPED test in call: {nodeid}")
+            logger.info(f"🔍 DEBUG: Skip reason: {skip_reason}")
         else:
             status = "FAIL"
             # prefer concise exception from call.excinfo
@@ -194,6 +259,36 @@ def pytest_runtest_makereport(item, call):
                     logger.exception("Failed capturing screenshot/html via ScreenshotUtils")
             else:
                 logger.warning("No webdriver fixture available on test item; skipping screenshot capture")
+        
+        suite_reporter = None
+        test_path = str(item.fspath)
+        
+        if "smoke_tests" in test_path:
+            suite_reporter = get_suite_reporter("smoke")
+        elif "regression_tests" in test_path:
+            suite_reporter = get_suite_reporter("regression")
+        elif "sanity_tests" in test_path:
+            suite_reporter = get_suite_reporter("sanity")
+        elif "api_tests" in test_path:
+            suite_reporter = get_suite_reporter("api")
+        else:
+            # Fallback to smoke reporter
+            suite_reporter = get_suite_reporter("smoke")
+            
+        # record result in the appropriate reporter with proper metadata
+        if suite_reporter:
+            logger.info(f"🔍 DEBUG: About to add to {suite_reporter.test_suite_name}: {nodeid} - {status}")
+            suite_reporter.add_test_result(
+                test_name=nodeid,
+                status=status,
+                error_message=error_message,
+                screenshot_path=screenshot_path,
+                duration=duration,
+                skip_reason=skip_reason,  # Add skip reason for skipped tests
+            )
+            logger.info(f"Added test result to {suite_reporter.test_suite_name}: {nodeid} - {status}")
+        else:
+            logger.warning(f"No reporter found for test: {nodeid}")
 
         # Attach latest log file to pytest-html (copy into reports/logs and add link + preview)
         try:
@@ -252,33 +347,5 @@ def pytest_runtest_makereport(item, call):
         except Exception:
             logger.exception("Failed to attach latest log to pytest-html")
 
-        # record result in SmokeReporter (use same paths)
-        try:
-            smoke_reporting.add_test_result(
-                test_name=nodeid,
-                status=status,
-                error_message=error_message,
-                screenshot_path=screenshot_path,
-                duration=duration,
-            )
-        except Exception:
-            logger.exception("Failed adding result to smoke_reporting")
-
     except Exception:
         logger.exception("Unhandled exception in pytest_runtest_makereport")
-        
-@pytest.fixture
-def auth_api():
-    return AuthAPI()
-
-@pytest.fixture
-def flight_api():
-    return FlightAPI()
-
-@pytest.fixture
-def authenticated_api(auth_api):
-    """Fixture that provides authenticated API session"""
-    # Use your test credentials
-    response = auth_api.login("test_user@example.com", "test_password")
-    assert response.status_code == 200, "Login failed for API tests"
-    return auth_api
