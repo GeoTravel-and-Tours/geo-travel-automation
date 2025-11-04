@@ -72,12 +72,14 @@ class TestFlightBookingSmoke(TestBase):
         self.flight_booking.logger.step(1, "Opening homepage")
         self.home_page.open()
         self.home_page.wait_for_homepage_load(timeout=15, max_retries=3)
+        self.flight_booking.debug_ui_elements()
 
         self.flight_booking.logger.step(2, "Performing basic flight search")
-        self.flight_booking.perform_basic_flight_search()
+        search_success = self.flight_booking.perform_basic_flight_search()
+        assert search_success, "Basic flight search failed"
 
         self.flight_booking.logger.step(3, "Waiting for search to complete")
-        time.sleep(5)
+        time.sleep(3)
 
         self.flight_booking.logger.step(4, "Verifying search results page")
         current_url = self.flight_booking.navigator.get_current_url()
@@ -106,18 +108,17 @@ class TestFlightBookingSmoke(TestBase):
         self.home_page.wait_for_homepage_load(timeout=15, max_retries=3)
         
         self.flight_booking.logger.step(2, "Performing basic flight search")
-        self.flight_booking.perform_basic_flight_search()
+        search_success = self.flight_booking.perform_basic_flight_search()
+        assert search_success, "Flight search failed"
 
         self.flight_booking.logger.step(3, "Verifying search session is initialized")
-        time.sleep(5)
-        assert (
-            self.flight_booking.is_search_session_initialized()
-        ), "Search session not properly initialized (missing searchId)"
+        time.sleep(3)
+        search_initialized = self.flight_booking.is_search_session_initialized()
+        assert search_initialized, "Search session not properly initialized (missing searchId)"
 
         self.flight_booking.logger.step(4, "Checking search results display")
-        assert (
-            self.flight_booking.are_search_results_displayed()
-        ), "Search results not displayed properly"
+        results_displayed = self.flight_booking.are_search_results_displayed()
+        assert results_displayed, "Search results not displayed properly"
 
         self.flight_booking.logger.success("Search results displayed correctly")
 
@@ -131,7 +132,8 @@ class TestFlightBookingSmoke(TestBase):
         self.home_page.wait_for_homepage_load(timeout=15, max_retries=3)
         
         self.flight_booking.logger.step(2, "Performing basic flight search")
-        self.flight_booking.perform_basic_flight_search()
+        search_success = self.flight_booking.perform_basic_flight_search()
+        assert search_success, "Flight search failed"
         
         self.flight_booking.logger.step(3, "Selecting flight")
         selection_success = self.flight_booking.select_flight()
@@ -149,10 +151,12 @@ class TestFlightBookingSmoke(TestBase):
         self.home_page.wait_for_homepage_load(timeout=15, max_retries=3)
         
         self.flight_booking.logger.step(2, "Performing basic flight search")
-        self.flight_booking.perform_basic_flight_search()
+        search_success = self.flight_booking.perform_basic_flight_search()
+        assert search_success, "Flight search failed"
         
         self.flight_booking.logger.step(3, "Selecting flight")
-        self.flight_booking.select_flight()
+        selection_success = self.flight_booking.select_flight()
+        assert selection_success, "Flight selection failed"
 
         self.flight_booking.logger.step(4, "Filling passenger information")
         form_filled = self.flight_booking.fill_passenger_information()
@@ -174,21 +178,24 @@ class TestFlightBookingSmoke(TestBase):
         self.home_page.wait_for_homepage_load(timeout=15, max_retries=3)
         
         self.flight_booking.logger.step(2, "Performing basic flight search")
-        self.flight_booking.perform_basic_flight_search()
+        search_success = self.flight_booking.perform_basic_flight_search()
+        assert search_success, "Flight search failed"
         
         self.flight_booking.logger.step(3, "Selecting flight")
-        self.flight_booking.select_flight()
+        selection_success = self.flight_booking.select_flight()
+        assert selection_success, "Flight selection failed"
 
         self.flight_booking.logger.step(4, "Filling passenger information")
-        self.flight_booking.fill_passenger_information()
+        form_filled = self.flight_booking.fill_passenger_information()
+        assert form_filled, "Failed to fill passenger form"
 
         self.flight_booking.logger.step(5, "Saving and continuing")
-        self.flight_booking.save_passenger_info_and_continue()
+        saved = self.flight_booking.save_passenger_info_and_continue()
+        assert saved, "Failed to save passenger information"
 
         self.flight_booking.logger.step(6, "Checking payment page accessibility")
-        assert (
-            self.flight_booking.is_payment_page_accessible()
-        ), "Payment page not accessible"
+        payment_accessible = self.flight_booking.is_payment_page_accessible()
+        assert payment_accessible, "Payment page not accessible"
 
         self.flight_booking.logger.step(7, "Selecting payment method")
         payment_method_selected = self.flight_booking.select_payment_method()
@@ -206,32 +213,41 @@ class TestFlightBookingSmoke(TestBase):
             self.flight_booking.logger.step(1, "Opening homepage and performing search")
             self.home_page.open()
             self.home_page.wait_for_homepage_load(timeout=15, max_retries=3)
-            self.flight_booking.perform_basic_flight_search()
+            search_success = self.flight_booking.perform_basic_flight_search()
+            assert search_success, "Flight search failed"
 
             # Step 2: Verify search results
             self.flight_booking.logger.step(2, "Verifying search results")
-            assert self.flight_booking.is_search_session_initialized(), "Search session failed"
-            assert self.flight_booking.are_search_results_displayed(), "No search results"
+            search_initialized = self.flight_booking.is_search_session_initialized()
+            assert search_initialized, "Search session failed"
+            
+            results_displayed = self.flight_booking.are_search_results_displayed()
+            assert results_displayed, "No search results"
 
             # Step 3: Select flight
             self.flight_booking.logger.step(3, "Selecting flight")
-            assert self.flight_booking.select_flight(), "Flight selection failed"
+            selection_success = self.flight_booking.select_flight()
+            assert selection_success, "Flight selection failed"
 
             # Step 4: Fill passenger information
             self.flight_booking.logger.step(4, "Filling passenger information")
-            assert self.flight_booking.fill_passenger_information(), "Passenger form failed"
+            form_filled = self.flight_booking.fill_passenger_information()
+            assert form_filled, "Passenger form failed"
 
             # Step 5: Save and continue
             self.flight_booking.logger.step(5, "Saving passenger information")
-            assert self.flight_booking.save_passenger_info_and_continue(), "Save failed"
+            saved = self.flight_booking.save_passenger_info_and_continue()
+            assert saved, "Save failed"
 
             # Step 6: Verify payment page
             self.flight_booking.logger.step(6, "Verifying payment page")
-            assert self.flight_booking.is_payment_page_accessible(), "Payment page not accessible"
+            payment_accessible = self.flight_booking.is_payment_page_accessible()
+            assert payment_accessible, "Payment page not accessible"
 
             # Step 7: Select payment method
             self.flight_booking.logger.step(7, "Selecting payment method")
-            assert self.flight_booking.select_payment_method(), "Payment method selection failed"
+            payment_method_selected = self.flight_booking.select_payment_method()
+            assert payment_method_selected, "Payment method selection failed"
 
             self.flight_booking.logger.success("Complete booking flow works correctly")
 

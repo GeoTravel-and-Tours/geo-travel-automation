@@ -675,10 +675,26 @@ class GeoReporter:
         """Categorize test failures based on error messages and test names"""
         if not error_message:
             return "Unknown"
-            
+
         error_lower = error_message.lower()
         test_lower = test_name.lower()
-        
+
+        # Airport Selection Failures
+        if "failed to select departure airport" in error_lower or "failed to select arrival airport" in error_lower:
+            return "Airport Selection"
+
+        # Search Functionality Failures  
+        if "search session" in error_lower and "initialized" in error_lower:
+            return "Search Initialization"
+
+        # Form Interaction Failures
+        if "failed to select" in error_lower and ("date" in error_lower or "calendar" in error_lower):
+            return "Date Selection"
+
+        # Dropdown/Selection Failures
+        if "failed to select" in error_lower and ("dropdown" in error_lower or "option" in error_lower):
+            return "Dropdown Interaction"
+
         # API Test Categories
         if "api" in test_lower:
             if "timeout" in error_lower or "read timed out" in error_lower:
@@ -705,7 +721,7 @@ class GeoReporter:
                 return "Code Logic"
             else:
                 return "API Error"
-        
+
         # UI Test Categories  
         elif "elementclickintercepted" in error_lower:
             return "UI Interaction"
@@ -723,10 +739,16 @@ class GeoReporter:
             return "Visual Validation"
         else:
             return "Functional"
-    
+
     def _get_fix_suggestion(self, category, test_name):
         """Provide fix suggestions based on failure category"""
         suggestions = {
+            # Airport Selection Issues
+            "Airport Selection": "Update airport locators, add retry logic for airport dropdown, verify airport codes",
+            "Search Initialization": "Check search session state, verify package availability, add session validation",
+            "Date Selection": "Update date picker locators, add calendar interaction waits, verify date format",
+            "Dropdown Interaction": "Add explicit waits for dropdown options, verify option visibility, update selectors",
+
             # API Categories
             "API Timeout": "Increase API timeout settings or check endpoint responsiveness",
             "API Connection": "Verify network connectivity and API server status",
@@ -739,7 +761,7 @@ class GeoReporter:
             "Dependency Failure": "Check prerequisite test steps or data setup",
             "Code Logic": "Review test code for type mismatches or method calls",
             "API Error": "Check API documentation and endpoint specifications",
-            
+
             # UI Categories
             "UI Interaction": "Add explicit wait conditions for element clickability",
             "Page Load Performance": "Increase timeout or add loader wait conditions",
@@ -748,7 +770,7 @@ class GeoReporter:
             "DOM State": "Re-locate elements after DOM updates",
             "JavaScript Execution": "Check browser compatibility and script loading",
             "Visual Validation": "Update screenshot references or adjust thresholds",
-            
+
             # General
             "Functional Assertion": "Review test expectations and actual results",
             "Unknown": "Investigate logs and reproduce manually"
