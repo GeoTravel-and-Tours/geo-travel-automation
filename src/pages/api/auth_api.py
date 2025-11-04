@@ -48,3 +48,7 @@ class AuthAPI(BaseAPI):
 
         self.logger.info(f"Retrieved credentials from environment for: {email}")
         return email, password
+    
+    def refresh_token(self):
+        """"POST /api/auth/refresh"""
+        return self.post("/api/auth/refresh")

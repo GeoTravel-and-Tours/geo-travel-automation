@@ -25,6 +25,7 @@ It helps track improvements, fixes, and added features over time.
 - TestBase improvements: reliable teardown reporting and screenshot-on-failure integration with ScreenshotUtils.
 - API test scaffolding and fixtures for AuthAPI (session-scoped client, auth fixtures).
 - Smoke reporting integration updated to accept screenshot and HTML artifact paths for unified reporting.
+- More API tests
 
 ### Changed
 - Resolved circular import between logger and cleanup modules by using lazy imports and removing module-level side effects.

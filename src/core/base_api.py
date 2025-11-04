@@ -26,6 +26,7 @@ class BaseAPI:
     def _request(self, method, endpoint, **kwargs):
         """Base request method with logging and error handling"""
         url = f"{self.base_url}{endpoint}"
+        kwargs['timeout'] = 30
         
         # Merge headers
         headers = self.headers.copy()
@@ -35,6 +36,7 @@ class BaseAPI:
         self.logger.info(f"API Request: {method} {url}")
         
         try:
+            kwargs['timeout'] = 30
             response = self.session.request(method, url, headers=headers, **kwargs)
             self.logger.info(f"API Response: {response.status_code}")
             

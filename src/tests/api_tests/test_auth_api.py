@@ -17,6 +17,7 @@ class TestAuthAPI:
     @pytest.mark.api
     def test_login_success(self, auth_api):
         """Test successful login with valid credentials from environment"""
+        self.logger.info("=== Testing Login Success ===")
         response = auth_api.login()
         
         # Check if login was successful
@@ -35,6 +36,7 @@ class TestAuthAPI:
     @pytest.mark.api
     def test_login_invalid_credentials(self, auth_api):
         """Test login with invalid credentials"""
+        self.logger.info("=== Testing Login with Invalid Credentials ===")
         response = auth_api.login("invalid@example.com", "wrongpassword123")
         
         self.logger.info(f"Invalid credentials response: {response.status_code} - {response.text}")
@@ -50,6 +52,7 @@ class TestAuthAPI:
     @pytest.mark.api
     def test_login_empty_credentials(self, auth_api):
         """Test login with empty credentials"""
+        self.logger.info("=== Testing Login with Empty Credentials ===")
         response = auth_api.login("", "")
         
         self.logger.info(f"Empty credentials response: {response.status_code} - {response.text}")
@@ -65,6 +68,7 @@ class TestAuthAPI:
     @pytest.mark.api
     def test_login_missing_password(self, auth_api):
         """Test login with missing password"""
+        self.logger.info("=== Testing Login with Missing Password ===")
         response = auth_api.login("test@example.com", "")
         
         self.logger.info(f"Missing password response: {response.status_code} - {response.text}")
@@ -80,6 +84,7 @@ class TestAuthAPI:
     @pytest.mark.api
     def test_auth_token_set_after_successful_login(self, auth_api):
         """Test that auth token is set after successful login"""
+        self.logger.info("=== Testing Auth Token Set After Successful Login ===")
         response = auth_api.login()
         
         # Check if login was successful
@@ -101,3 +106,4 @@ class TestAuthAPI:
             self.logger.info(f"Authorization header: {auth_api.headers['Authorization'][:50]}...")
         else:
             pytest.skip("No access token in response - cannot test token setting")
+            

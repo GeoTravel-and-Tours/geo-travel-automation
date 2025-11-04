@@ -19,7 +19,8 @@ class GeoLogger:
     LOG_RETENTION_DAYS = 30
     MAX_LOG_SIZE_MB = 10
     MAX_BACKUP_COUNT = 10
-    LOGS_DIR = Path("logs")
+    LOGS_DIR = Path(__file__).resolve().parents[2] / "logs"
+    
 
     _instance = None
     _initialized = False
@@ -114,7 +115,7 @@ class GeoLogger:
 
     def _ensure_logs_directory(self):
         """Ensure logs directory exists"""
-        self.LOGS_DIR.mkdir(exist_ok=True)
+        self.LOGS_DIR.mkdir(parents=True, exist_ok=True)
 
     def _generate_log_filename(self):
         """Generate unique timestamped log filename"""

@@ -23,3 +23,15 @@ class FlightAPI(BaseAPI):
         """GET /api/flight/user/booked-flights"""
         endpoint = f"/api/flight/user/booked-flights?limit={limit}&page={page}&category={category}"
         return self.get(endpoint)
+    
+    def create_quote(self, quote_data):
+        """POST /api/flight/quote"""
+        return self.post("/api/flight/quote", json=quote_data)
+    
+    def get_quote(self, reference):
+        """GET /api/flight/quote"""
+        return self.get(f"/api/flight/quote?reference={reference}")
+    
+    def validate_passenger_email(self, passenger_data):
+        """POST /api/flight/validate-passenger-email"""
+        return self.post("/api/flight/validate-passenger-email", json=passenger_data)

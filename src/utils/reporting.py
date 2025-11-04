@@ -596,11 +596,13 @@ class GeoReporter:
             "test_basic_homepage_elements_exist": "Checking page structure and elements",
             "test_homepage_navigation_works": "Testing page navigation links",
             "test_homepage_health_check": "Overall page health and validation",
+            
             # Login Tests
             "test_login_page_accessibility": "Login page structure check",
             "test_successful_login_and_redirect": "User authentication flow",
             "test_failed_login_with_error_message": "Invalid login handling",
             "test_logout_functionality": "User session termination",
+            
             # Flight Booking Tests
             "test_flight_search_form_visible": "Flight search form visibility",
             "test_basic_flight_search": "Performing a basic flight search",
@@ -610,10 +612,12 @@ class GeoReporter:
             "test_payment_page_accessible": "Accessing payment options",
             "test_flights_navigation_works": "Testing browser navigation during flight booking",
             "test_error_handling": "Error scenarios during flight booking",
+            
             # Package Booking Tests
             "test_complete_package_booking_flow": "End-to-end package booking process",
             "test_package_search_functionality": "Searching for travel packages",
             "test_booking_form_validation": "Validating package booking form",
+            
             
             
             #============================ API Tests ============================#
@@ -626,7 +630,43 @@ class GeoReporter:
 
             # Flight API Tests  
             "test_flight_search_request": "Creating flight search requests via API",
+            "test_flight_search_flow": "End-to-end flight search process via API",
+            "test_flight_quote_flow": "Flight quoting process via API",
+            "test_passenger_email_validation": "Validating passenger email via API",
+            "test_different_cabins": "Testing different cabin classes via API",
+            "test_return_flight_search": "Testing return flight search via API",
+            "test_multi_city_flight_search": "Testing multi-city flight searches via API",
+            "test_passenger_combinations": "Testing different passenger combinations via API",
+            "test_initiate_booking_flow": "Testing flight booking initiation via API",
+            "test_error_scenarios": "Testing error handling in flight booking via API",
             "test_get_booked_flights": "Fetching user's booked flights via API",
+
+            # Miscellaneous API Tests
+            "test_get_google_reviews": "Fetching Google reviews via API",
+            "test_get_commercial_deals": "Fetching commercial deals via API",
+            "test_get_single_commercial_deal": "Fetching a single commercial deal via API",
+            "test_get_all_events": "Fetching all events via API",
+            "test_search_hotels": "Searching hotels via API",
+            "test_get_hotel_cities": "Fetching hotel cities via API",
+            "test_get_airports": "Fetching airports via API",
+            "test_get_airlines": "Fetching airlines via API",
+            "test_get_all_blogs": "Fetching all blogs via API",
+            "test_get_single_blog": "Fetching a single blog via API",
+            "test_get_blog_comments": "Fetching blog comments via API",
+            "test_refresh_token": "Refreshing authentication token via API",
+            "test_get_user_profile": "Fetching user profile via API",
+            "test_get_user_transactions": "Fetching user transactions via API",
+            "test_get_notifications": "Fetching user notifications via API",
+            "test_subscribe_newsletter": "Subscribing user to newsletter via API",
+            "test_apply_voucher": "Applying voucher code via API",
+
+            # Packages API Tests
+            "test_get_all_packages": "Fetching all packages via API",
+            "test_get_package_countries": "Fetching package countries via API",
+            "test_get_single_package": "Fetching a single package via API",
+            "test_search_packages": "Searching packages via API",
+            "test_get_all_deals": "Fetching all deals via API",
+            "test_get_single_deal": "Fetching a single deal via API"
         }
 
         return context_map.get(method_name, "Functional test")
