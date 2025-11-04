@@ -681,42 +681,79 @@ class GeoReporter:
         
         # API Test Categories
         if "api" in test_lower:
-            if "assertionerror" in error_lower or "expected" in error_lower:
-                return "Functional"
+            if "timeout" in error_lower or "read timed out" in error_lower:
+                return "API Timeout"
+            elif "connection" in error_lower or "refused" in error_lower:
+                return "API Connection"
+            elif "401" in error_lower or "unauthorized" in error_lower:
+                return "Authentication"
+            elif "403" in error_lower or "forbidden" in error_lower:
+                return "Authorization"
+            elif "404" in error_lower or "not found" in error_lower:
+                return "Resource Not Found"
+            elif "400" in error_lower or "bad request" in error_lower:
+                return "Request Validation"
+            elif "500" in error_lower or "internal server" in error_lower:
+                return "Server Error"
+            elif "keyerror" in error_lower or "indexerror" in error_lower:
+                return "Response Parsing"
+            elif "assertionerror" in error_lower or "expected" in error_lower:
+                return "Functional Assertion"
             elif "dependency" in error_lower or "login failed" in error_lower:
                 return "Dependency Failure"
-            elif "timeout" in error_lower:
-                return "API Timeout"
+            elif "typeerror" in error_lower or "attributeerror" in error_lower:
+                return "Code Logic"
             else:
                 return "API Error"
         
         # UI Test Categories  
         elif "elementclickintercepted" in error_lower:
-            return "Wait Condition Issue"
+            return "UI Interaction"
         elif "timeout" in error_lower:
             if "loader" in error_lower or "page load" in error_lower:
-                return "Slow Page Load / Loader Interference"
-            return "Timeout Exception"
+                return "Page Load Performance"
+            return "UI Timeout"
         elif "nosuchelement" in error_lower:
-            return "Element Not Found"
+            return "Element Visibility"
         elif "staleelement" in error_lower:
-            return "Stale Element Reference"
+            return "DOM State"
+        elif "javascript" in error_lower:
+            return "JavaScript Execution"
+        elif "screenshot" in error_lower:
+            return "Visual Validation"
         else:
             return "Functional"
-
+    
     def _get_fix_suggestion(self, category, test_name):
         """Provide fix suggestions based on failure category"""
         suggestions = {
-            "Wait Condition Issue": "Add EC.element_to_be_clickable() with explicit wait",
-            "Slow Page Load / Loader Interference": "Increase timeout or add loader wait condition",
-            "Element Not Found": "Check element locator or add explicit wait",
-            "Stale Element Reference": "Re-locate element before interaction",
-            "API Timeout": "Increase API timeout or check endpoint responsiveness",
+            # API Categories
+            "API Timeout": "Increase API timeout settings or check endpoint responsiveness",
+            "API Connection": "Verify network connectivity and API server status",
+            "Authentication": "Check auth token validity and refresh mechanism",
+            "Authorization": "Verify user permissions and role-based access",
+            "Resource Not Found": "Validate resource IDs and endpoint URLs",
+            "Request Validation": "Check request parameters and data format",
+            "Server Error": "Monitor server logs and check backend services",
+            "Response Parsing": "Add response structure validation and error handling",
             "Dependency Failure": "Check prerequisite test steps or data setup",
-            "Timeout Exception": "Increase wait time or optimize page load",
-            "API Error": "Check API endpoint and request parameters"
+            "Code Logic": "Review test code for type mismatches or method calls",
+            "API Error": "Check API documentation and endpoint specifications",
+            
+            # UI Categories
+            "UI Interaction": "Add explicit wait conditions for element clickability",
+            "Page Load Performance": "Increase timeout or add loader wait conditions",
+            "UI Timeout": "Optimize wait strategies and element locators",
+            "Element Visibility": "Verify element selectors and page state",
+            "DOM State": "Re-locate elements after DOM updates",
+            "JavaScript Execution": "Check browser compatibility and script loading",
+            "Visual Validation": "Update screenshot references or adjust thresholds",
+            
+            # General
+            "Functional Assertion": "Review test expectations and actual results",
+            "Unknown": "Investigate logs and reproduce manually"
         }
-        return suggestions.get(category, "")
+        return suggestions.get(category, "Review test implementation and error logs")
 
     def _clean_error_message(self, error_message):
         """Clean and format error message for Slack"""
