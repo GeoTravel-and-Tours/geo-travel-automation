@@ -127,7 +127,7 @@ class ScreenshotUtils:
             test_name, error_message, None, browser_info
         )
 
-    def capture_screenshot(self, filename=None, subfolder=None, browser_info=None, full_page=True):
+    def capture_screenshot(self, filename=None, subfolder=None, browser_info=None, full_page=False):
         """
         Capture screenshot (supports full-page by default)
         """
@@ -175,6 +175,16 @@ class ScreenshotUtils:
         Returns paths to both files
         """
         try:
+            # Check if driver is available and valid
+            if not hasattr(self, 'driver') or not self.driver:
+                self.logger.warning("No driver available for screenshot capture")
+                return {"screenshot": None, "html": None}
+
+            # Check if driver has current_url method (is a WebDriver instance)
+            if not hasattr(self.driver, 'current_url'):
+                self.logger.warning("Driver object is not a valid WebDriver instance")
+                return {"screenshot": None, "html": None}
+            
             timestamp = self._generate_timestamp()
             clean_test_name = self._clean_filename(test_name)
 

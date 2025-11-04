@@ -102,7 +102,7 @@ class ReportUtils:
 
 # ====== GEO REPORTER ======
 class GeoReporter:
-    def __init__(self, test_suite_name="Smoke Tests"):
+    def __init__(self, test_suite_name="SMOKE TESTS"):
         self.test_suite_name = test_suite_name
         self.test_results = []
         self.suite_start_time = None
@@ -123,17 +123,32 @@ class GeoReporter:
         self.branch = os.getenv("BRANCH") or os.getenv("GIT_BRANCH") or "MAIN"
         self.build_id = os.getenv("BUILD_ID") or f"#{datetime.now().strftime('%Y.%m.%d.%H%M')}"
         self.browser = os.getenv("BROWSER", "CHROME").upper()
-        self.test_type = self._determine_test_type()
+        self.test_type, self.test_scope = self._determine_test_type()
             
     def _determine_test_type(self):
         """Determine if this is API, UI, or mixed test suite"""
         suite_lower = self.test_suite_name.lower()
+
         if "api" in suite_lower:
-            return "API"
+            return "API", "BACKEND"
         elif any(ui_type in suite_lower for ui_type in ["smoke", "regression", "sanity", "ui"]):
-            return "UI"
+        # elif any(ui_type in suite_lower for ui_type in ["smoke", "regression", "sanity", "ui", "flight", "package", "login", "homepage"]):
+            return "UI", "FRONTEND"
         else:
-            return "MIXED"
+            return "MIXED", "FRONTEND & BACKEND"
+    
+    def _determine_scope_from_suite_names(self, suite_names):
+        """Determine scope from suite names"""
+        has_frontend = any(suite in ["smoke", "regression", "sanity"] for suite in suite_names)
+        has_backend = "api" in suite_names
+
+        if has_frontend and has_backend:
+            return "FRONTEND & BACKEND"
+        elif has_frontend:
+            return "FRONTEND"
+        elif has_backend:
+            return "BACKEND"
+        return "UNKNOWN"
 
     def start_test_suite(self):
         """Start tracking test suite"""
@@ -145,15 +160,19 @@ class GeoReporter:
         """Start unified test run for multiple suites"""
         self.overall_start_time = datetime.now()
         self.suite_results = {}
-        self.test_suite_name = f"Unified {self._format_suite_names(suite_names)} Test Report"
-        self.test_type = "MIXED" if len(suite_names) > 1 else self._determine_test_type()
+        self.test_suite_name = f"Unified {self._format_suite_names(suite_names)} TEST REPORT"
+
+        self.test_scope = self._determine_scope_from_suite_names(suite_names)
+        self.test_type = "MIXED" if self.test_scope == "FRONTEND & BACKEND" else self.test_scope
 
         self.logger.info(f"Starting unified test run for: {', '.join(suite_names)}")
 
-        # Send start notification (keeping the original rocket message)
+        # Send start notification with scope info
+        scope_icon = self._get_scope_icon(self.test_scope)
         slack_notifier.send_webhook_message(
             f"🚀 Hey Team, GEO-Bot here! 🤖\n"
-            f"✨ *[{self.env}] {self.test_suite_name}* suite has officially *launched*!\n"
+            f"✨ *[{self.env}] {self.test_suite_name}* Suite has Officially *Launched*!\n"
+            f"{scope_icon} *Scope:* {self.test_scope}\n"
             f"🕒 *Start Time:* {self.overall_start_time.strftime('%Y-%m-%d %H:%M:%S')}\n"
             f"Let's squash some bugs! 🐛🔨"
         )
@@ -274,6 +293,32 @@ class GeoReporter:
         }
 
         return unified_report
+    def _determine_unified_scope(self):
+        """Determine the scope for unified reports based on included suites"""
+        if not self.suite_results:
+            return "UNKNOWN"
+
+        has_frontend = any(suite in ["smoke", "regression", "sanity"] for suite in self.suite_results.keys())
+        has_backend = "api" in self.suite_results.keys()
+
+        if has_frontend and has_backend:
+            return "FRONTEND & BACKEND"
+        elif has_frontend:
+            return "FRONTEND"
+        elif has_backend:
+            return "BACKEND"
+        else:
+            return "UNKNOWN"
+
+    def _get_scope_icon(self, scope):
+        """Get appropriate icon for the scope"""
+        icon_map = {
+            "FRONTEND": "💻",
+            "BACKEND": "🔧", 
+            "FRONTEND & BACKEND": "🔗",
+            "UNKNOWN": "❓"
+        }
+        return icon_map.get(scope, "❓")
 
     def send_unified_slack_report(self):
         """Send enhanced unified report to Slack with new formatting"""
@@ -287,7 +332,7 @@ class GeoReporter:
         minutes = int(total_seconds // 60)
         seconds = int(total_seconds % 60)
         duration_formatted = f"{total_seconds:.1f}s ({minutes}m {seconds}s)" if minutes > 0 else f"{total_seconds:.1f}s"
-        
+
         # Determine overall status
         if unified_report["failed_tests"] == 0:
             status_emoji = "✅✅✅"
@@ -296,30 +341,48 @@ class GeoReporter:
             status_emoji = "❌❌❌" 
             status_message = "⚠️ Uh-oh, GEO-Bot spotted some issues! Please check the details below 🐞🔧"
 
-        # Build the enhanced message
+        unified_scope = self._determine_unified_scope()
+        scope_icon = self._get_scope_icon(unified_scope)
+
         message_lines = [
-            f"🧪 {unified_report['test_suite_name']}",
-            f"🕓 Executed: {unified_report['end_time']}",
-            f"🧑‍💻 Environment: {self.env}",
-            f"🧩 Branch: {self.branch}",
-            f"🌐 Browser: {self.browser}",
-            f"🧰 Build ID: {self.build_id}",
+            "",
+            f"*🧪 {unified_report['test_suite_name']}*",
+            f"Executed: {unified_report['end_time']}",
+            f"Environment: {self.env}",
+            f"Branch: {self.branch}",
+        ]
+
+        # Add browser info only for FRONTEND tests
+        if unified_scope in ["FRONTEND", "FRONTEND & BACKEND"]:
+            message_lines.append(f"Browser: {self.browser}")
+
+        # Add scope line
+        message_lines.append(f"Scope: {unified_scope}")
+        
+        # Alternatively, include icon
+        # message_lines.append(f"{scope_icon} Scope: {unified_scope}")
+        message_lines.append(f"Build ID: {self.build_id}")
+
+        message_lines.extend([
+            "",
             "------------------------------------------------------",
             f"{status_emoji} {status_message}",
             "------------------------------------------------------",
-            "📊 Summary",
             "",
+            "*📊 Summary*\n",
             f"• Total Tests: {unified_report['total_tests']}",
             f"• ✅ Passed: {unified_report['passed_tests']}",
             f"• ⚠️ Skipped: {unified_report['skipped_tests']}",
             f"• ❌ Failed: {unified_report['failed_tests']}",
             f"• 🧮 Success Rate: {unified_report['success_rate']:.1f}%",
             f"• 🕒 Duration: {duration_formatted}",
+            "",
             "------------------------------------------------------",
+            "",
             "🧠 Suite Breakdown",
             ""
-        ]
-
+        ])
+        
         # Add suite breakdown
         for suite_name, suite_data in self.suite_results.items():
             report = suite_data["report"]
@@ -351,8 +414,8 @@ class GeoReporter:
                 
                 message_lines.append(f"{i}️⃣ [{suite_display}] {readable_test_name}")
                 message_lines.append(f"‣ Error: {error}")
-                message_lines.append(f"‣ Type: {category}")
                 message_lines.append(f"‣ Context: {context}")
+                message_lines.append(f"‣ Issue Type: {category}")
                 
                 # Add fix suggestion for specific categories
                 fix_suggestion = self._get_fix_suggestion(category, test_name)
@@ -396,7 +459,7 @@ class GeoReporter:
         minutes = int(total_seconds // 60)
         seconds = int(total_seconds % 60)
         duration_formatted = f"{total_seconds:.1f}s ({minutes}m {seconds}s)" if minutes > 0 else f"{total_seconds:.1f}s"
-        
+
         # Determine overall status
         if report["failed_tests"] == 0:
             status_emoji = "✅✅✅"
@@ -405,34 +468,45 @@ class GeoReporter:
             status_emoji = "❌❌❌" 
             status_message = "⚠️ Uh-oh, GEO-Bot spotted some issues! Please check the details below 🐞🔧"
 
-        # Determine header based on test type
-        if self.test_type == "API":
-            header = f"🧪 API Test Report"
-        elif self.test_type == "UI":
-            header = f"🧪 UI {self.test_suite_name} Report"
-        else:
-            header = f"🧪 {self.test_suite_name} Report"
-        
+        # Determine scope icon
+        scope_icon = self._get_scope_icon(self.test_scope)
+
+        # Build message lines
         message_lines = [
-            header,
-            f"🕓 Executed: {report['end_time']}",
-            f"🧑‍💻 Environment: {self.env}",
-            f"🧩 Branch: {self.branch}",
-            f"🌐 Browser: {self.browser}",
-            f"🧰 Build ID: {self.build_id}",
+            "",
+            f"*🧪 {self.test_suite_name} REPORT*",
+            f"Executed: {report['end_time']}",
+            f"Environment: {self.env}",
+            f"Branch: {self.branch}",
+        ]
+        
+        if self.test_scope in ["FRONTEND", "FRONTEND & BACKEND"]:
+            message_lines.append(f"Browser: {self.browser}")
+
+        # Add scope line
+        message_lines.append(f"Scope: {self.test_scope}")
+
+        # Alternatively, include icon
+        # message_lines.append(f"{scope_icon} Scope: {unified_scope}")
+        message_lines.append(f"Build ID: {self.build_id}")
+
+        message_lines.extend([
+            "",
             "------------------------------------------------------",
             f"{status_emoji} {status_message}",
             "------------------------------------------------------",
-            "📊 Summary",
             "",
+            "*📊 Summary*\n",
             f"• Total Tests: {report['total_tests']}",
             f"• ✅ Passed: {report['passed_tests']}",
             f"• ⚠️ Skipped: {report['skipped_tests']}",
             f"• ❌ Failed: {report['failed_tests']}",
             f"• 🧮 Success Rate: {report['success_rate']:.1f}%",
             f"• 🕒 Duration: {duration_formatted}",
+            "",
             "------------------------------------------------------"
-        ]
+            "",
+        ])
 
         # Add failed tests section
         if report["failed_tests"] > 0:
@@ -598,7 +672,9 @@ class GeoReporter:
             "Element Not Found": "Check element locator or add explicit wait",
             "Stale Element Reference": "Re-locate element before interaction",
             "API Timeout": "Increase API timeout or check endpoint responsiveness",
-            "Dependency Failure": "Check prerequisite test steps or data setup"
+            "Dependency Failure": "Check prerequisite test steps or data setup",
+            "Timeout Exception": "Increase wait time or optimize page load",
+            "API Error": "Check API endpoint and request parameters"
         }
         return suggestions.get(category, "")
 
@@ -652,25 +728,39 @@ class GeoReporter:
         """Save individual test report to a file"""
         os.makedirs("reports", exist_ok=True)
         filename = f"reports/{self.test_suite_name.lower().replace(' ', '_')}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+        
+        def json_serializer(obj):
+            if isinstance(obj, datetime):
+                return obj.strftime("%Y-%m-%d %H:%M:%S")
+            raise TypeError(f"Object of type {obj.__class__.__name__} is not JSON serializable")
+        
         with open(filename, "w") as f:
-            json.dump(report, f, indent=4)
+            json.dump(report, f, indent=4, default=json_serializer)
         self._cleanup_old_reports()
 
     def _save_unified_report(self, unified_report):
         """Save unified report to file"""
         os.makedirs("reports", exist_ok=True)
         filename = f"reports/unified_test_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+        
+        def json_serializer(obj):
+            if isinstance(obj, datetime):
+                return obj.strftime("%Y-%m-%d %H:%M:%S")
+            raise TypeError(f"Object of type {obj.__class__.__name__} is not JSON serializable")
+        
         with open(filename, "w") as f:
-            json.dump(unified_report, f, indent=4)
+            json.dump(unified_report, f, indent=4, default=json_serializer)
         self._cleanup_old_reports()
 
 
 # ====== GLOBAL INSTANCES ======
 # Individual suite reporters
-smoke_reporting = GeoReporter("Smoke Tests")
-regression_reporting = GeoReporter("Regression Tests") 
-sanity_reporting = GeoReporter("Sanity Tests")
-api_reporting = GeoReporter("API Tests")
+smoke_reporting = GeoReporter("UI SMOKE TEST")
+regression_reporting = GeoReporter("UI REGRESSION TEST")
+sanity_reporting = GeoReporter("UI SANITY TEST")
+api_smoke_reporting = GeoReporter("API SMOKE TEST")
+api_regression_reporting = GeoReporter("API REGRESSION TEST")
+api_sanity_reporting = GeoReporter("API SANITY TEST")
 
 # Unified reporter instance
 unified_reporter = smoke_reporting
@@ -681,6 +771,8 @@ def get_suite_reporter(suite_name):
         "smoke": smoke_reporting,
         "regression": regression_reporting, 
         "sanity": sanity_reporting,
-        "api": api_reporting
+        "api": api_smoke_reporting,
+        "api_regression": api_regression_reporting,
+        "api_sanity": api_sanity_reporting
     }
     return reporters.get(suite_name, smoke_reporting)

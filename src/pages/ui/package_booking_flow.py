@@ -2,19 +2,20 @@
 
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from src.core.base_page import BasePage
 import time
 
 class PackageBookingFlow(BasePage):
     """
-    
+    Page Object Model for Package Booking Flow
+    Handles the complete package booking process from search to payment
     """
     
-    # Locators
+    # ===== LOCATORS =====
+    # Navigation & Search
     PACKAGE_BUTTON = (By.XPATH, "//button[normalize-space()='Package']")
-    
-    # Locators
     TRIP_TYPE_DROPDOWN = (By.XPATH, "//div[@class='relative']//div[@data-sentry-element='Listbox']")
     GROUP_OPTION = (By.XPATH, "//span[normalize-space()='group']")
     COUNTRY_SELECTOR = (By.XPATH, "//div[contains(@class,'h-full relative')]")
@@ -23,20 +24,40 @@ class PackageBookingFlow(BasePage):
     TRAVEL_DATE_SELECTOR = (By.CSS_SELECTOR, "div[class='w-full flex items-center px-3.5 min-h-12 h-full py-2 rounded-md border border-gray-300 cursor-pointer justify-between']")
     SEARCH_PACKAGES_BUTTON = (By.CSS_SELECTOR, "body > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > form:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > button:nth-child(1)")
 
+    # Package Selection
     VIEW_PACKAGE_BUTTON = (By.CSS_SELECTOR, "body > main:nth-child(2) > div:nth-child(3) > section:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > section:nth-child(1) > div:nth-child(2) > button:nth-child(7)")
-
     PRICE_OPTION = (By.CSS_SELECTOR, "body > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2)")
     BOOK_RESERVATION_BUTTON = (By.CSS_SELECTOR, "body > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > button:nth-child(2)")
 
+    # Booking Form
     FULL_NAME_INPUT = (By.NAME, "fullName")
     EMAIL_INPUT = (By.NAME, "email")
     PHONE_INPUT = (By.CSS_SELECTOR, "input[placeholder='Phone number']")
     PROCEED_TO_PAYMENT_BUTTON = (By.CSS_SELECTOR, "body > div:nth-child(29) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > footer:nth-child(4) > div:nth-child(1) > button:nth-child(1)")
-
     
+    # Modal Locators
+    MODAL_BACKGROUND = (By.CSS_SELECTOR, "div.fixed.inset-0.bg-black\\/60")
+    MODAL_FULL_NAME_INPUT = (By.XPATH, "//input[@placeholder='Enter your full name']")
+    MODAL_EMAIL_INPUT = (By.XPATH, "//input[@placeholder='Enter your email address']")
+    MODAL_TRAVEL_DATE_INPUT = (By.CSS_SELECTOR, "input[placeholder='Select a date ']")
+    MODAL_PHONE_INPUT = (By.XPATH, "//input[@placeholder='Phone number']")
+    MODAL_PROCEED_BUTTON = (By.XPATH, "//button[normalize-space()='Proceed to checkout']")
+    
+    # Booking Confirmation Modal
+    CLOSE_MODAL_BUTTON = (By.XPATH, "//button[@aria-label='Close modal']")
+    TERMS_CHECKBOX = (By.XPATH, "//input[@aria-label='Terms and policy']")
+    PROCEED_TO_PAYMENT_BUTTON = (By.XPATH, "//button[normalize-space()='Proceed to payment']")
+
     def __init__(self, driver):
+        """Initialize PackageBookingFlow with driver"""
         super().__init__(driver)
 
+    # ===== SEARCH & NAVIGATION METHODS =====
+    
+    def click_package(self):
+        """Click on Package button in navigation"""
+        self.logger.info("Clicking Package button")
+        return self.element.click(self.PACKAGE_BUTTON)
 
     def select_trip_type(self):
         """Select trip type as group"""
@@ -46,21 +67,20 @@ class PackageBookingFlow(BasePage):
         self.logger.info("Trip type selected: group")
         return self
 
-    def select_country(self, country_code):
+    def select_country(self, country_name):
         """Select country from dropdown"""
-        self.logger.info(f"Selecting country: {country_code}")
+        self.logger.info(f"Selecting country: {country_name}")
         self.element.click(self.COUNTRY_SELECTOR)
         self.element.click(self.COUNTRY_INPUT)
 
-        # Enter country code and select from results
-        self.element.type(self.COUNTRY_INPUT, country_code)
+        # Enter country name and select from results
+        self.element.type(self.COUNTRY_INPUT, country_name)
         self.element.click(self.COUNTRY_SEARCH_RESULT)
-        self.logger.info(f"Country selected: {country_code}")
+        self.logger.info(f"Country selected: {country_name}")
         return self
 
     def select_travel_date(self):
         """Open travel date selector and pick a date"""
-        # Open the calendar
         self.logger.info("Opening travel date selector")
         self.element.click(self.TRAVEL_DATE_SELECTOR)
         time.sleep(2)  # Wait for calendar to open
@@ -79,7 +99,12 @@ class PackageBookingFlow(BasePage):
 
         time.sleep(2)  # Wait for date selection to process
         return self
-    
+
+    def search_packages(self):
+        """Click search packages button"""
+        self.logger.info("Clicking Search Packages button")
+        return self.element.click(self.SEARCH_PACKAGES_BUTTON)
+
     def is_search_session_initialized(self, search_term="packages", timeout=30):
         """Check if search session is properly initialized with configurable search term"""
         try:
@@ -91,27 +116,19 @@ class PackageBookingFlow(BasePage):
             )
 
             current_url = self.driver.current_url
-            self.logger.info(f"✅ Found '{search_term}' in URL: {current_url}")
+            self.logger.info(f"Search session initialized successfully - Found '{search_term}' in URL: {current_url}")
             return True
 
         except TimeoutException:
             current_url = self.driver.current_url
             self.logger.warning(f"'{search_term}' not found in URL after {timeout}s")
-            self.logger.info(f"   Current URL: {current_url}")
+            self.logger.info(f"Current URL: {current_url}")
             return False
         except Exception as e:
             self.logger.error(f"Error checking search session: {e}")
             return False
 
-    def search_packages(self):
-        """Click search packages button"""
-        self.logger.info("Clicking Search Packages button")
-        return self.element.click(self.SEARCH_PACKAGES_BUTTON)
-
-    def click_package(self):
-        """Click on Package button"""
-        self.logger.info("Clicking Package button")
-        return self.element.click(self.PACKAGE_BUTTON)
+    # ===== PACKAGE SELECTION METHODS =====
 
     def click_view_package(self):
         """Click on View Package button"""
@@ -127,58 +144,280 @@ class PackageBookingFlow(BasePage):
     def select_price_option(self):
         """Select price option"""
         self.logger.info("Selecting price option")
-        self.javascript.execute_script("arguments[0].scrollIntoView(true);", self.driver.find_element(*self.BOOK_RESERVATION_BUTTON))
+        self.javascript.execute_script("arguments[0].scrollIntoView(true);", 
+                                     self.driver.find_element(*self.BOOK_RESERVATION_BUTTON))
         return self.element.click(self.PRICE_OPTION)
 
-    def click_book_reservation(self):
-        """Click Book Reservation button using JavaScript"""
-        self.logger.info("Clicking Book Reservation button")
-        element = self.driver.find_element(*self.BOOK_RESERVATION_BUTTON)
-        self.driver.execute_script("arguments[0].click();", element)
-        element.click()
-        return self
+    # ===== BOOKING FLOW METHODS =====
 
-    def fill_booking_form(self, full_name, email, phone):
-        """Fill out the booking form in modal"""
-        self.logger.info("Filling out booking form in modal")
+    def handle_booking_flow(self):
+        """Complete booking flow including modal handling"""
+        self.logger.info("Starting complete booking flow")
+
+        # Step 1: Click Book Reservation
+        self.click_book_reservation()
+
+        # Step 2: Fill modal form
+        self.fill_booking_modal()
         
-        # Wait for modal to load and target it directly
-        time.sleep(2)
+        # Step 3: Handle second modal (terms and conditions)
+        self.handle_second_modal()
+
+        # Step 4: Verify we're ready for payment (but don't proceed to payment gateway)
+        self.verify_payment_ready()
+        
+    def handle_second_modal(self):
+        """Handle the second modal with terms and conditions"""
+        self.logger.info("Handling second modal with terms and conditions")
         
         try:
-            # Find the modal container
-            modal = self.driver.find_element(By.CSS_SELECTOR, "#headlessui-dialog-panel-«r3j»")
-            self.logger.info("Modal found successfully")
+            # Wait for second modal to appear
+            WebDriverWait(self.driver, 15).until(
+                EC.visibility_of_element_located(self.CLOSE_MODAL_BUTTON)
+            )
+            self.logger.info("Second modal is visible")
+    
+            # Step 1: Click Close modal button (the 'X' button)
+            self.logger.info("Clicking Close modal button")
+            close_button = WebDriverWait(self.driver, 10).until(
+                EC.element_to_be_clickable(self.CLOSE_MODAL_BUTTON)
+            )
+            close_button.click()
+            self.logger.info("Closed modal successfully")
+            time.sleep(2)
+    
+            # Step 2: Wait for the page to stabilize after modal close
+            self.logger.info("Waiting for page to stabilize after modal close")
+            time.sleep(3)  # Increased wait for stability
+    
+            # Step 3: Scroll the Terms checkbox into view and ensure it's clickable
+            self.logger.info("Scrolling Terms checkbox into view")
+            terms_checkbox = WebDriverWait(self.driver, 10).until(
+                EC.presence_of_element_located(self.TERMS_CHECKBOX)
+            )
             
-            # Find form fields within the modal
-            name_field = modal.find_element(By.XPATH, ".//input[contains(@placeholder,'Enter your full name')]")
-            email_field = modal.find_element(By.XPATH, ".//input[@placeholder='Enter your email address']")
-            phone_field = modal.find_element(By.XPATH, ".//input[@placeholder='Phone number']")
-            
-            self.logger.info("All form fields found within modal")
-            
-            # Fill the form
-            name_field.clear()
-            name_field.send_keys(full_name)
-            self.logger.info("Full name filled")
-            
-            email_field.clear()
-            email_field.send_keys(email)
-            self.logger.info("Email filled")
+            # Scroll to the checkbox using JavaScript
+            self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", terms_checkbox)
+            self.logger.info("Scrolled Terms checkbox to center of view")
+            time.sleep(2)
+    
+            # Step 4: Use JavaScript to click the checkbox (bypasses overlay issues)
+            self.logger.info("Clicking Terms and Conditions checkbox using JavaScript")
+            self.driver.execute_script("arguments[0].click();", terms_checkbox)
+            self.logger.info("Terms and Conditions checkbox selected via JavaScript")
+            time.sleep(2)
+    
+            # Step 5: Verify the checkbox is actually checked
+            is_checked = self.driver.execute_script("return arguments[0].checked;", terms_checkbox)
+            if is_checked:
+                self.logger.info("✅ Terms and Conditions checkbox is successfully checked")
+            else:
+                self.logger.warning("Terms checkbox might not be checked, trying alternative approach")
+                # Try clicking again with explicit wait
+                terms_checkbox = WebDriverWait(self.driver, 5).until(
+                    EC.element_to_be_clickable(self.TERMS_CHECKBOX)
+                )
+                terms_checkbox.click()
+                self.logger.info("Terms checkbox clicked via regular method")
+    
+        except Exception as e:
+            self.logger.error(f"Error handling second modal: {str(e)}")
+            # Take screenshot for debugging
+            self.driver.save_screenshot("second_modal_error.png")
+            raise
+        
+    def verify_payment_ready(self):
+        """Verify that the booking flow is complete and ready for payment"""
+        self.logger.info("Verifying booking flow is complete and ready for payment")
 
-            phone_field.clear()
-            phone_field.send_keys(phone)
-            self.logger.info("Phone filled")
+        try:
+            # Check that Proceed to Payment button is present and enabled
+            proceed_payment_button = WebDriverWait(self.driver, 10).until(
+                EC.presence_of_element_located(self.PROCEED_TO_PAYMENT_BUTTON)
+            )
+
+            if proceed_payment_button.is_enabled():
+                self.logger.success("✅ Booking flow completed successfully - Ready for payment")
+                self.logger.info("Stopping automation before payment gateway to avoid external service interaction")
+                return True
+            else:
+                self.logger.warning("Proceed to Payment button is not enabled")
+                return False
 
         except Exception as e:
-            self.logger.error(f"Failed to fill form in modal: {e}")
-            # Fallback: try without modal context
-            try:
-                self.logger.info("Trying fallback without modal context...")
-                name_field = self.driver.find_element(By.XPATH, "//input[contains(@placeholder,'Enter your full name')]")
-                name_field.send_keys(full_name)
-                self.logger.info("Full name filled (fallback)")
-            except:
-                self.logger.error("Fallback also failed")
+            self.logger.error(f"Error verifying payment readiness: {str(e)}")
+            return False
 
-        return self
+    def click_book_reservation(self):
+        """Clicks the Book Reservation button"""
+        self.logger.info("Clicking Book Reservation button")
+
+        try:
+            book_reservation_button = WebDriverWait(self.driver, 15).until(
+                EC.element_to_be_clickable(self.BOOK_RESERVATION_BUTTON)
+            )
+
+            # Scroll into view and click using JavaScript
+            self.javascript.execute_script("arguments[0].scrollIntoView(true);", book_reservation_button)
+            self.javascript.execute_script("arguments[0].click();", book_reservation_button)
+            
+            self.logger.info("Book Reservation button clicked successfully")
+
+        except Exception as e:
+            self.logger.error(f"Failed to click Book Reservation: {str(e)}")
+            raise
+
+    def fill_booking_modal(self):
+        """Fills out the booking modal form with test data"""
+        self.logger.info("Filling booking modal form")
+
+        # Wait for modal to be fully loaded
+        WebDriverWait(self.driver, 15).until(
+            EC.visibility_of_element_located(self.MODAL_BACKGROUND)
+        )
+
+        # Wait for form content to be loaded
+        WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located(self.MODAL_FULL_NAME_INPUT)
+        )
+
+        self.logger.info("Booking modal is visible, filling form...")
+
+        # Test data
+        test_data = {
+            "full_name": "GEO Bot",
+            "email": "geobot@yopmail.com", 
+            "phone": "1234567890",
+            "travel_date": "05/11/2025"
+        }
+
+        try:
+            # Full Name
+            full_name_field = self.driver.find_element(*self.MODAL_FULL_NAME_INPUT)
+            full_name_field.clear()
+            full_name_field.send_keys(test_data["full_name"])
+            self.logger.info(f"Filled full name: {test_data['full_name']}")
+
+            # Email Address
+            email_field = self.driver.find_element(*self.MODAL_EMAIL_INPUT)
+            email_field.clear()
+            email_field.send_keys(test_data["email"])
+            self.logger.info(f"Filled email: {test_data['email']}")
+            
+            # Travel Date - Use calendar selection instead of direct input
+            self.logger.info("Selecting travel date from calendar")
+            travel_date_field = self.driver.find_element(*self.MODAL_TRAVEL_DATE_INPUT)
+            travel_date_field.click()
+            self.logger.info("Clicked travel date field - waiting for calendar to open")
+            time.sleep(2)
+
+            # Select a date from the calendar popup
+            self.select_date_from_calendar(test_data["travel_date"])
+
+            # Phone Number
+            phone_field = self.driver.find_element(*self.MODAL_PHONE_INPUT)
+            phone_field.clear()
+            phone_field.send_keys(test_data["phone"])
+            self.logger.info(f"Filled phone: {test_data['phone']}")
+
+            # Small delay to ensure all fields are properly filled
+            time.sleep(2)
+            
+            # Wait for Proceed button to become enabled
+            self.wait_for_proceed_button_enabled()
+
+            # Click Proceed to Checkout
+            proceed_button = WebDriverWait(self.driver, 10).until(
+                EC.element_to_be_clickable(self.MODAL_PROCEED_BUTTON)
+            )
+            proceed_button.click()
+            self.logger.info("Clicked 'Proceed to checkout'")
+
+        except Exception as e:
+            self.logger.error(f"Error filling booking modal: {str(e)}")
+            # Take screenshot for debugging
+            self.driver.save_screenshot("booking_modal_error.png")
+            raise
+        
+    def select_date_from_calendar(self, date_string):
+        """
+        Select date from calendar popup
+        Date format: "05/11/2025" (day/month/year)
+        """
+        self.logger.info(f"Selecting date from calendar: {date_string}")
+
+        try:
+            # Parse the date
+            day, month, year = date_string.split('/')
+
+            # Wait for calendar to be visible
+            calendar_popup = WebDriverWait(self.driver, 10).until(
+                EC.visibility_of_element_located((By.CSS_SELECTOR, "[role='dialog']"))
+            )
+            self.logger.info("Calendar popup is visible")
+
+            # Try to find and click the specific date
+            # Look for the day number in the calendar
+            date_cell_xpath = f"//button[text()='{int(day)}' and not(@disabled)]"
+
+            date_cell = WebDriverWait(self.driver, 10).until(
+                EC.element_to_be_clickable((By.XPATH, date_cell_xpath))
+            )
+
+            date_cell.click()
+            self.logger.info(f"Selected date: {date_string}")
+            time.sleep(2)
+
+        except TimeoutException:
+            self.logger.warning("Could not find specific date cell, trying alternative approach")
+
+            # Alternative: Click today's date or any available date
+            available_dates = self.driver.find_elements(
+                By.CSS_SELECTOR, "button:not([disabled])"
+            )
+
+            for date_element in available_dates:
+                if date_element.text.isdigit() and 1 <= int(date_element.text) <= 31:
+                    date_element.click()
+                    self.logger.info(f"Selected available date: {date_element.text}")
+                    time.sleep(2)
+                    break
+
+    def wait_for_proceed_button_enabled(self, timeout=10):
+        """Waits for the Proceed to checkout button to become enabled"""
+        self.logger.info("Waiting for Proceed button to become enabled...")
+        
+        start_time = time.time()
+        while time.time() - start_time < timeout:
+            try:
+                proceed_button = self.driver.find_element(*self.MODAL_PROCEED_BUTTON)
+                
+                # Check if button is enabled (not disabled)
+                if proceed_button.is_enabled():
+                    self.logger.info("Proceed button is now enabled")
+                    return True
+                
+                self.logger.info("Proceed button still disabled, waiting...")
+                time.sleep(1)
+                
+            except Exception as e:
+                self.logger.warning(f"Error checking button state: {e}")
+                time.sleep(1)
+        
+        self.logger.error("Proceed button did not become enabled within timeout")
+        return False
+
+    def wait_for_booking_confirmation(self):
+        """Waits for booking confirmation or next page load"""
+        self.logger.info("Waiting for booking confirmation...")
+
+        try:
+            # Wait for either checkout page or confirmation
+            WebDriverWait(self.driver, 30).until(
+                lambda driver: "checkout" in driver.current_url.lower() or 
+                              "confirmation" in driver.current_url.lower() or
+                              "success" in driver.current_url.lower()
+            )
+            self.logger.info("Successfully navigated to next booking step")
+        except TimeoutException:
+            self.logger.info("Continuing with booking flow...")

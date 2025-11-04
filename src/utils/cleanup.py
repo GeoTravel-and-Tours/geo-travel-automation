@@ -25,6 +25,10 @@ class CleanupManager:
                 "directory": self.base_dir / "logs",
                 "patterns": ["*.log", "*.txt"],
             },
+            "report_logs": {
+                "directory": self.base_dir / "reports" / "logs",
+                "patterns": ["*.log", "*.txt"],
+            },
             "reports": {
                 "directory": self.base_dir / "reports", 
                 "patterns": ["*.json", "*.html", "*.xml"],
@@ -33,7 +37,7 @@ class CleanupManager:
                 "directory": self.base_dir / "reports" / "screenshots",
                 "patterns": ["*.png", "*.jpg", "*.jpeg"],
                 "recursive": True,
-            }
+            },
         }
 
     def _setup_logger(self):

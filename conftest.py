@@ -15,6 +15,7 @@ from src.utils.reporting import get_suite_reporter
 from src.utils.screenshot import ScreenshotUtils
 from configs.environment import EnvironmentConfig
 from src.utils.notifications import slack_notifier
+from configs.environment import EnvironmentConfig
 from src.utils.logger import GeoLogger
 
 from src.pages.api.auth_api import AuthAPI
@@ -150,6 +151,13 @@ def driver():
         pytest.skip(f"Environment unavailable - skipping test")
     
     driver_instance = driver_factory.create_driver()
+    # Set window size to desktop view from environment config
+    if EnvironmentConfig.WINDOW_SIZE:
+        width, height = EnvironmentConfig.WINDOW_SIZE.split('x')
+        driver_instance.set_window_size(int(width), int(height))
+    else:
+        # Fallback to maximize if no specific size configured
+        driver_instance.maximize_window()
     yield driver_instance
     try:
         driver_instance.quit()
@@ -160,7 +168,6 @@ def driver():
 @pytest.fixture
 def browser(driver):
     """Provides browser name for cross-browser tests"""
-    from configs.environment import EnvironmentConfig
     return EnvironmentConfig.BROWSER
 
 

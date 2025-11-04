@@ -1,5 +1,6 @@
 # src/utils/wait_strategy.py
 
+import time
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
@@ -14,6 +15,11 @@ class WaitStrategy:
         self.timeout = timeout
         self.wait = WebDriverWait(driver, timeout)
         self.logger = GeoLogger(name="WaitStrategy")
+        
+    def wait(self, seconds):
+        """Simple time.sleep wrapper for explicit waits"""
+        self.logger.debug(f"Waiting for {seconds} seconds")
+        time.sleep(seconds)
 
     def wait_for_visible(self, locator, timeout=None):
         """Wait for element to be visible with proper locator handling"""

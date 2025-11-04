@@ -16,7 +16,7 @@ from datetime import datetime
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
 # Import your custom reporters
-from src.utils.reporting import smoke_reporting, regression_reporting, sanity_reporting, api_reporting, unified_reporter
+from src.utils.reporting import smoke_reporting, regression_reporting, sanity_reporting, api_smoke_reporting, unified_reporter
 from src.utils.notifications import slack_notifier
 from src.utils.git_utils import setup_git_metadata
 from configs.environment import EnvironmentConfig
@@ -32,7 +32,7 @@ def get_suite_reporter(suite_name):
         "smoke": smoke_reporting,
         "regression": regression_reporting, 
         "sanity": sanity_reporting,
-        "api": api_reporting
+        "api": api_smoke_reporting
     }
     return reporters.get(suite_name, smoke_reporting)
 
@@ -118,7 +118,7 @@ def run_tests(suite_name, pytest_args=None, skip_env_check=False, is_unified_run
     if not is_unified_run:
         slack_notifier.send_webhook_message(
             f"🚀 Hey Team, GEO-Bot here! 🤖\n"
-            f"✨ *[{suite_reporter.env}] {suite_reporter.test_suite_name}* suite has officially *launched*!\n"
+            f"✨ *[{suite_reporter.env}] {suite_reporter.test_suite_name}* Suite has Officially *Launched*!\n"
             f"🕒 *Start Time:* {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
             f"Let's squash some bugs! 🐛🔨"
         )

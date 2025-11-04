@@ -16,6 +16,30 @@ It helps track improvements, fixes, and added features over time.
 
 ---
 
+## [1.4.0] - 2025-11-04
+### Added
+- Centralized failure capture via pytest_runtest_makereport hook that saves screenshots and HTML error captures for failed tests.
+- Attachment of failure artifacts (screenshots, HTML error files, latest log) into the pytest-html report using pytest-html extras.
+- ValidationUtils implemented to provide safe element finding and visibility checks with proper wait handling.
+- Backwards-compatible wrapper in CleanupManager to satisfy older callers (e.g., _cleanup_directory) and robust deletion helpers to handle read-only files and recursive deletion.
+- TestBase improvements: reliable teardown reporting and screenshot-on-failure integration with ScreenshotUtils.
+- API test scaffolding and fixtures for AuthAPI (session-scoped client, auth fixtures).
+- Smoke reporting integration updated to accept screenshot and HTML artifact paths for unified reporting.
+
+### Changed
+- Resolved circular import between logger and cleanup modules by using lazy imports and removing module-level side effects.
+- pytest-html integration updated to attach images/html previews and a downloadable latest log file into the generated HTML report.
+- Reporting flow made defensive to prevent reporting hooks from crashing test runs.
+- Standardized artifact locations under reports/ (screenshots, logs) for easier collection and CI uploads.
+
+### Fixed
+- Fixed TypeError caused by passing unsupported timeout parameter to Selenium's find_element by using explicit wait utilities.
+- Fixed multiple teardown/reporting race conditions that could prevent screenshots or logs from being captured.
+- Fixed cleanup script to support dry-run, treat directories as cleanup targets, and handle permission issues more robustly.
+- Fixed missing skip reason handling so skipped tests include reasons in reports and notifications.
+
+---
+
 ## [1.3.0] - 2025-10-28
 ### Added
 - **Enhanced Slack Reporting** with modern formatting and demarcation lines

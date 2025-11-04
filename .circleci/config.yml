@@ -26,10 +26,10 @@ jobs:
           at: .
       - run:
           name: Run smoke tests
-          command: python scripts/run_scheduled_tests.py --suite smoke
+          command: python scripts/run_scheduled_tests.py --suite api smoke
       - run:
-          name: Cleanup old test artifacts
-          command: python scripts/cleanup.py --days 30
+          name: Cleanup old test artifacts (7 days old)
+          command: python scripts/cleanup.py --days 7
           when: always  # Run cleanup even if tests fail
 
   # Job to run regression tests (commented out for now)
@@ -83,7 +83,7 @@ workflows:
       - install-dependencies
       - run:
           name: Dry run cleanup (see what would be deleted)
-          command: python scripts/cleanup.py --days 30 --dry-run --stats
+          command: python scripts/cleanup.py --days 7 --dry-run --stats
       - run:
           name: Perform cleanup
-          command: python scripts/cleanup.py --days 30
+          command: python scripts/cleanup.py --days 7
