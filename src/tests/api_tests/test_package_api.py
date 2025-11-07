@@ -101,3 +101,97 @@ class TestPackageAPI:
                     response = authenticated_package_api.get_single_deal(item_id)
                     self.logger.info(f"Single Deal: {response.status_code}")
                     assert response.status_code in [200, 404]
+                    
+    @pytest.mark.api
+    def test_book_package(self, authenticated_package_api):
+        self.logger.info("=== Testing Book Package ===")
+    
+        # First get available packages
+        packages_response = authenticated_package_api.get_all_packages(limit=10)
+        assert packages_response.status_code == 200
+    
+        packages_data = packages_response.json()
+    
+        # Extract packages from nested structure
+        if isinstance(packages_data, dict) and 'data' in packages_data:
+            package_data = packages_data['data']
+            if 'packages' in package_data:
+                packages = package_data['packages']
+            else:
+                packages = package_data.get('data', [])
+        else:
+            packages = packages_data if isinstance(packages_data, list) else []
+    
+        if packages and len(packages) > 0:
+            # Find the first ACTIVE package with prices
+            selected_package = None
+            pricing_text = None
+    
+            for package in packages:
+                if (package.get('status') == 'Active' and
+                    package.get('prices') and
+                    len(package['prices']) > 0):
+    
+                    selected_package = package
+                    # Use the first pricing option from the package
+                    pricing_text = package['prices'][0].get('pricing_text', 'Group')
+                    break
+                
+            if not selected_package:
+                # If no active packages, use the first one regardless of status
+                selected_package = packages[0]
+                pricing_text = selected_package['prices'][0].get('pricing_text', 'Group') if selected_package.get('prices') else 'Group'
+    
+            package_id = selected_package.get('id')
+            package_title = selected_package.get('title', 'Unknown Package')
+    
+            self.logger.info(f"Selected package: {package_title} (ID: {package_id})")
+            self.logger.info(f"Using pricing text: {pricing_text}")
+    
+            # CORRECT booking data using the extracted pricing text
+            booking_data = {
+                "package": package_id,
+                "full_name": "GEO Bot",
+                "email": "geobot@yopmail.com",
+                "phone": "1234567890",
+                "pricing_text": pricing_text,  # Dynamic from package data
+                "is_full_payment": True,
+                "departure_date": "2025-12-01",
+                "adults": 1,
+                "children": 0,
+                "infants": 0,
+                "book_at_deal_price": False
+            }
+    
+            response = authenticated_package_api.book_package(booking_data)
+            self.logger.info(f"Book Package: {response.status_code}")
+    
+            if response.status_code == 200:
+                response_data = response.json()
+                self.logger.info(f"✅ Booking successful! Response: {response_data}")
+                
+                # Check for paymentLink in the data object
+                if 'data' in response_data and 'paymentLink' in response_data['data']:
+                    payment_link = response_data['data']['paymentLink']
+                    self.logger.info(f"Payment link: {payment_link}")
+                    
+                    # VERIFY THE PAYMENT LINK
+                    is_valid, message = authenticated_package_api.verify_payment_link(payment_link)
+                    if is_valid:
+                        self.logger.success(f"✅ Payment link verification: {message}")
+                    else:
+                        self.logger.warning(f"⚠️ Payment link issue: {message}")
+                else:
+                    self.logger.info("Booking created but no payment link returned (might be free package)")
+                    
+                assert response_data.get('status') == 'success', "Booking should be successful"
+                assert 'data' in response_data, "Response should contain data object"
+                
+            elif response.status_code == 400:
+                self.logger.warning(f"Validation error: {response.text}")
+            elif response.status_code == 422:
+                self.logger.warning(f"Business logic error: {response.text}")
+    
+            assert response.status_code in [200]
+        else:
+            self.logger.warning("No packages available for testing")
