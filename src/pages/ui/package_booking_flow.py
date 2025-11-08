@@ -5,6 +5,8 @@ from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from src.core.base_page import BasePage
+from src.pages.ui.payment_flow import PaymentPage
+from selenium.webdriver.common.action_chains import ActionChains
 import time
 
 class PackageBookingFlow(BasePage):
@@ -62,22 +64,74 @@ class PackageBookingFlow(BasePage):
     def select_trip_type(self):
         """Select trip type as group"""
         self.logger.info("Selecting trip type as 'group'")
-        self.element.click(self.TRIP_TYPE_DROPDOWN)
-        self.element.click(self.GROUP_OPTION)
-        self.logger.info("Trip type selected: group")
-        return self
+
+        try:
+            # Wait for dropdown to be clickable
+            trip_dropdown = WebDriverWait(self.driver, 10).until(
+                EC.element_to_be_clickable(self.TRIP_TYPE_DROPDOWN)
+            )
+            trip_dropdown.click()
+            self.logger.info("Clicked trip type dropdown")
+            time.sleep(2)
+
+            # Wait for group option and click
+            group_option = WebDriverWait(self.driver, 10).until(
+                EC.element_to_be_clickable(self.GROUP_OPTION)
+            )
+            group_option.click()
+            self.logger.info("Trip type selected: group")
+            time.sleep(2)
+
+            return self
+
+        except Exception as e:
+            self.logger.error(f"Failed to select trip type: {e}")
+            self.screenshot.capture_screenshot_on_failure("trip_type_selection_error.png")
+            raise
 
     def select_country(self, country_name):
         """Select country from dropdown"""
         self.logger.info(f"Selecting country: {country_name}")
-        self.element.click(self.COUNTRY_SELECTOR)
-        self.element.click(self.COUNTRY_INPUT)
 
-        # Enter country name and select from results
-        self.element.type(self.COUNTRY_INPUT, country_name)
-        self.element.click(self.COUNTRY_SEARCH_RESULT)
-        self.logger.info(f"Country selected: {country_name}")
-        return self
+        try:
+            # Step 1: Click country selector
+            country_selector = WebDriverWait(self.driver, 10).until(
+                EC.element_to_be_clickable(self.COUNTRY_SELECTOR)
+            )
+            country_selector.click()
+            self.logger.info("Clicked country selector")
+            time.sleep(2)
+
+            # Step 2: Wait for and click country input
+            country_input = WebDriverWait(self.driver, 10).until(
+                EC.element_to_be_clickable(self.COUNTRY_INPUT)
+            )
+            country_input.click()
+            self.logger.info("Clicked country input")
+            time.sleep(1)
+
+            # Step 3: Type country name
+            country_input.clear()
+            time.sleep(2)
+            country_input.send_keys(country_name)
+            self.logger.info(f"Typed country: {country_name}")
+            time.sleep(2)
+
+            # Step 4: Select from results with better waiting
+            country_result = WebDriverWait(self.driver, 10).until(
+                EC.element_to_be_clickable(self.COUNTRY_SEARCH_RESULT)
+            )
+            country_result.click()
+            self.logger.info(f"Country selected: {country_name}")
+            time.sleep(2)
+
+            return self
+
+        except Exception as e:
+            self.logger.error(f"Failed to select country {country_name}: {e}")
+            # Take screenshot for debugging
+            self.screenshot.capture_screenshot_on_failure(f"country_selection_error_{country_name}.png")
+            raise
 
     def select_travel_date(self):
         """Open travel date selector and pick a date"""
@@ -142,11 +196,51 @@ class PackageBookingFlow(BasePage):
         return self.element.click(self.VIEW_PACKAGE_BUTTON)
 
     def select_price_option(self):
-        """Select price option"""
+        """Select price option with better click handling"""
         self.logger.info("Selecting price option")
-        self.javascript.execute_script("arguments[0].scrollIntoView(true);", 
-                                     self.driver.find_element(*self.BOOK_RESERVATION_BUTTON))
-        return self.element.click(self.PRICE_OPTION)
+
+        try:
+            # Wait for the element to be present and visible
+            price_option = WebDriverWait(self.driver, 15).until(
+                EC.presence_of_element_located(self.PRICE_OPTION)
+            )
+
+            # Scroll to the element with more offset to ensure it's in view
+            self.driver.execute_script("""
+                arguments[0].scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center',
+                    inline: 'center'
+                });
+            """, price_option)
+
+            # Wait a bit for scroll to complete
+            time.sleep(2)
+
+            # Try JavaScript click first (bypasses overlay issues)
+            self.logger.info("Attempting JavaScript click")
+            self.driver.execute_script("arguments[0].click();", price_option)
+
+            # Wait for selection to take effect
+            time.sleep(3)
+
+            self.logger.info("Price option selected successfully")
+            return True
+
+        except Exception as e:
+            self.logger.error(f"Failed to select price option: {e}")
+
+            # Alternative: Try clicking via ActionChains
+            try:
+                self.logger.info("Trying ActionChains click")
+                actions = ActionChains(self.driver)
+                actions.move_to_element(price_option).click().perform()
+                time.sleep(3)
+                self.logger.info("Price option selected via ActionChains")
+                return True
+            except Exception as e2:
+                self.logger.error(f"ActionChains also failed: {e2}")
+                return False
 
     # ===== BOOKING FLOW METHODS =====
 
@@ -238,7 +332,6 @@ class PackageBookingFlow(BasePage):
 
             if proceed_payment_button.is_enabled():
                 self.logger.success("✅ Booking flow completed successfully - Ready for payment")
-                self.logger.info("Stopping automation before payment gateway to avoid external service interaction")
                 return True
             else:
                 self.logger.warning("Proceed to Payment button is not enabled")
@@ -249,7 +342,7 @@ class PackageBookingFlow(BasePage):
             return False
 
     def click_book_reservation(self):
-        """Clicks the Book Reservation button"""
+        """Clicks the Book Reservation button with better scrolling"""
         self.logger.info("Clicking Book Reservation button")
 
         try:
@@ -257,10 +350,21 @@ class PackageBookingFlow(BasePage):
                 EC.element_to_be_clickable(self.BOOK_RESERVATION_BUTTON)
             )
 
-            # Scroll into view and click using JavaScript
-            self.javascript.execute_script("arguments[0].scrollIntoView(true);", book_reservation_button)
-            self.javascript.execute_script("arguments[0].click();", book_reservation_button)
-            
+            # Better scrolling to ensure element is clickable
+            self.driver.execute_script("""
+                arguments[0].scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center',
+                    inline: 'center'
+                });
+                window.scrollBy(0, -100);  // Adjust for any fixed headers
+            """, book_reservation_button)
+
+            time.sleep(2)  # Wait for scroll to complete
+
+            # Try JavaScript click first
+            self.driver.execute_script("arguments[0].click();", book_reservation_button)
+
             self.logger.info("Book Reservation button clicked successfully")
 
         except Exception as e:
@@ -336,7 +440,7 @@ class PackageBookingFlow(BasePage):
         except Exception as e:
             self.logger.error(f"Error filling booking modal: {str(e)}")
             # Take screenshot for debugging
-            self.driver.save_screenshot("booking_modal_error.png")
+            self.screenshot.capture_screenshot_on_failure("booking_modal_error.png")
             raise
         
     def select_date_from_calendar(self, date_string):
@@ -421,3 +525,23 @@ class PackageBookingFlow(BasePage):
             self.logger.info("Successfully navigated to next booking step")
         except TimeoutException:
             self.logger.info("Continuing with booking flow...")
+            
+    def complete_booking_with_payment(self):
+        """Complete booking including payment flow"""
+        self.logger.info("=== Completing Booking with Payment ===")
+
+        # Initialize payment page and complete payment
+        payment_page = PaymentPage(self.driver)
+
+        # Click proceed to payment
+        payment_page.proceed_to_payment()
+
+        # Complete Flutterwave payment
+        payment_success = payment_page.complete_payment_flow()
+
+        if payment_success:
+            self.logger.success("🎉 Package booking with payment completed successfully!")
+            return True
+        else:
+            self.logger.error("❌ Payment flow failed")
+            return False
