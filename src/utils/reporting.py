@@ -393,6 +393,16 @@ class GeoReporter:
             message_lines.append(f"{suite_display}: {passed}/{total} Passed ({success_rate:.0f}%)")
 
         message_lines.append("------------------------------------------------------")
+        
+        # Add artifacts links if available (NEW SECTION)
+        artifacts_link = self._get_artifacts_link()
+        if artifacts_link:
+            message_lines.extend([
+                "",
+                "------------------------------------------------------",
+                artifacts_link,
+                "------------------------------------------------------"
+            ])
 
         # Add failed tests section
         all_failed_tests = unified_report["all_failed_tests"]
@@ -507,6 +517,16 @@ class GeoReporter:
             "------------------------------------------------------"
             "",
         ])
+        
+        # Add artifacts links if available (NEW SECTION)
+        artifacts_link = self._get_artifacts_link()
+        if artifacts_link:
+            message_lines.extend([
+                "",
+                "------------------------------------------------------",
+                artifacts_link,
+                "------------------------------------------------------"
+            ])
 
         # Add failed tests section
         if report["failed_tests"] > 0:
@@ -666,7 +686,8 @@ class GeoReporter:
             "test_get_single_package": "Fetching a single package via API",
             "test_search_packages": "Searching packages via API",
             "test_get_all_deals": "Fetching all deals via API",
-            "test_get_single_deal": "Fetching a single deal via API"
+            "test_get_single_deal": "Fetching a single deal via API",
+            "test_book_package": "Booking a package via API",
         }
 
         return context_map.get(method_name, "Functional test")
@@ -850,6 +871,16 @@ class GeoReporter:
         with open(filename, "w") as f:
             json.dump(unified_report, f, indent=4, default=json_serializer)
         self._cleanup_old_reports()
+        
+    def _get_artifacts_link(self):
+        """Generate CircleCI artifacts link for all screenshots"""
+        build_url = os.getenv('CIRCLE_BUILD_URL')
+        
+        if build_url:
+            artifacts_link = f"{build_url}/artifacts"
+            return f"📸 *View All Screenshots:* {artifacts_link}"
+        
+        return None
 
 
 # ====== GLOBAL INSTANCES ======
