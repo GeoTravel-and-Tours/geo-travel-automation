@@ -26,6 +26,7 @@ logger = GeoLogger("conftest")
 # NEW: Global flag to track environment status
 environment_available = True
 environment_skip_info = None
+SKIP_UI_ENV_CHECK = False
 
 def pytest_addoption(parser):
     """Add command line option to skip environment check"""
@@ -38,15 +39,22 @@ def pytest_addoption(parser):
     
 def pytest_configure(config):
     """Check environment availability before test session starts"""
-    global environment_available, environment_skip_info
+    global environment_available, environment_skip_info, SKIP_UI_ENV_CHECK
     
     # Check if we should skip environment check
     skip_env_check = config.getoption("--skip-env-check") or False
     
     if not skip_env_check:
+        if SKIP_UI_ENV_CHECK:
+            logger.info("API tests detected - skipping UI environment check")
+            config.environment_down = False
+            environment_available = True
+            return
+        
         logger.info("Checking environment availability...")
         environment = EnvironmentConfig.TEST_ENV
         base_url = EnvironmentConfig.get_base_url()
+        
         
         if not EnvironmentConfig.is_environment_accessible():
             # Environment is down - set up skipping mechanism

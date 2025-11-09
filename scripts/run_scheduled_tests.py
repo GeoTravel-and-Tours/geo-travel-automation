@@ -180,6 +180,8 @@ def run_tests(suite_name, pytest_args=None, skip_env_check=False, is_unified_run
         
         # API-specific configurations
         if suite_name == "api":
+            from conftest import SKIP_UI_ENV_CHECK
+            SKIP_UI_ENV_CHECK = True  # Ensure UI checks are skipped in API tests
             base_pytest_args.extend([
                 "--log-cli-level=DEBUG",  # More verbose for API debugging
                 "-o", "log_cli=true",  # Ensure CLI logging
