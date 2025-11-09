@@ -699,6 +699,22 @@ class GeoReporter:
 
         error_lower = error_message.lower()
         test_lower = test_name.lower()
+        
+        # Dependency/Skip related
+        if "skip" in error_lower or "skipped" in error_lower or "dependency" in error_lower:
+            return "Dependency Failure"
+        
+        # Environment/Setup issues
+        if "environment" in error_lower or "unavailable" in error_lower or "setup" in error_lower:
+            return "Environment Setup"
+        
+        # Network issues
+        if "network" in error_lower or "connection" in error_lower or "ssl" in error_lower:
+            return "Network Issue"
+        
+        # Data/State issues  
+        if "data" in error_lower or "state" in error_lower or "prerequisite" in error_lower:
+            return "Test Data"
 
         # Airport Selection Failures
         if "failed to select departure airport" in error_lower or "failed to select arrival airport" in error_lower:
@@ -802,7 +818,29 @@ class GeoReporter:
         """Clean and format error message for Slack"""
         if not error_message:
             return "No error message"
+        
+        # SPECIAL HANDLING FOR SKIPPED TESTS - Clean file paths
+        if "Skipped:" in error_message or "skipped" in error_message.lower():
+            # Remove file paths and line numbers, keep only the reason
+            lines = error_message.split("\n")
+            clean_lines = []
             
+            for line in lines:
+                line = line.strip()
+                # Skip file path lines
+                if line.startswith('(') and '.py"' in line:
+                    continue
+                if "Skipped:" in line:
+                    # Extract just the reason after "Skipped:"
+                    reason = line.split("Skipped:")[-1].strip()
+                    clean_lines.append(reason)
+                elif line and not line.startswith('File "'):
+                    clean_lines.append(line)
+            
+            if clean_lines:
+                return " | ".join(clean_lines[:2])
+        
+        # Original error cleaning logic for non-skipped tests
         lines = error_message.split("\n")
         clean_lines = []
 
