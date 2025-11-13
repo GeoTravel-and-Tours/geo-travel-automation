@@ -911,14 +911,23 @@ class GeoReporter:
         self._cleanup_old_reports()
         
     def _get_artifacts_link(self):
-        """Generate CircleCI artifacts link for all screenshots"""
+        """Generate CI artifacts link (works for CircleCI or GitHub Actions)"""
+        # Try CircleCI first
         build_url = os.getenv('CIRCLE_BUILD_URL')
-        
+
+        # If not CircleCI, try GitHub Actions
+        if not build_url and os.getenv('GITHUB_RUN_ID'):
+            github_url = os.getenv('GITHUB_SERVER_URL', 'https://github.com')
+            repo = os.getenv('GITHUB_REPOSITORY', '')
+            run_id = os.getenv('GITHUB_RUN_ID')
+            build_url = f"{github_url}/{repo}/actions/runs/{run_id}"
+
         if build_url:
             artifacts_link = f"{build_url}/artifacts"
             return f"📸 *View All Screenshots:* {artifacts_link}"
-        
+
         return None
+
 
 
 # ====== GLOBAL INSTANCES ======
