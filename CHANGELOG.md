@@ -16,6 +16,27 @@ It helps track improvements, fixes, and added features over time.
 
 ---
 
+## [1.4.1] - 2025-11-13
+### Added
+- GitHub Actions workflow (.github/workflows/qa-automation.yml) to replace CircleCI pipeline, including:
+- Daily smoke tests schedule
+- Weekly regression tests (commented for future use)
+- Manual cleanup workflow via workflow_dispatch
+- Artifact uploads for test screenshots
+- Dependency installation and cleanup steps
+- Environment variable support in scripts for GitHub Actions (GITHUB_REF_NAME, GITHUB_SHA) to ensure CI/CD metadata collection works on GitHub Actions as well as CircleCI
+
+### Changed
+- Updated get_current_branch() to check GITHUB_REF_NAME in addition to CircleCI variables
+- Updated get_commit_hash() to check GITHUB_SHA in addition to CircleCI variables
+- Updated _get_artifacts_link() to generate artifact links in GitHub Actions if CircleCI variables are not present
+- Ensures CI/CD scripts are fully compatible with GitHub Actions while maintaining CircleCI fallback
+
+### Fixed
+- N/A (migration-focused update)
+
+---
+
 ## [1.4.0] - 2025-11-04
 ### Added
 - Centralized failure capture via pytest_runtest_makereport hook that saves screenshots and HTML error captures for failed tests.

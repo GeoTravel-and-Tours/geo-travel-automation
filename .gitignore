@@ -1,27 +1,33 @@
-# Python
+# =========================
+# Python artifacts
+# =========================
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
 .Python
-env/
-venv/
-.venv/
-.env
 *.egg-info/
 .installed.cfg
 *.egg
+
+# Virtual environments
+env/
+venv/
+.venv/
+
+# Python test artifacts
 .pytest_cache/
 .coverage
 .coverage.*
-.cache
 nosetests.xml
 coverage.xml
 *.cover
 *.py,cover
 .hypothesis/
 
-# Project-specific generated files
+# =========================
+# Project-generated files
+# =========================
 reports/
 *.html
 *.xml
@@ -32,9 +38,8 @@ pytest-report.html
 allure-report/
 allure-results/
 
-# Screenshots and test evidence
+# Screenshots / test evidence
 screenshots/
-reports/
 *.png
 *.jpg
 *.jpeg
@@ -43,41 +48,54 @@ reports/
 # Logs
 logs/
 *.log
+*.log.*
 geckodriver.log
 chromedriver.log
-*.log.*
 
-# Environment variables (never commit secrets!)
+# Environment variables (never commit secrets)
 .env
 .env.local
 .env.*.local
 
-# IDE
+# =========================
+# IDE / Editor files
+# =========================
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
 
-# OS
+# =========================
+# OS files
+# =========================
 .DS_Store
 Thumbs.db
 
-# Temporary files
+# =========================
+# Temporary / cache files
 *.tmp
 *.temp
 .cache/
 
+# =========================
 # WebDriver binaries (let webdriver-manager handle these)
 chromedriver*
 geckodriver*
 msedgedriver*
 IEDriverServer*
 
-# Misc
+# =========================
+# Miscellaneous scripts / files
+# =========================
 scripts/debug_cleanup.py
 scripts/debug_api_urls.py
+scripts/run_scheduled_tests_future.py
 
 src/utils/reporting_manager.py
 conftest_manager.py
-scripts/run_scheduled_tests_future.py
+
+# =========================
+# CI/CD configuration
+# =========================
+.circleci/config.yml
