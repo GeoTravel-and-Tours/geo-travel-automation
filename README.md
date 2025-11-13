@@ -1,7 +1,7 @@
 ## 🧩 `README.md`
 
 
-# Automation Testing Framework
+# Geo-Automation Framework
 
 A structured and maintainable automation testing framework designed for ***Geo Travel*** Web App test execution.  
 This setup provides flexibility for integration with different tools, environments, and pipelines.
@@ -56,8 +56,9 @@ pytest
 Run specific suites:
 
 ```sh
-python scripts/run_tests.py --suite smoke
-python scripts/run_tests.py --suite regression
+python scripts/run_scheduled_tests.py --suite smoke
+python scripts/run_scheduled_tests.py --suite api
+python scripts/run_scheduled_tests.py --suite api smoke
 ```
 
 Reports and logs are saved in the `reports/`, `logs\` directory.
