@@ -71,7 +71,47 @@ jobs:
       - name: 🧹 Cleanup old test artifacts (7 days)
         run: python scripts/cleanup.py --days 7
 
-  # Uncomment when regression tests are ready
+  # ============================================================================
+  # 📤 GITHUB PAGES DEPLOYMENT - For direct screenshot access
+  # ============================================================================
+  publish-artifacts:
+    name: 📤 Publish to GitHub Pages
+    runs-on: ubuntu-latest
+    needs: run-smoke-tests
+    if: always()  # Run even if tests fail
+    
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+      
+      - name: 🗂️ Prepare artifacts directory
+        run: |
+          mkdir -p public/screenshots
+          mkdir -p public/reports
+          
+      - name: 📸 Copy screenshots and reports to public directory
+        run: |
+          # Copy screenshots from failures, success, etc.
+          cp -r reports/screenshots/failures/* public/screenshots/ 2>/dev/null || echo "No failure screenshots found"
+          cp -r reports/screenshots/success/* public/screenshots/ 2>/dev/null || echo "No success screenshots found"
+          cp -r reports/screenshots/steps/* public/screenshots/ 2>/dev/null || echo "No step screenshots found"
+          
+          # Copy HTML reports
+          cp -r reports/*.html public/reports/ 2>/dev/null || echo "No HTML reports found"
+          
+          # Copy error HTML captures
+          cp -r logs/error_captures/* public/screenshots/ 2>/dev/null || echo "No error captures found"
+          
+      - name: 🌐 Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
+          keep_files: false
+
+  # ============================================================================
+  # 🧩 REGRESSION TESTS (Uncomment when ready)
+  # ============================================================================
   # run-regression-tests:
   #   name: 🧩 Run Regression Tests
   #   runs-on: ubuntu-latest
@@ -84,10 +124,14 @@ jobs:
   #     - name: 🧹 Cleanup old artifacts
   #       run: python scripts/cleanup.py --days 7
 
+  # ============================================================================
+  # 🧽 MANUAL CLEANUP (For manual triggers only)
+  # ============================================================================
   manual-cleanup:
     name: 🧽 Manual Cleanup
     runs-on: ubuntu-latest
     if: github.event_name == 'workflow_dispatch'
+    
     steps:
       - name: 📥 Checkout code
         uses: actions/checkout@v4
@@ -107,3 +151,15 @@ jobs:
 
       - name: 🧹 Perform cleanup
         run: python scripts/cleanup.py --days 7
+
+# ============================================================================
+# 🎯 WORKFLOW NOTES:
+# ============================================================================
+# ✅ GitHub Pages will be available at:
+#    https://geo-engineering.github.io/qa-automation/screenshots/
+#
+# ✅ Direct screenshot links in Slack will look like:
+#    https://geo-engineering.github.io/qa-automation/screenshots/element_not_found_test_login_20240115_080000.png
+#
+# ✅ The 'gh-pages' branch is automatically created and managed by GitHub Actions
+# ============================================================================
