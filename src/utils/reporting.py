@@ -898,13 +898,13 @@ class GeoReporter:
     def _get_failure_links(self, failed_test):
         """Generate direct links for failed test evidence"""
         screenshot_url = failed_test.get('public_screenshot_url')
-        html_url = failed_test.get('public_html_url')
+        # html_url = failed_test.get('public_html_url')
         
         links = []
         if screenshot_url:
             links.append(f"📸 <{screenshot_url}|View Screenshot>")
-        if html_url:
-            links.append(f"📄 <{html_url}|View HTML Report>")
+        # if html_url:
+        #     links.append(f"📄 <{html_url}|View HTML Report>")
         
         return " | ".join(links) if links else "No evidence captured"
 

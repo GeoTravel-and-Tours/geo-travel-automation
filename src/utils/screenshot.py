@@ -210,22 +210,22 @@ class ScreenshotUtils:
                 screenshot_filename, "failures", browser_info
             )
 
-            # 2. Capture HTML error report in logs directory
-            html_filename = f"{error_type}_{clean_test_name}_{timestamp}.html"
-            html_path = self.logs_dir / "error_captures" / html_filename
+            # # 2. Capture HTML error report in logs directory
+            # html_filename = f"{error_type}_{clean_test_name}_{timestamp}.html"
+            # html_path = self.logs_dir / "error_captures" / html_filename
 
-            # Generate comprehensive HTML report
-            html_content = self.reporting._generate_error_html(
-                test_name, error_message, additional_info
-            )
+            # # Generate comprehensive HTML report
+            # html_content = self.reporting._generate_error_html(
+            #     test_name, error_message, additional_info
+            # )
 
-            with open(html_path, "w", encoding="utf-8") as f:
-                f.write(html_content)
+            # with open(html_path, "w", encoding="utf-8") as f:
+                # f.write(html_content)
 
             # 3. Generate GitHub Pages URLs for direct access
             result = {
                 "screenshot": screenshot_path,
-                "html": str(html_path),
+                # "html": str(html_path),
                 "timestamp": timestamp,
             }
             
@@ -234,12 +234,12 @@ class ScreenshotUtils:
                 screenshot_filename = Path(screenshot_path).name
                 result["public_screenshot_url"] = f"{self.github_pages_base}/screenshots/{screenshot_filename}"
             
-            if html_path:
-                html_filename = Path(html_path).name
-                result["public_html_url"] = f"{self.github_pages_base}/screenshots/{html_filename}"
+            # if html_path:
+            #     html_filename = Path(html_path).name
+            #     result["public_html_url"] = f"{self.github_pages_base}/screenshots/{html_filename}"
 
             self.logger.error(
-                f"📊 Failure captured - Screenshot: {screenshot_path}, HTML: {html_path}"
+                f"📊 Failure captured - Screenshot: {screenshot_path}"#, HTML: {html_path}"
             )
 
             return result
