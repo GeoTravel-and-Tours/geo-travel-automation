@@ -92,6 +92,9 @@ jobs:
       - name: 📸 Deploy ALL test artifacts to GitHub Pages
         run: |
           echo "🚀 Deploying ALL test artifacts to GitHub Pages..."
+          # Wait a moment for all file operations to complete
+          echo "⏳ Waiting for file operations to complete..."
+          sleep 10
           
           # Copy ALL screenshots (recursively from all subfolders)
           if [ -d "reports/screenshots" ]; then
@@ -100,6 +103,7 @@ jobs:
             echo "✅ Screenshots copied: $(find public/screenshots -type f | wc -l) files"
           else
             echo "❌ reports/screenshots directory not found"
+            find . -name "*.png" | head -10
           fi
           
           # Copy ALL HTML reports
@@ -109,6 +113,7 @@ jobs:
             echo "✅ HTML reports copied: $(ls public/reports/*.html 2>/dev/null | wc -l) files"
           else
             echo "❌ No HTML reports found"
+            find . -name "*.html" | head -10
           fi
           
           echo "🎉 GitHub Pages deployment ready!"
