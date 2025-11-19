@@ -394,15 +394,6 @@ class GeoReporter:
 
         message_lines.append("------------------------------------------------------")
         
-        # Add artifacts links if available (NEW SECTION)
-        artifacts_link = self._get_artifacts_link()
-        if artifacts_link:
-            message_lines.extend([
-                "",
-                "------------------------------------------------------",
-                artifacts_link,
-                "------------------------------------------------------"
-            ])
 
         # Add failed tests section
         all_failed_tests = unified_report["all_failed_tests"]
@@ -426,6 +417,7 @@ class GeoReporter:
                 message_lines.append(f"‣ Error: {error}")
                 message_lines.append(f"‣ Context: {context}")
                 message_lines.append(f"‣ Issue Type: {category}")
+                message_lines.append(f"‣ Evidence: {self._get_failure_links(test)}")
                 
                 # Add fix suggestion for specific categories
                 fix_suggestion = self._get_fix_suggestion(category, test_name)
@@ -518,15 +510,6 @@ class GeoReporter:
             "",
         ])
         
-        # Add artifacts links if available (NEW SECTION)
-        artifacts_link = self._get_artifacts_link()
-        if artifacts_link:
-            message_lines.extend([
-                "",
-                "------------------------------------------------------",
-                artifacts_link,
-                "------------------------------------------------------"
-            ])
 
         # Add failed tests section
         if report["failed_tests"] > 0:
@@ -541,10 +524,12 @@ class GeoReporter:
                 duration = failed_test.get('duration', 0)
                 readable_test_name = self._format_test_name(test_name)
                 
-                message_lines.append(f"{i}️⃣ {readable_test_name}")
+                suite_display = self._format_suite_display_name("individual")
+                message_lines.append(f"{i}️⃣ [{suite_display}] {readable_test_name}")
                 message_lines.append(f"‣ Error: {error}")
                 message_lines.append(f"‣ Type: {category}")
                 message_lines.append(f"‣ Context: {context}")
+                message_lines.append(f"‣ Evidence: {self._get_failure_links(failed_test)}")
 
                 # Add fix suggestion
                 fix_suggestion = self._get_fix_suggestion(category, test_name)
@@ -910,23 +895,18 @@ class GeoReporter:
             json.dump(unified_report, f, indent=4, default=json_serializer)
         self._cleanup_old_reports()
         
-    def _get_artifacts_link(self):
-        """Generate CI artifacts link (works for CircleCI or GitHub Actions)"""
-        # Try CircleCI first
-        build_url = os.getenv('CIRCLE_BUILD_URL')
-
-        # If not CircleCI, try GitHub Actions
-        if not build_url and os.getenv('GITHUB_RUN_ID'):
-            github_url = os.getenv('GITHUB_SERVER_URL', 'https://github.com')
-            repo = os.getenv('GITHUB_REPOSITORY', '')
-            run_id = os.getenv('GITHUB_RUN_ID')
-            build_url = f"{github_url}/{repo}/actions/runs/{run_id}"
-
-        if build_url:
-            artifacts_link = f"{build_url}/artifacts"
-            return f"📸 *View All Screenshots:* {artifacts_link}"
-
-        return None
+    def _get_failure_links(self, failed_test):
+        """Generate direct links for failed test evidence"""
+        screenshot_url = failed_test.get('public_screenshot_url')
+        html_url = failed_test.get('public_html_url')
+        
+        links = []
+        if screenshot_url:
+            links.append(f"📸 <{screenshot_url}|View Screenshot>")
+        if html_url:
+            links.append(f"📄 <{html_url}|View HTML Report>")
+        
+        return " | ".join(links) if links else "No evidence captured"
 
 
 
