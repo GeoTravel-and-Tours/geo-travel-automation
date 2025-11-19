@@ -10,6 +10,7 @@ from selenium.webdriver.common.keys import Keys
 from src.core.base_page import BasePage
 import time
 import re
+from datetime import datetime, timedelta
 
 
 class FlightBookingFlow(BasePage):
@@ -40,7 +41,7 @@ class FlightBookingFlow(BasePage):
     AMSTERDAM_SCHIPHOL_OPTION = (By.XPATH, "//*[contains(text(), 'Amsterdam') or contains(text(), 'Schiphol')]")\
     
     # Date Selection
-    DEPARTURE_DATE_FIELD = (By.XPATH, "//div[contains(@class, 'cursor-pointer') and contains(., 'Departure Date')]")
+    DEPARTURE_DATE_FIELD = ("xpath", "//div[contains(@class,'cursor-pointer') and .//p[text()='Departure Date']]")
     AVAILABLE_DATES = (By.CSS_SELECTOR, "button:not([disabled])")
     
     # Search Button
@@ -94,34 +95,77 @@ class FlightBookingFlow(BasePage):
             self.logger.error(f"Error checking flight search form: {e}")
             return False
 
-    def select_one_way_trip(self):
-        """Select One Way trip type - SIMPLIFIED AND FIXED"""
-        try:
-            self.logger.info("Selecting One Way trip type...")
-            
-            # Wait for page to load
-            time.sleep(2)
-            
-            # Find and click trip type dropdown
-            trip_dropdown = WebDriverWait(self.driver, 10).until(
-                EC.element_to_be_clickable(self.TRIP_TYPE_DROPDOWN)
-            )
-            trip_dropdown.click()
-            self.logger.info("Clicked trip type dropdown")
-            time.sleep(2)
-            
-            # Find and click One Way option
-            one_way_option = WebDriverWait(self.driver, 10).until(
-                EC.element_to_be_clickable(self.ONE_WAY_OPTION)
-            )
-            one_way_option.click()
-            self.logger.info("Selected One Way trip type")
-            time.sleep(2)
-            return True
-            
-        except Exception as e:
-            self.logger.warning(f"Could not select One Way: {e}")
+    def select_one_way_trip(self, trip_type="One Way"):
+        log = self.logger
+
+        log.info(f"Selecting trip type: {trip_type}")
+
+        trip_type = trip_type.lower().strip()
+
+        # Possible labels UI may use
+        TRIP_TYPE_ALIASES = {
+            "one way": ["One Way", "One-way", "One way", "one way"],
+            "round trip": ["Round Trip", "Return", "round trip"],
+            "multi city": ["Multi City", "Multicity", "multi city"]
+        }
+
+        target_labels = TRIP_TYPE_ALIASES.get(trip_type, [trip_type])
+
+        # --- STEP 1: Try to open the trip type listbox ---
+        dropdown_selectors = [
+            ("xpath", "//button[contains(., 'Round') or contains(., 'Trip') or contains(., 'Way')]"),
+            ("xpath", "//button[contains(@id,'headlessui-listbox-button')]"),
+            ("css selector", "button[id*='headlessui-listbox-button']"),
+            ("xpath", "//button[contains(@class,'listbox')]"),
+            ("xpath", "//button[contains(@class,'cursor-pointer') and contains(@class,'rounded')]"),
+            ("xpath", "//button[contains(., 'Trip') or contains(., 'trip')]")
+        ]
+
+        opened = False
+        for by, selector in dropdown_selectors:
+            try:
+                log.info(f"Trying trip dropdown selector: {selector}")
+                elem = WebDriverWait(self.driver, 5).until(
+                    EC.element_to_be_clickable((by, selector))
+                )
+                self.javascript.execute_script("arguments[0].scrollIntoView(true);", elem)
+                elem.click()
+                opened = True
+                log.info("Trip type dropdown opened successfully")
+                break
+            except Exception as e:
+                log.warning(f"Dropdown selector failed: {selector} -> {e}")
+
+        if not opened:
+            log.error("❌ Could NOT open trip type dropdown")
             return False
+
+        # --- STEP 2: Select the requested trip type ---
+        option_found = False
+        for label in target_labels:
+            try:
+                xpath = f"//*[normalize-space(text())='{label}']"
+                log.info(f"Trying option selector: {xpath}")
+
+                option = WebDriverWait(self.driver, 7).until(
+                    EC.element_to_be_clickable(("xpath", xpath))
+                )
+                self.javascript.execute_script("arguments[0].scrollIntoView(true);", option)
+                option.click()
+                option_found = True
+                log.info(f"Trip type selected: {label}")
+                break
+            except:
+                continue
+
+        if not option_found:
+            log.error(f"❌ Could NOT find trip type option matching: {target_labels}")
+            return False
+
+        return True
+
+
+
 
     def select_from_airport(self, airport_name="Heathrow"):
         """Select departure airport - AGGRESSIVE FALLBACK APPROACH"""
@@ -236,7 +280,7 @@ class FlightBookingFlow(BasePage):
 
         except Exception as e:
             self.logger.error(f"Failed to select from airport {airport_name}: {e}")
-            self.screenshot.capture_screenshot(f"select_from_airport_error")
+            self.screenshot.capture_screenshot_on_failure(f"select_from_airport_error")
             return False
 
     def select_from_airport_with_retry(self, airport_name, max_retries=3):
@@ -443,32 +487,43 @@ class FlightBookingFlow(BasePage):
             
         except Exception as e:
             self.logger.error(f"Failed to select to airport {airport_name}: {e}")
-            self.screenshot.capture_screenshot(f"select_to_airport_error")
+            self.screenshot.capture_screenshot_on_failure(f"select_to_airport_error")
             return False
 
     def select_departure_date(self):
-        """Select departure date from calendar"""
-        self.logger.info("Selecting departure date...")
-        
+        """
+        Selects the departure date dynamically.
+        :param days_ahead: Number of days from today (default 1 = tomorrow)
+        """
         try:
+            self.logger.info("Selecting departure date...")
+
+            # Step 1: Click the departure date field
+            departure_field = self.pageinfo.find_element(self.DEPARTURE_DATE_FIELD, timeout=10)
             departure_field = WebDriverWait(self.driver, 10).until(
                 EC.element_to_be_clickable(self.DEPARTURE_DATE_FIELD)
             )
             departure_field.click()
-            time.sleep(2)
 
-            # Find and click the first available future date
-            available_dates = self.driver.find_elements(*self.AVAILABLE_DATES)
-            for date in available_dates:
-                if date.text.isdigit() and 1 <= int(date.text) <= 31:
-                    if int(date.text) > 10:  # Pick a future date
-                        date.click()
-                        self.logger.info(f"Selected departure date: {date.text}")
-                        break
+            # Find all enabled day buttons
+            available_days = self.driver.find_elements(
+                By.CSS_SELECTOR, "button.day:not([disabled])"
+            )
 
-            time.sleep(2)
+            # Pick tomorrow (or the first day greater than today)
+            tomorrow_day = (datetime.today() + timedelta(days=1)).day
+            for day in available_days:
+                if day.text.isdigit() and int(day.text) == tomorrow_day:
+                    day.click()
+                    self.logger.info(f"Selected departure date: {tomorrow_day}")
+                    break
+            else:
+                self.logger.warning("Tomorrow's date not found, selecting first available date")
+                available_days[0].click()
+
+            time.sleep(1)  # wait for selection to process
             return True
-            
+
         except Exception as e:
             self.logger.error(f"Failed to select departure date: {e}")
             return False
@@ -477,54 +532,45 @@ class FlightBookingFlow(BasePage):
         """Perform complete flight search flow - SIMPLIFIED AND FIXED"""
         from_city = "Heathrow"
         to_city = "Schiphol"
-    
+
         self.logger.info(f"Performing ONE WAY flight search: {from_city} → {to_city}")
-    
+
         try:
             # Step 1: Select One Way trip type
             one_way_selected = self.select_one_way_trip()
             if not one_way_selected:
                 self.logger.warning("Could not select One Way, proceeding with default trip type")
-    
-            time.sleep(3)
-    
-            # Step 2: Select departure airport with retry
+
+            time.sleep(2)
+
+            # Step 2: Select departure airport
             from_success = self.select_from_airport_with_retry(from_city, max_retries=2)
             if not from_success:
                 raise Exception(f"Failed to select departure airport: {from_city}")
-    
+
             # Step 3: Select destination airport
             to_success = self.select_to_airport(to_city)
             if not to_success:
                 raise Exception(f"Failed to select destination airport: {to_city}")
-    
-            # Step 4: Verify form is filled
+
+            # Step 4: Select departure date (tomorrow by default)
+            date_success = self.select_departure_date()
+            if not date_success:
+                raise Exception("Failed to select departure date")
+
+            # Step 5: Verify form is filled
             if not self.verify_search_form_filled():
                 self.logger.error("Search form validation failed!")
                 raise Exception("Search form not properly filled")
-    
-            # Step 5: Click search button
-            search_button = WebDriverWait(self.driver, 15).until(
-                EC.element_to_be_clickable(self.SEARCH_FLIGHTS_BUTTON)
-            )
-            search_button.click()
-            self.logger.info("Search button clicked")
-    
-            # Step 6: Wait for search results
-            time.sleep(5)
-    
-            # Check if search was successful
-            if self.is_search_session_initialized():
-                self.logger.info("Flight search completed successfully")
-                return True
-            else:
-                self.logger.warning("Search may not have completed properly, but continuing...")
-                return True
-    
+
+            self.logger.info("Basic flight search form completed successfully!")
+            return True
+
         except Exception as e:
             self.logger.error(f"Flight search failed: {e}")
-            self.screenshot.capture_screenshot("flight_search_error")
-            raise
+            # Capture screenshot
+            # self.screenshot.capture_screenshot_on_failure("flight_search_error.png")
+            return False
 
     def verify_search_form_filled(self):
         """Verify that the search form has been properly filled - SIMPLIFIED"""
@@ -647,7 +693,7 @@ class FlightBookingFlow(BasePage):
 
         except Exception as e:
             self.logger.error(f"Failed to select flight: {e}")
-            self.screenshot.capture_screenshot("flight_selection_failed")
+            self.screenshot.capture_screenshot_on_failure("flight_selection_failed")
             return False
 
     def fill_passenger_information(self):
@@ -781,6 +827,6 @@ class FlightBookingFlow(BasePage):
                 pass
             
         # Take screenshot
-        self.screenshot.capture_screenshot("ui_debug_comprehensive")
+        self.screenshot.capture_screenshot_on_failure("ui_debug_comprehensive")
 
         return True

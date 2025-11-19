@@ -5,7 +5,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.firefox import GeckoDriverManager
 from webdriver_manager.microsoft import EdgeChromiumDriverManager
 from configs.environment import EnvironmentConfig
-from utils.logger import GeoLogger
+from src.utils.logger import GeoLogger
 
 
 class DriverFactory:

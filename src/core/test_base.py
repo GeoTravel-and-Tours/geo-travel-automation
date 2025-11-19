@@ -5,8 +5,8 @@ import pytest
 import os
 from datetime import datetime
 from selenium.common.exceptions import WebDriverException
-from utils.notifications import slack_notifier
-from utils.reporting import smoke_reporting
+from src.utils.notifications import slack_notifier
+from src.utils.reporting import smoke_reporting
 from datetime import datetime
 from src.utils.screenshot import ScreenshotUtils
 

@@ -3,7 +3,7 @@
 import requests
 import json
 from datetime import datetime
-from ..utils.logger import GeoLogger
+from src.utils.logger import GeoLogger
 from configs.environment import EnvironmentConfig
 
 class BaseAPI:

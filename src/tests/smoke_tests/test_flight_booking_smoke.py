@@ -72,7 +72,7 @@ class TestFlightBookingSmoke(TestBase):
         self.flight_booking.logger.step(1, "Opening homepage")
         self.home_page.open()
         self.home_page.wait_for_homepage_load(timeout=15, max_retries=3)
-        self.flight_booking.debug_ui_elements()
+        # self.flight_booking.debug_ui_elements()
 
         self.flight_booking.logger.step(2, "Performing basic flight search")
         search_success = self.flight_booking.perform_basic_flight_search()
