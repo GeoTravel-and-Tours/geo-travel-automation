@@ -12,10 +12,10 @@ from pathlib import Path
 # Add project root to path
 sys.path.append(str(Path(__file__).resolve().parent.parent))
 
-from src.utils.cleanup import CleanupManager
-
-
 def main():
+    # LAZY IMPORT - Only import when actually needed
+    from src.utils.cleanup import CleanupManager
+    
     parser = argparse.ArgumentParser(description="Clean up old test artifacts")
     parser.add_argument(
         "--days", 
