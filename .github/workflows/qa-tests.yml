@@ -106,14 +106,14 @@ jobs:
           echo "📁 Files found in artifacts directory:"
           find artifacts -type f | head -20
 
-          # Copy screenshots
+          # Copy screenshots preserving folder structure
           echo "📸 Copying screenshots..."
-          find artifacts -name "*.png" -type f -exec cp {} public/screenshots/ \;
-          echo "➡ Total screenshots: $(ls public/screenshots | wc -l)"
+          cp -r artifacts/reports/screenshots public/ 2>/dev/null || echo "No screenshots to copy"
+          echo "➡ Total screenshots: $(find public/screenshots -type f | wc -l)"
 
           # Copy HTML reports
           echo "📄 Copying HTML reports..."
-          find artifacts -name "*.html" -type f -exec cp {} public/reports/ \;
+          cp -r artifacts/reports/*.html public/reports/ 2>/dev/null || echo "No HTML reports"
           echo "➡ Total reports: $(ls public/reports | wc -l)"
 
           echo "🎉 Files ready for GitHub Pages deployment"

@@ -80,7 +80,7 @@ class ScreenshotUtils:
 
     def _get_github_pages_url(self):
         """Generate GitHub Pages URL based on repo"""
-        repo = os.getenv('GITHUB_REPOSITORY', 'geo-engineering/qa-automation')
+        repo = os.getenv('GITHUB_REPOSITORY', 'GeoTravel-and-Tours/geo-travel-automation')
         return f"https://{repo.split('/')[0]}.github.io/{repo.split('/')[1]}"
     
     def _generate_timestamp(self):
@@ -241,7 +241,7 @@ class ScreenshotUtils:
             # Generate public URLs for GitHub Pages
             if screenshot_path:
                 screenshot_filename = Path(screenshot_path).name
-                result["public_screenshot_url"] = f"{self.github_pages_base}/screenshots/{screenshot_filename}"
+                result["public_screenshot_url"] = f"{self.github_pages_base}/screenshots/failures/{screenshot_filename}"
                 print(f"🔍 DEBUG: GitHub Pages URL: {result['public_screenshot_url']}")
 
             self.logger.error(
