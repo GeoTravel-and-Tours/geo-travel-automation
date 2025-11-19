@@ -1,5 +1,3 @@
-# scripts/run_scheduled_tests.py
-
 #!/usr/bin/env python3
 """
 Test suite runner with CLI argument for suite selection and comprehensive reporting
@@ -12,10 +10,9 @@ import pytest
 from dotenv import load_dotenv
 from datetime import datetime
 
-# Add parent directory to path
-sys.path.append(os.path.join(os.path.dirname(__file__), "../src"))
+project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, project_root)
 
-# Import your custom reporters
 from src.utils.reporting import smoke_reporting, regression_reporting, sanity_reporting, api_smoke_reporting, unified_reporter
 from src.utils.notifications import slack_notifier
 from src.utils.git_utils import setup_git_metadata
