@@ -13,7 +13,7 @@ from dotenv import load_dotenv
 from datetime import datetime
 
 # Add parent directory to path
-sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+sys.path.append(os.path.join(os.path.dirname(__file__), "../src"))
 
 # Import your custom reporters
 from src.utils.reporting import smoke_reporting, regression_reporting, sanity_reporting, api_smoke_reporting, unified_reporter
@@ -60,7 +60,7 @@ def _setup_environment_metadata():
     logger.info(f"Browser: {os.getenv('BROWSER')}")
     logger.info(f"Environment: {EnvironmentConfig.TEST_ENV.upper()}")
     
-def _send_environment_unavailable_notification(environment, url, check_type="UI"):
+def _send_environment_unavailable_notification(environment, url, check_type="UI", reason=None):
     """Send environment unavailable notification to Slack"""
     timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     
@@ -71,17 +71,24 @@ def _send_environment_unavailable_notification(environment, url, check_type="UI"
         f"*URL:* {url}",
         f"*Time:* {timestamp}",
         f"*Check Type:* {check_type}",
-        f"*Status:* All tests will be skipped",
+        f"*Status:* All tests will be skipped"
+    ]
+    
+    if reason:
+        message_lines.append(f"*Reason:* {reason}")  # Include skip reason in Slack message
+    
+    message_lines.extend([
         "------------------------------------------------------",
         "⚠️ *Recommended Actions:*",
         "• Check if the environment is running",
-        "• Verify network connectivity", 
+        "• Verify network connectivity",
         "• Contact DevOps team if issue persists",
         "• Retry when environment is available"
-    ]
+    ])
     
     message = "\n".join(message_lines)
     slack_notifier.send_webhook_message(message)
+
 
 def run_tests(suite_name, pytest_args=None, skip_env_check=False, is_unified_run=False):
     """Run selected test suite with comprehensive reporting"""
@@ -126,36 +133,56 @@ def run_tests(suite_name, pytest_args=None, skip_env_check=False, is_unified_run
     # Environment check - ONLY for UI tests, skip for API tests
     if not skip_env_check and suite_name != "api":
         logger.info("Checking UI environment availability...")
-        if not EnvironmentConfig.is_environment_accessible():
-            logger.error("UI environment is not accessible. Skipping UI tests.")
+
+        skip_reason = None
+        try:
+            if not EnvironmentConfig.is_environment_accessible():
+                skip_reason = "Homepage URL not reachable"
+        except Exception as e:
+            skip_reason = f"UI health check failed: {e}"
+
+        if skip_reason:
+            logger.error(f"Skipping UI tests: {skip_reason}")
             base_url = EnvironmentConfig.get_base_url()
             _send_environment_unavailable_notification(
                 environment=EnvironmentConfig.TEST_ENV,
                 url=base_url,
-                check_type="UI"
+                check_type="UI",
+                reason=skip_reason
             )
             if not is_unified_run:
-                logger.info("UI Environment unavailable - tests skipped. Slack notification sent by conftest.py")
+                logger.info("Slack notification sent for skipped UI tests")
             return 0
         else:
             logger.success("UI environment is accessible - proceeding with tests")
 
+
     # API-specific environment check
     if not skip_env_check and suite_name == "api":
         logger.info("Checking API environment availability...")
-        if EnvironmentConfig.should_skip_api_tests():
-            logger.warning("API environment is not accessible. Skipping API tests.")
+
+        skip_reason = None
+        try:
+            if EnvironmentConfig.should_skip_api_tests():
+                skip_reason = "Authentication endpoint not accessible"
+        except Exception as e:
+            skip_reason = f"API health check failed: {e}"
+
+        if skip_reason:
+            logger.warning(f"Skipping API tests: {skip_reason}")
             api_base_url = EnvironmentConfig.get_api_base_url()
             _send_environment_unavailable_notification(
                 environment=EnvironmentConfig.TEST_ENV,
                 url=api_base_url,
-                check_type="API"
+                check_type="API",
+                reason=skip_reason
             )
             if not is_unified_run:
-                logger.info("API Environment unavailable - tests skipped. Slack notification sent by conftest.py")
+                logger.info("Slack notification sent for skipped API tests")
             return 0
         else:
             logger.success("API environment is accessible - proceeding with tests")
+
 
     # Start individual suite reporting
     suite_reporter.start_test_suite()

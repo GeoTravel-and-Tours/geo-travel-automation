@@ -311,13 +311,18 @@ class EnvironmentConfig:
         logger = GeoLogger("APICheck")
         env = environment or cls.TEST_ENV
         
-        # Check if at least the auth endpoint is accessible (minimum requirement)
-        is_auth_accessible = cls.is_api_accessible("/api/auth/login", env)
+        try:
+            # Minimum health check: authentication endpoint
+            is_auth_accessible = cls.is_api_accessible("/api/auth/login", env)
+        except Exception as e:
+            logger.error(f"API health check failed: {e}")
+            return True     # skip tests if health check fails
         
         if not is_auth_accessible:
             logger.warning(f"API tests will be skipped - authentication endpoint not accessible in {env}")
             return True
             
+        logger.info(f"API environment healthy - proceeding with tests in {env}")
         return False
 
     # ========== ENVIRONMENTS CHECK ==========

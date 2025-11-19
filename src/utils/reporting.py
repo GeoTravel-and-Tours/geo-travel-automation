@@ -194,7 +194,7 @@ class GeoReporter:
             "category": self._get_test_category(test_name, error_message) if status == "FAIL" else None,
         }
         self.test_results.append(test_result)
-        self.logger.info(f"Test result added: {test_name} - {status} (Duration: {duration:.2f}s)")
+        self.logger.info(f"Test result added: {test_name} - {status} (Duration: {actual_duration:.2f}s)")
 
     def add_suite_result(self, suite_name, report_data):
         """Add results from a specific test suite for unified reporting"""

@@ -177,7 +177,11 @@ class ScreenshotUtils:
         try:
             # Check if driver is available and valid
             if not hasattr(self, 'driver') or not self.driver:
-                self.logger.warning("No driver available for screenshot capture")
+                try:
+                    url = self.driver.current_url if self.driver else "N/A"
+                    self.logger.warning("No driver available for screenshot capture")
+                except Exception:
+                    url = "N/A"
                 return {"screenshot": None, "html": None}
 
             # Check if driver has current_url method (is a WebDriver instance)
