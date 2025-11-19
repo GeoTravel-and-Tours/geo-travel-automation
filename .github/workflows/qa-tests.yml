@@ -55,6 +55,19 @@ jobs:
       - name: 🧪 Run smoke test suite
         run: |
           echo "Running smoke tests on $TEST_ENV..."
+          echo "Python path: $(which python)"
+          echo "Pytest version:"
+          python -c "import pytest; print(f'pytest {pytest.__version__}')" || echo "pytest import failed"
+          echo "Current directory: $(pwd)"
+          echo "Files in scripts/:"
+          ls -la scripts/
+          echo "Checking run_scheduled_tests.py exists:"
+          ls -la scripts/run_scheduled_tests.py
+          # Use the same Python that installed dependencies
+          python -c "import sys; print(sys.executable)"
+          python -c "import pytest; print('pytest is available')"
+          # Run with full path to be sure
+          /opt/hostedtoolcache/Python/3.10.*/x64/bin/python scripts/run_scheduled_tests.py --suite api smoke
           python scripts/run_scheduled_tests.py --suite api smoke
         continue-on-error: true  # Allow workflow to continue even if tests fail
 
@@ -79,10 +92,16 @@ jobs:
     runs-on: ubuntu-latest
     needs: run-smoke-tests
     if: always()  # Run even if tests fail
+    permissions:
+      contents: write  # Required for actions-gh-pages to push to gh-pages branch
+      pages: write    # Required for GitHub Pages deployment
+      id-token: write
     
     steps:
       - name: 📥 Checkout code
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
       
       - name: 🗂️ Prepare artifacts directory
         run: |
