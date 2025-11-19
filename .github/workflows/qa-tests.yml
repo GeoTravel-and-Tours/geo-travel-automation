@@ -89,18 +89,29 @@ jobs:
           mkdir -p public/screenshots
           mkdir -p public/reports
           
-      - name: 📸 Copy screenshots and reports to public directory
+      - name: 📸 Deploy ALL test artifacts to GitHub Pages
         run: |
-          # Copy screenshots from failures, success, etc.
-          cp -r reports/screenshots/failures/* public/screenshots/ 2>/dev/null || echo "No failure screenshots found"
-          cp -r reports/screenshots/success/* public/screenshots/ 2>/dev/null || echo "No success screenshots found"
-          cp -r reports/screenshots/steps/* public/screenshots/ 2>/dev/null || echo "No step screenshots found"
+          echo "🚀 Deploying ALL test artifacts to GitHub Pages..."
           
-          # Copy HTML reports
-          cp -r reports/*.html public/reports/ 2>/dev/null || echo "No HTML reports found"
+          # Copy ALL screenshots (recursively from all subfolders)
+          if [ -d "reports/screenshots" ]; then
+            echo "📸 Copying screenshots from reports/screenshots/"
+            find reports/screenshots -type f \( -name "*.png" -o -name "*.jpg" -o -name "*.jpeg" \) -exec cp {} public/screenshots/ \;
+            echo "✅ Screenshots copied: $(find public/screenshots -type f | wc -l) files"
+          else
+            echo "❌ reports/screenshots directory not found"
+          fi
           
-          # Copy error HTML captures
-          cp -r logs/error_captures/* public/screenshots/ 2>/dev/null || echo "No error captures found"
+          # Copy ALL HTML reports
+          if ls reports/*.html 1> /dev/null 2>&1; then
+            echo "📄 Copying HTML reports"
+            cp reports/*.html public/reports/
+            echo "✅ HTML reports copied: $(ls public/reports/*.html 2>/dev/null | wc -l) files"
+          else
+            echo "❌ No HTML reports found"
+          fi
+          
+          echo "🎉 GitHub Pages deployment ready!"
           
       - name: 🌐 Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3

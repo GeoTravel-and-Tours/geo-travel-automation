@@ -239,7 +239,6 @@ def pytest_runtest_makereport(item, call):
     if report.when == "setup":
         item.start_time = time.time()
         
-        
         if report.skipped:
             _handle_skipped_test(item, report)
         return
@@ -285,47 +284,54 @@ def pytest_runtest_makereport(item, call):
 
         # If failed, capture evidence with ScreenshotUtils (use same files for pytest-html and smoke reporter)
         if status == "FAIL":
-            driver_instance = item.funcargs.get("driver", None)
-            # also look for common alternate driver fixture names
-            if not driver_instance:
-                for alt in ("webdriver", "browser_driver", "browser"):
-                    driver_instance = item.funcargs.get(alt)
-                    if driver_instance:
-                        break
+            # ✅ NEW: Skip screenshot capture for API tests
+            test_path = str(item.fspath)
+            is_api_test = "api_tests" in test_path.lower()
+            
+            if not is_api_test:  # Only capture screenshots for UI tests
+                driver_instance = item.funcargs.get("driver", None)
+                # also look for common alternate driver fixture names
+                if not driver_instance:
+                    for alt in ("webdriver", "browser_driver", "browser"):
+                        driver_instance = item.funcargs.get(alt)
+                        if driver_instance:
+                            break
 
-            if driver_instance:
-                try:
-                    ss = ScreenshotUtils(driver_instance)
-                    result = ss.capture_screenshot_on_failure(
-                        test_name=nodeid,
-                        error_message=error_message or "Test failed",
-                        additional_info={"nodeid": nodeid},
-                        browser_info=os.getenv("BROWSER", None),
-                    )
-                    screenshot_path = result.get("screenshot")
-                    html_path = result.get("html")
+                if driver_instance:
+                    try:
+                        ss = ScreenshotUtils(driver_instance)
+                        result = ss.capture_screenshot_on_failure(
+                            test_name=nodeid,
+                            error_message=error_message or "Test failed",
+                            additional_info={"nodeid": nodeid},
+                            browser_info=os.getenv("BROWSER", None),
+                        )
+                        screenshot_path = result.get("screenshot")
+                        html_path = result.get("html")
 
-                    # attach screenshot and html to pytest-html via report.extra
-                    extras_list = getattr(report, "extras", [])
-                    if screenshot_path and os.path.exists(screenshot_path):
-                        extras_list.append(extras.image(screenshot_path))
-                    if html_path and os.path.exists(html_path):
-                        try:
-                            with open(html_path, "r", encoding="utf-8") as f:
-                                html_content = f.read()
-                            extras_list.append(extras.html(f"<details><summary>Error HTML</summary>{html_content}</details>"))
-                        except Exception:
-                            logger.exception("Failed reading html_path for attachment")
-                    report.extras = extras_list
+                        # attach screenshot and html to pytest-html via report.extra
+                        extras_list = getattr(report, "extras", [])
+                        if screenshot_path and os.path.exists(screenshot_path):
+                            extras_list.append(extras.image(screenshot_path))
+                        if html_path and os.path.exists(html_path):
+                            try:
+                                with open(html_path, "r", encoding="utf-8") as f:
+                                    html_content = f.read()
+                                extras_list.append(extras.html(f"<details><summary>Error HTML</summary>{html_content}</details>"))
+                            except Exception:
+                                logger.exception("Failed reading html_path for attachment")
+                        report.extras = extras_list
 
-                    # also store on item so other hooks or reporters can reuse
-                    setattr(item, "_screenshot_path", screenshot_path)
-                    setattr(item, "_error_html_path", html_path)
-                    logger.info(f"Captured failure evidence for {nodeid} -> {screenshot_path}, {html_path}")
-                except Exception:
-                    logger.exception("Failed capturing screenshot/html via ScreenshotUtils")
+                        # also store on item so other hooks or reporters can reuse
+                        setattr(item, "_screenshot_path", screenshot_path)
+                        setattr(item, "_error_html_path", html_path)
+                        logger.info(f"Captured failure evidence for {nodeid} -> {screenshot_path}, {html_path}")
+                    except Exception:
+                        logger.exception("Failed capturing screenshot/html via ScreenshotUtils")
+                else:
+                    logger.warning("No webdriver fixture available on test item; skipping screenshot capture")
             else:
-                logger.warning("No webdriver fixture available on test item; skipping screenshot capture")
+                logger.info(f"Skipping screenshot capture for API test: {nodeid}")
         
         suite_reporter = None
         test_path = str(item.fspath)
