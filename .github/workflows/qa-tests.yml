@@ -57,10 +57,9 @@ jobs:
         with:
           name: smoke_test_artifacts
           path: |
-            reports/screenshots
-            reports/*.html
-            reports/*.xml
+            reports/
             logs/
+          retention-days: 7
 
       - name: 🧹 Cleanup old test artifacts (7 days)
         run: python scripts/cleanup.py --days 7
@@ -84,42 +83,34 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
       
-      - name: 🗂️ Prepare artifacts directory
-        run: |
-          mkdir -p public/screenshots
-          mkdir -p public/reports
+      - name: 📥 Download test artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: smoke_test_artifacts
+          path: ./
           
       - name: 📸 Deploy ALL test artifacts to GitHub Pages
         run: |
           echo "🚀 Deploying ALL test artifacts to GitHub Pages..."
           
-          # Check what actually exists
-          echo "📁 Checking actual file structure..."
-          find . -name "*.png" -o -name "*.html" | head -20
-          echo "📁 Reports directory:"
-          ls -la reports/ 2>/dev/null || echo "No reports directory"
-          
-          # Copy ALL screenshots from wherever they actually are
-          echo "📸 Copying ALL screenshots found in the workspace..."
           mkdir -p public/screenshots
-          
-          # Find and copy ALL PNG files from anywhere in the workspace
-          find . -name "*.png" -type f -exec cp {} public/screenshots/ \; 2>/dev/null || echo "No PNG files found"
-          find . -name "*.jpg" -type f -exec cp {} public/screenshots/ \; 2>/dev/null || echo "No JPG files found"
-          find . -name "*.jpeg" -type f -exec cp {} public/screenshots/ \; 2>/dev/null || echo "No JPEG files found"
-          
-          echo "✅ Screenshots copied: $(find public/screenshots -type f | wc -l) files"
-          find public/screenshots -type f | head -10
-          
-          # Copy ALL HTML reports from anywhere
-          echo "📄 Copying ALL HTML reports..."
           mkdir -p public/reports
-          find . -name "*.html" -type f -exec cp {} public/reports/ \; 2>/dev/null || echo "No HTML files found"
           
-          echo "✅ HTML reports copied: $(find public/reports -type f | wc -l) files"
-          find public/reports -type f | head -10
+          # Copy screenshots
+          if [ -d "reports/screenshots" ]; then
+            echo "📸 Copying screenshots..."
+            cp -r reports/screenshots/* public/screenshots/ 2>/dev/null || echo "No screenshots to copy"
+            echo "✅ Screenshots: $(find public/screenshots -type f | wc -l) files"
+          fi
           
-          echo "🎉 GitHub Pages deployment ready!"
+          # Copy HTML reports
+          if ls reports/*.html 1> /dev/null 2>&1; then
+            echo "📄 Copying HTML reports..."
+            cp reports/*.html public/reports/ 2>/dev/null || echo "No HTML reports"
+            echo "✅ HTML reports: $(ls public/reports/*.html 2>/dev/null | wc -l) files"
+          fi
+          
+          echo "🎉 Deployment ready!"
           
       - name: 🌐 Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
