@@ -140,6 +140,8 @@ class ScreenshotUtils:
         Capture screenshot (supports full-page by default)
         """
         try:
+            print(f"🔍 DEBUG: capture_screenshot called with filename: {filename}")
+            
             self.logger.debug("Starting screenshot capture...")
 
             # Handle filename generation
@@ -154,6 +156,7 @@ class ScreenshotUtils:
                     "screenshot", subfolder, browser_info
                 )
 
+            print(f"🔍 DEBUG: Saving to: {filepath}")
             filepath.parent.mkdir(parents=True, exist_ok=True)
 
             # Full-page logic
@@ -166,13 +169,17 @@ class ScreenshotUtils:
                 self.driver.set_window_size(original_size["width"], original_size["height"])
             else:
                 # Normal viewport screenshot
+                print(f"🔍 DEBUG: Taking normal screenshot...")
                 self.driver.save_screenshot(str(filepath))
+                print(f"🔍 DEBUG: Screenshot taken successfully")
 
             self.logger.info(f"Screenshot captured: {filepath}")
             return str(filepath)
 
         except Exception as e:
             self.logger.error(f"Failed to capture screenshot: {e}")
+            import traceback
+            print(f"🔍 DEBUG: Screenshot error: {traceback.format_exc()}")
             return None
 
     def capture_screenshot_on_failure(
@@ -183,7 +190,10 @@ class ScreenshotUtils:
         Returns paths to both files with GitHub Pages URLs
         """
         try:
-            # Check if driver is available and valid
+            # DEBUG: Check driver status
+            print(f"🔍 DEBUG: Starting screenshot capture for {test_name}")
+            print(f"🔍 DEBUG: Driver exists: {hasattr(self, 'driver')}")
+            
             if not hasattr(self, 'driver') or not self.driver:
                 self.logger.warning("No driver available for screenshot capture")
                 return {"screenshot": None, "html": None}
@@ -191,6 +201,14 @@ class ScreenshotUtils:
             # Check if driver has current_url method (is a valid WebDriver instance)
             if not hasattr(self.driver, 'current_url'):
                 self.logger.warning("Driver object is not a valid WebDriver instance")
+                return {"screenshot": None, "html": None}
+            
+            # DEBUG: Check if we can interact with driver
+            try:
+                current_url = self.driver.current_url
+                print(f"🔍 DEBUG: Current URL: {current_url}")
+            except Exception as e:
+                print(f"🔍 DEBUG: Cannot get current URL: {e}")
                 return {"screenshot": None, "html": None}
             
             timestamp = self._generate_timestamp()
@@ -206,26 +224,17 @@ class ScreenshotUtils:
                 error_type = error_message.split(':')[0].lower().replace(' ', '_')[:15]
 
             screenshot_filename = f"{error_type}_{clean_test_name}_{timestamp}"
+            print(f"🔍 DEBUG: Attempting screenshot: {screenshot_filename}")
+            
             screenshot_path = self.capture_screenshot(
                 screenshot_filename, "failures", browser_info
             )
 
-            # # 2. Capture HTML error report in logs directory
-            # html_filename = f"{error_type}_{clean_test_name}_{timestamp}.html"
-            # html_path = self.logs_dir / "error_captures" / html_filename
-
-            # # Generate comprehensive HTML report
-            # html_content = self.reporting._generate_error_html(
-            #     test_name, error_message, additional_info
-            # )
-
-            # with open(html_path, "w", encoding="utf-8") as f:
-                # f.write(html_content)
+            print(f"🔍 DEBUG: Screenshot result: {screenshot_path}")
 
             # 3. Generate GitHub Pages URLs for direct access
             result = {
                 "screenshot": screenshot_path,
-                # "html": str(html_path),
                 "timestamp": timestamp,
             }
             
@@ -233,19 +242,18 @@ class ScreenshotUtils:
             if screenshot_path:
                 screenshot_filename = Path(screenshot_path).name
                 result["public_screenshot_url"] = f"{self.github_pages_base}/screenshots/{screenshot_filename}"
-            
-            # if html_path:
-            #     html_filename = Path(html_path).name
-            #     result["public_html_url"] = f"{self.github_pages_base}/screenshots/{html_filename}"
+                print(f"🔍 DEBUG: GitHub Pages URL: {result['public_screenshot_url']}")
 
             self.logger.error(
-                f"📊 Failure captured - Screenshot: {screenshot_path}"#, HTML: {html_path}"
+                f"📊 Failure captured - Screenshot: {screenshot_path}"
             )
 
             return result
 
         except Exception as e:
             self.logger.error(f"Failed to capture complete failure: {e}")
+            import traceback
+            print(f"🔍 DEBUG: Full error: {traceback.format_exc()}")
             return {"screenshot": None, "html": None, "timestamp": None}
 
     def capture_screenshot_on_success(self, test_name, browser_info=None):
