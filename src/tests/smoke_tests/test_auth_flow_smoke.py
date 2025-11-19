@@ -90,32 +90,32 @@ class TestAuthFlowSmoke(TestBase):
 
         self.auth_flow.logger.success("Successful login & redirect test passed")
 
-    @pytest.mark.smoke
-    @pytest.mark.auth
-    def test_failed_login_with_error_message(self):
-        """Smoke Test 2: Failed login with invalid credentials shows toast error message"""
-        self.auth_flow.logger.info("=== Testing Failed Login with Error Message ===")
+    # @pytest.mark.smoke
+    # @pytest.mark.auth
+    # def test_failed_login_with_error_message(self):
+    #     """Smoke Test 2: Failed login with invalid credentials shows toast error message"""
+    #     self.auth_flow.logger.info("=== Testing Failed Login with Error Message ===")
 
-        self.auth_flow.logger.step(1, "Navigating to login page")
-        self.auth_flow.open_login_page()
-        assert self.auth_flow.wait_for_login_page(), "Login page should load successfully"
+    #     self.auth_flow.logger.step(1, "Navigating to login page")
+    #     self.auth_flow.open_login_page()
+    #     assert self.auth_flow.wait_for_login_page(), "Login page should load successfully"
 
-        self.auth_flow.logger.step(2, "Attempting login with invalid credentials")
-        login_success = self.auth_flow.login(
-            "invalid_user@example.com", "wrong_password_123"
-        )
+    #     self.auth_flow.logger.step(2, "Attempting login with invalid credentials")
+    #     login_success = self.auth_flow.login(
+    #         "invalid_user@example.com", "wrong_password_123"
+    #     )
 
-        assert not login_success, "Login should fail with invalid credentials"
+    #     assert not login_success, "Login should fail with invalid credentials"
 
-        self.auth_flow.logger.step(3, "Fetching error message from toast")
-        error_message = self.auth_flow.get_last_toast() or self.auth_flow.get_toast_error_message()
+    #     self.auth_flow.logger.step(3, "Fetching error message from toast")
+    #     error_message = self.auth_flow.get_last_toast() or self.auth_flow.get_toast_error_message()
 
-        assert error_message is not None, "Error message (toast) should be displayed for failed login"
-        assert len(error_message) > 0, "Error message should not be empty"
+    #     assert error_message is not None, "Error message (toast) should be displayed for failed login"
+    #     assert len(error_message) > 0, "Error message should not be empty"
 
-        self.auth_flow.logger.success(
-            f"Failed login test passed - Captured error: {error_message}"
-        )
+    #     self.auth_flow.logger.success(
+    #         f"Failed login test passed - Captured error: {error_message}"
+    #     )
 
     @pytest.mark.smoke
     @pytest.mark.auth

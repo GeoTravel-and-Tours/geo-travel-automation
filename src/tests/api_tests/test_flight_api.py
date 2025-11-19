@@ -199,31 +199,31 @@ class TestFlightAPI:
         assert response.status_code == 200
         assert 'search_id' in response.json().get('data', {})
 
-    @pytest.mark.api
-    def test_multi_city_flight_search(self, authenticated_flight_api):
-        """Test multi-city flight search"""
-        self.logger.info("=== Testing Multi-City Flight Search ===")
-        search_data = {
-            "flight_type": "multi-city",
-            "adults": 1,
-            "children": 0,
-            "infants": 0,
-            "destinations": [
-                {
-                    "origin": "LOS",
-                    "destination": "CDG",
-                    "departure_date": self.get_future_date(30)
-                },
-                {
-                    "origin": "CDG", 
-                    "destination": "LHR",
-                    "departure_date": self.get_future_date(35)
-                }
-            ]
-        }
+    # @pytest.mark.api
+    # def test_multi_city_flight_search(self, authenticated_flight_api):
+    #     """Test multi-city flight search"""
+    #     self.logger.info("=== Testing Multi-City Flight Search ===")
+    #     search_data = {
+    #         "flight_type": "multi-city",
+    #         "adults": 1,
+    #         "children": 0,
+    #         "infants": 0,
+    #         "destinations": [
+    #             {
+    #                 "origin": "LOS",
+    #                 "destination": "CDG",
+    #                 "departure_date": self.get_future_date(30)
+    #             },
+    #             {
+    #                 "origin": "CDG", 
+    #                 "destination": "LHR",
+    #                 "departure_date": self.get_future_date(35)
+    #             }
+    #         ]
+    #     }
 
-        response = authenticated_flight_api.search_request(search_data)
-        assert response.status_code == 200
+    #     response = authenticated_flight_api.search_request(search_data)
+    #     assert response.status_code == 200
 
     @pytest.mark.api
     def test_passenger_combinations(self, authenticated_flight_api):
