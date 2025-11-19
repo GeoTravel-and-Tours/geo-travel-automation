@@ -1,5 +1,6 @@
 # src/utils/screenshot.py
 
+import os
 import base64
 import logging
 from datetime import datetime, timedelta
@@ -21,11 +22,13 @@ class ScreenshotUtils:
         self,
         driver: WebDriver,
         screenshot_dir="reports/screenshots",
+        github_pages_base=None,
         logs_dir="logs",
         logger=None,
     ):
         self.driver = driver
         self.screenshot_dir = Path(screenshot_dir)
+        self.github_pages_base = github_pages_base or self._get_github_pages_url()
         self.logs_dir = Path(logs_dir)
         self.logger = logger or self._setup_default_logger()
         self._setup_directories()
@@ -75,6 +78,11 @@ class ScreenshotUtils:
             self.logger.error(f"Failed to create directories: {e}")
             raise
 
+    def _get_github_pages_url(self):
+        """Generate GitHub Pages URL based on repo"""
+        repo = os.getenv('GITHUB_REPOSITORY', 'geo-engineering/qa-automation')
+        return f"https://{repo.split('/')[0]}.github.io/{repo.split('/')[1]}"
+    
     def _generate_timestamp(self):
         """Generate consistent timestamp"""
         return datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -172,19 +180,15 @@ class ScreenshotUtils:
     ):
         """
         Complete failure capture: screenshot + HTML error report
-        Returns paths to both files
+        Returns paths to both files with GitHub Pages URLs
         """
         try:
             # Check if driver is available and valid
             if not hasattr(self, 'driver') or not self.driver:
-                try:
-                    url = self.driver.current_url if self.driver else "N/A"
-                    self.logger.warning("No driver available for screenshot capture")
-                except Exception:
-                    url = "N/A"
+                self.logger.warning("No driver available for screenshot capture")
                 return {"screenshot": None, "html": None}
 
-            # Check if driver has current_url method (is a WebDriver instance)
+            # Check if driver has current_url method (is a valid WebDriver instance)
             if not hasattr(self.driver, 'current_url'):
                 self.logger.warning("Driver object is not a valid WebDriver instance")
                 return {"screenshot": None, "html": None}
@@ -193,13 +197,21 @@ class ScreenshotUtils:
             clean_test_name = self._clean_filename(test_name)
 
             # 1. Capture screenshot in failures folder
-            screenshot_filename = f"FAILURE_{clean_test_name}_{timestamp}"
+            # Extract error type for better naming
+            error_type = "error"
+            if additional_info and 'category' in additional_info:
+                error_type = additional_info['category'].lower().replace(' ', '_')
+            elif error_message:
+                # Extract first word of error
+                error_type = error_message.split(':')[0].lower().replace(' ', '_')[:15]
+
+            screenshot_filename = f"{error_type}_{clean_test_name}_{timestamp}"
             screenshot_path = self.capture_screenshot(
                 screenshot_filename, "failures", browser_info
             )
 
             # 2. Capture HTML error report in logs directory
-            html_filename = f"FAILURE_{clean_test_name}_{timestamp}.html"
+            html_filename = f"{error_type}_{clean_test_name}_{timestamp}.html"
             html_path = self.logs_dir / "error_captures" / html_filename
 
             # Generate comprehensive HTML report
@@ -210,15 +222,27 @@ class ScreenshotUtils:
             with open(html_path, "w", encoding="utf-8") as f:
                 f.write(html_content)
 
-            self.logger.error(
-                f"📊 Failure captured - Screenshot: {screenshot_path}, HTML: {html_path}"
-            )
-
-            return {
+            # 3. Generate GitHub Pages URLs for direct access
+            result = {
                 "screenshot": screenshot_path,
                 "html": str(html_path),
                 "timestamp": timestamp,
             }
+            
+            # Generate public URLs for GitHub Pages
+            if screenshot_path:
+                screenshot_filename = Path(screenshot_path).name
+                result["public_screenshot_url"] = f"{self.github_pages_base}/screenshots/{screenshot_filename}"
+            
+            if html_path:
+                html_filename = Path(html_path).name
+                result["public_html_url"] = f"{self.github_pages_base}/screenshots/{html_filename}"
+
+            self.logger.error(
+                f"📊 Failure captured - Screenshot: {screenshot_path}, HTML: {html_path}"
+            )
+
+            return result
 
         except Exception as e:
             self.logger.error(f"Failed to capture complete failure: {e}")
