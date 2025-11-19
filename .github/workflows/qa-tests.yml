@@ -90,14 +90,14 @@ jobs:
 
       - name: Build public directory
         run: |
-          mkdir -p public/screenshots
+          mkdir -p public/screenshots/failures
           mkdir -p public/reports
 
           echo "📁 Listing artifact files:"
           find artifacts -type f | head -20
 
           echo "📸 Copying screenshots..."
-          find artifacts -name "*.png" -exec cp {} public/screenshots/ \; || true
+          find artifacts/reports/screenshots/failures -type f -name "*.png" -exec cp {} public/screenshots/failures\; || true
 
           echo "📄 Copying HTML reports..."
           find artifacts -name "*.html" -exec cp {} public/reports/ \; || true
