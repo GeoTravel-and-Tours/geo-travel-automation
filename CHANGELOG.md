@@ -11,8 +11,33 @@ It helps track improvements, fixes, and added features over time.
 ### Planned
 - Add support for email notification integration
 - Regression test suites for major features
-- Enhanced API test coverage for booking flows
+- Switch from using Slack Webhook URL to using Slack Bot Token because it is more controllable and has more Pros
 - Performance monitoring integration
+
+---
+
+## [1.4.1] - 2025-11-19
+### Added
+- GitHub Pages integration for direct screenshot access without zip downloads
+- Direct clickable links in Slack reports for failed test evidence
+- Enhanced screenshot naming with error-type prefixes (element_not_found, api_timeout, etc.)
+- Public artifact deployment to gh-pages branch for browser-accessible test evidence
+- Automated GitHub Pages workflow that publishes screenshots and reports after test runs
+
+### Changed
+- Improved test reporting with better environment handling and screenshot robustness
+- Enhanced driver availability checks before capturing screenshots to prevent errors
+- Fixed duration logging to use actual_duration instead of potentially None values
+- Updated module resolution in test runner scripts for proper import handling
+- More robust API test skipping logic to prevent false positives in environment checks
+- GitHub workflow enhancements with consistent environment variable loading
+
+### Fixed
+- Critical method errors in screenshot capture by removing non-existent method calls
+- GitHub Pages URL generation logic for proper direct linking
+- Undefined variable issues in individual report generation
+- Environment skip notifications with proper reason parameter passing
+- Driver validation in screenshot utilities to handle None driver instances
 
 ---
 
