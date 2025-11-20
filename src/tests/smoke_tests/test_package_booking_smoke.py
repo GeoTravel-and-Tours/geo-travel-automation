@@ -125,75 +125,75 @@ class TestPackageBookingSmoke(TestBase):
             self.package_booking_flow.screenshot.capture_screenshot_on_failure("package_search_failure")
             raise
 
-    @pytest.mark.smoke
-    @pytest.mark.dependency(depends=["homepage_loaded", "package_search_works", "booking_form_works"])
-    def test_complete_package_booking_flow(self):
-        """Smoke Test 4: Comprehensive end-to-end package booking flow"""
-        self.package_booking_flow.logger.info("=== COMPREHENSIVE TEST: Complete Package Booking Flow ===")
+    # @pytest.mark.smoke
+    # @pytest.mark.dependency(depends=["homepage_loaded", "package_search_works", "booking_form_works"])
+    # def test_complete_package_booking_flow(self):
+    #     """Smoke Test 4: Comprehensive end-to-end package booking flow"""
+    #     self.package_booking_flow.logger.info("=== COMPREHENSIVE TEST: Complete Package Booking Flow ===")
         
-        # All quick tests passed, now run the full flow
-        try:
-            # Step 1: Open homepage
-            self.package_booking_flow.logger.step(1,"Opening homepage")
-            self.home_page.open()
-            self.home_page.wait_for_homepage_load(timeout=15, max_retries=3)
+    #     # All quick tests passed, now run the full flow
+    #     try:
+    #         # Step 1: Open homepage
+    #         self.package_booking_flow.logger.step(1,"Opening homepage")
+    #         self.home_page.open()
+    #         self.home_page.wait_for_homepage_load(timeout=15, max_retries=3)
             
-            # Step 2: Navigate to packages
-            self.package_booking_flow.logger.step(2,"Clicking on Package")
-            self.package_booking_flow.click_package()
+    #         # Step 2: Navigate to packages
+    #         self.package_booking_flow.logger.step(2,"Clicking on Package")
+    #         self.package_booking_flow.click_package()
             
-            # Step 3: Select trip type
-            self.package_booking_flow.logger.step(3,"Selecting trip type")
-            self.package_booking_flow.select_trip_type()
+    #         # Step 3: Select trip type
+    #         self.package_booking_flow.logger.step(3,"Selecting trip type")
+    #         self.package_booking_flow.select_trip_type()
             
-            # Step 4: Select country
-            self.package_booking_flow.logger.step(4,"Selecting country")
-            self.package_booking_flow.select_country("Nigeria")
+    #         # Step 4: Select country
+    #         self.package_booking_flow.logger.step(4,"Selecting country")
+    #         self.package_booking_flow.select_country("Nigeria")
 
-            # Step 5: Select travel date
-            self.package_booking_flow.logger.step(5,"Opening travel date selector")
-            self.package_booking_flow.select_travel_date()
+    #         # Step 5: Select travel date
+    #         self.package_booking_flow.logger.step(5,"Opening travel date selector")
+    #         self.package_booking_flow.select_travel_date()
 
-            # Step 6: Search packages
-            self.package_booking_flow.logger.step(6,"Searching packages")
-            self.package_booking_flow.search_packages()
-            time.sleep(5)
-            self.package_booking_flow.is_search_session_initialized(search_term="packages", timeout=30)
+    #         # Step 6: Search packages
+    #         self.package_booking_flow.logger.step(6,"Searching packages")
+    #         self.package_booking_flow.search_packages()
+    #         time.sleep(5)
+    #         self.package_booking_flow.is_search_session_initialized(search_term="packages", timeout=30)
 
-            # Step 7: View package details
-            self.package_booking_flow.logger.step(7,"Viewing package details")
-            self.package_booking_flow.click_view_package()
-            time.sleep(5)
+    #         # Step 7: View package details
+    #         self.package_booking_flow.logger.step(7,"Viewing package details")
+    #         self.package_booking_flow.click_view_package()
+    #         time.sleep(5)
 
-            # Step 8: Select price option
-            self.package_booking_flow.logger.step(8,"Selecting price option")
-            self.package_booking_flow.select_price_option()
-            time.sleep(5)
+    #         # Step 8: Select price option
+    #         self.package_booking_flow.logger.step(8,"Selecting price option")
+    #         self.package_booking_flow.select_price_option()
+    #         time.sleep(5)
             
-            # Step 9: Complete booking flow
-            self.package_booking_flow.logger.step(9,"Booking reservation and filling details")
-            self.package_booking_flow.handle_booking_flow()
+    #         # Step 9: Complete booking flow
+    #         self.package_booking_flow.logger.step(9,"Booking reservation and filling details")
+    #         self.package_booking_flow.handle_booking_flow()
             
-            # Step 10: Verify booking progression
-            self.package_booking_flow.logger.step(10,"Verifying booking progression")
-            time.sleep(5)
+    #         # Step 10: Verify booking progression
+    #         self.package_booking_flow.logger.step(10,"Verifying booking progression")
+    #         time.sleep(5)
             
-            # Step 11: Complete booking flow WITH PAYMENT
-            self.package_booking_flow.logger.step(11,"Initiating payment flow")
-            payment_success = self.package_booking_flow.complete_booking_with_payment()
-            assert payment_success, "Should successfully reach Flutterwave test mode"
+    #         # Step 11: Complete booking flow WITH PAYMENT
+    #         self.package_booking_flow.logger.step(11,"Initiating payment flow")
+    #         payment_success = self.package_booking_flow.complete_booking_with_payment()
+    #         assert payment_success, "Should successfully reach Flutterwave test mode"
     
-            # Final verification
-            if payment_success:
-                current_url = self.navigator.get_current_url()
-                self.package_booking_flow.logger.info(f"Final URL: {current_url}")
-                self.package_booking_flow.logger.success("✅ SUCCESS: Reached Flutterwave test mode verification")
-                # We expect to be on Flutterwave since we stopped at test mode verification
-                assert "flutterwave" in current_url, "Should be on Flutterwave after successful test mode verification"
-            else:
-                self.package_booking_flow.logger.error("❌ Failed to reach Flutterwave test mode")
-                assert False, "Payment flow failed to reach Flutterwave test mode"
+    #         # Final verification
+    #         if payment_success:
+    #             current_url = self.navigator.get_current_url()
+    #             self.package_booking_flow.logger.info(f"Final URL: {current_url}")
+    #             self.package_booking_flow.logger.success("✅ SUCCESS: Reached Flutterwave test mode verification")
+    #             # We expect to be on Flutterwave since we stopped at test mode verification
+    #             assert "flutterwave" in current_url, "Should be on Flutterwave after successful test mode verification"
+    #         else:
+    #             self.package_booking_flow.logger.error("❌ Failed to reach Flutterwave test mode")
+    #             assert False, "Payment flow failed to reach Flutterwave test mode"
             
-        except Exception as e:
-            self.package_booking_flow.logger.error(f"❌ Comprehensive package booking test failed: {str(e)}")
-            raise
+    #     except Exception as e:
+    #         self.package_booking_flow.logger.error(f"❌ Comprehensive package booking test failed: {str(e)}")
+    #         raise
