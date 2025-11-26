@@ -4,7 +4,7 @@ import pytest
 import time
 from src.utils.screenshot import ScreenshotUtils
 from selenium.webdriver.common.by import By
-from pages.ui.home_page import HomePage
+from src.pages.ui.home_page import HomePage
 from src.pages.ui.package_booking_flow import PackageBookingFlow
 from src.utils.navigation import NavigationUtils
 from src.core.test_base import TestBase

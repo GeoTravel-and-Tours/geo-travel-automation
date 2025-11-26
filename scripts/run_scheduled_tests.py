@@ -13,7 +13,7 @@ from datetime import datetime
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, project_root)
 
-from src.utils.reporting import smoke_reporting, regression_reporting, sanity_reporting, api_smoke_reporting, unified_reporter
+from src.utils.reporting import smoke_reporting, regression_reporting, sanity_reporting, api_smoke_reporting, unified_reporter, partners_api_smoke_reporting
 from src.utils.notifications import slack_notifier
 from src.utils.git_utils import setup_git_metadata
 from configs.environment import EnvironmentConfig
@@ -29,7 +29,8 @@ def get_suite_reporter(suite_name):
         "smoke": smoke_reporting,
         "regression": regression_reporting, 
         "sanity": sanity_reporting,
-        "api": api_smoke_reporting
+        "api": api_smoke_reporting,
+        "partners_api": partners_api_smoke_reporting
     }
     return reporters.get(suite_name, smoke_reporting)
 
@@ -103,6 +104,7 @@ def run_tests(suite_name, pytest_args=None, skip_env_check=False, is_unified_run
         "regression": "src/tests/regression_tests/",
         "sanity": "src/tests/sanity_tests/", 
         "api": "src/tests/api_tests/",
+        "partners_api": "src/tests/partners_api_tests/",
     }
 
     # Validate suite name
@@ -127,8 +129,8 @@ def run_tests(suite_name, pytest_args=None, skip_env_check=False, is_unified_run
             f"Let's squash some bugs! 🐛🔨"
         )
 
-    # Environment check - ONLY for UI tests, skip for API tests
-    if not skip_env_check and suite_name != "api":
+    # Environment check - ONLY for UI tests, skip for API and Partners API tests
+    if not skip_env_check and suite_name not in ["api", "partners_api"]:
         logger.info("Checking UI environment availability...")
 
         skip_reason = None
@@ -153,6 +155,49 @@ def run_tests(suite_name, pytest_args=None, skip_env_check=False, is_unified_run
         else:
             logger.success("UI environment is accessible - proceeding with tests")
 
+    # Partners API-specific environment check
+    if not skip_env_check and suite_name == "partners_api":
+        logger.info("Checking Partners API environment availability...")
+
+        skip_reason = None
+        try:
+            # Check if Partners API base URL is configured and accessible
+            partners_base_url = EnvironmentConfig.get_partners_api_base_url()
+            if not partners_base_url:
+                skip_reason = "Partners API base URL not configured"
+            else:
+                # Test basic connectivity to Partners API gateway
+                from src.pages.api.partners_api.partners_auth_api import PartnersAuthAPI
+                auth_api = PartnersAuthAPI()
+                welcome_response = auth_api.get_welcome()
+                
+                if welcome_response.status_code != 200:
+                    skip_reason = f"Partners API gateway unreachable (Status: {welcome_response.status_code})"
+                else:
+                    # Verify welcome message structure
+                    welcome_data = welcome_response.json()
+                    if 'message' not in welcome_data or 'Welcome to GeoTravel API Gateway' not in welcome_data.get('message', ''):
+                        skip_reason = "Partners API returned unexpected response structure"
+                    
+        except ImportError as e:
+            skip_reason = f"Partners API dependencies not available: {str(e)}"
+        except Exception as e:
+            skip_reason = f"Partners API health check failed: {e}"
+
+        if skip_reason:
+            logger.error(f"Skipping Partners API tests: {skip_reason}")
+            partners_base_url = getattr(EnvironmentConfig, 'get_partners_api_base_url', lambda: "Not configured")()
+            _send_environment_unavailable_notification(
+                environment=EnvironmentConfig.TEST_ENV,
+                url=partners_base_url if partners_base_url else "Not configured",
+                check_type="Partners API",
+                reason=skip_reason
+            )
+            if not is_unified_run:
+                logger.info("Slack notification sent for skipped Partners API tests")
+            return 0
+        else:
+            logger.success("Partners API environment is accessible - proceeding with tests")
 
     # API-specific environment check
     if not skip_env_check and suite_name == "api":
@@ -210,6 +255,12 @@ def run_tests(suite_name, pytest_args=None, skip_env_check=False, is_unified_run
                 "--log-cli-level=DEBUG",  # More verbose for API debugging
                 "-o", "log_cli=true",  # Ensure CLI logging
                 "-m", "api"  # Use api marker for API tests
+            ])
+        # Partners API-specific configurations
+        if suite_name == "partners_api":
+            base_pytest_args.extend([
+                "-m", "partners_api",  # Use partners_api marker
+                "--log-cli-level=DEBUG",  # More verbose for debugging
             ])
 
         # Add any additional pytest arguments
@@ -309,14 +360,14 @@ if __name__ == "__main__":
     default_build_id = f"#{datetime.now().strftime('%Y.%m.%d.%H%M')}.{git_info['commit_hash'][:7]}" if git_info['commit_hash'] != 'UNKNOWN' else f"#{datetime.now().strftime('%Y.%m.%d.%H%M')}"
     
     parser = argparse.ArgumentParser(
-        description="Run test suites dynamically (smoke, regression, sanity, api)"
+        description="Run test suites dynamically (smoke, regression, sanity, api, partners_api)"
     )
     parser.add_argument(
         "--suite",
         nargs="+",
         required=True,
-        choices=["smoke", "regression", "sanity", "api"],
-        help="Specify test suite(s) to run (one or more of: smoke, regression, sanity, api)"
+        choices=["smoke", "regression", "sanity", "api", "partners_api"],
+        help="Specify test suite(s) to run (one or more of: smoke, regression, sanity, api, partners_api)"
     )
     parser.add_argument(
         "--skip-env-check",

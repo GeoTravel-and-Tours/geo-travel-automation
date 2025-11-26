@@ -1,6 +1,7 @@
 # conftest.py
 
 import os
+import random
 import time
 import shutil
 from pathlib import Path
@@ -17,9 +18,6 @@ from configs.environment import EnvironmentConfig
 from src.utils.notifications import slack_notifier
 from configs.environment import EnvironmentConfig
 from src.utils.logger import GeoLogger
-
-from src.pages.api.auth_api import AuthAPI
-from src.pages.api.flight_api import FlightAPI
 
 logger = GeoLogger("conftest")
 
@@ -335,9 +333,14 @@ def pytest_runtest_makereport(item, call):
         
         suite_reporter = None
         test_path = str(item.fspath)
+        logger.info(f"🔍 CRITICAL DEBUG: test_path = {test_path}")
+        logger.info(f"🔍 CRITICAL DEBUG: 'partners_api_tests' in test_path = {'partners_api_tests' in test_path}")
+        logger.info(f"🔍 CRITICAL DEBUG: 'partners_api' in test_path = {'partners_api' in test_path}")
         
         if "smoke_tests" in test_path:
             suite_reporter = get_suite_reporter("smoke")
+        elif "partners_api_tests" in test_path:
+            suite_reporter = get_suite_reporter("partners_api")
         elif "regression_tests" in test_path:
             suite_reporter = get_suite_reporter("regression")
         elif "sanity_tests" in test_path:
@@ -347,6 +350,8 @@ def pytest_runtest_makereport(item, call):
         else:
             # Fallback to smoke reporter
             suite_reporter = get_suite_reporter("smoke")
+        logger.info(f"🔍 CRITICAL DEBUG: Selected reporter = {suite_reporter}")
+        logger.info(f"🔍 CRITICAL DEBUG: Reporter type = {type(suite_reporter)}")
             
         # record result in the appropriate reporter with proper metadata
         if suite_reporter:

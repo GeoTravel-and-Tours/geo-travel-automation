@@ -25,19 +25,23 @@ class EnvironmentConfig:
     ENVIRONMENTS = {
         "dev": {
             "base_url": "https://retail.dev.gowithgeo.com",
-            "api_base_url": "https://api.dev.gowithgeo.com"
+            "api_base_url": "https://api.dev.gowithgeo.com",
+            "partners_api_base_url": "https://sandbox.api.developers.gowithgeo.com"
         },
         "qa": {
             "base_url": "https://retail.qa.gowithgeo.com", 
-            "api_base_url": "https://api.qa.gowithgeo.com"
+            "api_base_url": "https://api.qa.gowithgeo.com",
+            "partners_api_base_url": "https://sandbox.api.developers.gowithgeo.com"
         },
         "staging": {
             "base_url": "https://retail.stg.gowithgeo.com",
-            "api_base_url": "https://api.stg.gowithgeo.com"
+            "api_base_url": "https://api.stg.gowithgeo.com",
+            "partners_api_base_url": "https://sandbox.api.developers.gowithgeo.com"
         },
         'production': {
             'base_url': 'https://www.gowithgeo.com',
-            'api_base_url': 'https://api.gowithgeo.com'
+            'api_base_url': 'https://api.gowithgeo.com',
+            'partners_api_base_url': 'https://api.developers.gowithgeo.com'
         }
     }
 
@@ -184,6 +188,51 @@ class EnvironmentConfig:
             
         # Otherwise use the environment-specific API URL
         return cls.ENVIRONMENTS.get(env, {}).get("api_base_url")
+    
+    @classmethod
+    def get_partners_api_base_url(cls, environment=None):
+        """Get Partners API base URL for the specified environment"""
+        env = environment or cls.TEST_ENV
+        
+        # If PARTNERS_API_BASE_URL is explicitly set in environment, use it
+        partners_api_url = os.getenv("PARTNERS_API_BASE_URL")
+        if partners_api_url:
+            return partners_api_url
+            
+        # Otherwise use the environment-specific Partners API URL
+        return cls.ENVIRONMENTS.get(env, {}).get("partners_api_base_url")
+    
+    # Partners API Verified Test Account
+    PARTNERS_VERIFIED_EMAIL = os.getenv("PARTNERS_VERIFIED_EMAIL")
+    PARTNERS_VERIFIED_PASSWORD = os.getenv("PARTNERS_VERIFIED_PASSWORD")
+    
+    @classmethod
+    def get_verified_partners_account(cls):
+        """Get verified partners account from environment variables"""
+        if not cls.PARTNERS_VERIFIED_EMAIL or not cls.PARTNERS_VERIFIED_PASSWORD:
+            raise ValueError(
+                "Partners verified account credentials not found in environment variables. "
+                "Please set PARTNERS_VERIFIED_EMAIL and PARTNERS_VERIFIED_PASSWORD in .env file"
+            )
+        
+        return {
+            "email": cls.PARTNERS_VERIFIED_EMAIL,
+            "password": cls.PARTNERS_VERIFIED_PASSWORD,
+        }
+    
+    @classmethod
+    def validate_partners_credentials(cls):
+        """Validate that partners credentials are properly set"""
+        credentials = cls.get_verified_partners_account()
+        
+        if not credentials["email"] or not credentials["password"]:
+            return False
+            
+        # Basic validation - email format
+        if "@" not in credentials["email"]:
+            return False
+            
+        return True
 
     @classmethod
     def get_api_credentials(cls):

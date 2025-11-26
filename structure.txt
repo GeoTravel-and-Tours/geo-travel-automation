@@ -1,0 +1,101 @@
+.
+├── .circleci
+│   └── config.yml
+├── .env
+├── .github
+│   └── workflows
+│       └── qa-tests.yml
+├── .gitignore
+├── .pytest_cache
+│   ├── .gitignore
+│   ├── CACHEDIR.TAG
+│   ├── README.md
+│   └── v
+│       └── cache
+│           ├── lastfailed
+│           └── nodeids
+├── CHANGELOG.md
+├── PRE_PUSH_CHECKLIST.md
+├── README.md
+├── configs
+│   └── environment.py
+├── conftest.py
+├── pytest.ini
+├── requirements.txt
+├── scripts
+│   ├── cleanup.py
+│   └── run_scheduled_tests.py
+├── src
+│   ├── core
+│   │   ├── __init__.py
+│   │   ├── base_api.py
+│   │   ├── base_page.py
+│   │   ├── driver_factory.py
+│   │   ├── partners_base_api.py
+│   │   └── test_base.py
+│   ├── pages
+│   │   ├── api
+│   │   │   ├── auth_api.py
+│   │   │   ├── blogs_api.py
+│   │   │   ├── commercial_deals_api.py
+│   │   │   ├── events_api.py
+│   │   │   ├── flight_api.py
+│   │   │   ├── flight_utils_api.py
+│   │   │   ├── google_reviews_api.py
+│   │   │   ├── hotels_api.py
+│   │   │   ├── newsletter_api.py
+│   │   │   ├── notification_api.py
+│   │   │   ├── package_api.py
+│   │   │   ├── partners_api
+│   │   │   │   ├── organization_api.py
+│   │   │   │   ├── partners_auth_api.py
+│   │   │   │   ├── partners_flight_api.py
+│   │   │   │   └── partners_package_api.py
+│   │   │   ├── price_api.py
+│   │   │   ├── transactions_api.py
+│   │   │   └── users_api.py
+│   │   └── ui
+│   │       ├── __init__.py
+│   │       ├── auth_flow.py
+│   │       ├── dashboard_page.py
+│   │       ├── flight_booking_flow.py
+│   │       ├── home_page.py
+│   │       ├── package_booking_flow.py
+│   │       └── payment_flow.py
+│   ├── tests
+│   │   ├── api_tests
+│   │   │   ├── test_auth_api.py
+│   │   │   ├── test_flight_api.py
+│   │   │   ├── test_misc_api.py
+│   │   │   └── test_package_api.py
+│   │   ├── partners_api_tests
+│   │   │   ├── test_partners_auth_api.py
+│   │   │   ├── test_partners_flight.py
+│   │   │   ├── test_partners_organization.py
+│   │   │   └── test_partners_package.py
+│   │   ├── regression_tests
+│   │   └── smoke_tests
+│   │       ├── test_auth_flow_smoke.py
+│   │       ├── test_flight_booking_smoke.py
+│   │       ├── test_homepage_smoke.py
+│   │       ├── test_hotels_booking_smoke.py
+│   │       └── test_package_booking_smoke.py
+│   └── utils
+│       ├── __init__.py
+│       ├── cleanup.py
+│       ├── element_actions.py
+│       ├── git_utils.py
+│       ├── html_templates.py
+│       ├── javascript.py
+│       ├── logger.py
+│       ├── navigation.py
+│       ├── notifications.py
+│       ├── page_info.py
+│       ├── reporting.py
+│       ├── screenshot.py
+│       ├── validation.py
+│       ├── verified_partners_helper.py
+│       └── wait_strategy.py
+└── structure.txt
+
+21 directories, 78 files
