@@ -131,6 +131,8 @@ class GeoReporter:
 
         if "api" in suite_lower:
             return "API", "BACKEND"
+        elif "partners_api" in suite_lower or "partners" in suite_lower:
+            return "PARTNERS_API", "PARTNERS_BACKEND"
         elif any(ui_type in suite_lower for ui_type in ["smoke", "regression", "sanity", "ui"]):
         # elif any(ui_type in suite_lower for ui_type in ["smoke", "regression", "sanity", "ui", "flight", "package", "login", "homepage"]):
             return "UI", "FRONTEND"
@@ -321,6 +323,7 @@ class GeoReporter:
         icon_map = {
             "FRONTEND": "💻",
             "BACKEND": "🔧", 
+            "PARTNERS_BACKEND": "🤝",
             "FRONTEND & BACKEND": "🔗",
             "UNKNOWN": "❓"
         }
@@ -579,7 +582,13 @@ class GeoReporter:
             "api": "API",
             "smoke": "UI Smoke", 
             "regression": "UI Regression",
-            "sanity": "UI Sanity"
+            "sanity": "UI Sanity",
+            "partners_api": "Partners API",
+            "partners_api_regression": "Partners API Regression", 
+            "partners_auth": "Partners Auth API",
+            "partners_flight": "Partners Flight API",
+            "partners_package": "Partners Package API", 
+            "partners_organization": "Partners Organization API"
         }
         return name_map.get(suite_name, suite_name.upper())
 
@@ -679,6 +688,48 @@ class GeoReporter:
             "test_get_all_deals": "Fetching all deals via API",
             "test_get_single_deal": "Fetching a single deal via API",
             "test_book_package": "Booking a package via API",
+            
+            
+            # ============================ PARTNERS API TESTS ============================ #
+            # Partners Auth API Tests
+            "test_welcome_message": "Partners API gateway connectivity",
+            "test_organization_signup_success": "Organization registration via Partners API",
+            "test_organization_login_unverified_returns_no_token": "Unverified user authentication flow",
+            "test_verified_user_login_returns_token": "Verified user token generation",
+            "test_verified_user_login_response_structure": "Verified user login response validation",
+            
+            # Partners Flight API Tests
+            "test_verified_user_can_search_flights": "Flight search functionality for verified partners",
+            "test_verified_user_can_book_flight": "Flight booking functionality for verified partners", 
+            "test_flight_search_counted_in_usage": "Flight search usage tracking",
+            "test_flight_booking_counted_in_usage": "Flight booking usage tracking",
+            "test_flight_usage_reflected_in_range_endpoint": "Flight usage range reporting",
+            "test_unverified_user_blocked_from_flight_search": "Flight API security - unverified user blocking",
+            "test_unverified_user_blocked_from_flight_booking": "Flight booking security validation",
+            
+            # Partners Package API Tests
+            "test_verified_user_can_get_packages": "Package listing access for verified partners",
+            "test_verified_user_can_get_package_countries": "Package countries and cities access",
+            "test_verified_user_can_book_package": "Package booking functionality",
+            "test_package_booking_appears_in_bookings_list": "Package booking record validation",
+            "test_package_booking_counted_in_usage": "Package booking usage tracking",
+            "test_package_usage_reflected_in_range_endpoint": "Package usage range reporting",
+            "test_unverified_user_blocked_from_package_listing": "Package API security validation",
+            "test_unverified_user_blocked_from_package_countries": "Package countries security",
+            "test_unverified_user_blocked_from_package_booking": "Package booking security",
+            
+            # Partners Organization API Tests  
+            "test_verified_user_can_access_profile": "Organization profile access",
+            "test_verified_user_can_reset_api_keys": "API key management and reset",
+            "test_verified_user_can_access_usage_data": "Organization usage data access",
+            "test_verified_account_status": "Verified account validation",
+            "test_usage_records_contain_flight_data": "Flight data in usage records",
+            "test_usage_records_contain_package_data": "Package data in usage records", 
+            "test_usage_range_shows_cumulative_data": "Cumulative usage reporting",
+            "test_unverified_user_blocked_from_all_organization_endpoints": "Organization API security",
+            "test_unverified_login_returns_no_token": "Unverified login token validation",
+            "test_malformed_token_returns_401": "Token validation security",
+            "test_expired_token_returns_401": "Token expiration handling",
         }
 
         return context_map.get(method_name, "Functional test")
@@ -690,6 +741,43 @@ class GeoReporter:
 
         error_lower = error_message.lower()
         test_lower = test_name.lower()
+        
+        # PARTNERS API SPECIFIC CATEGORIES
+        if "partners_api" in test_lower or "partners" in test_lower:
+            if "500" in error_lower or "internal server" in error_lower:
+                return "Partners API Server Error"
+            elif "401" in error_lower or "unauthorized" in error_lower:
+                return "Partners API Authentication"
+            elif "403" in error_lower or "forbidden" in error_lower:
+                return "Partners API Authorization" 
+            elif "token" in error_lower and ("invalid" in error_lower or "expired" in error_lower):
+                return "Partners Token Validation"
+            elif "verified" in error_lower and "unverified" in error_lower:
+                return "Partners Verification Status"
+            elif "api key" in error_lower or "api_secret" in error_lower:
+                return "Partners API Credentials"
+            elif "organization" in error_lower:
+                return "Partners Organization Access"
+            elif "flight" in error_lower and "search" in error_lower:
+                return "Partners Flight Search"
+            elif "flight" in error_lower and "book" in error_lower:
+                return "Partners Flight Booking" 
+            elif "package" in error_lower and "book" in error_lower:
+                return "Partners Package Booking"
+            elif "usage" in error_lower:
+                return "Partners Usage Tracking"
+            elif "KeyError" in error_lower or "IndexError" in error_lower:
+                return "Partners Response Parsing"
+            elif "AssertionError" in error_lower or "expected" in error_lower:
+                return "Partners Functional Assertion"
+            elif "TypeError" in error_lower or "AttributeError" in error_lower:
+                return "Partners Code Logic"
+            elif "timeout" in error_lower or "read timed out" in error_lower:
+                return "Partners API Timeout"
+            elif "connection" in error_lower or "refused" in error_lower:
+                return "Partners API Connection"
+            else:
+                return "Partners API Error"
         
         # Dependency/Skip related
         if "skip" in error_lower or "skipped" in error_lower or "dependency" in error_lower:
@@ -747,6 +835,8 @@ class GeoReporter:
                 return "Dependency Failure"
             elif "typeerror" in error_lower or "attributeerror" in error_lower:
                 return "Code Logic"
+            elif "connection" in error_lower or "refused" in error_lower:
+                return "API Connection"
             else:
                 return "API Error"
 
@@ -801,7 +891,22 @@ class GeoReporter:
 
             # General
             "Functional Assertion": "Review test expectations and actual results",
-            "Unknown": "Investigate logs and reproduce manually"
+            "Unknown": "Investigate logs and reproduce manually",
+            
+            
+            # PARTNERS API SPECIFIC SUGGESTIONS
+            "Partners API Server Error": "Check Partners API service status, verify endpoint URLs, review server logs",
+            "Partners API Authentication": "Verify API credentials, check token validity, validate authentication flow",
+            "Partners API Authorization": "Check user permissions, verify organization status, review access controls",
+            "Partners Token Validation": "Validate token format, check expiration, verify token generation process",
+            "Partners Verification Status": "Confirm email verification status, check verification flow, validate user state",
+            "Partners API Credentials": "Verify API key/secret configuration, check credential rotation, validate app ID",
+            "Partners Organization Access": "Check organization registration, verify profile access, validate org permissions",
+            "Partners Flight Search": "Validate flight search parameters, check availability, verify search session",
+            "Partners Flight Booking": "Review booking payload, check passenger data, validate payment flow",
+            "Partners Package Booking": "Verify package availability, check booking parameters, validate package status",
+            "Partners Usage Tracking": "Check usage recording mechanism, verify data aggregation, validate reporting endpoints",
+            "Partners API Error": "Review Partners API documentation, check request/response format, validate endpoints",
         }
         return suggestions.get(category, "Review test implementation and error logs")
 
@@ -924,6 +1029,8 @@ sanity_reporting = GeoReporter("UI SANITY TEST")
 api_smoke_reporting = GeoReporter("API SMOKE TEST")
 api_regression_reporting = GeoReporter("API REGRESSION TEST")
 api_sanity_reporting = GeoReporter("API SANITY TEST")
+partners_api_smoke_reporting = GeoReporter("PARTNERS API SMOKE TEST")
+partners_api_regression_reporting = GeoReporter("PARTNERS API REGRESSION TEST")
 
 # Unified reporter instance
 unified_reporter = smoke_reporting
@@ -936,6 +1043,8 @@ def get_suite_reporter(suite_name):
         "sanity": sanity_reporting,
         "api": api_smoke_reporting,
         "api_regression": api_regression_reporting,
-        "api_sanity": api_sanity_reporting
+        "api_sanity": api_sanity_reporting,
+        "partners_api": partners_api_smoke_reporting,
+        "partners_api_regression": partners_api_regression_reporting
     }
     return reporters.get(suite_name, smoke_reporting)
