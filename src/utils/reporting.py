@@ -776,6 +776,8 @@ class GeoReporter:
                 return "Partners API Timeout"
             elif "connection" in error_lower or "refused" in error_lower:
                 return "Partners API Connection"
+            elif "valueerror" in error_lower or "bad request" in error_lower:
+                return "Partners Request Validation"
             else:
                 return "Partners API Error"
         
