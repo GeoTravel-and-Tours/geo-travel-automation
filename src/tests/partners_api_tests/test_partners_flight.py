@@ -55,7 +55,7 @@ class TestPartnersFlightSecurity:
         search_data = {
             "origin": "LHR",
             "destination": "LOS", 
-            "departure_date": "2025-11-26",
+            "departure_date": PartnersFlightAPI.get_future_date(1),
             "return_date": "",
             "adults": 1,
             "flight_type": "one_way",
@@ -143,7 +143,7 @@ class TestPartnersFlightFunctionality:
         search_data = {
             "origin": "LHR",
             "destination": "LOS",
-            "departure_date": "2025-11-26", 
+            "departure_date": PartnersFlightAPI.get_future_date(1),
             "return_date": "",
             "adults": 1,
             "flight_type": "one_way",
@@ -199,7 +199,7 @@ class TestPartnersFlightFunctionality:
         search_data = {
             "origin": "LHR", 
             "destination": "LOS",
-            "departure_date": "2025-11-26",
+            "departure_date": PartnersFlightAPI.get_future_date(1),
             "return_date": "",
             "adults": 1,
             "flight_type": "one_way", 
@@ -219,7 +219,7 @@ class TestPartnersFlightFunctionality:
             pytest.skip("No flight offers available for booking test")
         
         # Use first flight offer for booking
-        first_offer = flight_offers[1]
+        first_offer = flight_offers[0]
         flight_id = first_offer['id']
         
         self.logger.info(f"🔵 VERIFIED USER - Attempting flight booking: {flight_id}")
@@ -333,6 +333,7 @@ class TestPartnersFlightFunctionality:
         self.logger.info("🔵 GETTING BASELINE USAGE FOR FLIGHT SEARCHES")
         initial_usage_response = self.org_api.get_usage(mode='test')
         assert initial_usage_response.status_code == 200
+        print(initial_usage_response.text)
         
         initial_usage_data = initial_usage_response.json()
         initial_records = initial_usage_data['data']['records']
@@ -347,7 +348,7 @@ class TestPartnersFlightFunctionality:
         search_data = {
             "origin": "LHR",
             "destination": "LOS", 
-            "departure_date": "2025-11-26",
+            "departure_date": PartnersFlightAPI.get_future_date(1),
             "return_date": "",
             "adults": 1,
             "flight_type": "one_way",
@@ -370,6 +371,7 @@ class TestPartnersFlightFunctionality:
         self.logger.info("🔵 CHECKING UPDATED USAGE METRICS")
         final_usage_response = self.org_api.get_usage(mode='test')
         assert final_usage_response.status_code == 200
+        print(final_usage_response.text)
         
         final_usage_data = final_usage_response.json()
         final_records = final_usage_data['data']['records']
@@ -414,7 +416,7 @@ class TestPartnersFlightFunctionality:
         search_data = {
             "origin": "LHR",
             "destination": "LOS", 
-            "departure_date": "2025-11-26",
+            "departure_date": PartnersFlightAPI.get_future_date(1),
             "return_date": "",
             "adults": 1,
             "flight_type": "one_way",
@@ -435,9 +437,9 @@ class TestPartnersFlightFunctionality:
         
         # Use a flight offer (skip ID "1" as we found it might be problematic)
         if len(flight_offers) > 1:
-            flight_offer = flight_offers[1]  # Use second offer
+            flight_offer = flight_offers[0]  # Use first offer
         else:
-            flight_offer = flight_offers[0]
+            flight_offer = flight_offers[1]
         
         flight_id = flight_offer['id']
         

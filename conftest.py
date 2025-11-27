@@ -3,6 +3,7 @@
 import os
 import random
 import time
+import sys
 import shutil
 from pathlib import Path
 import html as html_escape
@@ -35,6 +36,12 @@ def pytest_addoption(parser):
         help="Skip environment availability check"
     )
     
+def should_skip_ui_environment_check():
+    """Check if UI environment check should be skipped"""
+    return (os.getenv("SKIP_UI_ENV_CHECK") == "true" or 
+            os.getenv("TEST_TYPE") == "API" or
+            any("partners_api" in arg for arg in sys.argv))
+    
 def pytest_configure(config):
     """Check environment availability before test session starts"""
     global environment_available, environment_skip_info, SKIP_UI_ENV_CHECK
@@ -43,37 +50,37 @@ def pytest_configure(config):
     skip_env_check = config.getoption("--skip-env-check") or False
     
     if not skip_env_check:
-        if SKIP_UI_ENV_CHECK:
-            logger.info("API tests detected - skipping UI environment check")
-            config.environment_down = False
-            environment_available = True
-            return
-        
-        logger.info("Checking environment availability...")
-        environment = EnvironmentConfig.TEST_ENV
-        base_url = EnvironmentConfig.get_base_url()
-        
-        
-        if not EnvironmentConfig.is_environment_accessible():
-            # Environment is down - set up skipping mechanism
-            config.environment_down = True
-            environment_available = False
+        # NEW: Use the should_skip_ui_environment_check function here
+        if not should_skip_ui_environment_check():
+            logger.info("Checking environment availability...")
+            environment = EnvironmentConfig.TEST_ENV
+            base_url = EnvironmentConfig.get_base_url()
             
-            # Store skip info for reporting
-            environment_skip_info = {
-                'environment': environment,
-                'url': base_url,
-                'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-                'check_type': 'UI'  # Default to UI environment check
-            }
-            
-            logger.error(f"Environment {environment} ({base_url}) is not accessible after multiple attempts")
-            logger.info("Tests will be skipped due to environment unavailability")
-            
+            if not EnvironmentConfig.is_environment_accessible():
+                # Environment is down - set up skipping mechanism
+                config.environment_down = True
+                environment_available = False
+                
+                # Store skip info for reporting
+                environment_skip_info = {
+                    'environment': environment,
+                    'url': base_url,
+                    'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                    'check_type': 'UI'
+                }
+                
+                logger.error(f"Environment {environment} ({base_url}) is not accessible after multiple attempts")
+                logger.info("Tests will be skipped due to environment unavailability")
+                
+            else:
+                config.environment_down = False
+                environment_available = True
+                logger.success("Environment is accessible - proceeding with tests")
         else:
+            # NEW: If we should skip UI check, mark environment as available
             config.environment_down = False
             environment_available = True
-            logger.success("Environment is accessible - proceeding with tests")
+            logger.info("Skipping UI environment check for API/Partners API tests")
     else:
         config.environment_down = False
         environment_available = True
@@ -83,6 +90,14 @@ def pytest_configure(config):
 def pytest_collection_modifyitems(config, items):
     """Skip all tests if environment is down with proper reporting"""
     global environment_available, environment_skip_info
+    
+    # NEW: Check if these are Partners API tests and skip UI environment check
+    are_partners_api_tests = any("partners_api" in item.nodeid for item in items)
+    
+    if are_partners_api_tests:
+        logger.info("Partners API tests detected - UI environment check will be skipped")
+        # Set flag to skip UI environment checks for these tests
+        os.environ["SKIP_UI_ENV_CHECK"] = "true"
     
     if getattr(config, 'environment_down', False) and not environment_available:
         skip_env = pytest.mark.skip(reason=f"Environment {environment_skip_info['environment']} is not accessible")

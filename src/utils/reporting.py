@@ -349,17 +349,28 @@ class GeoReporter:
         else:
             status_emoji = "❌❌❌" 
             status_message = "⚠️ Uh-oh, GEO-Bot spotted some issues! Please check the details below 🐞🔧"
+            
+        # NEW: Add @channel mention when tests fail
+        if unified_report["failed_tests"] > 0:
+            message_lines = [
+                "<!channel> 🚨",
+                "",
+                f"*🧪 {unified_report['test_suite_name']}*",
+            ]
+        else:
+            message_lines = [
+                "",
+                f"*🧪 {unified_report['test_suite_name']}*",
+                ]    # Start with empty line for success case
 
         unified_scope = self._determine_unified_scope()
         scope_icon = self._get_scope_icon(unified_scope)
 
-        message_lines = [
-            "",
-            f"*🧪 {unified_report['test_suite_name']}*",
+        message_lines.extend([
             f"Executed: {unified_report['end_time']}",
             f"Environment: {self.env}",
             f"Branch: {self.branch}",
-        ]
+        ])
 
         # Add browser info only for FRONTEND tests
         if unified_scope in ["FRONTEND", "FRONTEND & BACKEND"]:
@@ -746,6 +757,12 @@ class GeoReporter:
         if "partners_api" in test_lower or "partners" in test_lower:
             if "500" in error_lower or "internal server" in error_lower:
                 return "Partners API Server Error"
+            if "502" in error_lower or "bad gateway" in error_lower:
+                return "Partners API Gateway Error"
+            if "404" in error_lower or "not found" in error_lower:
+                return "Partners API Resource Not Found"
+            if "400" in error_lower or "bad request" in error_lower:
+                return "Partners API Request Validation"
             elif "401" in error_lower or "unauthorized" in error_lower:
                 return "Partners API Authentication"
             elif "403" in error_lower or "forbidden" in error_lower:
