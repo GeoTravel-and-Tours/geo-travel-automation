@@ -1,6 +1,7 @@
 # src/pages/api/Partners_api/partners_flight_api.py
 
 import os
+from datetime import datetime, timedelta
 from src.core.partners_base_api import PartnersBaseAPI
 
 class PartnersFlightAPI(PartnersBaseAPI):
@@ -43,3 +44,9 @@ class PartnersFlightAPI(PartnersBaseAPI):
         if limit: params['limit'] = limit
         if page: params['page'] = page
         return self.get(self.endpoints['bookings'], params=params)
+    
+    @staticmethod
+    def get_future_date(days_ahead=1):
+        """Get a future date string in YYYY-MM-DD format"""
+        future_date = datetime.now() + timedelta(days=days_ahead)
+        return future_date.strftime("%Y-%m-%d")
