@@ -3,6 +3,7 @@
 import pytest
 import random
 from src.pages.api.partners_api.partners_auth_api import PartnersAuthAPI
+from src.pages.api.partners_api.partners_flight_api import PartnersFlightAPI
 from src.pages.api.partners_api.organization_api import PartnersOrganizationAPI
 from src.utils.verified_partners_helper import VerifiedUserHelper
 from configs.environment import EnvironmentConfig
@@ -14,6 +15,7 @@ class TestPartnersOrganizationSecurity:
     def setup_method(self):
         self.auth_api = PartnersAuthAPI()
         self.org_api = PartnersOrganizationAPI()
+        self.flight_api = PartnersFlightAPI()
         
         # Use THE SAME email pattern as auth tests
         self.test_email = f"geobot{random.randint(10000,99999)}@yopmail.com"
@@ -186,7 +188,7 @@ class TestPartnersOrganizationFunctionality:
         search_data = {
             "origin": "LHR",
             "destination": "LOS",
-            "departure_date": "2025-11-26",
+            "departure_date": PartnersFlightAPI.get_future_date(1),
             "adults": 1,
             "flight_type": "one_way",
             "cabin": "ECONOMY"
