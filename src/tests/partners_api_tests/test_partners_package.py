@@ -1,5 +1,6 @@
 import pytest
 import random
+import time
 from src.pages.api.partners_api.partners_auth_api import PartnersAuthAPI
 from src.pages.api.partners_api.partners_package_api import PartnersPackageAPI
 from src.pages.api.partners_api.organization_api import PartnersOrganizationAPI
@@ -410,17 +411,19 @@ class TestPartnersPackageFunctionality:
         
         self.logger.info("🔵 VERIFYING COMPLETE BOOKING RECORD CREATION")
         
-        # Get current bookings count before new booking
+        # Get current bookings count before new booking using totalItems
         bookings_before_response = package_api.get_package_bookings()
         if bookings_before_response.status_code == 200:
-            bookings_before = bookings_before_response.json()['data']['bookings']
-            initial_count = len(bookings_before)
+            response_data = bookings_before_response.json()['data']
+            bookings_before = response_data['bookings']
+            pagination_before = response_data['pagination']
+            initial_count = pagination_before['totalItems']  # Use totalItems instead of len()
             initial_booking_emails = {booking['user_details']['email'] for booking in bookings_before}
         else:
             initial_count = 0
             initial_booking_emails = set()
         
-        self.logger.info(f"📊 Initial bookings count: {initial_count}")
+        self.logger.info(f"📊 Initial total bookings: {initial_count}")
         
         # Create a new package booking
         packages_response = package_api.get_all_packages()
@@ -456,23 +459,41 @@ class TestPartnersPackageFunctionality:
                     self.logger.success(f"✅ {booking_result['message']}")
                     
                     # Wait for the booking to appear in the list
-                    import time
-                    time.sleep(3)
+                    time.sleep(5)
                     
-                    # Get updated bookings list
+                    # Get updated bookings list and count using totalItems
                     bookings_after_response = package_api.get_package_bookings()
                     if bookings_after_response.status_code == 200:
-                        bookings_after = bookings_after_response.json()['data']['bookings']
-                        final_count = len(bookings_after)
+                        response_data_after = bookings_after_response.json()['data']
+                        bookings_after = response_data_after['bookings']
+                        pagination_after = response_data_after['pagination']
+                        final_count = pagination_after['totalItems']  # Use totalItems instead of len()
                         
-                        self.logger.info(f"📊 Final bookings count: {final_count}")
+                        self.logger.info(f"📊 Final total bookings: {final_count}")
                         
                         # Find the new booking by email (since we don't get ID from booking response)
+                        # Note: We need to search through all pages if needed
                         new_booking = None
+                        current_page = 1
+                        
+                        # Check first page
                         for booking in bookings_after:
                             if booking['user_details']['email'] == test_email:
                                 new_booking = booking
                                 break
+                        
+                        # If not found on first page and there are more pages, check additional pages
+                        if not new_booking and pagination_after['totalPages'] > 1:
+                            for page in range(2, pagination_after['totalPages'] + 1):
+                                page_response = package_api.get_package_bookings(params={'page': page})
+                                if page_response.status_code == 200:
+                                    page_bookings = page_response.json()['data']['bookings']
+                                    for booking in page_bookings:
+                                        if booking['user_details']['email'] == test_email:
+                                            new_booking = booking
+                                            break
+                                if new_booking:
+                                    break
                         
                         # Verify the new booking appears in the list
                         assert new_booking is not None, f"New booking with email {test_email} should appear in bookings list"
@@ -504,8 +525,10 @@ class TestPartnersPackageFunctionality:
                         assert 'id' in organization
                         assert 'name' in organization
                         
-                        # Verify count increased
-                        assert final_count > initial_count, f"Bookings count should increase from {initial_count} to {final_count}"
+                        # Verify count increased (using totalItems for accurate comparison)
+                        assert final_count == initial_count + 1, (
+                            f"Bookings count should increase by 1 from {initial_count} to {final_count}"
+                        )
                         
                         self.logger.success(f"✅ Package booking correctly created and appears in bookings list")
                         self.logger.info(f"📊 Count increased from {initial_count} to {final_count}")
