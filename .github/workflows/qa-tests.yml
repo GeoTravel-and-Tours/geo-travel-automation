@@ -4,16 +4,11 @@ on:
   push:
     branches:
       - main
-
   workflow_dispatch:
-
   schedule:
     - cron: "0 7 * * *"
 
 jobs:
-  # ============================================================================
-  # 🚀 SMOKE TESTS (API + UI)
-  # ============================================================================
   run-smoke-tests:
     name: 🚀 Run Smoke Tests
     runs-on: ubuntu-latest
@@ -21,6 +16,8 @@ jobs:
     steps:
       - name: 📥 Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Needed for git operations
 
       - name: 🐍 Set up Python
         uses: actions/setup-python@v5
@@ -31,23 +28,26 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          python -c "import pytest; print('pytest version:', pytest.__version__)"
-          python -c "import selenium; print('selenium version:', selenium.__version__)"
 
       - name: ⚙️ Load environment variables
         run: |
           echo "TEST_ENV=${{ secrets.TEST_ENV }}" >> $GITHUB_ENV
           echo "BROWSER=${{ secrets.BROWSER }}" >> $GITHUB_ENV
           echo "HEADLESS=${{ secrets.HEADLESS }}" >> $GITHUB_ENV
-          echo "TEST_USER_EMAIL=${{ secrets.TEST_USER_EMAIL }}" >> $GITHUB_ENV
-          echo "TEST_USER_PASSWORD=${{ secrets.TEST_USER_PASSWORD }}" >> $GITHUB_ENV
+          echo "SLACK_WEBHOOK_URL=${{ secrets.SLACK_WEBHOOK_URL }}" >> $GITHUB_ENV
           echo "API_TEST_EMAIL=${{ secrets.API_TEST_EMAIL }}" >> $GITHUB_ENV
           echo "API_TEST_PASSWORD=${{ secrets.API_TEST_PASSWORD }}" >> $GITHUB_ENV
-          echo "SLACK_WEBHOOK_URL=${{ secrets.SLACK_WEBHOOK_URL }}" >> $GITHUB_ENV
-          echo "PROJECT_NAME=${{ secrets.PROJECT_NAME }}" >> $GITHUB_ENV
-          echo "ENVIRONMENT=${{ secrets.ENVIRONMENT }}" >> $GITHUB_ENV
           echo "PARTNERS_VERIFIED_EMAIL=${{ secrets.PARTNERS_VERIFIED_EMAIL }}" >> $GITHUB_ENV
           echo "PARTNERS_VERIFIED_PASSWORD=${{ secrets.PARTNERS_VERIFIED_PASSWORD }}" >> $GITHUB_ENV
+
+      # Create docs/ structure if it doesn't exist
+      - name: 🏗️ Setup docs directory
+        run: |
+          mkdir -p docs/screenshots/failures
+          if [ ! -f docs/index.html ]; then
+            echo "Creating minimal index.html..."
+            echo '<!DOCTYPE html><html><head><title>GeoTravel Dashboard</title></head><body><h1>GeoTravel Test Dashboard</h1><p>Screenshots will appear here.</p></body></html>' > docs/index.html
+          fi
 
       - name: 🧪 Run smoke test suite
         run: |
@@ -55,166 +55,37 @@ jobs:
           python scripts/run_scheduled_tests.py --suite api smoke partners_api
         continue-on-error: true
 
-      # Upload all results
-      - name: 📦 Upload ALL artifacts
+      # NEW: Commit screenshots to docs/ folder
+      - name: 📝 Commit Screenshots to Repository
+        run: |
+          # Copy any new screenshots to docs/screenshots/failures/
+          if [ -d "reports/screenshots/failures" ]; then
+            cp -r reports/screenshots/failures/* docs/screenshots/failures/ 2>/dev/null || true
+          fi
+          
+          # Check if there are new screenshots to commit
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          
+          git add docs/
+          
+          if git diff --cached --quiet; then
+            echo "No new screenshots to commit"
+          else
+            git commit -m "📸 Add test failure screenshots [skip ci]"
+            git push
+            echo "Screenshots committed to repository"
+          fi
+
+      # Upload artifacts for debugging
+      - name: 📦 Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: smoke_test_artifacts
+          name: test_results
           path: |
-            reports/**
-            logs/**
-            **/*.png
-            **/*.html
+            reports/
+            logs/
           retention-days: 7
 
-      - name: 🧹 Cleanup
+      - name: 🧹 Cleanup old reports
         run: python scripts/cleanup.py --days 7
-
-
-  # ============================================================================
-  # 📤 PREPARE FILES FOR GITHUB PAGES
-  # ============================================================================
-  publish-artifacts:
-    name: 📤 Prepare GitHub Pages Files
-    runs-on: ubuntu-latest
-    needs: run-smoke-tests
-    if: always()
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Download Smoke Test Artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: smoke_test_artifacts
-          path: artifacts/
-
-      - name: Build public directory
-        run: |
-          mkdir -p screenshots/failures
-          
-          # Copy screenshots to root (not inside public/)
-          find artifacts/reports/screenshots/failures -name "*.png" -exec cp {} screenshots/failures/ \;
-          
-          # Create minimal HTML wrapper for each screenshot
-          for screenshot in screenshots/failures/*.png; do
-            filename=$(basename "$screenshot")
-            cat > "screenshots/failures/${filename%.*}.html" << EOF
-          <!DOCTYPE html>
-          <html>
-          <head>
-              <title>Screenshot: $filename</title>
-              <style>
-                  body { margin: 0; padding: 20px; background: #f5f5f5; text-align: center; }
-                  img { max-width: 90%; border: 2px solid #333; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
-                  .container { margin-top: 20px; }
-              </style>
-          </head>
-          <body>
-              <div class="container">
-                  <h2>Screenshot: $filename</h2>
-                  <img src="$filename" alt="Test Failure Screenshot">
-                  <p><a href="$filename" download>Download Original</a></p>
-              </div>
-          </body>
-          </html>
-          EOF
-              done
-
-      # *** THIS IS REQUIRED FOR GITHUB PAGES ***
-      - name: Upload GitHub Pages artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: public
-
-
-  # ============================================================================
-  # 🚀 DEPLOY TO GITHUB PAGES (MANDATORY)
-  # ============================================================================
-  deploy:
-    needs: publish-artifacts
-    runs-on: ubuntu-latest
-    permissions:
-      pages: write
-      id-token: write
-
-    environment:
-      name: github-pages
-      url: ${{ steps.deploy.outputs.page_url }}
-
-    steps:
-      - name: Deploy GitHub Pages
-        id: deploy
-        uses: actions/deploy-pages@v4
-
-
-  # ============================================================================
-  # 🧩 REGRESSION TESTS (Uncomment when ready)
-  # ============================================================================
-  # run-regression-tests:
-  #   name: 🧩 Run Regression Tests
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: 📥 Checkout code
-  #       uses: actions/checkout@v4
-  #
-  #     - name: 🐍 Set up Python
-  #       uses: actions/setup-python@v5
-  #       with:
-  #         python-version: "3.10"
-  #
-  #     - name: 📦 Install dependencies
-  #       run: |
-  #         python -m pip install --upgrade pip
-  #         pip install -r requirements.txt
-  #
-  #     - name: 🧪 Run regression suite
-  #       run: python scripts/run_scheduled_tests.py --suite regression
-  #
-  #     - name: 🧹 Cleanup artifacts
-  #       run: python scripts/cleanup.py --days 7
-
-
-  
-  # ============================================================================
-  # 🧽 MANUAL CLEANUP
-  # ============================================================================
-  manual-cleanup:
-    name: 🧽 Manual Cleanup
-    runs-on: ubuntu-latest
-    if: github.event_name == 'workflow_dispatch'
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: 🐍 Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.10"
-
-      - name: 📦 Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-
-      - name: 🔍 Dry run cleanup
-        run: python scripts/cleanup.py --days 7 --dry-run --stats
-
-      - name: 🧹 Cleanup
-        run: python scripts/cleanup.py --days 7
-
-
-
-# ============================================================================
-# 🎯 WORKFLOW NOTES
-# ============================================================================
-# 📌 GitHub Pages Screenshot URL:
-#    https://<org>.github.io/<repo>/screenshots/<file>.png
-#
-# 📌 HTML Reports URL:
-#    https://<org>.github.io/<repo>/reports/<file>.html
-#
-# 📌 The gh-pages branch is auto-managed by GitHub Actions.
-# ============================================================================
