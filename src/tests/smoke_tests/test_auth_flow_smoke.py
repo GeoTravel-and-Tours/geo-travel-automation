@@ -82,6 +82,7 @@ class TestAuthFlowSmoke(TestBase):
         login_success = self.auth_flow.login(email, password)
 
         assert login_success, "Login should be successful with valid credentials"
+        time.sleep(5)  # Wait for redirect
 
         self.auth_flow.logger.step(3, "Verifying user is redirected to dashboard")
         assert (

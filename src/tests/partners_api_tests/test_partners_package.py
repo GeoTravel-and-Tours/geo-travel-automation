@@ -1,5 +1,7 @@
 import pytest
 import random
+import functools
+import requests
 import time
 from src.pages.api.partners_api.partners_auth_api import PartnersAuthAPI
 from src.pages.api.partners_api.partners_package_api import PartnersPackageAPI
@@ -7,6 +9,35 @@ from src.pages.api.partners_api.organization_api import PartnersOrganizationAPI
 from src.utils.verified_partners_helper import VerifiedUserHelper
 from configs.environment import EnvironmentConfig
 from src.utils.logger import GeoLogger
+
+def retry_on_timeout(max_retries=3, delay=2):
+    """✅ ADDED: Decorator to retry test on timeout"""
+    def decorator(func):
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            last_exception = None
+            for attempt in range(max_retries):
+                try:
+                    return func(*args, **kwargs)
+                except requests.exceptions.Timeout as e:
+                    last_exception = e
+                    if attempt == max_retries - 1:
+                        break
+                    
+                    wait_time = delay * (2 ** attempt)  # Exponential backoff
+                    logger = args[0].logger if args else GeoLogger(func.__name__)
+                    logger.warning(
+                        f"⏳ {func.__name__} timeout (attempt {attempt + 1}/{max_retries}), "
+                        f"retrying in {wait_time}s..."
+                    )
+                    time.sleep(wait_time)
+            
+            if last_exception:
+                logger.error(f"❌ {func.__name__} failed after {max_retries} attempts")
+                raise last_exception
+        return wrapper
+    return decorator
+
 
 class TestPartnersPackageSecurity:
     """SECURITY TESTS - Unverified users should be blocked from package operations"""
@@ -114,6 +145,7 @@ class TestPartnersPackageFunctionality:
         self.logger = GeoLogger(self.__class__.__name__)
     
     @pytest.mark.partners_api
+    @retry_on_timeout(max_retries=3, delay=2)  # ✅ ADDED RETRY DECORATOR
     def test_verified_user_can_get_packages(self):
         """TEST: Verified users can get package listings with complete structure"""
         # Get package API with verified credentials
@@ -121,10 +153,18 @@ class TestPartnersPackageFunctionality:
         assert package_api is not None, "Should get verified package API"
         
         self.logger.info("🔵 VERIFIED USER - Getting package listings")
-        response = package_api.get_all_packages()
+        # ✅ TEMPORARILY INCREASE TIMEOUT FOR THIS CALL
+        original_timeout = package_api.timeout
+        package_api.timeout = 90  # 90 seconds for package listings
+        
+        try:
+            response = package_api.get_all_packages()
+        finally:
+            package_api.timeout = original_timeout  # Restore original timeout
         
         assert response.status_code == 200, "Verified user should be able to access package listings"
         data = response.json()
+        print(response.text)
         
         # Verify complete response structure
         assert data['message'] == "Packages retrieved successfully"

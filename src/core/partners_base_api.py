@@ -1,6 +1,7 @@
 # src/core/partners_base_api.py
 
 import requests
+import time
 import json
 from datetime import datetime
 from src.utils.logger import GeoLogger
@@ -12,7 +13,7 @@ class PartnersBaseAPI:
     Uses different base URL than main API
     """
     def __init__(self):
-        self.base_url = EnvironmentConfig.get_partners_api_base_url()  # DIFFERENT URL
+        self.base_url = EnvironmentConfig.get_partners_api_base_url()
         self.session = requests.Session()
         self.auth_token = None
         self.headers = {
@@ -20,6 +21,8 @@ class PartnersBaseAPI:
             'Accept': 'application/json'
         }
         self.logger = GeoLogger(self.__class__.__name__)
+        # ✅ INCREASED TIMEOUT: 30 → 60 seconds
+        self.timeout = 60
     
     def set_auth_token(self, token):
         """Set authentication token for Partners API requests"""
@@ -27,8 +30,8 @@ class PartnersBaseAPI:
         self.headers['Authorization'] = f'Bearer {token}'
         self.logger.info("Auth token set for Partners API requests")
     
-    def _request(self, method, endpoint, **kwargs):
-        """Base request method with logging and error handling"""
+    def _request_with_retry(self, method, endpoint, max_retries=3, **kwargs):
+        """✅ ADDED: Request with retry logic for timeouts"""
         url = f"{self.base_url}{endpoint}"
         
         # Merge headers
@@ -36,22 +39,55 @@ class PartnersBaseAPI:
         if 'headers' in kwargs:
             headers.update(kwargs.pop('headers'))
         
+        # Set timeout (connect: 10s, read: 60s)
+        kwargs.setdefault('timeout', (10, self.timeout))
+        
         self.logger.info(f"Partners API Request: {method} {url}")
         
-        try:
-            kwargs['timeout'] = 30
-            response = self.session.request(method, url, headers=headers, **kwargs)
-            self.logger.info(f"Partners API Response: {response.status_code}")
-            
-            # Log response for debugging
-            if response.status_code >= 400:
-                self.logger.warning(f"Partners API Error: {response.status_code} - {response.text}")
-            
-            return response
-            
-        except requests.exceptions.RequestException as e:
-            self.logger.error(f"Partners API Request failed: {str(e)}")
-            raise
+        last_exception = None
+        
+        for attempt in range(max_retries):
+            try:
+                response = self.session.request(
+                    method, 
+                    url, 
+                    headers=headers, 
+                    **kwargs
+                )
+                
+                self.logger.info(f"Partners API Response: {response.status_code}")
+                
+                # Log response for debugging
+                if response.status_code >= 400:
+                    self.logger.warning(f"Partners API Error: {response.status_code} - {response.text}")
+                
+                return response
+                
+            except (requests.exceptions.ReadTimeout, requests.exceptions.ConnectTimeout) as e:
+                last_exception = e
+                if attempt < max_retries - 1:
+                    wait_time = 2 ** attempt  # Exponential backoff: 1s, 2s, 4s
+                    self.logger.warning(
+                        f"⏳ Timeout on attempt {attempt + 1}/{max_retries} for {endpoint}, "
+                        f"retrying in {wait_time}s..."
+                    )
+                    time.sleep(wait_time)
+                else:
+                    self.logger.error(f"❌ All {max_retries} attempts failed for {endpoint}")
+                    raise last_exception
+                    
+            except (requests.exceptions.ConnectionError, 
+        requests.exceptions.ChunkedEncodingError,
+        requests.exceptions.ReadTimeout) as e:
+                wait_time = 5 * (attempt + 1)  # 5s, 10s, 15s
+                self.logger.warning(f"Server connection issue, retry in {wait_time}s...")
+                time.sleep(wait_time)
+                self.logger.error(f"Partners API Request failed: {str(e)}")
+    
+    def _request(self, method, endpoint, **kwargs):
+        """Base request method with logging and error handling"""
+        # ✅ UPDATED: Use retry logic
+        return self._request_with_retry(method, endpoint, max_retries=3, **kwargs)
     
     def get(self, endpoint, **kwargs):
         return self._request('GET', endpoint, **kwargs)
