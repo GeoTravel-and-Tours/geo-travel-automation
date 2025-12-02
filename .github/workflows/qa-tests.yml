@@ -61,18 +61,23 @@ jobs:
 
       # NEW: Commit screenshots to docs/ folder
       - name: 📝 Commit Screenshots to Repository
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Copy any new screenshots to docs/screenshots/failures/
-          if [ -d "reports/screenshots/failures" ]; then
-            cp -r reports/screenshots/failures/* docs/screenshots/failures/ 2>/dev/null || true
-          fi
-          
-          # Check if there are new screenshots to commit
+          # Setup git with token
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          
+
+          # Set remote URL with token
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+
+          # Ensure directory exists
+          mkdir -p docs/screenshots/failures
+
+          # Add docs files
           git add docs/
-          
+
+          # Check if there are changes
           if git diff --cached --quiet; then
             echo "No new screenshots to commit"
           else
