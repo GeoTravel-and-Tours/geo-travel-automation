@@ -184,6 +184,8 @@ class GeoReporter:
     ):
         """Add individual test result with comprehensive metadata"""
         actual_duration = duration or 0.0
+        print(f"🔍 DEBUG: screenshot_path = {screenshot_path}")
+        print(f"🔍 DEBUG: dashboard_url = {test_result.get('dashboard_url')}")
         
         test_result = {
             "test_name": test_name,
@@ -1029,14 +1031,10 @@ class GeoReporter:
         
     def _get_failure_links(self, failed_test):
         """Generate direct links for failed test evidence"""
-        screenshot_url = failed_test.get('public_screenshot_url')
+        dashboard_url = failed_test.get('dashboard_url')
         
         links = []
-        if screenshot_url:
-            # Extract just the filename from the path
-            filename = screenshot_url.split('/')[-1]
-            # GitHub Pages path
-            github_pages_url = f"https://geotravel-and-tours.github.io/geo-travel-automation/screenshots/failures/{filename}"
+        if dashboard_url:
             links.append(f"📊 <{failed_test.get('dashboard_url')}|View Dashboard>")
         
         return " | ".join(links) if links else "No evidence captured"
