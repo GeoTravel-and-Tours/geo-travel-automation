@@ -1032,13 +1032,14 @@ class GeoReporter:
     def _get_failure_links(self, failed_test):
         """Generate direct links for failed test evidence"""
         screenshot_url = failed_test.get('public_screenshot_url')
-        # html_url = failed_test.get('public_html_url')
         
         links = []
         if screenshot_url:
-            links.append(f"📸 <{screenshot_url}|View Screenshot>")
-        # if html_url:
-        #     links.append(f"📄 <{html_url}|View HTML Report>")
+            # Extract just the filename from the path
+            filename = screenshot_url.split('/')[-1]
+            # GitHub Pages path
+            github_pages_url = f"https://geotravel-and-tours.github.io/geo-travel-automation/screenshots/failures/{filename}"
+            links.append(f"📸 <{github_pages_url}|View Screenshot>")
         
         return " | ".join(links) if links else "No evidence captured"
 
