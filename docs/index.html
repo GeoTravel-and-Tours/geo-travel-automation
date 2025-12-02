@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GeoTravel Test Automation Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #2563eb;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --dark-color: #1f2937;
+            --light-color: #f9fafb;
+            --border-color: #e5e7eb;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            color: var(--dark-color);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+            border-left: 6px solid var(--primary-color);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary-color), #3b82f6);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+
+        .header-text h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--dark-color);
+            margin-bottom: 5px;
+        }
+
+        .header-text p {
+            color: #6b7280;
+            font-size: 16px;
+        }
+
+        /* Stats Cards */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card.success {
+            border-top: 4px solid var(--success-color);
+        }
+
+        .stat-card.warning {
+            border-top: 4px solid var(--warning-color);
+        }
+
+        .stat-card.danger {
+            border-top: 4px solid var(--danger-color);
+        }
+
+        .stat-card.info {
+            border-top: 4px solid var(--primary-color);
+        }
+
+        .stat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+
+        .stat-card.success .stat-icon {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success-color);
+        }
+
+        .stat-card.warning .stat-icon {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning-color);
+        }
+
+        .stat-card.danger .stat-icon {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger-color);
+        }
+
+        .stat-card.info .stat-icon {
+            background: rgba(37, 99, 235, 0.1);
+            color: var(--primary-color);
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #6b7280;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Screenshot Gallery */
+        .gallery-container {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            color: var(--primary-color);
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            background: var(--light-color);
+            border: 1px solid var(--border-color);
+            color: var(--dark-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .filter-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .filter-btn:hover:not(.active) {
+            background: #e5e7eb;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+        }
+
+        .screenshot-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        .screenshot-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .screenshot-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .screenshot-image:hover {
+            transform: scale(1.03);
+        }
+
+        .screenshot-info {
+            padding: 20px;
+        }
+
+        .test-name {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--dark-color);
+            font-size: 16px;
+            line-height: 1.4;
+        }
+
+        .test-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: #6b7280;
+            margin-bottom: 15px;
+        }
+
+        .test-date {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .test-category {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .category-ui {
+            background: rgba(37, 99, 235, 0.1);
+            color: var(--primary-color);
+        }
+
+        .category-api {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success-color);
+        }
+
+        .category-error {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger-color);
+        }
+
+        .screenshot-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            font-size: 14px;
+            flex: 1;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--light-color);
+            color: var(--dark-color);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: #e5e7eb;
+            transform: translateY(-2px);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6b7280;
+        }
+
+        .empty-icon {
+            font-size: 64px;
+            color: #d1d5db;
+            margin-bottom: 20px;
+        }
+
+        .empty-state h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #4b5563;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: #6b7280;
+            font-size: 14px;
+            border-top: 1px solid var(--border-color);
+            margin-top: 30px;
+        }
+
+        .last-updated {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            margin-top: 15px;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            max-width: 90%;
+            max-height: 90%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .modal-image {
+            max-width: 100%;
+            max-height: 80vh;
+            display: block;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: rgba(0, 0, 0, 0.9);
+        }
+
+        .modal-info {
+            padding: 20px;
+            background: white;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .stats-container {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+            
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .controls {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--border-color);
+            border-top-color: var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Highlight animation for new screenshots */
+        @keyframes highlight {
+            0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(37, 99, 235, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
+        }
+
+        .new-screenshot {
+            animation: highlight 2s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="logo-container">
+                <div class="logo">
+                    <i class="fas fa-globe-americas"></i>
+                </div>
+                <div class="header-text">
+                    <h1>GeoTravel Test Automation Dashboard</h1>
+                    <p>Real-time failure monitoring and screenshot gallery</p>
+                </div>
+            </div>
+        </header>
+
+        <!-- Stats Section -->
+        <div class="stats-container">
+            <div class="stat-card success">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-value" id="total-screenshots">0</div>
+                        <div class="stat-label">Total Screenshots</div>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card info">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-value" id="ui-failures">0</div>
+                        <div class="stat-label">UI Failures</div>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="fas fa-desktop"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card warning">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-value" id="api-failures">0</div>
+                        <div class="stat-label">API Failures</div>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card danger">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-value" id="today-failures">0</div>
+                        <div class="stat-label">Today's Failures</div>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="fas fa-calendar-day"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screenshot Gallery -->
+        <div class="gallery-container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-images"></i> Failure Screenshots
+                </h2>
+                <div class="controls">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="today">Today</button>
+                    <button class="filter-btn" data-filter="ui">UI Tests</button>
+                    <button class="filter-btn" data-filter="api">API Tests</button>
+                </div>
+            </div>
+
+            <div id="gallery-content">
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                </div>
+                <div class="gallery-grid" id="screenshot-grid" style="display: none;"></div>
+                <div class="empty-state" id="empty-state" style="display: none;">
+                    <div class="empty-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h3>No Failure Screenshots Found</h3>
+                    <p>All tests are passing! Great job team! 🎉</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal for Full-size Image -->
+        <div class="modal" id="image-modal">
+            <div class="modal-content">
+                <button class="modal-close" id="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+                <img class="modal-image" id="modal-image" src="" alt="Full size screenshot">
+                <div class="modal-info">
+                    <h3 id="modal-test-name"></h3>
+                    <p id="modal-test-details"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <p>GeoTravel QA Automation Dashboard • Powered by GitHub Pages</p>
+            <div class="last-updated">
+                <i class="fas fa-sync-alt"></i>
+                <span id="last-updated">Loading...</span>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Configuration
+        const SCREENSHOT_DIR = 'screenshots/failures/';
+        const TODAY = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+
+        // State
+        let screenshots = [];
+        let currentFilter = 'all';
+
+        // DOM Elements
+        const elements = {
+            grid: document.getElementById('screenshot-grid'),
+            loading: document.getElementById('loading'),
+            emptyState: document.getElementById('empty-state'),
+            totalScreenshots: document.getElementById('total-screenshots'),
+            uiFailures: document.getElementById('ui-failures'),
+            apiFailures: document.getElementById('api-failures'),
+            todayFailures: document.getElementById('today-failures'),
+            modal: document.getElementById('image-modal'),
+            modalImage: document.getElementById('modal-image'),
+            modalTestName: document.getElementById('modal-test-name'),
+            modalTestDetails: document.getElementById('modal-test-details'),
+            modalClose: document.getElementById('modal-close'),
+            lastUpdated: document.getElementById('last-updated')
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadScreenshots();
+            setupEventListeners();
+            updateLastUpdated();
+        });
+
+        // Load screenshots from GitHub
+        async function loadScreenshots() {
+            try {
+                // In production, this would fetch from GitHub API
+                // For now, we'll simulate with local file structure
+                await simulateScreenshotLoading();
+                
+                // In real implementation:
+                // const response = await fetch('https://api.github.com/repos/GeoTravel-and-Tours/geo-travel-automation/contents/docs/screenshots/failures');
+                // const files = await response.json();
+                
+                filterScreenshots(currentFilter);
+                updateStats();
+                
+            } catch (error) {
+                console.error('Error loading screenshots:', error);
+                showEmptyState();
+            }
+        }
+
+        // Simulate loading for demo purposes
+        function simulateScreenshotLoading() {
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    // This is where you'd parse actual screenshot files
+                    // For now, we'll create demo data
+                    screenshots = scanScreenshotDirectory();
+                    resolve();
+                }, 1000);
+            });
+        }
+
+        // Scan directory for screenshots (simulated)
+        function scanScreenshotDirectory() {
+            // In production, this would use GitHub API or server-side scanning
+            // For now, return empty array and let the actual images load
+            return [];
+        }
+
+        // Filter screenshots based on selected filter
+        function filterScreenshots(filter) {
+            currentFilter = filter;
+            updateFilterButtons();
+            
+            let filteredScreenshots = [...screenshots];
+            
+            if (filter === 'today') {
+                filteredScreenshots = filteredScreenshots.filter(s => 
+                    s.date === TODAY
+                );
+            } else if (filter === 'ui') {
+                filteredScreenshots = filteredScreenshots.filter(s => 
+                    s.category === 'ui'
+                );
+            } else if (filter === 'api') {
+                filteredScreenshots = filteredScreenshots.filter(s => 
+                    s.category === 'api'
+                );
+            }
+            
+            displayScreenshots(filteredScreenshots);
+        }
+
+        // Display screenshots in grid
+        function displayScreenshots(screenshotList) {
+            elements.loading.style.display = 'none';
+            
+            if (screenshotList.length === 0) {
+                elements.grid.style.display = 'none';
+                elements.emptyState.style.display = 'block';
+                return;
+            }
+            
+            elements.emptyState.style.display = 'none';
+            elements.grid.style.display = 'grid';
+            elements.grid.innerHTML = '';
+            
+            // Sort by date (newest first)
+            screenshotList.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            
+            screenshotList.forEach((screenshot, index) => {
+                const card = createScreenshotCard(screenshot, index);
+                elements.grid.appendChild(card);
+            });
+        }
+
+        // Create screenshot card element
+        function createScreenshotCard(screenshot, index) {
+            const card = document.createElement('div');
+            card.className = `screenshot-card ${index < 3 ? 'new-screenshot' : ''}`;
+            
+            // Determine category
+            const categoryClass = screenshot.category === 'api' ? 'category-api' : 'category-ui';
+            const categoryText = screenshot.category === 'api' ? 'API' : 'UI';
+            
+            card.innerHTML = `
+                <img 
+                    src="${SCREENSHOT_DIR}${screenshot.filename}" 
+                    alt="${screenshot.testName}" 
+                    class="screenshot-image"
+                    loading="lazy"
+                    onerror="this.src='https://via.placeholder.com/400x200/ff6b6b/ffffff?text=Screenshot+Not+Found'"
+                >
+                <div class="screenshot-info">
+                    <div class="test-name">${screenshot.testName}</div>
+                    <div class="test-meta">
+                        <span class="test-date">
+                            <i class="far fa-calendar"></i> ${screenshot.date}
+                        </span>
+                        <span class="test-category ${categoryClass}">
+                            ${categoryText}
+                        </span>
+                    </div>
+                    <div class="screenshot-actions">
+                        <button class="btn btn-primary" onclick="viewScreenshot('${screenshot.filename}', '${screenshot.testName}')">
+                            <i class="fas fa-expand"></i> View Full
+                        </button>
+                        <a href="${SCREENSHOT_DIR}${screenshot.filename}" 
+                           class="btn btn-secondary" 
+                           download="${screenshot.filename}">
+                            <i class="fas fa-download"></i> Download
+                        </a>
+                    </div>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        // Update statistics
+        function updateStats() {
+            const total = screenshots.length;
+            const uiCount = screenshots.filter(s => s.category === 'ui').length;
+            const apiCount = screenshots.filter(s => s.category === 'api').length;
+            const todayCount = screenshots.filter(s => s.date === TODAY).length;
+            
+            elements.totalScreenshots.textContent = total;
+            elements.uiFailures.textContent = uiCount;
+            elements.apiFailures.textContent = apiCount;
+            elements.todayFailures.textContent = todayCount;
+        }
+
+        // Show empty state
+        function showEmptyState() {
+            elements.loading.style.display = 'none';
+            elements.grid.style.display = 'none';
+            elements.emptyState.style.display = 'block';
+        }
+
+        // Update filter buttons
+        function updateFilterButtons() {
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                if (btn.dataset.filter === currentFilter) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+        }
+
+        // View screenshot in modal
+        function viewScreenshot(filename, testName) {
+            elements.modalImage.src = SCREENSHOT_DIR + filename;
+            elements.modalTestName.textContent = testName;
+            elements.modalTestDetails.textContent = `Captured: ${new Date().toLocaleString()}`;
+            elements.modal.style.display = 'flex';
+        }
+
+        // Update last updated time
+        function updateLastUpdated() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            const dateString = now.toLocaleDateString([], {weekday: 'long', month: 'long', day: 'numeric'});
+            elements.lastUpdated.textContent = `Last updated: ${timeString} on ${dateString}`;
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    filterScreenshots(btn.dataset.filter);
+                });
+            });
+
+            // Modal close
+            elements.modalClose.addEventListener('click', () => {
+                elements.modal.style.display = 'none';
+            });
+
+            // Close modal on background click
+            elements.modal.addEventListener('click', (e) => {
+                if (e.target === elements.modal) {
+                    elements.modal.style.display = 'none';
+                }
+            });
+
+            // Close modal with Escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && elements.modal.style.display === 'flex') {
+                    elements.modal.style.display = 'none';
+                }
+            });
+
+            // Auto-refresh every 5 minutes
+            setInterval(() => {
+                loadScreenshots();
+                updateLastUpdated();
+            }, 5 * 60 * 1000);
+        }
+
+        // Expose functions to global scope for onclick handlers
+        window.viewScreenshot = viewScreenshot;
+    </script>
+</body>
+</html>

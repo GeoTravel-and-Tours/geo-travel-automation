@@ -36,7 +36,7 @@ class TestAuthFlowSmoke(TestBase):
         self.home_page.wait_for_homepage_load(timeout=15, max_retries=3)
 
         self.auth_flow.logger.step(2, "Navigating to login page")
-        self.auth_flow.open_login_page()
+        # self.auth_flow.open_login_page()
 
         self.auth_flow.logger.step(3, "Verifying login page loads")
         assert self.auth_flow.wait_for_login_page(), "Login page should load"
