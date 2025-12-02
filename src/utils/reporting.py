@@ -184,8 +184,6 @@ class GeoReporter:
     ):
         """Add individual test result with comprehensive metadata"""
         actual_duration = duration or 0.0
-        print(f"🔍 DEBUG: screenshot_path = {screenshot_path}")
-        print(f"🔍 DEBUG: dashboard_url = {test_result.get('dashboard_url')}")
         
         test_result = {
             "test_name": test_name,
@@ -201,6 +199,9 @@ class GeoReporter:
             screenshot_filename = Path(screenshot_path).name
             test_result["dashboard_url"] = "https://geotravel-and-tours.github.io/geo-travel-automation/"
 
+        print(f"🔍 DEBUG: screenshot_path = {screenshot_path}")
+        print(f"🔍 DEBUG: dashboard_url = {test_result.get('dashboard_url')}")
+        
         self.test_results.append(test_result)
         self.logger.info(f"Test result added: {test_name} - {status} (Duration: {actual_duration:.2f}s)")
 
