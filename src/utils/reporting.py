@@ -197,11 +197,8 @@ class GeoReporter:
         }
         if screenshot_path:
             screenshot_filename = Path(screenshot_path).name
-            test_result["dashboard_url"] = "https://geotravel-and-tours.github.io/geo-travel-automation/"
+            test_result["screenshot_url"] = f"https://geotravel-and-tours.github.io/geo-travel-automation/screenshots/failures/{screenshot_filename}"
 
-        print(f"🔍 DEBUG: screenshot_path = {screenshot_path}")
-        print(f"🔍 DEBUG: dashboard_url = {test_result.get('dashboard_url')}")
-        
         self.test_results.append(test_result)
         self.logger.info(f"Test result added: {test_name} - {status} (Duration: {actual_duration:.2f}s)")
 
@@ -1032,11 +1029,11 @@ class GeoReporter:
         
     def _get_failure_links(self, failed_test):
         """Generate direct links for failed test evidence"""
-        dashboard_url = failed_test.get('dashboard_url')
+        screenshot_url = failed_test.get('screenshot_url')
         
         links = []
-        if dashboard_url:
-            links.append(f"📊 <{failed_test.get('dashboard_url')}|View Dashboard>")
+        if screenshot_url:
+            links.append(f"📸 <{screenshot_url}|View Screenshot>")
         
         return " | ".join(links) if links else "No evidence captured"
 

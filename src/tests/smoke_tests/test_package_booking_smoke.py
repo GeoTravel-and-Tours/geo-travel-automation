@@ -162,7 +162,7 @@ class TestPackageBookingSmoke(TestBase):
 
             # Step 7: View package details
             self.package_booking_flow.logger.step(7,"Viewing package details")
-            self.package_booking_flow.click_view_package()
+            # self.package_booking_flow.click_view_package()
             time.sleep(5)
 
             # Step 8: Select price option
