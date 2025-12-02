@@ -34,9 +34,13 @@ jobs:
           echo "TEST_ENV=${{ secrets.TEST_ENV }}" >> $GITHUB_ENV
           echo "BROWSER=${{ secrets.BROWSER }}" >> $GITHUB_ENV
           echo "HEADLESS=${{ secrets.HEADLESS }}" >> $GITHUB_ENV
-          echo "SLACK_WEBHOOK_URL=${{ secrets.SLACK_WEBHOOK_URL }}" >> $GITHUB_ENV
+          echo "TEST_USER_EMAIL=${{ secrets.TEST_USER_EMAIL }}" >> $GITHUB_ENV
+          echo "TEST_USER_PASSWORD=${{ secrets.TEST_USER_PASSWORD }}" >> $GITHUB_ENV
           echo "API_TEST_EMAIL=${{ secrets.API_TEST_EMAIL }}" >> $GITHUB_ENV
           echo "API_TEST_PASSWORD=${{ secrets.API_TEST_PASSWORD }}" >> $GITHUB_ENV
+          echo "SLACK_WEBHOOK_URL=${{ secrets.SLACK_WEBHOOK_URL }}" >> $GITHUB_ENV
+          echo "PROJECT_NAME=${{ secrets.PROJECT_NAME }}" >> $GITHUB_ENV
+          echo "ENVIRONMENT=${{ secrets.ENVIRONMENT }}" >> $GITHUB_ENV
           echo "PARTNERS_VERIFIED_EMAIL=${{ secrets.PARTNERS_VERIFIED_EMAIL }}" >> $GITHUB_ENV
           echo "PARTNERS_VERIFIED_PASSWORD=${{ secrets.PARTNERS_VERIFIED_PASSWORD }}" >> $GITHUB_ENV
 

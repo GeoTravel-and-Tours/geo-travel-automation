@@ -537,18 +537,6 @@
                 </div>
             </div>
 
-            <div class="stat-card warning">
-                <div class="stat-header">
-                    <div>
-                        <div class="stat-value" id="api-failures">0</div>
-                        <div class="stat-label">API Failures</div>
-                    </div>
-                    <div class="stat-icon">
-                        <i class="fas fa-code"></i>
-                    </div>
-                </div>
-            </div>
-
             <div class="stat-card danger">
                 <div class="stat-header">
                     <div>
@@ -571,8 +559,6 @@
                 <div class="controls">
                     <button class="filter-btn active" data-filter="all">All</button>
                     <button class="filter-btn" data-filter="today">Today</button>
-                    <button class="filter-btn" data-filter="ui">UI Tests</button>
-                    <button class="filter-btn" data-filter="api">API Tests</button>
                 </div>
             </div>
 
@@ -608,6 +594,8 @@
         <!-- Footer -->
         <footer>
             <p>GeoTravel QA Automation Dashboard • Powered by GitHub Pages</p>
+            <br>
+            <p>With ❤️ from Only1JohnN</p>
             <div class="last-updated">
                 <i class="fas fa-sync-alt"></i>
                 <span id="last-updated">Loading...</span>
@@ -617,12 +605,10 @@
 
     <script>
         // Configuration
-        const SCREENSHOT_DIR = 'screenshots/failures/';
         const TODAY = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
 
         // State
         let screenshots = [];
-        let currentFilter = 'all';
 
         // DOM Elements
         const elements = {
@@ -698,14 +684,6 @@
                 filteredScreenshots = filteredScreenshots.filter(s => 
                     s.date === TODAY
                 );
-            } else if (filter === 'ui') {
-                filteredScreenshots = filteredScreenshots.filter(s => 
-                    s.category === 'ui'
-                );
-            } else if (filter === 'api') {
-                filteredScreenshots = filteredScreenshots.filter(s => 
-                    s.category === 'api'
-                );
             }
             
             displayScreenshots(filteredScreenshots);
@@ -739,13 +717,10 @@
             const card = document.createElement('div');
             card.className = `screenshot-card ${index < 3 ? 'new-screenshot' : ''}`;
             
-            // Determine category
-            const categoryClass = screenshot.category === 'api' ? 'category-api' : 'category-ui';
-            const categoryText = screenshot.category === 'api' ? 'API' : 'UI';
             
             card.innerHTML = `
                 <img 
-                    src="${SCREENSHOT_DIR}${screenshot.filename}" 
+                    src="screenshots/failures/${screenshot.filename}" 
                     alt="${screenshot.testName}" 
                     class="screenshot-image"
                     loading="lazy"
@@ -756,10 +731,6 @@
                     <div class="test-meta">
                         <span class="test-date">
                             <i class="far fa-calendar"></i> ${screenshot.date}
-                        </span>
-                        <span class="test-category ${categoryClass}">
-                            ${categoryText}
-                        </span>
                     </div>
                     <div class="screenshot-actions">
                         <button class="btn btn-primary" onclick="viewScreenshot('${screenshot.filename}', '${screenshot.testName}')">
@@ -781,12 +752,10 @@
         function updateStats() {
             const total = screenshots.length;
             const uiCount = screenshots.filter(s => s.category === 'ui').length;
-            const apiCount = screenshots.filter(s => s.category === 'api').length;
             const todayCount = screenshots.filter(s => s.date === TODAY).length;
             
             elements.totalScreenshots.textContent = total;
             elements.uiFailures.textContent = uiCount;
-            elements.apiFailures.textContent = apiCount;
             elements.todayFailures.textContent = todayCount;
         }
 
@@ -810,7 +779,7 @@
 
         // View screenshot in modal
         function viewScreenshot(filename, testName) {
-            elements.modalImage.src = SCREENSHOT_DIR + filename;
+            elements.modalImage.src = "screenshots/failures/" + filename;
             elements.modalTestName.textContent = testName;
             elements.modalTestDetails.textContent = `Captured: ${new Date().toLocaleString()}`;
             elements.modal.style.display = 'flex';

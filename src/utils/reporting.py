@@ -197,7 +197,7 @@ class GeoReporter:
         }
         if screenshot_path:
             screenshot_filename = Path(screenshot_path).name
-            test_result["public_screenshot_url"] = f"https://geotravel-and-tours.github.io/geo-travel-automation/screenshots/failures/{screenshot_filename}"
+            test_result["dashboard_url"] = "https://geotravel-and-tours.github.io/geo-travel-automation/"
 
         self.test_results.append(test_result)
         self.logger.info(f"Test result added: {test_name} - {status} (Duration: {actual_duration:.2f}s)")
@@ -1037,7 +1037,7 @@ class GeoReporter:
             filename = screenshot_url.split('/')[-1]
             # GitHub Pages path
             github_pages_url = f"https://geotravel-and-tours.github.io/geo-travel-automation/screenshots/failures/{filename}"
-            links.append(f"📸 <{github_pages_url}|View Screenshot>")
+            links.append(f"📊 <{failed_test.get('dashboard_url')}|View Dashboard>")
         
         return " | ".join(links) if links else "No evidence captured"
 
