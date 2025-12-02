@@ -64,6 +64,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          echo "📁 Contents of docs/screenshots/failures/:"
+          ls -la docs/screenshots/failures/ || echo "Directory doesn't exist"
+          
           # Setup git with token
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
@@ -74,16 +77,22 @@ jobs:
           # Ensure directory exists
           mkdir -p docs/screenshots/failures
 
-          # Add docs files
-          git add docs/
+          # Force add (ignore .gitignore)
+          git add -f docs/screenshots/failures/
 
-          # Check if there are changes
-          if git diff --cached --quiet; then
-            echo "No new screenshots to commit"
-          else
+          # Show what will be committed
+          echo "📋 Git status:"
+          git status --porcelain
+
+          # Commit if there are changes
+          if ! git diff --cached --quiet; then
             git commit -m "📸 Add test failure screenshots [skip ci]"
             git push
-            echo "Screenshots committed to repository"
+            echo "✅ Screenshots committed to repository"
+          else
+            echo "❌ No changes to commit (screenshots may be gitignored)"
+            # List ignored files
+            git check-ignore docs/screenshots/failures/* || true
           fi
 
       # Upload artifacts for debugging
