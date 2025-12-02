@@ -196,10 +196,8 @@ class GeoReporter:
             "category": self._get_test_category(test_name, error_message) if status == "FAIL" else None,
         }
         if screenshot_path:
-            relative_path = screenshot_path.lstrip("./")
-            test_result["public_screenshot_url"] = (
-                f"https://geotravel-and-tours.github.io/geo-travel-automation/{relative_path}"
-            )
+            screenshot_filename = Path(screenshot_path).name
+            test_result["public_screenshot_url"] = f"https://geotravel-and-tours.github.io/geo-travel-automation/screenshots/failures/{screenshot_filename}"
 
         self.test_results.append(test_result)
         self.logger.info(f"Test result added: {test_name} - {status} (Duration: {actual_duration:.2f}s)")
