@@ -164,7 +164,7 @@ class TestPartnersPackageFunctionality:
         
         assert response.status_code == 200, "Verified user should be able to access package listings"
         data = response.json()
-        print(response.text)
+        self.logger.info(response.text)
         
         # Verify complete response structure
         assert data['message'] == "Packages retrieved successfully"
@@ -216,7 +216,7 @@ class TestPartnersPackageFunctionality:
         
         self.logger.info("🔵 VERIFIED USER - Getting package countries")
         response = package_api.get_package_countries()
-        print(response.text)
+        self.logger.info(response.text)
         
         assert response.status_code == 200, "Verified user should be able to access package countries"
         data = response.json()

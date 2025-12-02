@@ -333,7 +333,7 @@ class TestPartnersFlightFunctionality:
         self.logger.info("🔵 GETTING BASELINE USAGE FOR FLIGHT SEARCHES")
         initial_usage_response = self.org_api.get_usage(mode='test')
         assert initial_usage_response.status_code == 200
-        print(initial_usage_response.text)
+        self.logger.info(initial_usage_response.text)
         
         initial_usage_data = initial_usage_response.json()
         initial_records = initial_usage_data['data']['records']
@@ -371,7 +371,7 @@ class TestPartnersFlightFunctionality:
         self.logger.info("🔵 CHECKING UPDATED USAGE METRICS")
         final_usage_response = self.org_api.get_usage(mode='test')
         assert final_usage_response.status_code == 200
-        print(final_usage_response.text)
+        self.logger.info(final_usage_response.text)
         
         final_usage_data = final_usage_response.json()
         final_records = final_usage_data['data']['records']
