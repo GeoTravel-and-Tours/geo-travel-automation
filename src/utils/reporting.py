@@ -759,6 +759,8 @@ class GeoReporter:
                 return "Partners API Server Error"
             if "502" in error_lower or "bad gateway" in error_lower:
                 return "Partners API Gateway Error"
+            if "503" in error_lower or "service unavailable" in error_lower:
+                return "Partners API Service Unavailable"
             if "404" in error_lower or "not found" in error_lower:
                 return "Partners API Resource Not Found"
             if "400" in error_lower or "bad request" in error_lower:
@@ -838,6 +840,8 @@ class GeoReporter:
                 return "API Connection"
             elif "401" in error_lower or "unauthorized" in error_lower:
                 return "Authentication"
+            if "503" in error_lower or "service unavailable" in error_lower:
+                return "API Service Unavailable"
             elif "403" in error_lower or "forbidden" in error_lower:
                 return "Authorization"
             elif "404" in error_lower or "not found" in error_lower:
@@ -1028,13 +1032,14 @@ class GeoReporter:
     def _get_failure_links(self, failed_test):
         """Generate direct links for failed test evidence"""
         screenshot_url = failed_test.get('public_screenshot_url')
-        # html_url = failed_test.get('public_html_url')
         
         links = []
         if screenshot_url:
-            links.append(f"📸 <{screenshot_url}|View Screenshot>")
-        # if html_url:
-        #     links.append(f"📄 <{html_url}|View HTML Report>")
+            # Extract just the filename from the path
+            filename = screenshot_url.split('/')[-1]
+            # GitHub Pages path
+            github_pages_url = f"https://geotravel-and-tours.github.io/geo-travel-automation/screenshots/failures/{filename}"
+            links.append(f"📸 <{github_pages_url}|View Screenshot>")
         
         return " | ".join(links) if links else "No evidence captured"
 

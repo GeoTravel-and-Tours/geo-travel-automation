@@ -27,7 +27,7 @@ class PackageBookingFlow(BasePage):
     SEARCH_PACKAGES_BUTTON = (By.CSS_SELECTOR, "body > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > form:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > button:nth-child(1)")
 
     # Package Selection
-    VIEW_PACKAGE_BUTTON = (By.CSS_SELECTOR, "body > main:nth-child(2) > div:nth-child(3) > section:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > section:nth-child(1) > div:nth-child(2) > button:nth-child(7)")
+    VIEW_PACKAGE_BUTTON = (By.XPATH, "(//button[normalize-space()='View package'])[1]")
     PRICE_OPTION = (By.CSS_SELECTOR, "body > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2)")
     BOOK_RESERVATION_BUTTON = (By.CSS_SELECTOR, "body > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > button:nth-child(2)")
 
@@ -187,9 +187,9 @@ class PackageBookingFlow(BasePage):
     def click_view_package(self):
         """Click on View Package button"""
         self.logger.info("Clicking View Package button")
-        # Scroll further down (300 pixels past the element)
+        # Scroll further down (500 pixels past the element)
         self.javascript.execute_script(
-            "arguments[0].scrollIntoView(true); window.scrollBy(0, 300);", 
+            "arguments[0].scrollIntoView(true); window.scrollBy(0, 500);", 
             self.driver.find_element(*self.VIEW_PACKAGE_BUTTON)
         )
         time.sleep(1)

@@ -241,7 +241,7 @@ class ScreenshotUtils:
             # Generate public URLs for GitHub Pages
             if screenshot_path:
                 screenshot_filename = Path(screenshot_path).name
-                result["public_screenshot_url"] = f"{self.github_pages_base}/screenshots/failures/{screenshot_filename}"
+                result["public_screenshot_url"] = f"screenshots/failures/{screenshot_filename}"
                 print(f"🔍 DEBUG: GitHub Pages URL: {result['public_screenshot_url']}")
 
             self.logger.error(
