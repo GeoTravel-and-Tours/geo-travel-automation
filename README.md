@@ -58,7 +58,8 @@ Run specific suites:
 ```sh
 python scripts/run_scheduled_tests.py --suite smoke
 python scripts/run_scheduled_tests.py --suite api
-python scripts/run_scheduled_tests.py --suite api smoke
+python scripts/run_scheduled_tests.py --suite partners_api
+python scripts/run_scheduled_tests.py --suite api smoke partners_api
 ```
 
 Reports and logs are saved in the `reports/`, `logs\` directory.
