@@ -4,6 +4,7 @@ import requests
 import json
 from datetime import datetime
 from src.utils.logger import GeoLogger
+from src.utils.token_extractor import TokenExtractor
 from configs.environment import EnvironmentConfig
 
 class BaseAPI:
@@ -13,15 +14,38 @@ class BaseAPI:
         self.auth_token = None
         self.headers = {
             'Content-Type': 'application/json',
-            'Accept': 'application/json'
+            'Accept': 'application/json',
+            'X-Client-Type': 'retail'
         }
-        self.logger = GeoLogger(self.__class__.__name__)  # Initialize your logger
+        self.logger = GeoLogger(self.__class__.__name__)
+        self.token_extractor = TokenExtractor()
     
     def set_auth_token(self, token):
         """Set authentication token for API requests"""
+        if not token or not isinstance(token, str):
+            self.logger.warning("⚠️ Invalid token provided to set_auth_token()")
+            return
+        
         self.auth_token = token
+        # Set Authorization header for bearer token usage
         self.headers['Authorization'] = f'Bearer {token}'
-        self.logger.info("Auth token set for API requests")
+        # Also set cookie expected by retail API clients
+        try:
+            # requests.Session manages cookies via cookiejar
+            # Ensure cookie domain matches API host so it is sent on subsequent requests
+            from urllib.parse import urlparse
+            parsed = urlparse(self.base_url or '')
+            domain = parsed.hostname if parsed.hostname else None
+            if domain:
+                self.session.cookies.set('retail_access_token', token, domain=domain, path='/')
+                self.logger.debug(f"Set 'retail_access_token' cookie on session for domain: {domain}")
+            else:
+                # Fallback: set cookie without domain
+                self.session.cookies.set('retail_access_token', token)
+                self.logger.debug("Set 'retail_access_token' cookie on session (no domain)")
+        except Exception as e:
+            self.logger.debug(f"Could not set cookie on session: {e}")
+        self.logger.info(f"✅ Auth token set (length: {len(token)})")
     
     def _request(self, method, endpoint, **kwargs):
         """Base request method with logging and error handling"""

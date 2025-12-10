@@ -3,6 +3,7 @@
 import pytest
 from src.pages.api.auth_api import AuthAPI
 from src.utils.logger import GeoLogger
+from src.utils.token_extractor import TokenExtractor
 
 class TestAuthAPI:
     
@@ -24,12 +25,15 @@ class TestAuthAPI:
         assert response.status_code == 200
         
         response_data = response.json()
-        # Access token is nested under 'data'
+        # New API returns success with token in cookie 'retail_access_token'
+        assert response_data.get('status') == 'success'
         assert 'data' in response_data
-        assert 'access_token' in response_data['data']
-        assert 'refresh_token' in response_data['data']
-        assert auth_api.auth_token is not None
-        
+
+        # Token is extracted from cookie (retail_access_token), not response body
+        assert auth_api.auth_token is not None, "Auth token should be extracted from cookie"
+        assert isinstance(auth_api.auth_token, str)
+        assert len(auth_api.auth_token) > 0
+
         self.logger.info("Login successful with valid credentials")
         self.logger.info(f"Access token received: {auth_api.auth_token[:50]}...")
     
@@ -83,27 +87,72 @@ class TestAuthAPI:
 
     @pytest.mark.api
     def test_auth_token_set_after_successful_login(self, auth_api):
-        """Test that auth token is set after successful login"""
+        """Test that auth token is set after successful login (works for both environments)"""
         self.logger.info("=== Testing Auth Token Set After Successful Login ===")
+        
         response = auth_api.login()
         
-        # Check if login was successful
+        # Verify login was successful
         assert response.status_code == 200
         
-        response_data = response.json()
-        # Token is nested under 'data'
-        if 'data' in response_data and 'access_token' in response_data['data']:
-            # Auth token should be set
-            assert auth_api.auth_token is not None
-            assert isinstance(auth_api.auth_token, str)
-            assert len(auth_api.auth_token) > 0
+        # auth_api.login() handles token extraction from both cookies and response body
+        assert auth_api.auth_token is not None, "Auth token must be set after successful login"
+        assert isinstance(auth_api.auth_token, str), "Auth token must be a string"
+        assert len(auth_api.auth_token) > 0, "Auth token cannot be empty"
+        
+        # Verify Authorization header is properly set
+        assert 'Authorization' in auth_api.headers, "Authorization header must be set"
+        assert auth_api.headers['Authorization'].startswith('Bearer '), "Authorization header must start with 'Bearer '"
+        assert auth_api.auth_token in auth_api.headers['Authorization'], "Auth token must be in Authorization header"
+        
+        self.logger.info(f"✅ Auth token successfully set (length: {len(auth_api.auth_token)})")
+        self.logger.info(f"Authorization header: {auth_api.headers['Authorization'][:50]}...")
+    
+    @pytest.mark.api
+    def test_dynamic_token_extraction(self, auth_api):
+        """Test that token extraction works dynamically"""
+        self.logger.info("=== Testing Dynamic Token Extraction ===")
+        response = auth_api.login()
+        
+        assert response.status_code == 200
+        
+        # Test the token extractor directly
+        token_extractor = TokenExtractor()
+        token, extraction_method = token_extractor.extract_token(response)
+        
+        # Token should be found via some method
+        assert token is not None, "Token extraction failed"
+        assert extraction_method is not None, "Extraction method should be identified"
+        assert extraction_method in ['response_body', 'cookies', 'header'], f"Invalid extraction method: {extraction_method}"
+        
+        # Token should be valid
+        is_valid = token_extractor.validate_token(token)
+        assert is_valid, f"Token validation failed for {extraction_method} extracted token"
+        
+        self.logger.success(f"✅ Dynamic token extraction successful via '{extraction_method}'")
+    
+    @pytest.mark.api
+    def test_token_validation(self, auth_api):
+        """Test that token validation works correctly"""
+        self.logger.info("=== Testing Token Validation ===")
+        response = auth_api.login()
+        
+        assert response.status_code == 200
+        
+        token_extractor = TokenExtractor()
+        token, _ = token_extractor.extract_token(response)
+        
+        assert token is not None, "No token extracted"
+        
+        # Test validation
+        is_valid = token_extractor.validate_token(token)
+        assert is_valid, "Token validation failed"
+        
+        # Test invalid token scenarios
+        assert not token_extractor.validate_token(None)
+        assert not token_extractor.validate_token("")
+        assert not token_extractor.validate_token("invalid")
+        
+        self.logger.success("✅ Token validation working correctly")
             
-            # Check that Authorization header is set
-            assert 'Authorization' in auth_api.headers
-            assert f'Bearer {auth_api.auth_token}' == auth_api.headers['Authorization']
-            
-            self.logger.info("Auth token successfully set after login")
-            self.logger.info(f"Authorization header: {auth_api.headers['Authorization'][:50]}...")
-        else:
-            pytest.skip("No access token in response - cannot test token setting")
             

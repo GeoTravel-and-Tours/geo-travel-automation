@@ -5,6 +5,7 @@ import pytest
 import random
 from src.pages.api.partners_api.partners_auth_api import PartnersAuthAPI
 from src.utils.verified_partners_helper import VerifiedUserHelper
+from src.utils.token_extractor import TokenExtractor
 from src.utils.logger import GeoLogger
 
 class TestPartnersAuth:
@@ -103,3 +104,28 @@ class TestPartnersAuth:
         assert data['data']['isEmailVerified'] is True
         assert data['data']['accessToken'] is not None
         self.logger.success("✅ Verified user login has correct response structure")
+    
+    @pytest.mark.partners_api
+    def test_partners_dynamic_token_extraction(self):
+        """TEST: Partners API uses dynamic token extraction"""
+        self.logger.info("=== Testing Partners API Dynamic Token Extraction ===")
+        login_response = self.auth_api.login({
+            "orgEmail": os.getenv("PARTNERS_VERIFIED_EMAIL"),
+            "password": os.getenv("PARTNERS_VERIFIED_PASSWORD")
+        })
+        
+        assert login_response.status_code == 200
+        
+        # Test the token extractor directly
+        token_extractor = TokenExtractor()
+        token, extraction_method = token_extractor.extract_token(login_response)
+        
+        # Token should be found
+        assert token is not None, "Token extraction failed for Partners API"
+        assert extraction_method is not None, "Extraction method should be identified"
+        
+        # Token should be valid
+        is_valid = token_extractor.validate_token(token)
+        assert is_valid, f"Token validation failed for {extraction_method} extracted token"
+        
+        self.logger.success(f"✅ Partners API dynamic token extraction successful via '{extraction_method}'")

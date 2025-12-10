@@ -1,11 +1,13 @@
-# src/pages/api/Partners_api/partners_auth_api.py
+# src/pages/api/partners_api/partners_auth_api.py
 
 import os
 from src.core.partners_base_api import PartnersBaseAPI
+from src.utils.token_extractor import TokenExtractor
 
 class PartnersAuthAPI(PartnersBaseAPI):
     def __init__(self):
         super().__init__()
+        self.token_extractor = TokenExtractor()
         self.endpoints = {
             'welcome': '/api',
             'signup': '/api/auth/signup',
@@ -25,8 +27,24 @@ class PartnersAuthAPI(PartnersBaseAPI):
         return self.post(self.endpoints['signup'], json=org_data)
     
     def login(self, credentials):
-        """POST /api/auth/login - Organization login"""
-        return self.post(self.endpoints['login'], json=credentials)
+        """POST /api/auth/login - Organization login with dynamic token extraction"""
+        response = self.post(self.endpoints['login'], json=credentials)
+        
+        if response.status_code == 200:
+            # Use TokenExtractor for dynamic token extraction
+            token, extraction_method = self.token_extractor.extract_token(response)
+            
+            if token:
+                is_valid = self.token_extractor.validate_token(token)
+                self.token_extractor.log_extraction_attempt(token, extraction_method, is_valid)
+                
+                if is_valid:
+                    self.set_auth_token(token)
+                    self.logger.success(f"✅ Login successful - token set via {extraction_method}")
+            else:
+                self.logger.debug("Login successful (200) but no token found (may not be verified user)")
+        
+        return response
     
     def verify_email(self, token):
         """POST /api/auth/verify-email - Verify email address"""

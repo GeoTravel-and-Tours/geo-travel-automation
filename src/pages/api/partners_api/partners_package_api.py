@@ -1,7 +1,5 @@
 # src/pages/api/Partners_api/partners_package_api.py
 
-import os
-from wsgiref import headers
 from src.core.partners_base_api import PartnersBaseAPI
 
 class PartnersPackageAPI(PartnersBaseAPI):
@@ -18,13 +16,12 @@ class PartnersPackageAPI(PartnersBaseAPI):
         }
     
     def _get_package_headers(self):
+        """Get headers required for package API requests."""
         return {
             'x-api-key': self.api_key,
             'x-api-secret': self.api_secret,
             'x-app-id': self.app_id
         }
-        self.logger.info(f"Package API Headers: {headers}")  # Debug logging
-        return headers
     
     def get_all_packages(self, city=None, country=None, limit=None, page=None):
         params = {}

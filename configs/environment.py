@@ -89,6 +89,39 @@ class EnvironmentConfig:
         "visa": "/api/visa/create"
     }
 
+    # Token Extraction Configuration - Customizable per environment
+    # Controls how tokens are extracted from auth responses
+    TOKEN_EXTRACTION_CONFIG = {
+        'dev': {
+            'response_fields': ['access_token', 'accessToken', 'token'],
+            'cookie_names': ['retail_access_token', 'partners_access_token', 'auth_token', 'access_token', 'session'],
+            'nested_path': 'data',
+            'try_cookies_first': False,
+            'validate_token': True,
+        },
+        'qa': {
+            'response_fields': ['access_token', 'accessToken', 'token'],
+            'cookie_names': ['retail_access_token', 'partners_access_token', 'auth_token', 'access_token', 'session'],
+            'nested_path': 'data',
+            'try_cookies_first': False,
+            'validate_token': True,
+        },
+        'staging': {
+            'response_fields': ['access_token', 'accessToken', 'token'],
+            'cookie_names': ['retail_access_token', 'partners_access_token', 'auth_token', 'access_token', 'session'],
+            'nested_path': 'data',
+            'try_cookies_first': False,
+            'validate_token': True,
+        },
+        'production': {
+            'response_fields': ['access_token', 'accessToken', 'token'],
+            'cookie_names': ['retail_access_token', 'partners_access_token', 'auth_token', 'access_token', 'session', 'jwt'],
+            'nested_path': 'data',
+            'try_cookies_first': False,
+            'validate_token': True,
+        }
+    }
+
     
     @classmethod
     def get_base_url(cls, environment=None):
@@ -201,6 +234,49 @@ class EnvironmentConfig:
             
         # Otherwise use the environment-specific Partners API URL
         return cls.ENVIRONMENTS.get(env, {}).get("partners_api_base_url")
+    
+    @classmethod
+    def get_token_extraction_config(cls, environment=None):
+        """
+        Get token extraction configuration for the specified environment.
+        
+        This configuration controls how authentication tokens are extracted from API responses.
+        Supports:
+        - Multiple response field names (access_token, accessToken, token, etc.)
+        - Cookie-based token extraction
+        - Configurable nesting paths
+        - Token validation
+        
+        Args:
+            environment: Environment name (dev, qa, staging, production)
+                        If None, uses TEST_ENV
+        
+        Returns:
+            Dictionary with token extraction configuration
+        """
+        env = environment or cls.TEST_ENV
+        config = cls.TOKEN_EXTRACTION_CONFIG.get(env)
+        
+        if not config:
+            # Return default config if environment not found
+            logger = GeoLogger("EnvironmentConfig")
+            logger.warning(f"⚠️ No token extraction config for {env}, using defaults")
+            return cls.TOKEN_EXTRACTION_CONFIG.get('qa', {})
+        
+        return config
+    
+    @classmethod
+    def override_token_extraction_config(cls, environment, config_updates):
+        """
+        Override token extraction configuration for an environment.
+        Useful for environment-specific customizations.
+        
+        Args:
+            environment: Environment name
+            config_updates: Dictionary of config updates to merge
+        """
+        if environment in cls.TOKEN_EXTRACTION_CONFIG:
+            cls.TOKEN_EXTRACTION_CONFIG[environment].update(config_updates)
     
     # Partners API Verified Test Account
     PARTNERS_VERIFIED_EMAIL = os.getenv("PARTNERS_VERIFIED_EMAIL")
