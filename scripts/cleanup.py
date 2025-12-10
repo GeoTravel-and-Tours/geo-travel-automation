@@ -40,6 +40,10 @@ class CleanupManager:
                 "patterns": ["*.png", "*.jpg", "*.jpeg"],
                 "recursive": True,
             },
+            "docs": {
+                "directory": self.base_dir / "docs" / "screenshots" / "failures",
+                "patterns": ["*.png", "*.jpg", "*.jpeg"],
+            }
         }
 
     def _setup_logger(self):
