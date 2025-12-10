@@ -5,6 +5,7 @@ import time
 import json
 from datetime import datetime
 from src.utils.logger import GeoLogger
+from src.utils.token_extractor import TokenExtractor
 from configs.environment import EnvironmentConfig
 
 class PartnersBaseAPI:
@@ -18,17 +19,23 @@ class PartnersBaseAPI:
         self.auth_token = None
         self.headers = {
             'Content-Type': 'application/json',
-            'Accept': 'application/json'
+            'Accept': 'application/json',
+            'X-Client-Type': 'partners'
         }
         self.logger = GeoLogger(self.__class__.__name__)
+        self.token_extractor = TokenExtractor()
         # ✅ INCREASED TIMEOUT: 30 → 60 seconds
         self.timeout = 60
     
     def set_auth_token(self, token):
         """Set authentication token for Partners API requests"""
+        if not token or not isinstance(token, str):
+            self.logger.warning("⚠️ Invalid token provided to set_auth_token()")
+            return
+        
         self.auth_token = token
         self.headers['Authorization'] = f'Bearer {token}'
-        self.logger.info("Auth token set for Partners API requests")
+        self.logger.info(f"✅ Auth token set (length: {len(token)})")
     
     def _request_with_retry(self, method, endpoint, max_retries=3, **kwargs):
         """✅ ADDED: Request with retry logic for timeouts"""

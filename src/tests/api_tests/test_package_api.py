@@ -148,6 +148,9 @@ class TestPackageAPI:
             self.logger.info(f"Selected package: {package_title} (ID: {package_id})")
             self.logger.info(f"Using pricing text: {pricing_text}")
     
+            # Determine a valid departure date. Prefer package's start_date if available.
+            departure_date = selected_package.get('start_date') or selected_package.get('available_from') or "2025-12-01"
+
             # CORRECT booking data using the extracted pricing text
             booking_data = {
                 "package": package_id,
@@ -156,7 +159,8 @@ class TestPackageAPI:
                 "phone": "1234567890",
                 "pricing_text": pricing_text,  # Dynamic from package data
                 "is_full_payment": True,
-                "departure_date": "2025-12-01",
+                "is_lockdown_payment": False,
+                "departure_date": departure_date,
                 "adults": 1,
                 "children": 0,
                 "infants": 0,

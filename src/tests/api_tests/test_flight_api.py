@@ -17,13 +17,20 @@ class TestFlightAPI:
     def authenticated_flight_api(self):
         """Fixture that returns authenticated FlightAPI instance"""
         auth_api = AuthAPI()
+        self.logger.info("🔐 Authenticating for Flight API tests...")
         # This will automatically use credentials from environment
         response = auth_api.login()
         
         # If login fails, skip the test
         if response.status_code != 200:
+            self.logger.error(f"❌ Login failed with status {response.status_code}")
             pytest.skip(f"Login failed with status {response.status_code} - cannot run flight tests")
-            
+        
+        if not auth_api.auth_token:
+            self.logger.error("❌ Login succeeded but no auth token found")
+            pytest.skip("No auth token in response")
+        
+        self.logger.success(f"✅ Authenticated successfully (token length: {len(auth_api.auth_token)})")
         flight_api = FlightAPI()
         flight_api.set_auth_token(auth_api.auth_token)
         return flight_api

@@ -3,6 +3,7 @@
 import pytest
 from src.pages.api.auth_api import AuthAPI
 from src.utils.logger import GeoLogger
+from src.utils.token_extractor import TokenExtractor
 
 class TestAuthAPI:
     
@@ -24,12 +25,15 @@ class TestAuthAPI:
         assert response.status_code == 200
         
         response_data = response.json()
-        # Access token is nested under 'data'
+        # New API returns success with token in cookie 'retail_access_token'
+        assert response_data.get('status') == 'success'
         assert 'data' in response_data
-        assert 'access_token' in response_data['data']
-        assert 'refresh_token' in response_data['data']
-        assert auth_api.auth_token is not None
-        
+
+        # Token is extracted from cookie (retail_access_token), not response body
+        assert auth_api.auth_token is not None, "Auth token should be extracted from cookie"
+        assert isinstance(auth_api.auth_token, str)
+        assert len(auth_api.auth_token) > 0
+
         self.logger.info("Login successful with valid credentials")
         self.logger.info(f"Access token received: {auth_api.auth_token[:50]}...")
     
@@ -106,4 +110,52 @@ class TestAuthAPI:
             self.logger.info(f"Authorization header: {auth_api.headers['Authorization'][:50]}...")
         else:
             pytest.skip("No access token in response - cannot test token setting")
+    
+    @pytest.mark.api
+    def test_dynamic_token_extraction(self, auth_api):
+        """Test that token extraction works dynamically"""
+        self.logger.info("=== Testing Dynamic Token Extraction ===")
+        response = auth_api.login()
+        
+        assert response.status_code == 200
+        
+        # Test the token extractor directly
+        token_extractor = TokenExtractor()
+        token, extraction_method = token_extractor.extract_token(response)
+        
+        # Token should be found via some method
+        assert token is not None, "Token extraction failed"
+        assert extraction_method is not None, "Extraction method should be identified"
+        assert extraction_method in ['response_body', 'cookies', 'header'], f"Invalid extraction method: {extraction_method}"
+        
+        # Token should be valid
+        is_valid = token_extractor.validate_token(token)
+        assert is_valid, f"Token validation failed for {extraction_method} extracted token"
+        
+        self.logger.success(f"✅ Dynamic token extraction successful via '{extraction_method}'")
+    
+    @pytest.mark.api
+    def test_token_validation(self, auth_api):
+        """Test that token validation works correctly"""
+        self.logger.info("=== Testing Token Validation ===")
+        response = auth_api.login()
+        
+        assert response.status_code == 200
+        
+        token_extractor = TokenExtractor()
+        token, _ = token_extractor.extract_token(response)
+        
+        assert token is not None, "No token extracted"
+        
+        # Test validation
+        is_valid = token_extractor.validate_token(token)
+        assert is_valid, "Token validation failed"
+        
+        # Test invalid token scenarios
+        assert not token_extractor.validate_token(None)
+        assert not token_extractor.validate_token("")
+        assert not token_extractor.validate_token("invalid")
+        
+        self.logger.success("✅ Token validation working correctly")
+            
             

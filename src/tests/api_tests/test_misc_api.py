@@ -23,9 +23,15 @@ class TestMiscAPIs:
     @pytest.fixture
     def authenticated_api(self):
         auth_api = AuthAPI()
+        self.logger.info("🔐 Authenticating for API tests...")
         response = auth_api.login()
         if response.status_code != 200:
+            self.logger.error(f"❌ Login failed with status {response.status_code}")
             pytest.skip("Login failed")
+        if not auth_api.auth_token:
+            self.logger.error("❌ Login succeeded but no auth token found")
+            pytest.skip("No auth token in response")
+        self.logger.success(f"✅ Authenticated successfully with token (length: {len(auth_api.auth_token)})")
         return auth_api.auth_token
     
     # Google Reviews Tests
