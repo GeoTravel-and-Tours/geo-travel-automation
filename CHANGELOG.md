@@ -9,20 +9,136 @@ It helps track improvements, fixes, and added features over time.
 
 ## [Unreleased]
 ### Planned
-- Add support for email notification integration
+- CI/CD GitHub Actions pipeline optimization
+- Performance baseline tests and monitoring
+- Enhanced Slack Bot Token integration (switching from Webhook URL)
+- GraphQL API testing support
+- Contract testing with OpenAPI/Swagger
+- Load testing framework
+- Mobile app automation (Appium)
+- Visual regression testing
+- Email notification integration
 - Regression test suites for major features
-- Switch from using Slack Webhook URL to using Slack Bot Token because it is more controllable and has more Pros
-- Performance monitoring integration
 
 ---
 
-## [1.4.1] - 2025-11-19
+## [1.6.0] - 2025-12-10
+### Added
+- **TokenExtractor utility** (src/utils/token_extractor.py) for centralized, flexible token extraction from multiple sources:
+  - Response body token extraction (configurable field mapping)
+  - Cookie-based token extraction (supports secure HTTP-only cookies)
+  - Authorization header extraction (Bearer token fallback)
+  - Per-environment configuration via TOKEN_EXTRACTION_CONFIG
+  - Token validation with expiry checks
+- **X-Client-Type headers** for API differentiation between retail and partners
+- **Environment-scoped test suite checking** with proper verification of required endpoints per suite:
+  - API suite checks only API environment
+  - UI smoke suite checks only UI environment
+  - Partners API suite checks only Partners API environment
+  - Multi-suite runs check all required environments
+- **GitHub project documentation** suite:
+  - Comprehensive PROJECT.md with roadmap and current status
+  - .github/ISSUE_TEMPLATE/bug_report.md for structured bug reporting
+  - .github/ISSUE_TEMPLATE/feature_request.md for feature proposals
+  - .github/pull_request_template.md with detailed PR checklist
+  - CONTRIBUTING.md (planned) with development guidelines
+  - ARCHITECTURE.md (planned) with system design documentation
+
+### Changed
+- **Logging standardization** across entire codebase:
+  - Removed all emoji prefixes (❌, ✅, 🔍, 🔄, etc.)
+  - Standardized log levels: debug, info, warning, error
+  - Improved log clarity with consistent formatting
+  - Better error message context for troubleshooting
+- **conftest.py** environment check logic:
+  - Fixed `should_skip_ui_environment_check()` to properly scope per test suite
+  - Added command-line argument detection for `--suite api` filtering
+  - Test suite filtering now respects only required environments
+- **Code cleanup and optimization**:
+  - Removed duplicate method definitions in VerifiedUserHelper
+  - Removed unreachable code in PartnersPackageAPI
+  - Cleaned up unused imports throughout codebase
+  - Improved test assertions in auth tests for multiple token extraction methods
+
+### Fixed
+- **Bug:** Environment checks were not scoped per test suite (conftest.py line 44)
+  - `--suite api` was checking UI environment unnecessarily
+  - Fixed by adding suite detection in should_skip_ui_environment_check()
+  - Verified with 7 test combinations all working correctly
+- **Bug:** PartnersPackageAPI had unreachable code in _get_package_headers()
+- **Bug:** VerifiedUserHelper had 3 duplicate get_verified_flight_api() method definitions
+- **Bug:** Excessive logging with emojis was cluttering test output
+
+### Test Results
+- ✅ API tests: 59 passed, 1 skipped
+- ✅ Environment checks: All 7 suite combinations verified
+- ✅ Token extraction: Dynamic extraction from multiple sources working
+- ✅ No regressions in existing test suites
+
+---
+
+## [1.5.1] - 2025-12-02
+### Added
+- Partners API test suite enhancements and expansion
+- Improved package booking test flow with retry logic
+- Enhanced timeout handling for long-running partner operations
+- Support for logging failure screenshots in docs directory structure
+- Enhanced screenshot embedding in Slack reports with GitHub Pages hosting
+- Improved Slack report formatting with screenshot URLs
+
+### Changed
+- Improved test reliability with increased timeout values
+- Enhanced partner API retry logic with exponential backoff
+- Refined package booking flow to handle edge cases better
+- Improved screenshot capturing and organization in CI/CD workflows
+- Updated reporting.py to better handle screenshot integration
+- Enhanced QA test workflow for screenshot handling
+
+### Fixed
+- Package booking test reliability issues
+- Timeout issues in partners API operations
+- Screenshot deployment in GitHub Actions workflow
+- HTML copying in CI/CD pipeline
+- Public screenshot URL generation in test reports
+- Failing UI and API test suite execution
+
+---
+
+## [1.5.0-beta] - 2025-11-26
+### Added
+- **Partners API test automation framework** - Complete partner API testing infrastructure:
+  - Partners authentication API implementation
+  - Partners flight API endpoints
+  - Partners package API endpoints
+  - Partners booking management
+- Partners API workflow support in CI/CD pipeline
+- Comprehensive partners API test suite with smoke tests
+
+### Changed
+- CI/CD workflow enhanced to support partners API testing
+- Test reporting system updated for partners API integration
+- Test environment handling improved for multiple API types
+
+### Fixed
+- Environment handling for partners API tests
+- Test reporting compatibility with partners API suites
+
+---
+
+## [1.5.0] - 2025-11-19
 ### Added
 - GitHub Pages integration for direct screenshot access without zip downloads
 - Direct clickable links in Slack reports for failed test evidence
 - Enhanced screenshot naming with error-type prefixes (element_not_found, api_timeout, etc.)
 - Public artifact deployment to gh-pages branch for browser-accessible test evidence
 - Automated GitHub Pages workflow that publishes screenshots and reports after test runs
+- GitHub Actions workflow (.github/workflows/qa-automation.yml) to replace CircleCI pipeline:
+  - Daily smoke tests schedule
+  - Weekly regression tests (commented for future use)
+  - Manual cleanup workflow via workflow_dispatch
+  - Artifact uploads for test screenshots
+- Lazy import system to resolve Selenium dependency chain in cleanup utilities
+- Independent cleanup script with zero external dependencies
 
 ### Changed
 - Improved test reporting with better environment handling and screenshot robustness
@@ -31,6 +147,9 @@ It helps track improvements, fixes, and added features over time.
 - Updated module resolution in test runner scripts for proper import handling
 - More robust API test skipping logic to prevent false positives in environment checks
 - GitHub workflow enhancements with consistent environment variable loading
+- Updated get_current_branch() to check GITHUB_REF_NAME for GitHub Actions compatibility
+- Updated get_commit_hash() to check GITHUB_SHA for GitHub Actions compatibility
+- Updated _get_artifacts_link() to generate artifact links in GitHub Actions
 
 ### Fixed
 - Critical method errors in screenshot capture by removing non-existent method calls
@@ -38,27 +157,7 @@ It helps track improvements, fixes, and added features over time.
 - Undefined variable issues in individual report generation
 - Environment skip notifications with proper reason parameter passing
 - Driver validation in screenshot utilities to handle None driver instances
-
----
-
-## [1.4.1] - 2025-11-13
-### Added
-- GitHub Actions workflow (.github/workflows/qa-automation.yml) to replace CircleCI pipeline, including:
-- Daily smoke tests schedule
-- Weekly regression tests (commented for future use)
-- Manual cleanup workflow via workflow_dispatch
-- Artifact uploads for test screenshots
-- Dependency installation and cleanup steps
-- Environment variable support in scripts for GitHub Actions (GITHUB_REF_NAME, GITHUB_SHA) to ensure CI/CD metadata collection works on GitHub Actions as well as CircleCI
-
-### Changed
-- Updated get_current_branch() to check GITHUB_REF_NAME in addition to CircleCI variables
-- Updated get_commit_hash() to check GITHUB_SHA in addition to CircleCI variables
-- Updated _get_artifacts_link() to generate artifact links in GitHub Actions if CircleCI variables are not present
-- Ensures CI/CD scripts are fully compatible with GitHub Actions while maintaining CircleCI fallback
-
-### Fixed
-- N/A (migration-focused update)
+- CircleCI and GitHub Actions compatibility issues in CI/CD scripts
 
 ---
 
