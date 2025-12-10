@@ -87,29 +87,26 @@ class TestAuthAPI:
 
     @pytest.mark.api
     def test_auth_token_set_after_successful_login(self, auth_api):
-        """Test that auth token is set after successful login"""
+        """Test that auth token is set after successful login (works for both environments)"""
         self.logger.info("=== Testing Auth Token Set After Successful Login ===")
+        
         response = auth_api.login()
         
-        # Check if login was successful
+        # Verify login was successful
         assert response.status_code == 200
         
-        response_data = response.json()
-        # Token is nested under 'data'
-        if 'data' in response_data and 'access_token' in response_data['data']:
-            # Auth token should be set
-            assert auth_api.auth_token is not None
-            assert isinstance(auth_api.auth_token, str)
-            assert len(auth_api.auth_token) > 0
-            
-            # Check that Authorization header is set
-            assert 'Authorization' in auth_api.headers
-            assert f'Bearer {auth_api.auth_token}' == auth_api.headers['Authorization']
-            
-            self.logger.info("Auth token successfully set after login")
-            self.logger.info(f"Authorization header: {auth_api.headers['Authorization'][:50]}...")
-        else:
-            pytest.skip("No access token in response - cannot test token setting")
+        # auth_api.login() handles token extraction from both cookies and response body
+        assert auth_api.auth_token is not None, "Auth token must be set after successful login"
+        assert isinstance(auth_api.auth_token, str), "Auth token must be a string"
+        assert len(auth_api.auth_token) > 0, "Auth token cannot be empty"
+        
+        # Verify Authorization header is properly set
+        assert 'Authorization' in auth_api.headers, "Authorization header must be set"
+        assert auth_api.headers['Authorization'].startswith('Bearer '), "Authorization header must start with 'Bearer '"
+        assert auth_api.auth_token in auth_api.headers['Authorization'], "Auth token must be in Authorization header"
+        
+        self.logger.info(f"✅ Auth token successfully set (length: {len(auth_api.auth_token)})")
+        self.logger.info(f"Authorization header: {auth_api.headers['Authorization'][:50]}...")
     
     @pytest.mark.api
     def test_dynamic_token_extraction(self, auth_api):

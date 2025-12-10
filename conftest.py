@@ -37,10 +37,11 @@ def pytest_addoption(parser):
     )
     
 def should_skip_ui_environment_check():
-    """Check if UI environment check should be skipped"""
+    """Check if UI environment check should be skipped for API/Partners API tests."""
     return (os.getenv("SKIP_UI_ENV_CHECK") == "true" or 
             os.getenv("TEST_TYPE") == "API" or
-            any("partners_api" in arg for arg in sys.argv))
+            any("partners_api" in arg for arg in sys.argv) or
+            any(arg == "api" for arg in sys.argv))
     
 def pytest_configure(config):
     """Check environment availability before test session starts"""
@@ -242,6 +243,7 @@ def _handle_skipped_test(item, report):
 @pytest.hookimpl(hookwrapper=True)
 def pytest_runtest_makereport(item, call):
     """Capture test results for reporting, attach screenshots/html and latest log to pytest-html"""
+    from pytest_html import extras
     outcome = yield
     report = outcome.get_result()
 
@@ -349,8 +351,6 @@ def pytest_runtest_makereport(item, call):
         suite_reporter = None
         test_path = str(item.fspath)
         logger.info(f"🔍 CRITICAL DEBUG: test_path = {test_path}")
-        logger.info(f"🔍 CRITICAL DEBUG: 'partners_api_tests' in test_path = {'partners_api_tests' in test_path}")
-        logger.info(f"🔍 CRITICAL DEBUG: 'partners_api' in test_path = {'partners_api' in test_path}")
         
         if "smoke_tests" in test_path:
             suite_reporter = get_suite_reporter("smoke")
@@ -365,8 +365,6 @@ def pytest_runtest_makereport(item, call):
         else:
             # Fallback to smoke reporter
             suite_reporter = get_suite_reporter("smoke")
-        logger.info(f"🔍 CRITICAL DEBUG: Selected reporter = {suite_reporter}")
-        logger.info(f"🔍 CRITICAL DEBUG: Reporter type = {type(suite_reporter)}")
             
         # record result in the appropriate reporter with proper metadata
         if suite_reporter:
@@ -399,7 +397,7 @@ def pytest_runtest_makereport(item, call):
                 if candidates:
                     latest_log = candidates[0]
                     target_logs_dir.mkdir(parents=True, exist_ok=True)
-                    dest_name = f"{latest_log.stem}__{int(latest_log.stat().st_mtime)}{latest_log.suffix}"
+                    dest_name = latest_log.name
                     copied = target_logs_dir / dest_name
                     try:
                         shutil.copy2(latest_log, copied)
