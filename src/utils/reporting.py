@@ -1112,7 +1112,7 @@ class GeoReporter:
                     # OLD structure (fallback)
                     links.append(f"📸 <{gh_pages}/screenshots/failures/{screenshot_name}|View Screenshot>")
         
-        # API TESTS - Only log + response
+        # API TESTS - Test Logs + Response Dump
         elif is_api_test:
             evidence = failed_test.get('evidence', {})
             
