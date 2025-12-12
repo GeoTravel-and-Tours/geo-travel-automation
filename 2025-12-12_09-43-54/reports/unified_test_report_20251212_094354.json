@@ -1,0 +1,215 @@
+{
+    "test_suite_name": "Unified UI Smoke + API + Partners API TEST REPORT",
+    "total_tests": 123,
+    "passed_tests": 119,
+    "failed_tests": 2,
+    "skipped_tests": 2,
+    "success_rate": 96.7,
+    "duration": 358.820544,
+    "start_time": "2025-12-12 09:37:55",
+    "end_time": "2025-12-12 09:43:54",
+    "suites_run": [
+        "smoke",
+        "api",
+        "partners_api"
+    ],
+    "suite_details": {
+        "smoke": {
+            "report": {
+                "test_suite_name": "Unified UI Smoke + API + Partners API TEST REPORT",
+                "total_tests": 28,
+                "passed_tests": 27,
+                "failed_tests": 1,
+                "skipped_tests": 0,
+                "success_rate": 96.42857142857143,
+                "duration": 247.557456,
+                "start_time": "2025-12-12 09:37:56",
+                "end_time": "2025-12-12 09:42:03",
+                "failed_tests_details": [
+                    {
+                        "test_name": "src/tests/smoke_tests/test_package_booking_smoke.py::TestPackageBookingSmoke::test_complete_package_booking_flow",
+                        "status": "FAIL",
+                        "error_message": "TimeoutException: Message: \n",
+                        "screenshot_path": "docs/screenshots/failures/timeoutexceptio_srctestssmoke_teststest_package_booking_smokepyTestPackageBookingSmoketest_complete_package_booking_flow_20251212_094203.png",
+                        "duration": 82.92747402191162,
+                        "timestamp": "09:42:03",
+                        "skip_reason": null,
+                        "category": "UI Timeout",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20251212_093755.log"
+                        },
+                        "log_path": "reports/logs/geo_travel_20251212_093755.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/geo_travel_20251212_093755.log",
+                        "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/screenshots/failures/timeoutexceptio_srctestssmoke_teststest_package_booking_smokepyTestPackageBookingSmoketest_complete_package_booking_flow_20251212_094203.png",
+                        "suite": "smoke"
+                    }
+                ],
+                "skipped_tests_details": []
+            },
+            "timestamp": "2025-12-12 09:42:03"
+        },
+        "api": {
+            "report": {
+                "test_suite_name": "API SMOKE TEST",
+                "total_tests": 60,
+                "passed_tests": 60,
+                "failed_tests": 0,
+                "skipped_tests": 0,
+                "success_rate": 100.0,
+                "duration": 28.755735,
+                "start_time": "2025-12-12 09:42:03",
+                "end_time": "2025-12-12 09:42:32",
+                "failed_tests_details": [],
+                "skipped_tests_details": []
+            },
+            "timestamp": "2025-12-12 09:42:32"
+        },
+        "partners_api": {
+            "report": {
+                "test_suite_name": "PARTNERS API SMOKE TEST",
+                "total_tests": 35,
+                "passed_tests": 32,
+                "failed_tests": 1,
+                "skipped_tests": 2,
+                "success_rate": 91.42857142857143,
+                "duration": 69.610232,
+                "start_time": "2025-12-12 09:42:44",
+                "end_time": "2025-12-12 09:43:54",
+                "failed_tests_details": [
+                    {
+                        "test_name": "src/tests/partners_api_tests/test_partners_package.py::TestPartnersPackageFunctionality::test_verified_user_can_book_package",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Verified user should be able to book packages\nassert 400 == 201\n +  where 400 = <Response [400]>.status_code",
+                        "screenshot_path": null,
+                        "duration": 1.6438682079315186,
+                        "timestamp": "09:43:44",
+                        "skip_reason": null,
+                        "category": "Partners API Request Validation",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20251212_093755.log",
+                            "response_file": "reports/failed_responses/20251212_094344_400_api_package_book.txt"
+                        },
+                        "log_path": "reports/logs/geo_travel_20251212_093755.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/geo_travel_20251212_093755.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251212_094344_400_api_package_book.txt",
+                        "suite": "partners_api"
+                    }
+                ],
+                "skipped_tests_details": [
+                    {
+                        "test_name": "src/tests/partners_api_tests/test_partners_flight.py::TestPartnersFlightFunctionality::test_verified_user_can_book_flight",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/partners_api_tests/test_partners_flight.py', 274, 'Skipped: Backend integration issue: Error posting data to Amadeus')",
+                        "screenshot_path": null,
+                        "duration": 6.130232810974121,
+                        "timestamp": "09:43:09",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/partners_api_tests/test_partners_flight.py', 274, 'Skipped: Backend integration issue: Error posting data to Amadeus')",
+                        "category": null,
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20251212_093755.log",
+                            "response_file": "reports/failed_responses/20251212_094309_500_api_flight_book.txt"
+                        },
+                        "log_path": "reports/logs/geo_travel_20251212_093755.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/geo_travel_20251212_093755.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251212_094309_500_api_flight_book.txt",
+                        "suite": "partners_api"
+                    },
+                    {
+                        "test_name": "src/tests/partners_api_tests/test_partners_flight.py::TestPartnersFlightFunctionality::test_flight_booking_counted_in_usage",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/partners_api_tests/test_partners_flight.py', 481, 'Skipped: Backend integration issue: Error posting data to Amadeus')",
+                        "screenshot_path": null,
+                        "duration": 6.054431676864624,
+                        "timestamp": "09:43:20",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/partners_api_tests/test_partners_flight.py', 481, 'Skipped: Backend integration issue: Error posting data to Amadeus')",
+                        "category": null,
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20251212_093755.log",
+                            "response_file": "reports/failed_responses/20251212_094320_500_api_flight_book.txt"
+                        },
+                        "log_path": "reports/logs/geo_travel_20251212_093755.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/geo_travel_20251212_093755.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251212_094320_500_api_flight_book.txt",
+                        "suite": "partners_api"
+                    }
+                ]
+            },
+            "timestamp": "2025-12-12 09:43:54"
+        }
+    },
+    "all_failed_tests": [
+        {
+            "test_name": "src/tests/smoke_tests/test_package_booking_smoke.py::TestPackageBookingSmoke::test_complete_package_booking_flow",
+            "status": "FAIL",
+            "error_message": "TimeoutException: Message: \n",
+            "screenshot_path": "docs/screenshots/failures/timeoutexceptio_srctestssmoke_teststest_package_booking_smokepyTestPackageBookingSmoketest_complete_package_booking_flow_20251212_094203.png",
+            "duration": 82.92747402191162,
+            "timestamp": "09:42:03",
+            "skip_reason": null,
+            "category": "UI Timeout",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20251212_093755.log"
+            },
+            "log_path": "reports/logs/geo_travel_20251212_093755.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/geo_travel_20251212_093755.log",
+            "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/screenshots/failures/timeoutexceptio_srctestssmoke_teststest_package_booking_smokepyTestPackageBookingSmoketest_complete_package_booking_flow_20251212_094203.png",
+            "suite": "smoke"
+        },
+        {
+            "test_name": "src/tests/partners_api_tests/test_partners_package.py::TestPartnersPackageFunctionality::test_verified_user_can_book_package",
+            "status": "FAIL",
+            "error_message": "AssertionError: Verified user should be able to book packages\nassert 400 == 201\n +  where 400 = <Response [400]>.status_code",
+            "screenshot_path": null,
+            "duration": 1.6438682079315186,
+            "timestamp": "09:43:44",
+            "skip_reason": null,
+            "category": "Partners API Request Validation",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20251212_093755.log",
+                "response_file": "reports/failed_responses/20251212_094344_400_api_package_book.txt"
+            },
+            "log_path": "reports/logs/geo_travel_20251212_093755.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/geo_travel_20251212_093755.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251212_094344_400_api_package_book.txt",
+            "suite": "partners_api"
+        }
+    ],
+    "all_skipped_tests": [
+        {
+            "test_name": "src/tests/partners_api_tests/test_partners_flight.py::TestPartnersFlightFunctionality::test_verified_user_can_book_flight",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/partners_api_tests/test_partners_flight.py', 274, 'Skipped: Backend integration issue: Error posting data to Amadeus')",
+            "screenshot_path": null,
+            "duration": 6.130232810974121,
+            "timestamp": "09:43:09",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/partners_api_tests/test_partners_flight.py', 274, 'Skipped: Backend integration issue: Error posting data to Amadeus')",
+            "category": null,
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20251212_093755.log",
+                "response_file": "reports/failed_responses/20251212_094309_500_api_flight_book.txt"
+            },
+            "log_path": "reports/logs/geo_travel_20251212_093755.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/geo_travel_20251212_093755.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251212_094309_500_api_flight_book.txt",
+            "suite": "partners_api"
+        },
+        {
+            "test_name": "src/tests/partners_api_tests/test_partners_flight.py::TestPartnersFlightFunctionality::test_flight_booking_counted_in_usage",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/partners_api_tests/test_partners_flight.py', 481, 'Skipped: Backend integration issue: Error posting data to Amadeus')",
+            "screenshot_path": null,
+            "duration": 6.054431676864624,
+            "timestamp": "09:43:20",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/partners_api_tests/test_partners_flight.py', 481, 'Skipped: Backend integration issue: Error posting data to Amadeus')",
+            "category": null,
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20251212_093755.log",
+                "response_file": "reports/failed_responses/20251212_094320_500_api_flight_book.txt"
+            },
+            "log_path": "reports/logs/geo_travel_20251212_093755.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/geo_travel_20251212_093755.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251212_094320_500_api_flight_book.txt",
+            "suite": "partners_api"
+        }
+    ]
+}
