@@ -1116,17 +1116,18 @@ class GeoReporter:
         elif is_api_test:
             evidence = failed_test.get('evidence', {})
             
+            # API response
+            resp_path = evidence.get('response_file')
+            if resp_path and timestamp:
+                resp_name = os.path.basename(resp_path)
+                links.append(f"🗂 <{gh_pages}/{timestamp}/api_failed_responses/{resp_name}|View Response>")
+                
             # Log file
             log_path = evidence.get('log_path')
             if log_path and timestamp:
                 log_name = os.path.basename(log_path)
                 links.append(f"📄 <{gh_pages}/{timestamp}/logs/{log_name}|View Log>")
             
-            # API response
-            resp_path = evidence.get('response_file')
-            if resp_path and timestamp:
-                resp_name = os.path.basename(resp_path)
-                links.append(f"🗂 <{gh_pages}/{timestamp}/api_failed_responses/{resp_name}|View Response>")
         
         return " | ".join(links) if links else "No evidence captured"
 
