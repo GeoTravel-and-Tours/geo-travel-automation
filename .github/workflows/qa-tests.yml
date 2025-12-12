@@ -9,8 +9,8 @@ on:
     - cron: "0 7 * * *"
 
 jobs:
-  run-smoke-tests:
-    name: 🚀 Run Smoke Tests
+  run-tests:
+    name: 🧪 Run Tests
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -18,10 +18,9 @@ jobs:
       id-token: write
 
     steps:
+      # --- Setup ---
       - name: 📥 Checkout code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # Needed for git operations
 
       - name: 🐍 Set up Python
         uses: actions/setup-python@v5
@@ -48,116 +47,415 @@ jobs:
           echo "PARTNERS_VERIFIED_EMAIL=${{ secrets.PARTNERS_VERIFIED_EMAIL }}" >> $GITHUB_ENV
           echo "PARTNERS_VERIFIED_PASSWORD=${{ secrets.PARTNERS_VERIFIED_PASSWORD }}" >> $GITHUB_ENV
 
-      # Create docs/ structure if it doesn't exist
-      - name: 🏗️ Setup docs directory
+      # --- Run Tests ---
+      - name: 🧪 Run test suites
         run: |
-          mkdir -p docs/screenshots/failures
-          if [ ! -f docs/index.html ]; then
-            echo "Creating minimal index.html..."
-            echo '<!DOCTYPE html><html><head><title>GeoTravel Dashboard</title></head><body><h1>GeoTravel Test Dashboard</h1><p>Screenshots will appear here.</p></body></html>' > docs/index.html
-          fi
-
-      - name: 🧪 Run smoke test suite
-        run: |
-          echo "Running smoke tests on $TEST_ENV..."
-          python scripts/run_scheduled_tests.py --suite api smoke partners_api
+          echo "Running test suites..."
+          python scripts/run_scheduled_tests.py --suite smoke api partners_api
         continue-on-error: true
 
-      # NEW: Commit screenshots to docs/ folder
-      - name: 📝 Commit Screenshots to Repository
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # --- Prepare Files for GitHub Pages ---
+      - name: 📁 Prepare files for GitHub Pages
         run: |
-          echo "📁 Contents of docs/screenshots/failures/:"
-          ls -la docs/screenshots/failures/ || echo "Directory doesn't exist"
+          # Create timestamp
+          TIMESTAMP=$(date +"%Y-%m-%d_%H-%M-%S")
+          echo "RUN_TIMESTAMP=$TIMESTAMP" >> $GITHUB_ENV
           
-          # Setup git with token
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-
-          # Set remote URL with token
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
-
-          # Pull latest changes to avoid conflicts
-          git pull --rebase origin main || git reset --hard origin/main
-
-          # Ensure directory exists
-          mkdir -p docs/screenshots/failures
-
-          # Force add (ignore .gitignore)
-          git add -f docs/screenshots/failures/
-
-          # Show what will be committed
-          echo "📋 Git status:"
-          git status --porcelain
-
-          # Commit if there are changes
-          if ! git diff --cached --quiet; then
-            git commit -m "📸 Add test failure screenshots [skip ci]"
-            git pull --rebase origin main
-            git push
-            echo "✅ Screenshots committed to repository"
-          else
-            echo "❌ No changes to commit (screenshots may be gitignored)"
-            # List ignored files
-            git check-ignore docs/screenshots/failures/* || true
+          # Create gh-pages folder
+          rm -rf gh-pages-content || true
+          mkdir -p gh-pages-content
+          
+          # Create run folder
+          RUN_DIR="gh-pages-content/$TIMESTAMP"
+          mkdir -p "$RUN_DIR"
+          
+          # Copy screenshots
+          echo "📸 Copying screenshots..."
+          if [ -d "docs/screenshots/failures" ]; then
+            mkdir -p "$RUN_DIR/screenshots"
+            cp docs/screenshots/failures/* "$RUN_DIR/screenshots/" 2>/dev/null || true
+          fi
+          
+          # Copy API failed responses
+          echo "📦 Copying API failed responses..."
+          if [ -d "reports/failed_responses" ]; then
+            mkdir -p "$RUN_DIR/api_failed_responses"
+            cp reports/failed_responses/* "$RUN_DIR/api_failed_responses/" 2>/dev/null || true
+          fi
+          
+          # Copy logs
+          echo "📄 Copying logs..."
+          if [ -d "logs" ]; then
+            mkdir -p "$RUN_DIR/logs"
+            cp logs/* "$RUN_DIR/logs/" 2>/dev/null || true
+          fi
+          
+          # Copy test reports
+          echo "📊 Copying test reports..."
+          if [ -d "reports" ]; then
+            mkdir -p "$RUN_DIR/reports"
+            cp reports/*.html reports/*.json "$RUN_DIR/reports/" 2>/dev/null || true
           fi
 
-      # Upload artifacts for debugging
-      - name: 📦 Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: test_results
-          path: |
-            reports/
-            logs/
-          retention-days: 7
-
-      - name: 🧹 Cleanup old reports
-        run: python scripts/cleanup.py --days 7
-
-  publish-reports:
-    name: 📊 Publish Reports to GitHub Pages
-    runs-on: ubuntu-latest
-    needs: run-smoke-tests
-    permissions:
-      contents: write
-      pages: write
-      id-token: write
-      
-    steps:
-      - name: 📥 Checkout repository
-        uses: actions/checkout@v4
-
-      - name: 📥 Download test artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: test_results
-          path: ./
-
-      - name: ✅ Ensure reports folder exists
+      # --- Create Simple UI Wrapper for Text Files ---
+      - name: 🎨 Create text file viewer
         run: |
-          if [ ! -d "reports" ]; then
-            echo "⚠️ No reports directory found. Creating empty directory for GitHub Pages.";
-            mkdir -p reports
-            echo '<!DOCTYPE html><html><head><title>Test Reports</title></head><body><h1>No test reports available</h1><p>No test reports were generated in this run.</p></body></html>' > reports/index.html
-          fi
+          TIMESTAMP="$RUN_TIMESTAMP"
+          
+          # Create a simple text viewer HTML file
+          cat > gh-pages-content/text-viewer.html << 'EOF'
+          <!DOCTYPE html>
+          <html>
+          <head>
+              <title>Text File Viewer</title>
+              <style>
+                  :root { --primary: #2e61e6; }
+                  body { 
+                      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+                      margin: 0; padding: 20px; background: #f5f7fa; color: #333;
+                  }
+                  .container { 
+                      max-width: 1000px; margin: 20px auto; background: white; 
+                      border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
+                      overflow: hidden;
+                  }
+                  .header { 
+                      background: linear-gradient(90deg, var(--primary) 0%, #5a8aff 100%); 
+                      color: white; padding: 20px; display: flex; justify-content: space-between;
+                      align-items: center;
+                  }
+                  .header h1 { margin: 0; font-size: 1.5em; }
+                  .content { padding: 20px; }
+                  pre { 
+                      background: #f8f9fa; padding: 20px; border-radius: 5px; 
+                      overflow-x: auto; border-left: 4px solid var(--primary);
+                      max-height: 70vh; overflow-y: auto;
+                  }
+                  .actions { margin-top: 20px; text-align: right; }
+                  .btn { 
+                      display: inline-block; padding: 8px 16px; background: var(--primary); 
+                      color: white; text-decoration: none; border-radius: 4px; margin-left: 10px;
+                  }
+                  .btn:hover { background: #1a4dc7; }
+                  .footer { 
+                      margin-top: 30px; padding-top: 15px; border-top: 1px solid #eee; 
+                      text-align: center; color: #666; font-size: 0.9em;
+                  }
+                  .heart { color: #e74c3c; }
+              </style>
+          </head>
+          <body>
+              <div class="container">
+                  <div class="header">
+                      <h1 id="filename">Loading...</h1>
+                      <div>
+                          <a href="#" id="download-btn" class="btn">📥 Download</a>
+                          <a href="#" id="back-btn" class="btn">← Back</a>
+                      </div>
+                  </div>
+                  <div class="content">
+                      <pre id="content">Loading file content...</pre>
+                  </div>
+                  <div class="footer">
+                      <p><i class="fas fa-code"></i> with <i class="fas fa-heart heart"></i> from <strong>Only1JohnN</strong></p>
+                  </div>
+              </div>
+              
+              <script>
+                  // Get file path from URL
+                  function getFileFromURL() {
+                      const params = new URLSearchParams(window.location.search);
+                      return params.get('file');
+                  }
+                  
+                  // Load file content
+                  async function loadFile() {
+                      const filePath = getFileFromURL();
+                      if (!filePath) {
+                          document.getElementById('content').textContent = 'No file specified.';
+                          return;
+                      }
+                      
+                      // Set filename in header
+                      const fileName = filePath.split('/').pop();
+                      document.getElementById('filename').textContent = fileName;
+                      
+                      // Set download link
+                      document.getElementById('download-btn').href = filePath;
+                      
+                      // Set back button
+                      document.getElementById('back-btn').href = document.referrer || './';
+                      
+                      try {
+                          // Fetch file content
+                          const response = await fetch(filePath);
+                          if (!response.ok) throw new Error('File not found');
+                          
+                          const text = await response.text();
+                          document.getElementById('content').textContent = text;
+                          
+                          // Add syntax highlighting for JSON
+                          if (fileName.endsWith('.json')) {
+                              try {
+                                  const json = JSON.parse(text);
+                                  document.getElementById('content').textContent = 
+                                      JSON.stringify(json, null, 2);
+                              } catch (e) {
+                                  // Not valid JSON, keep as plain text
+                              }
+                          }
+                          
+                      } catch (error) {
+                          document.getElementById('content').textContent = 
+                              `Error loading file: ${error.message}`;
+                      }
+                  }
+                  
+                  // Load file when page loads
+                  document.addEventListener('DOMContentLoaded', loadFile);
+              </script>
+          </body>
+          </html>
+          EOF
+          
+          # Create main index
+          cat > gh-pages-content/index.html << EOF
+          <!DOCTYPE html>
+          <html>
+          <head>
+              <title>GeoTravel Test Results</title>
+              <style>
+                  body { 
+                      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+                      margin: 0; padding: 0; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                      min-height: 100vh;
+                  }
+                  .container { 
+                      max-width: 800px; margin: 0 auto; padding: 40px 20px; 
+                  }
+                  .card { 
+                      background: white; border-radius: 15px; padding: 30px; 
+                      box-shadow: 0 10px 30px rgba(0,0,0,0.2); text-align: center;
+                  }
+                  h1 { 
+                      color: #2e61e6; margin-bottom: 10px; font-size: 2.5em;
+                  }
+                  .subtitle { 
+                      color: #666; margin-bottom: 30px; font-size: 1.1em;
+                  }
+                  .latest-run { 
+                      background: #f8f9fa; padding: 25px; border-radius: 10px; 
+                      margin: 30px 0; border-left: 4px solid #2e61e6;
+                  }
+                  .btn { 
+                      display: inline-block; padding: 12px 24px; 
+                      background: #2e61e6; color: white; text-decoration: none;
+                      border-radius: 8px; margin: 10px; font-weight: 500;
+                  }
+                  .btn:hover { background: #1a4dc7; }
+                  .footer { 
+                      margin-top: 40px; color: #666; font-size: 0.9em;
+                  }
+                  .heart { color: #e74c3c; }
+                  .file-types { 
+                      display: flex; justify-content: center; gap: 20px; 
+                      margin: 20px 0; flex-wrap: wrap;
+                  }
+                  .file-type { 
+                      background: #e9ecef; padding: 8px 15px; border-radius: 20px;
+                      font-size: 0.9em; color: #495057;
+                  }
+              </style>
+          </head>
+          <body>
+              <div class="container">
+                  <div class="card">
+                      <h1>🚀 GeoTravel Test Results</h1>
+                      <p class="subtitle">All test artifacts in one place</p>
+                      
+                      <div class="file-types">
+                          <span class="file-type">🖼️ Screenshots</span>
+                          <span class="file-type">📄 Logs</span>
+                          <span class="file-type">📊 API Responses</span>
+                          <span class="file-type">📋 Test Reports</span>
+                      </div>
+                      
+                      <div class="latest-run">
+                          <h3>Latest Run: $TIMESTAMP</h3>
+                          <a href="$TIMESTAMP/" class="btn">📂 View Latest Results</a>
+                      </div>
+                      
+                      <div class="footer">
+                          <p><i class="fas fa-code"></i> with <i class="fas fa-heart heart"></i> from <strong>Only1JohnN</strong></p>
+                          <p>Click any .txt/.log file to view with UI wrapper</p>
+                      </div>
+                  </div>
+              </div>
+          </body>
+          </html>
+          EOF
+          
+          # Create run-specific index
+          cat > "gh-pages-content/$TIMESTAMP/index.html" << EOF
+          <!DOCTYPE html>
+          <html>
+          <head>
+              <title>Run $TIMESTAMP</title>
+              <style>
+                  body { font-family: -apple-system, sans-serif; margin: 0; padding: 20px; background: #f5f7fa; }
+                  .container { max-width: 1000px; margin: 0 auto; }
+                  .header { text-align: center; margin-bottom: 30px; }
+                  h1 { color: #2e61e6; }
+                  .section { background: white; border-radius: 10px; padding: 20px; margin-bottom: 20px; }
+                  .section h2 { color: #495057; border-bottom: 2px solid #e9ecef; padding-bottom: 10px; }
+                  .file-list { list-style: none; padding: 0; }
+                  .file-item { padding: 12px; border-bottom: 1px solid #eee; display: flex; align-items: center; }
+                  .file-item:hover { background: #f8f9fa; }
+                  .file-icon { margin-right: 10px; font-size: 1.2em; }
+                  .file-name { flex: 1; }
+                  .file-size { color: #6c757d; font-size: 0.9em; }
+                  .text-file { color: #2e61e6; text-decoration: none; }
+                  .text-file:hover { text-decoration: underline; }
+                  .back-btn { display: inline-block; padding: 8px 16px; background: #6c757d; color: white; 
+                            text-decoration: none; border-radius: 4px; margin-top: 20px; }
+                  .back-btn:hover { background: #545b62; }
+              </style>
+          </head>
+          <body>
+              <div class="container">
+                  <div class="header">
+                      <h1>Test Run: $TIMESTAMP</h1>
+                      <p>All artifacts from this test run</p>
+                  </div>
+                  
+                  <!-- Screenshots Section -->
+                  <div class="section">
+                      <h2>🖼️ Screenshots</h2>
+                      <ul class="file-list" id="screenshots-list">
+                          <li>Loading...</li>
+                      </ul>
+                  </div>
+                  
+                  <!-- Logs Section -->
+                  <div class="section">
+                      <h2>📄 Logs</h2>
+                      <ul class="file-list" id="logs-list">
+                          <li>Loading...</li>
+                      </ul>
+                  </div>
+                  
+                  <!-- API Failed Responses Section -->
+                  <div class="section">
+                      <h2>📊 API Failed Responses</h2>
+                      <ul class="file-list" id="api-list">
+                          <li>Loading...</li>
+                      </ul>
+                  </div>
+                  
+                  <!-- Reports Section -->
+                  <div class="section">
+                      <h2>📋 Test Reports</h2>
+                      <ul class="file-list" id="reports-list">
+                          <li>Loading...</li>
+                      </ul>
+                  </div>
+                  
+                  <a href="../" class="back-btn">← Back to All Runs</a>
+              </div>
+              
+              <script>
+                  // Helper to create file link
+                  function createFileLink(fileName, folder, isTextFile = false) {
+                      const filePath = folder + '/' + fileName;
+                      
+                      if (isTextFile) {
+                          return \`<a href="../text-viewer.html?file=\${filePath}" class="text-file">\${fileName}</a>\`;
+                      } else {
+                          return \`<a href="\${filePath}" target="_blank">\${fileName}</a>\`;
+                      }
+                  }
+                  
+                  // Load files for a section
+                  async function loadFiles(sectionId, folder, isTextFile = false) {
+                      const list = document.getElementById(sectionId);
+                      list.innerHTML = '<li>Loading files...</li>';
+                      
+                      try {
+                          const response = await fetch(folder + '/');
+                          if (!response.ok) {
+                              list.innerHTML = '<li>No files found</li>';
+                              return;
+                          }
+                          
+                          const text = await response.text();
+                          const parser = new DOMParser();
+                          const doc = parser.parseFromString(text, 'text/html');
+                          const links = doc.querySelectorAll('a');
+                          
+                          let files = [];
+                          links.forEach(link => {
+                              const href = link.getAttribute('href');
+                              if (href && !href.startsWith('?') && href !== '../') {
+                                  files.push(href);
+                              }
+                          });
+                          
+                          if (files.length === 0) {
+                              list.innerHTML = '<li>No files found</li>';
+                              return;
+                          }
+                          
+                          list.innerHTML = '';
+                          files.forEach(file => {
+                              const li = document.createElement('li');
+                              li.className = 'file-item';
+                              li.innerHTML = \`
+                                  <span class="file-icon">\${isTextFile ? '📄' : '🖼️'}</span>
+                                  <span class="file-name">\${createFileLink(file, folder, isTextFile)}</span>
+                              \`;
+                              list.appendChild(li);
+                          });
+                          
+                      } catch (error) {
+                          list.innerHTML = '<li>Error loading files</li>';
+                      }
+                  }
+                  
+                  // Load all sections
+                  document.addEventListener('DOMContentLoaded', () => {
+                      const timestamp = '$TIMESTAMP';
+                      loadFiles('screenshots-list', timestamp + '/screenshots', false);
+                      loadFiles('logs-list', timestamp + '/logs', true);
+                      loadFiles('api-list', timestamp + '/api_failed_responses', true);
+                      loadFiles('reports-list', timestamp + '/reports', true);
+                  });
+              </script>
+          </body>
+          </html>
+          EOF
 
-      - name: 🚀 Deploy reports to GitHub Pages
+      # --- Deploy to GitHub Pages ---
+      - name: 🚀 Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./reports
+          publish_dir: ./gh-pages-content
           publish_branch: gh-pages
           allow_empty_commit: true
-          force_orphan: true  # Keeps history clean
-          keep_files: false   # Remove old files
+          force_orphan: false
+          keep_files: true
 
+      # --- Show URL ---
       - name: 🔗 Show published URL
         run: |
-          echo "📊 Reports published to GitHub Pages"
-          echo "🌐 Default URL:"
-          echo "https://${{ github.repository_owner }}.github.io/${GITHUB_REPOSITORY#*/}/"
           echo ""
-          echo "📁 If reports are in a subdirectory:"
-          echo "https://${{ github.repository_owner }}.github.io/${GITHUB_REPOSITORY#*/}/reports/"
+          echo "✅ DEPLOYMENT COMPLETE!"
+          echo ""
+          echo "🌐 View at: https://${{ github.repository_owner }}.github.io/${GITHUB_REPOSITORY#*/}/"
+          echo ""
+          echo "📁 Direct file access:"
+          echo "   • Screenshots: https://${{ github.repository_owner }}.github.io/${GITHUB_REPOSITORY#*/}/$RUN_TIMESTAMP/screenshots/"
+          echo "   • Logs: https://${{ github.repository_owner }}.github.io/${GITHUB_REPOSITORY#*/}/$RUN_TIMESTAMP/logs/"
+          echo "   • API Responses: https://${{ github.repository_owner }}.github.io/${GITHUB_REPOSITORY#*/}/$RUN_TIMESTAMP/api_failed_responses/"
+          echo ""
+          echo "💡 .txt/.log files will open in the UI viewer"
