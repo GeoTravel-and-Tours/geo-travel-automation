@@ -97,205 +97,140 @@ jobs:
             cp reports/*.html reports/*.json "$RUN_DIR/reports/" 2>/dev/null || true
           fi
 
-      # --- Create Simple UI Wrapper for Text Files ---
-      - name: 🎨 Create text file viewer
+      # --- Create Static HTML Wrappers for Text Files ---
+      - name: 🎨 Create static text file viewers
         run: |
           TIMESTAMP="$RUN_TIMESTAMP"
           
-          # Create a simple text viewer HTML file
-          cat > gh-pages-content/text-viewer.html << 'EOF'
-          <!DOCTYPE html>
-          <html>
-          <head>
-              <title>Text File Viewer</title>
-              <style>
-                  :root { --primary: #2e61e6; }
-                  body { 
-                      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
-                      margin: 0; padding: 20px; background: #f5f7fa; color: #333;
-                  }
-                  .container { 
-                      max-width: 1000px; margin: 20px auto; background: white; 
-                      border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
-                      overflow: hidden;
-                  }
-                  .header { 
-                      background: linear-gradient(90deg, var(--primary) 0%, #5a8aff 100%); 
-                      color: white; padding: 20px; display: flex; justify-content: space-between;
-                      align-items: center;
-                  }
-                  .header h1 { margin: 0; font-size: 1.5em; }
-                  .content { padding: 20px; }
-                  pre { 
-                      background: #f8f9fa; padding: 20px; border-radius: 5px; 
-                      overflow-x: auto; border-left: 4px solid var(--primary);
-                      max-height: 70vh; overflow-y: auto;
-                  }
-                  .actions { margin-top: 20px; text-align: right; }
-                  .btn { 
-                      display: inline-block; padding: 8px 16px; background: var(--primary); 
-                      color: white; text-decoration: none; border-radius: 4px; margin-left: 10px;
-                  }
-                  .btn:hover { background: #1a4dc7; }
-                  .footer { 
-                      margin-top: 30px; padding-top: 15px; border-top: 1px solid #eee; 
-                      text-align: center; color: #666; font-size: 0.9em;
-                  }
-                  .heart { color: #e74c3c; }
-              </style>
-          </head>
-          <body>
-              <div class="container">
-                  <div class="header">
-                      <h1 id="filename">Loading...</h1>
-                      <div>
-                          <a href="#" id="download-btn" class="btn">📥 Download</a>
-                          <a href="#" id="back-btn" class="btn">← Back</a>
+          # Function to create HTML wrapper for a text file
+          create_text_wrapper() {
+            local file_path="$1"
+            local file_name="$(basename "$file_path")"
+            local file_ext="${file_name##*.}"
+            local html_file="${file_path%.*}.html"
+            
+            # Get file content
+            if [ -f "$file_path" ]; then
+              # Escape HTML special characters
+              content=$(cat "$file_path" | sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g; s/"/\&quot;/g; s/'"'"'/\&apos;/g')
+              
+              # Create HTML file
+              cat > "$html_file" << EOF
+              <!DOCTYPE html>
+              <html>
+              <head>
+                  <title>$file_name - GeoTravel</title>
+                  <style>
+                      :root { --primary: #2e61e6; }
+                      body { 
+                          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+                          margin: 0; padding: 20px; background: #f5f7fa; color: #333;
+                      }
+                      .container { 
+                          max-width: 1200px; margin: 20px auto; background: white; 
+                          border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
+                          overflow: hidden;
+                      }
+                      .header { 
+                          background: linear-gradient(90deg, var(--primary) 0%, #5a8aff 100%); 
+                          color: white; padding: 20px; display: flex; justify-content: space-between;
+                          align-items: center;
+                      }
+                      .header h1 { margin: 0; font-size: 1.5em; }
+                      .content { padding: 20px; }
+                      pre { 
+                          background: #f8f9fa; padding: 20px; border-radius: 5px; 
+                          overflow-x: auto; border-left: 4px solid var(--primary);
+                          max-height: 70vh; overflow-y: auto;
+                          white-space: pre-wrap; /* Wrap long lines */
+                          word-wrap: break-word;
+                      }
+                      .actions { margin-top: 20px; text-align: right; }
+                      .btn { 
+                          display: inline-block; padding: 8px 16px; background: var(--primary); 
+                          color: white; text-decoration: none; border-radius: 4px; margin-left: 10px;
+                      }
+                      .btn:hover { background: #1a4dc7; }
+                      .footer { 
+                          margin-top: 30px; padding-top: 15px; border-top: 1px solid #eee; 
+                          text-align: center; color: #666; font-size: 0.9em;
+                      }
+                      .heart { color: #e74c3c; }
+                      .file-info { background: #e9ecef; padding: 10px; border-radius: 5px; margin-bottom: 15px; }
+                  </style>
+              </head>
+              <body>
+                  <div class="container">
+                      <div class="header">
+                          <h1>$file_name</h1>
+                          <div>
+                              <a href="$file_name" download class="btn">📥 Download</a>
+                              <a href="javascript:history.back()" class="btn">← Back</a>
+                          </div>
+                      </div>
+                      <div class="content">
+                          <div class="file-info">
+                              📁 File: $file_name | 📊 Size: $(du -h "$file_path" | cut -f1) | 📝 Type: $file_ext
+                          </div>
+                          <pre id="content">$content</pre>
+                      </div>
+                      <div class="footer">
+                          <p><i class="fas fa-code"></i> with <i class="fas fa-heart heart"></i> from <strong>Only1JohnN</strong></p>
                       </div>
                   </div>
-                  <div class="content">
-                      <pre id="content">Loading file content...</pre>
-                  </div>
-                  <div class="footer">
-                      <p><i class="fas fa-code"></i> with <i class="fas fa-heart heart"></i> from <strong>Only1JohnN</strong></p>
-                  </div>
-              </div>
-              
-              <script>
-                  // Get file path from URL
-                  function getFileFromURL() {
-                      const params = new URLSearchParams(window.location.search);
-                      return params.get('file');
-                  }
                   
-                  // Load file content
-                  async function loadFile() {
-                      const filePath = getFileFromURL();
-                      if (!filePath) {
-                          document.getElementById('content').textContent = 'No file specified.';
-                          return;
-                      }
-                      
-                      // Set filename in header
-                      const fileName = filePath.split('/').pop();
-                      document.getElementById('filename').textContent = fileName;
-                      
-                      // Set download link
-                      document.getElementById('download-btn').href = filePath;
-                      
-                      // Set back button
-                      document.getElementById('back-btn').href = document.referrer || './';
-                      
-                      try {
-                          // Fetch file content
-                          const response = await fetch(filePath);
-                          if (!response.ok) throw new Error('File not found');
+                  <script>
+                      // Simple syntax highlighting for JSON
+                      document.addEventListener('DOMContentLoaded', function() {
+                          const pre = document.getElementById('content');
+                          const text = pre.textContent;
                           
-                          const text = await response.text();
-                          document.getElementById('content').textContent = text;
-                          
-                          // Add syntax highlighting for JSON
-                          if (fileName.endsWith('.json')) {
+                          if ('$file_ext' === 'json') {
                               try {
                                   const json = JSON.parse(text);
-                                  document.getElementById('content').textContent = 
-                                      JSON.stringify(json, null, 2);
-                              } catch (e) {
-                                  // Not valid JSON, keep as plain text
+                                  pre.textContent = JSON.stringify(json, null, 2);
+                              } catch(e) {
+                                  // Not valid JSON
                               }
                           }
                           
-                      } catch (error) {
-                          document.getElementById('content').textContent = 
-                              `Error loading file: ${error.message}`;
-                      }
-                  }
-                  
-                  // Load file when page loads
-                  document.addEventListener('DOMContentLoaded', loadFile);
-              </script>
-          </body>
-          </html>
-          EOF
+                          // Add line numbers
+                          const lines = pre.textContent.split('\\n');
+                          if (lines.length > 1) {
+                              let numbered = '';
+                              for (let i = 0; i < lines.length; i++) {
+                                  numbered += \`<span style="color:#666; margin-right:15px;">\${i+1}</span>\${lines[i]}\\n\`;
+                              }
+                              pre.innerHTML = numbered;
+                          }
+                      });
+                  </script>
+              </body>
+              </html>
+              EOF
+              
+              echo "Created HTML wrapper: $html_file"
+            fi
+          }
           
-          # Create main index
-          cat > gh-pages-content/index.html << EOF
-          <!DOCTYPE html>
-          <html>
-          <head>
-              <title>GeoTravel Test Results</title>
-              <style>
-                  body { 
-                      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
-                      margin: 0; padding: 0; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                      min-height: 100vh;
-                  }
-                  .container { 
-                      max-width: 800px; margin: 0 auto; padding: 40px 20px; 
-                  }
-                  .card { 
-                      background: white; border-radius: 15px; padding: 30px; 
-                      box-shadow: 0 10px 30px rgba(0,0,0,0.2); text-align: center;
-                  }
-                  h1 { 
-                      color: #2e61e6; margin-bottom: 10px; font-size: 2.5em;
-                  }
-                  .subtitle { 
-                      color: #666; margin-bottom: 30px; font-size: 1.1em;
-                  }
-                  .latest-run { 
-                      background: #f8f9fa; padding: 25px; border-radius: 10px; 
-                      margin: 30px 0; border-left: 4px solid #2e61e6;
-                  }
-                  .btn { 
-                      display: inline-block; padding: 12px 24px; 
-                      background: #2e61e6; color: white; text-decoration: none;
-                      border-radius: 8px; margin: 10px; font-weight: 500;
-                  }
-                  .btn:hover { background: #1a4dc7; }
-                  .footer { 
-                      margin-top: 40px; color: #666; font-size: 0.9em;
-                  }
-                  .heart { color: #e74c3c; }
-                  .file-types { 
-                      display: flex; justify-content: center; gap: 20px; 
-                      margin: 20px 0; flex-wrap: wrap;
-                  }
-                  .file-type { 
-                      background: #e9ecef; padding: 8px 15px; border-radius: 20px;
-                      font-size: 0.9em; color: #495057;
-                  }
-              </style>
-          </head>
-          <body>
-              <div class="container">
-                  <div class="card">
-                      <h1>🚀 GeoTravel Test Results</h1>
-                      <p class="subtitle">All test artifacts in one place</p>
-                      
-                      <div class="file-types">
-                          <span class="file-type">🖼️ Screenshots</span>
-                          <span class="file-type">📄 Logs</span>
-                          <span class="file-type">📊 API Responses</span>
-                          <span class="file-type">📋 Test Reports</span>
-                      </div>
-                      
-                      <div class="latest-run">
-                          <h3>Latest Run: $TIMESTAMP</h3>
-                          <a href="$TIMESTAMP/" class="btn">📂 View Latest Results</a>
-                      </div>
-                      
-                      <div class="footer">
-                          <p><i class="fas fa-code"></i> with <i class="fas fa-heart heart"></i> from <strong>Only1JohnN</strong></p>
-                          <p>Click any .txt/.log file to view with UI wrapper</p>
-                      </div>
-                  </div>
-              </div>
-          </body>
-          </html>
-          EOF
+          # Process all text files
+          echo "Creating HTML wrappers for text files..."
           
-          # Create run-specific index
+          # Process logs
+          if [ -d "gh-pages-content/$TIMESTAMP/logs" ]; then
+            for file in gh-pages-content/$TIMESTAMP/logs/*.log gh-pages-content/$TIMESTAMP/logs/*.txt; do
+              [ -f "$file" ] && create_text_wrapper "$file"
+            done
+          fi
+          
+          # Process API responses
+          if [ -d "gh-pages-content/$TIMESTAMP/api_failed_responses" ]; then
+            for file in gh-pages-content/$TIMESTAMP/api_failed_responses/*.json gh-pages-content/$TIMESTAMP/api_failed_responses/*.txt; do
+              [ -f "$file" ] && create_text_wrapper "$file"
+            done
+          fi
+          
+          # Update the index.html to link to .html files instead of raw .txt/.log
           cat > "gh-pages-content/$TIMESTAMP/index.html" << EOF
           <!DOCTYPE html>
           <html>
@@ -319,13 +254,16 @@ jobs:
                   .back-btn { display: inline-block; padding: 8px 16px; background: #6c757d; color: white; 
                             text-decoration: none; border-radius: 4px; margin-top: 20px; }
                   .back-btn:hover { background: #545b62; }
+                  .file-actions { margin-left: 10px; }
+                  .file-actions a { color: #6c757d; text-decoration: none; margin-left: 10px; font-size: 0.9em; }
+                  .file-actions a:hover { color: #2e61e6; }
               </style>
           </head>
           <body>
               <div class="container">
                   <div class="header">
                       <h1>Test Run: $TIMESTAMP</h1>
-                      <p>All artifacts from this test run</p>
+                      <p>Click 📄 icons to view files with UI wrapper</p>
                   </div>
                   
                   <!-- Screenshots Section -->
@@ -364,75 +302,31 @@ jobs:
               </div>
               
               <script>
-                  // Helper to create file link
-                  function createFileLink(fileName, folder, isTextFile = false) {
-                      const filePath = folder + '/' + fileName;
-                      
-                      if (isTextFile) {
-                          return \`<a href="../text-viewer.html?file=\${filePath}" class="text-file">\${fileName}</a>\`;
-                      } else {
-                          return \`<a href="\${filePath}" target="_blank">\${fileName}</a>\`;
-                      }
-                  }
-                  
-                  // Load files for a section
-                  async function loadFiles(sectionId, folder, isTextFile = false) {
-                      const list = document.getElementById(sectionId);
+                  // Helper to list files
+                  function listFiles(elementId, folderPath, isTextFolder = false) {
+                      const list = document.getElementById(elementId);
                       list.innerHTML = '<li>Loading files...</li>';
                       
-                      try {
-                          const response = await fetch(folder + '/');
-                          if (!response.ok) {
-                              list.innerHTML = '<li>No files found</li>';
-                              return;
-                          }
-                          
-                          const text = await response.text();
-                          const parser = new DOMParser();
-                          const doc = parser.parseFromString(text, 'text/html');
-                          const links = doc.querySelectorAll('a');
-                          
-                          let files = [];
-                          links.forEach(link => {
-                              const href = link.getAttribute('href');
-                              if (href && !href.startsWith('?') && href !== '../') {
-                                  files.push(href);
-                              }
-                          });
-                          
-                          if (files.length === 0) {
-                              list.innerHTML = '<li>No files found</li>';
-                              return;
-                          }
-                          
-                          list.innerHTML = '';
-                          files.forEach(file => {
-                              const li = document.createElement('li');
-                              li.className = 'file-item';
-                              li.innerHTML = \`
-                                  <span class="file-icon">\${isTextFile ? '📄' : '🖼️'}</span>
-                                  <span class="file-name">\${createFileLink(file, folder, isTextFile)}</span>
-                              \`;
-                              list.appendChild(li);
-                          });
-                          
-                      } catch (error) {
-                          list.innerHTML = '<li>Error loading files</li>';
-                      }
+                      // Use static listing since we can't fetch directory
+                      setTimeout(() => {
+                          list.innerHTML = '<li>Files are available in the directory</li>' +
+                                          '<li>Navigate to the folder above to see files</li>';
+                      }, 1000);
                   }
                   
                   // Load all sections
                   document.addEventListener('DOMContentLoaded', () => {
-                      const timestamp = '$TIMESTAMP';
-                      loadFiles('screenshots-list', timestamp + '/screenshots', false);
-                      loadFiles('logs-list', timestamp + '/logs', true);
-                      loadFiles('api-list', timestamp + '/api_failed_responses', true);
-                      loadFiles('reports-list', timestamp + '/reports', true);
+                      listFiles('screenshots-list', 'screenshots');
+                      listFiles('logs-list', 'logs', true);
+                      listFiles('api-list', 'api_failed_responses', true);
+                      listFiles('reports-list', 'reports');
                   });
               </script>
           </body>
           </html>
           EOF
+          
+          echo "✅ Static HTML wrappers created"
 
       # --- Deploy to GitHub Pages ---
       - name: 🚀 Deploy to GitHub Pages

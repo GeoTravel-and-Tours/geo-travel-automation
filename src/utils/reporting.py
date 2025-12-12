@@ -1080,28 +1080,32 @@ class GeoReporter:
         
     def _get_failure_links(self, failed_test):
         """Generate direct links for failed test evidence"""
-        screenshot_url = failed_test.get('screenshot_url')
+        gh_pages = os.getenv("GH_PAGES_BASE_URL", "https://geotravel-and-tours.github.io/geo-travel-automation")
+        timestamp = os.getenv("GH_PAGES_TIMESTAMP", "")
+        
         links = []
-        if screenshot_url:
+        
+        # Screenshot link
+        screenshot_path = failed_test.get('screenshot_path')
+        if screenshot_path and timestamp:
+            screenshot_name = os.path.basename(screenshot_path)
+            screenshot_url = f"{gh_pages}/{timestamp}/screenshots/{screenshot_name}"
             links.append(f"📸 <{screenshot_url}|View Screenshot>")
-
-        # Include latest log link if available (prefer hosted absolute URL)
-        log_url = failed_test.get('log_url') or (failed_test.get('evidence', {}) or {}).get('log_path')
-        if log_url:
-            # If log_url is a relative path, convert to hosted GH Pages URL
-            if not str(log_url).startswith("http"):
-                gh_pages = os.getenv("GH_PAGES_BASE_URL", "https://geotravel-and-tours.github.io/geo-travel-automation")
-                log_url = f"{gh_pages}/{str(log_url).lstrip('./')}"
+        
+        # Log file link
+        log_path = failed_test.get('evidence', {}).get('log_path')
+        if log_path and timestamp:
+            log_name = os.path.basename(log_path)
+            log_url = f"{gh_pages}/{timestamp}/logs/{log_name}"
             links.append(f"📄 <{log_url}|Download Log>")
-
-        # Include any additional evidence files (response dumps, json) if provided
-        resp_file_url = failed_test.get('response_file_url') or (failed_test.get('evidence', {}) or {}).get('response_file')
-        if resp_file_url:
-            if not str(resp_file_url).startswith("http"):
-                gh_pages = os.getenv("GH_PAGES_BASE_URL", "https://geotravel-and-tours.github.io/geo-travel-automation")
-                resp_file_url = f"{gh_pages}/{str(resp_file_url).lstrip('./')}"
-            links.append(f"🗂 <{resp_file_url}|Response Dump>")
-
+        
+        # API response file link
+        resp_path = failed_test.get('evidence', {}).get('response_file')
+        if resp_path and timestamp:
+            resp_name = os.path.basename(resp_path)
+            resp_url = f"{gh_pages}/{timestamp}/api_failed_responses/{resp_name}"
+            links.append(f"🗂 <{resp_url}|Response Dump>")
+        
         return " | ".join(links) if links else "No evidence captured"
 
 
