@@ -115,3 +115,49 @@ jobs:
 
       - name: 🧹 Cleanup old reports
         run: python scripts/cleanup.py --days 7
+
+  publish-reports:
+    name: 📊 Publish Reports to GitHub Pages
+    runs-on: ubuntu-latest
+    needs: run-smoke-tests
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+      
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 📥 Download test artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: test_results
+          path: ./
+
+      - name: ✅ Ensure reports folder exists
+        run: |
+          if [ ! -d "reports" ]; then
+            echo "⚠️ No reports directory found. Creating empty directory for GitHub Pages.";
+            mkdir -p reports
+            echo '<!DOCTYPE html><html><head><title>Test Reports</title></head><body><h1>No test reports available</h1><p>No test reports were generated in this run.</p></body></html>' > reports/index.html
+          fi
+
+      - name: 🚀 Deploy reports to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./reports
+          publish_branch: gh-pages
+          allow_empty_commit: true
+          force_orphan: true  # Keeps history clean
+          keep_files: false   # Remove old files
+
+      - name: 🔗 Show published URL
+        run: |
+          echo "📊 Reports published to GitHub Pages"
+          echo "🌐 Default URL:"
+          echo "https://${{ github.repository_owner }}.github.io/${GITHUB_REPOSITORY#*/}/"
+          echo ""
+          echo "📁 If reports are in a subdirectory:"
+          echo "https://${{ github.repository_owner }}.github.io/${GITHUB_REPOSITORY#*/}/reports/"

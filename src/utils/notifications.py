@@ -132,19 +132,45 @@ class SlackNotifier(NotificationManager):
             except SlackApiError as e:
                 self.logger.warning(f"Slack SDK failed, falling back to webhook: {e.response['error']}")
 
-    def send_test_status(self, test_name, status, error_message=None, duration=None):
-        """Send formatted test status message"""
+    def send_test_status(self, test_name, status, error_message=None, duration=None, **kwargs):
+        """Send formatted test status message using concise schema.
+
+        Backwards compatible: accepts old args. New optional kwargs:
+        context, expected_actual, evidence (string or url), suggested_fix, timestamp
+        """
         status_emoji = "✅" if status == "PASS" else "❌"
-        message = f"{status_emoji} *{self.project_name}* - {self.environment}\n"
-        message += f"*Test:* {test_name}\n"
-        message += f"*Status:* {status}"
+        lines = [f"{status_emoji} *{self.project_name}* - {self.environment}"]
+        lines.append(f"*Test:* {test_name}")
+        lines.append(f"*Status:* {status}")
 
+        # Optional structured fields
+        context = kwargs.get("context")
+        expected_actual = kwargs.get("expected_actual")
+        evidence = kwargs.get("evidence")
+        suggested_fix = kwargs.get("suggested_fix")
+        timestamp = kwargs.get("timestamp")
+
+        if context:
+            lines.append(f"*Context:* {context}")
+        if expected_actual:
+            lines.append(f"*Expected vs Actual:* {expected_actual}")
+        if evidence:
+            lines.append(f"*Evidence:* {evidence}")
+        if suggested_fix:
+            lines.append(f"*Suggested Fix:* {suggested_fix}")
         if duration:
-            message += f"\n*Duration:* {duration:.2f}s"
+            try:
+                lines.append(f"*Duration:* {float(duration):.2f}s")
+            except Exception:
+                lines.append(f"*Duration:* {duration}")
+        if timestamp:
+            lines.append(f"*Timestamp:* {timestamp}")
 
-        if error_message and status != "PASS":
-            message += f"\n*Error:* {error_message}"
+        # Fallback to include raw error message if nothing else
+        if error_message and not any((context, expected_actual, evidence)):
+            lines.append(f"*Error:* {error_message}")
 
+        message = "\n".join(lines)
         return self.send_sdk_message(message)
 
 

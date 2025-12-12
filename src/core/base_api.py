@@ -2,6 +2,7 @@
 
 import requests
 import json
+from pathlib import Path
 from datetime import datetime
 from src.utils.logger import GeoLogger
 from src.utils.token_extractor import TokenExtractor
@@ -66,7 +67,19 @@ class BaseAPI:
             
             # Log response for debugging (be careful with sensitive data)
             if response.status_code >= 400:
-                self.logger.warning(f"API Error Response: {response.text}")
+                # Save response dump for troubleshooting
+                try:
+                    dump_dir = Path("reports/failed_responses")
+                    dump_dir.mkdir(parents=True, exist_ok=True)
+                    ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+                    safe_endpoint = endpoint.strip('/').replace('/', '_') or 'root'
+                    dump_file = dump_dir / f"{ts}_{response.status_code}_{safe_endpoint}.txt"
+                    with open(dump_file, 'w', encoding='utf-8') as df:
+                        df.write(response.text or response.content.decode('utf-8', errors='replace'))
+                    self.logger.warning(f"API Error Response: {response.status_code} - saved dump: {dump_file}")
+                except Exception as e:
+                    self.logger.warning(f"API Error Response: {response.text}")
+                    self.logger.debug(f"Failed saving response dump: {e}")
             
             return response
             

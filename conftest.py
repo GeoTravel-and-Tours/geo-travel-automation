@@ -366,20 +366,9 @@ def pytest_runtest_makereport(item, call):
             # Fallback to smoke reporter
             suite_reporter = get_suite_reporter("smoke")
             
-        # record result in the appropriate reporter with proper metadata
-        if suite_reporter:
-            logger.info(f"🔍 DEBUG: About to add to {suite_reporter.test_suite_name}: {nodeid} - {status}")
-            suite_reporter.add_test_result(
-                test_name=nodeid,
-                status=status,
-                error_message=error_message,
-                screenshot_path=screenshot_path,
-                duration=duration,
-                skip_reason=skip_reason,  # Add skip reason for skipped tests
-            )
-            logger.info(f"Added test result to {suite_reporter.test_suite_name}: {nodeid} - {status}")
-        else:
-            logger.warning(f"No reporter found for test: {nodeid}")
+        # Defer recording result until after we've possibly attached latest logs
+        # (we will add test result after copying latest_log_path below)
+        deferred_suite_reporter = suite_reporter
 
         # Attach latest log file to pytest-html (copy into reports/logs and add link + preview)
         try:
@@ -435,8 +424,59 @@ def pytest_runtest_makereport(item, call):
                     logger.exception("Failed to read/attach log preview")
                 report.extras = extras_list
                 setattr(item, "_latest_log_path", str(latest_log_path))
+                # also make available for reporter evidence
+                setattr(item, "_latest_log_path_for_report", str(latest_log_path))
+                # Also collect any recent API response dumps as evidence (modified within last 2 minutes)
+                try:
+                    recent_dumps = []
+                    dumps_dir = Path("reports/failed_responses")
+                    if dumps_dir.exists() and dumps_dir.is_dir():
+                        cutoff = time.time() - 120  # 2 minutes
+                        candidates = sorted(dumps_dir.iterdir(), key=lambda p: p.stat().st_mtime, reverse=True)
+                        for p in candidates:
+                            if p.stat().st_mtime >= cutoff:
+                                recent_dumps.append(str(p))
+                            else:
+                                break
+                    if recent_dumps:
+                        setattr(item, "_recent_response_files", recent_dumps)
+                except Exception:
+                    logger.exception("Failed scanning recent response dumps")
         except Exception:
             logger.exception("Failed to attach latest log to pytest-html")
 
     except Exception:
         logger.exception("Unhandled exception in pytest_runtest_makereport")
+
+    # Now record result in the appropriate reporter with proper metadata (after log available)
+    try:
+        if deferred_suite_reporter:
+            # Build evidence dict if latest log was copied
+            latest_log_for_report = getattr(item, "_latest_log_path_for_report", None) or getattr(item, "_latest_log_path", None)
+            evidence = None
+            if latest_log_for_report:
+                evidence = {"log_path": str(latest_log_for_report)}
+
+            # Also include recent response dumps if any
+            recent_response_files = getattr(item, "_recent_response_files", None)
+            if recent_response_files:
+                if not evidence:
+                    evidence = {}
+                # attach the most recent response file
+                evidence["response_file"] = recent_response_files[0]
+
+            logger.info(f"🔍 DEBUG: About to add to {deferred_suite_reporter.test_suite_name}: {nodeid} - {status}")
+            deferred_suite_reporter.add_test_result(
+                test_name=nodeid,
+                status=status,
+                error_message=error_message,
+                screenshot_path=screenshot_path,
+                duration=duration,
+                skip_reason=skip_reason,
+                evidence=evidence,
+            )
+            logger.info(f"Added test result to {deferred_suite_reporter.test_suite_name}: {nodeid} - {status}")
+        else:
+            logger.warning(f"No reporter found for test: {nodeid}")
+    except Exception:
+        logger.exception("Failed adding deferred test result to reporter")
