@@ -46,11 +46,17 @@ jobs:
           echo "ENVIRONMENT=${{ secrets.ENVIRONMENT }}" >> $GITHUB_ENV
           echo "PARTNERS_VERIFIED_EMAIL=${{ secrets.PARTNERS_VERIFIED_EMAIL }}" >> $GITHUB_ENV
           echo "PARTNERS_VERIFIED_PASSWORD=${{ secrets.PARTNERS_VERIFIED_PASSWORD }}" >> $GITHUB_ENV
+      
+      - name: 🏷️ Set timestamp for reporting
+        run: |
+          TIMESTAMP=$(date +"%Y-%m-%d_%H-%M-%S")
+          echo "RUN_TIMESTAMP=$TIMESTAMP" >> $GITHUB_ENV
+          echo "GH_PAGES_TIMESTAMP=$TIMESTAMP" >> $GITHUB_ENV
 
       # --- Run Tests ---
       - name: 🧪 Run test suites
         run: |
-          echo "Running test suites..."
+          echo "Running test suites with timestamp: $RUN_TIMESTAMP..."
           python scripts/run_scheduled_tests.py --suite smoke api partners_api
         continue-on-error: true
 
