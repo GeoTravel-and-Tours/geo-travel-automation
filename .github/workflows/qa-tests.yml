@@ -61,7 +61,7 @@ jobs:
           TIMESTAMP=$(date +"%Y-%m-%d_%H-%M-%S")
           echo "RUN_TIMESTAMP=$TIMESTAMP" >> $GITHUB_ENV
           
-          # Create gh-pages folder
+          # Clean and create folder
           rm -rf gh-pages-content || true
           mkdir -p gh-pages-content
           
@@ -69,264 +69,95 @@ jobs:
           RUN_DIR="gh-pages-content/$TIMESTAMP"
           mkdir -p "$RUN_DIR"
           
+          # Copy files
+          mkdir -p "$RUN_DIR/screenshots"
+          mkdir -p "$RUN_DIR/logs"
+          mkdir -p "$RUN_DIR/api_failed_responses"
+          mkdir -p "$RUN_DIR/reports"
+          
           # Copy screenshots
-          echo "📸 Copying screenshots..."
           if [ -d "docs/screenshots/failures" ]; then
-            mkdir -p "$RUN_DIR/screenshots"
             cp docs/screenshots/failures/* "$RUN_DIR/screenshots/" 2>/dev/null || true
           fi
           
-          # Copy API failed responses
-          echo "📦 Copying API failed responses..."
+          # Copy API responses
           if [ -d "reports/failed_responses" ]; then
-            mkdir -p "$RUN_DIR/api_failed_responses"
             cp reports/failed_responses/* "$RUN_DIR/api_failed_responses/" 2>/dev/null || true
           fi
           
           # Copy logs
-          echo "📄 Copying logs..."
           if [ -d "logs" ]; then
-            mkdir -p "$RUN_DIR/logs"
             cp logs/* "$RUN_DIR/logs/" 2>/dev/null || true
           fi
           
-          # Copy test reports
-          echo "📊 Copying test reports..."
+          # Copy reports
           if [ -d "reports" ]; then
-            mkdir -p "$RUN_DIR/reports"
             cp reports/*.html reports/*.json "$RUN_DIR/reports/" 2>/dev/null || true
           fi
+          
+          # Create simple index for this run
+          echo "<!DOCTYPE html>" > "$RUN_DIR/index.html"
+          echo "<html><head><title>Test Results - $TIMESTAMP</title>" >> "$RUN_DIR/index.html"
+          echo "<style>body{font-family:Arial;margin:20px;} h1{color:#2e61e6;} ul{list-style:none;padding:0;} li{margin:5px 0;} a{color:#2e61e6;}</style>" >> "$RUN_DIR/index.html"
+          echo "</head><body>" >> "$RUN_DIR/index.html"
+          echo "<h1>Test Results - $TIMESTAMP</h1>" >> "$RUN_DIR/index.html"
+          
+          # Add screenshots list
+          echo "<h2>Screenshots</h2><ul>" >> "$RUN_DIR/index.html"
+          for file in "$RUN_DIR/screenshots"/*; do
+            [ -f "$file" ] && filename=$(basename "$file") && echo "<li><a href='screenshots/$filename'>$filename</a></li>" >> "$RUN_DIR/index.html"
+          done
+          echo "</ul>" >> "$RUN_DIR/index.html"
+          
+          # Add logs list
+          echo "<h2>Logs</h2><ul>" >> "$RUN_DIR/index.html"
+          for file in "$RUN_DIR/logs"/*; do
+            [ -f "$file" ] && filename=$(basename "$file") && echo "<li><a href='logs/$filename'>$filename</a></li>" >> "$RUN_DIR/index.html"
+          done
+          echo "</ul>" >> "$RUN_DIR/index.html"
+          
+          # Add API responses list
+          echo "<h2>API Responses</h2><ul>" >> "$RUN_DIR/index.html"
+          for file in "$RUN_DIR/api_failed_responses"/*; do
+            [ -f "$file" ] && filename=$(basename "$file") && echo "<li><a href='api_failed_responses/$filename'>$filename</a></li>" >> "$RUN_DIR/index.html"
+          done
+          echo "</ul>" >> "$RUN_DIR/index.html"
+          
+          # Add reports list
+          echo "<h2>Reports</h2><ul>" >> "$RUN_DIR/index.html"
+          for file in "$RUN_DIR/reports"/*; do
+            [ -f "$file" ] && filename=$(basename "$file") && echo "<li><a href='reports/$filename'>$filename</a></li>" >> "$RUN_DIR/index.html"
+          done
+          echo "</ul>" >> "$RUN_DIR/index.html"
+          
+          echo "<p>Made with ❤️ by Only1JohnN</p></body></html>" >> "$RUN_DIR/index.html"
 
-      # --- Create Static HTML Wrappers for Text Files ---
-      - name: 🎨 Create static text file viewers
+      # --- Create Main Index ---
+      - name: 🏠 Create main index
         run: |
           TIMESTAMP="$RUN_TIMESTAMP"
           
-          # Function to create HTML wrapper for a text file
-          create_text_wrapper() {
-            local file_path="$1"
-            local file_name="$(basename "$file_path")"
-            local file_ext="${file_name##*.}"
-            local html_file="${file_path%.*}.html"
-            
-            # Get file content
-            if [ -f "$file_path" ]; then
-              # Escape HTML special characters
-              content=$(cat "$file_path" | sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g; s/"/\&quot;/g; s/'"'"'/\&apos;/g')
-              
-              # Create HTML file
-              cat > "$html_file" << EOF
-              <!DOCTYPE html>
-              <html>
-              <head>
-                  <title>$file_name - GeoTravel</title>
-                  <style>
-                      :root { --primary: #2e61e6; }
-                      body { 
-                          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
-                          margin: 0; padding: 20px; background: #f5f7fa; color: #333;
-                      }
-                      .container { 
-                          max-width: 1200px; margin: 20px auto; background: white; 
-                          border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
-                          overflow: hidden;
-                      }
-                      .header { 
-                          background: linear-gradient(90deg, var(--primary) 0%, #5a8aff 100%); 
-                          color: white; padding: 20px; display: flex; justify-content: space-between;
-                          align-items: center;
-                      }
-                      .header h1 { margin: 0; font-size: 1.5em; }
-                      .content { padding: 20px; }
-                      pre { 
-                          background: #f8f9fa; padding: 20px; border-radius: 5px; 
-                          overflow-x: auto; border-left: 4px solid var(--primary);
-                          max-height: 70vh; overflow-y: auto;
-                          white-space: pre-wrap; /* Wrap long lines */
-                          word-wrap: break-word;
-                      }
-                      .actions { margin-top: 20px; text-align: right; }
-                      .btn { 
-                          display: inline-block; padding: 8px 16px; background: var(--primary); 
-                          color: white; text-decoration: none; border-radius: 4px; margin-left: 10px;
-                      }
-                      .btn:hover { background: #1a4dc7; }
-                      .footer { 
-                          margin-top: 30px; padding-top: 15px; border-top: 1px solid #eee; 
-                          text-align: center; color: #666; font-size: 0.9em;
-                      }
-                      .heart { color: #e74c3c; }
-                      .file-info { background: #e9ecef; padding: 10px; border-radius: 5px; margin-bottom: 15px; }
-                  </style>
-              </head>
-              <body>
-                  <div class="container">
-                      <div class="header">
-                          <h1>$file_name</h1>
-                          <div>
-                              <a href="$file_name" download class="btn">📥 Download</a>
-                              <a href="javascript:history.back()" class="btn">← Back</a>
-                          </div>
-                      </div>
-                      <div class="content">
-                          <div class="file-info">
-                              📁 File: $file_name | 📊 Size: $(du -h "$file_path" | cut -f1) | 📝 Type: $file_ext
-                          </div>
-                          <pre id="content">$content</pre>
-                      </div>
-                      <div class="footer">
-                          <p><i class="fas fa-code"></i> with <i class="fas fa-heart heart"></i> from <strong>Only1JohnN</strong></p>
-                      </div>
-                  </div>
-                  
-                  <script>
-                      // Simple syntax highlighting for JSON
-                      document.addEventListener('DOMContentLoaded', function() {
-                          const pre = document.getElementById('content');
-                          const text = pre.textContent;
-                          
-                          if ('$file_ext' === 'json') {
-                              try {
-                                  const json = JSON.parse(text);
-                                  pre.textContent = JSON.stringify(json, null, 2);
-                              } catch(e) {
-                                  // Not valid JSON
-                              }
-                          }
-                          
-                          // Add line numbers
-                          const lines = pre.textContent.split('\\n');
-                          if (lines.length > 1) {
-                              let numbered = '';
-                              for (let i = 0; i < lines.length; i++) {
-                                  numbered += \`<span style="color:#666; margin-right:15px;">\${i+1}</span>\${lines[i]}\\n\`;
-                              }
-                              pre.innerHTML = numbered;
-                          }
-                      });
-                  </script>
-              </body>
-              </html>
-              EOF
-              
-              echo "Created HTML wrapper: $html_file"
-            fi
-          }
-          
-          # Process all text files
-          echo "Creating HTML wrappers for text files..."
-          
-          # Process logs
-          if [ -d "gh-pages-content/$TIMESTAMP/logs" ]; then
-            for file in gh-pages-content/$TIMESTAMP/logs/*.log gh-pages-content/$TIMESTAMP/logs/*.txt; do
-              [ -f "$file" ] && create_text_wrapper "$file"
-            done
-          fi
-          
-          # Process API responses
-          if [ -d "gh-pages-content/$TIMESTAMP/api_failed_responses" ]; then
-            for file in gh-pages-content/$TIMESTAMP/api_failed_responses/*.json gh-pages-content/$TIMESTAMP/api_failed_responses/*.txt; do
-              [ -f "$file" ] && create_text_wrapper "$file"
-            done
-          fi
-          
-          # Update the index.html to link to .html files instead of raw .txt/.log
-          cat > "gh-pages-content/$TIMESTAMP/index.html" << EOF
-          <!DOCTYPE html>
-          <html>
-          <head>
-              <title>Run $TIMESTAMP</title>
-              <style>
-                  body { font-family: -apple-system, sans-serif; margin: 0; padding: 20px; background: #f5f7fa; }
-                  .container { max-width: 1000px; margin: 0 auto; }
-                  .header { text-align: center; margin-bottom: 30px; }
-                  h1 { color: #2e61e6; }
-                  .section { background: white; border-radius: 10px; padding: 20px; margin-bottom: 20px; }
-                  .section h2 { color: #495057; border-bottom: 2px solid #e9ecef; padding-bottom: 10px; }
-                  .file-list { list-style: none; padding: 0; }
-                  .file-item { padding: 12px; border-bottom: 1px solid #eee; display: flex; align-items: center; }
-                  .file-item:hover { background: #f8f9fa; }
-                  .file-icon { margin-right: 10px; font-size: 1.2em; }
-                  .file-name { flex: 1; }
-                  .file-size { color: #6c757d; font-size: 0.9em; }
-                  .text-file { color: #2e61e6; text-decoration: none; }
-                  .text-file:hover { text-decoration: underline; }
-                  .back-btn { display: inline-block; padding: 8px 16px; background: #6c757d; color: white; 
-                            text-decoration: none; border-radius: 4px; margin-top: 20px; }
-                  .back-btn:hover { background: #545b62; }
-                  .file-actions { margin-left: 10px; }
-                  .file-actions a { color: #6c757d; text-decoration: none; margin-left: 10px; font-size: 0.9em; }
-                  .file-actions a:hover { color: #2e61e6; }
-              </style>
-          </head>
-          <body>
-              <div class="container">
-                  <div class="header">
-                      <h1>Test Run: $TIMESTAMP</h1>
-                      <p>Click 📄 icons to view files with UI wrapper</p>
-                  </div>
-                  
-                  <!-- Screenshots Section -->
-                  <div class="section">
-                      <h2>🖼️ Screenshots</h2>
-                      <ul class="file-list" id="screenshots-list">
-                          <li>Loading...</li>
-                      </ul>
-                  </div>
-                  
-                  <!-- Logs Section -->
-                  <div class="section">
-                      <h2>📄 Logs</h2>
-                      <ul class="file-list" id="logs-list">
-                          <li>Loading...</li>
-                      </ul>
-                  </div>
-                  
-                  <!-- API Failed Responses Section -->
-                  <div class="section">
-                      <h2>📊 API Failed Responses</h2>
-                      <ul class="file-list" id="api-list">
-                          <li>Loading...</li>
-                      </ul>
-                  </div>
-                  
-                  <!-- Reports Section -->
-                  <div class="section">
-                      <h2>📋 Test Reports</h2>
-                      <ul class="file-list" id="reports-list">
-                          <li>Loading...</li>
-                      </ul>
-                  </div>
-                  
-                  <a href="../" class="back-btn">← Back to All Runs</a>
-              </div>
-              
-              <script>
-                  // Helper to list files
-                  function listFiles(elementId, folderPath, isTextFolder = false) {
-                      const list = document.getElementById(elementId);
-                      list.innerHTML = '<li>Loading files...</li>';
-                      
-                      // Use static listing since we can't fetch directory
-                      setTimeout(() => {
-                          list.innerHTML = '<li>Files are available in the directory</li>' +
-                                          '<li>Navigate to the folder above to see files</li>';
-                      }, 1000);
-                  }
-                  
-                  // Load all sections
-                  document.addEventListener('DOMContentLoaded', () => {
-                      listFiles('screenshots-list', 'screenshots');
-                      listFiles('logs-list', 'logs', true);
-                      listFiles('api-list', 'api_failed_responses', true);
-                      listFiles('reports-list', 'reports');
-                  });
-              </script>
-          </body>
-          </html>
-          EOF
-          
-          echo "✅ Static HTML wrappers created"
+          echo "<!DOCTYPE html>" > gh-pages-content/index.html
+          echo "<html><head><title>GeoTravel Tests</title>" >> gh-pages-content/index.html
+          echo "<style>body{font-family:Arial;margin:0;padding:0;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh;}" >> gh-pages-content/index.html
+          echo ".container{max-width:800px;margin:0 auto;padding:40px 20px;}" >> gh-pages-content/index.html
+          echo ".card{background:white;border-radius:15px;padding:30px;box-shadow:0 10px 30px rgba(0,0,0,0.2);text-align:center;}" >> gh-pages-content/index.html
+          echo "h1{color:#2e61e6;margin-bottom:10px;}" >> gh-pages-content/index.html
+          echo ".btn{display:inline-block;padding:12px 24px;background:#2e61e6;color:white;text-decoration:none;border-radius:8px;margin:10px;}" >> gh-pages-content/index.html
+          echo ".btn:hover{background:#1a4dc7;}" >> gh-pages-content/index.html
+          echo ".footer{margin-top:40px;color:#666;}" >> gh-pages-content/index.html
+          echo "</style></head><body>" >> gh-pages-content/index.html
+          echo "<div class='container'><div class='card'>" >> gh-pages-content/index.html
+          echo "<h1>🚀 GeoTravel Test Results</h1>" >> gh-pages-content/index.html
+          echo "<p>All test artifacts in one place</p>" >> gh-pages-content/index.html
+          echo "<div style='background:#f8f9fa;padding:25px;border-radius:10px;margin:30px 0;border-left:4px solid #2e61e6;'>" >> gh-pages-content/index.html
+          echo "<h3>Latest Run: $TIMESTAMP</h3>" >> gh-pages-content/index.html
+          echo "<a href='$TIMESTAMP/' class='btn'>📂 View Latest Results</a>" >> gh-pages-content/index.html
+          echo "</div>" >> gh-pages-content/index.html
+          echo "<div class='footer'>" >> gh-pages-content/index.html
+          echo "<p>Made with ❤️ by Only1JohnN</p>" >> gh-pages-content/index.html
+          echo "<p>Simple file access</p>" >> gh-pages-content/index.html
+          echo "</div></div></div></body></html>" >> gh-pages-content/index.html
 
       # --- Deploy to GitHub Pages ---
       - name: 🚀 Deploy to GitHub Pages
@@ -347,9 +178,4 @@ jobs:
           echo ""
           echo "🌐 View at: https://${{ github.repository_owner }}.github.io/${GITHUB_REPOSITORY#*/}/"
           echo ""
-          echo "📁 Direct file access:"
-          echo "   • Screenshots: https://${{ github.repository_owner }}.github.io/${GITHUB_REPOSITORY#*/}/$RUN_TIMESTAMP/screenshots/"
-          echo "   • Logs: https://${{ github.repository_owner }}.github.io/${GITHUB_REPOSITORY#*/}/$RUN_TIMESTAMP/logs/"
-          echo "   • API Responses: https://${{ github.repository_owner }}.github.io/${GITHUB_REPOSITORY#*/}/$RUN_TIMESTAMP/api_failed_responses/"
-          echo ""
-          echo "💡 .txt/.log files will open in the UI viewer"
+          echo "📁 Latest run: $RUN_TIMESTAMP"

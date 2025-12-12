@@ -1080,45 +1080,30 @@ class GeoReporter:
         
     def _get_failure_links(self, failed_test):
         """Generate direct links for failed test evidence"""
-        print(f"DEBUG failed_test keys: {failed_test.keys()}")
-        if 'evidence' in failed_test:
-            print(f"DEBUG evidence: {failed_test['evidence']}")
-            
         gh_pages = os.getenv("GH_PAGES_BASE_URL", "https://geotravel-and-tours.github.io/geo-travel-automation")
-        timestamp = os.getenv("GH_PAGES_TIMESTAMP", "")
         
         links = []
         
-        # SCREENSHOT: Look in multiple possible places
+        # 1. Screenshot (already links to .png - correct)
         screenshot_path = failed_test.get('screenshot_path')
         if screenshot_path:
             screenshot_name = os.path.basename(screenshot_path)
-            if timestamp:
-                links.append(f"📸 <{gh_pages}/{timestamp}/screenshots/{screenshot_name}|View Screenshot>")
-            else:
-                links.append(f"📸 <{gh_pages}/screenshots/failures/{screenshot_name}|View Screenshot>")
+            links.append(f"📸 <{gh_pages}/screenshots/failures/{screenshot_name}|View Screenshot>")
         
-        # LOG FILE: Check evidence dict first, then direct key
+        # 2. Log file - link to .html version instead of .log
         evidence = failed_test.get('evidence', {})
-        log_path = evidence.get('log_path')
-        if not log_path:
-            log_path = failed_test.get('log_path')
-        
+        log_path = evidence.get('log_path') or failed_test.get('log_path')
         if log_path:
-            log_name = os.path.basename(log_path)
-            if timestamp:
-                links.append(f"📄 <{gh_pages}/{timestamp}/logs/{log_name}|Download Log>")
-            else:
-                links.append(f"📄 <{gh_pages}/logs/{log_name}|Download Log>")
+            log_name = os.path.basename(log_path)  # e.g., "test.log"
+            html_log_name = log_name + ".html"      # e.g., "test.log.html"
+            links.append(f"📄 <{gh_pages}/logs/{html_log_name}|View Log>")
         
-        # API RESPONSE: Check evidence dict
+        # 3. API response - link to .html version
         resp_path = evidence.get('response_file')
         if resp_path:
-            resp_name = os.path.basename(resp_path)
-            if timestamp:
-                links.append(f"🗂 <{gh_pages}/{timestamp}/api_failed_responses/{resp_name}|Response Dump>")
-            else:
-                links.append(f"🗂 <{gh_pages}/failed_responses/{resp_name}|Response Dump>")
+            resp_name = os.path.basename(resp_path)  # e.g., "response.txt"
+            html_resp_name = resp_name + ".html"     # e.g., "response.txt.html"
+            links.append(f"🗂 <{gh_pages}/failed_responses/{html_resp_name}|View Response>")
         
         return " | ".join(links) if links else "No evidence captured"
 
