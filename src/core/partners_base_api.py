@@ -20,7 +20,7 @@ class PartnersBaseAPI:
         self.headers = {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
-            'X-Client-Type': 'partners'
+            'X-Client-Type': 'corporate'
         }
         self.logger = GeoLogger(self.__class__.__name__)
         self.token_extractor = TokenExtractor()
@@ -66,7 +66,19 @@ class PartnersBaseAPI:
                 
                 # Log response for debugging
                 if response.status_code >= 400:
-                    self.logger.warning(f"Partners API Error: {response.status_code} - {response.text}")
+                    # Save response dump for troubleshooting
+                    try:
+                        from pathlib import Path
+                        dump_dir = Path("reports/failed_responses")
+                        dump_dir.mkdir(parents=True, exist_ok=True)
+                        ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+                        safe_endpoint = endpoint.strip('/').replace('/', '_') or 'root'
+                        dump_file = dump_dir / f"{ts}_{response.status_code}_{safe_endpoint}.txt"
+                        with open(dump_file, 'w', encoding='utf-8') as df:
+                            df.write(response.text or response.content.decode('utf-8', errors='replace'))
+                        self.logger.warning(f"Partners API Error: {response.status_code} - saved dump: {dump_file}")
+                    except Exception:
+                        self.logger.warning(f"Partners API Error: {response.status_code} - {response.text}")
                 
                 return response
                 

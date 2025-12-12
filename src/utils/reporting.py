@@ -180,7 +180,7 @@ class GeoReporter:
         )
 
     def add_test_result(
-        self, test_name, status, error_message=None, screenshot_path=None, duration=None, skip_reason=None
+        self, test_name, status, error_message=None, screenshot_path=None, duration=None, skip_reason=None, evidence=None
     ):
         """Add individual test result with comprehensive metadata"""
         actual_duration = duration or 0.0
@@ -195,6 +195,23 @@ class GeoReporter:
             "skip_reason": skip_reason,
             "category": self._get_test_category(test_name, error_message) if status == "FAIL" else None,
         }
+        # Attach additional evidence metadata (logs, response files, etc.)
+        if evidence and isinstance(evidence, dict):
+            test_result["evidence"] = evidence
+            # If a log path was provided, expose it as a downloadable link
+            log_path = evidence.get("log_path")
+            if log_path:
+                test_result["log_path"] = str(log_path)
+                # Prefer an absolute hosted URL so Slack will render it as a clickable link.
+                gh_pages = os.getenv("GH_PAGES_BASE_URL", "https://geotravel-and-tours.github.io/geo-travel-automation")
+                test_result["log_url"] = f"{gh_pages}/reports/logs/{Path(log_path).name}"
+            # If a response dump file exists, provide its hosted URL too
+            resp_file = evidence.get("response_file")
+            if resp_file:
+                test_result.setdefault("evidence", {})
+                test_result["evidence"]["response_file"] = str(resp_file)
+                gh_pages = os.getenv("GH_PAGES_BASE_URL", "https://geotravel-and-tours.github.io/geo-travel-automation")
+                test_result["response_file_url"] = f"{gh_pages}/reports/failed_responses/{Path(resp_file).name}"
         if screenshot_path:
             screenshot_filename = Path(screenshot_path).name
             test_result["screenshot_url"] = f"https://geotravel-and-tours.github.io/geo-travel-automation/screenshots/failures/{screenshot_filename}"
@@ -419,32 +436,45 @@ class GeoReporter:
             message_lines.append(f"❌ Failed Tests({len(all_failed_tests)})")
             message_lines.append("")
 
-            for i, test in enumerate(all_failed_tests[:8], 1):  # Limit to first 8
+            # Limit how many failures to display in Slack to avoid huge messages.
+            # Configurable via env var REPORT_MAX_FAILURES (default 8)
+            try:
+                max_failures = int(os.getenv("REPORT_MAX_FAILURES", "8"))
+            except Exception:
+                max_failures = 8
+
+            # If you want to see ALL failures in the message, replace the slice below
+            # with `for i, test in enumerate(all_failed_tests, 1):` — commented out on purpose.
+            for i, test in enumerate(all_failed_tests[:max_failures], 1):
                 suite = test.get('suite', 'Unknown')
                 test_name = test.get('test_name', 'Unknown Test')
-                error = self._clean_error_message(test.get('error_message', 'Unknown error'))
-                category = test.get('category') or self._get_test_category(test_name, error)
-                context = self._get_test_context(test_name, error)
+                raw_error = test.get('error_message', 'Unknown error')
+                error = self._clean_error_message(raw_error)
+                category = test.get('category') or self._get_test_category(test_name, raw_error)
+                context = self._get_test_context(test_name, raw_error)
                 duration = test.get('duration', 0)
-                
+
                 # Format test name to be more readable
                 readable_test_name = self._format_test_name(test_name)
                 suite_display = self._format_suite_display_name(suite)
-                
+
+                # Expected vs Actual extraction where possible
+                expected_actual = self._extract_expected_actual(raw_error) or "See error message"
+
                 message_lines.append(f"{i}️⃣ [{suite_display}] {readable_test_name}")
-                message_lines.append(f"‣ Error: {error}")
-                message_lines.append(f"‣ Context: {context}")
-                message_lines.append(f"‣ Issue Type: {category}")
-                message_lines.append(f"‣ Evidence: {self._get_failure_links(test)}")
-                
+                message_lines.append(f"• Error: {error}")
+                message_lines.append(f"• Context: {context}")
+                message_lines.append(f"• Expected vs Actual: {expected_actual}")
+                message_lines.append(f"• Evidence: {self._get_failure_links(test)}")
+
                 # Add fix suggestion for specific categories
                 fix_suggestion = self._get_fix_suggestion(category, test_name)
                 if fix_suggestion:
-                    message_lines.append(f"‣ Fix Suggestion: {fix_suggestion}")
-                
+                    message_lines.append(f"• Suggested Fix: {fix_suggestion}")
+
                 if duration > 0:
-                    message_lines.append(f"‣ Duration: {duration:.2f}s")
-                
+                    message_lines.append(f"• Duration: {duration:.2f}s | Timestamp: {test.get('timestamp', '')}")
+
                 message_lines.append("")  # Empty line between tests
 
         # Add skipped tests section
@@ -533,30 +563,33 @@ class GeoReporter:
         if report["failed_tests"] > 0:
             message_lines.append(f"❌ Failed Tests({report['failed_tests']})")
             message_lines.append("")
-
             for i, failed_test in enumerate(report["failed_tests_details"], 1):
                 test_name = failed_test['test_name']
-                error = self._clean_error_message(failed_test['error_message'])
-                category = failed_test.get('category') or self._get_test_category(test_name, error)
-                context = self._get_test_context(test_name, error)
+                raw_error = failed_test.get('error_message', '')
+                error = self._clean_error_message(raw_error)
+                category = failed_test.get('category') or self._get_test_category(test_name, raw_error)
+                context = self._get_test_context(test_name, raw_error)
                 duration = failed_test.get('duration', 0)
                 readable_test_name = self._format_test_name(test_name)
-                
+
+                # Expected vs Actual extraction
+                expected_actual = self._extract_expected_actual(raw_error) or "See error message"
+
                 suite_display = self._format_suite_display_name("individual")
                 message_lines.append(f"{i}️⃣ [{suite_display}] {readable_test_name}")
-                message_lines.append(f"‣ Error: {error}")
-                message_lines.append(f"‣ Type: {category}")
-                message_lines.append(f"‣ Context: {context}")
-                message_lines.append(f"‣ Evidence: {self._get_failure_links(failed_test)}")
+                message_lines.append(f"• Error: {error}")
+                message_lines.append(f"• Context: {context}")
+                message_lines.append(f"• Expected vs Actual: {expected_actual}")
+                message_lines.append(f"• Evidence: {self._get_failure_links(failed_test)}")
 
                 # Add fix suggestion
                 fix_suggestion = self._get_fix_suggestion(category, test_name)
                 if fix_suggestion:
-                    message_lines.append(f"‣ Fix Suggestion: {fix_suggestion}")
-                
+                    message_lines.append(f"• Suggested Fix: {fix_suggestion}")
+
                 if duration > 0:
-                    message_lines.append(f"‣ Duration: {duration:.2f}s")
-                
+                    message_lines.append(f"• Duration: {duration:.2f}s | Timestamp: {failed_test.get('timestamp', '')}")
+
                 message_lines.append("")
 
         # Add skipped tests section
@@ -931,6 +964,24 @@ class GeoReporter:
         }
         return suggestions.get(category, "Review test implementation and error logs")
 
+    def _extract_expected_actual(self, error_message: str):
+        """Try to extract Expected vs Actual from common assertion patterns."""
+        if not error_message:
+            return None
+        import re
+
+        # common pattern: assert 500 == 200
+        m = re.search(r"assert\s+([^\s]+)\s*==\s*([^\s]+)", error_message)
+        if m:
+            return f"Expected: {m.group(2)} | Actual: {m.group(1)}"
+
+        # pattern: expected 200 but got 500
+        m = re.search(r"expected\s+([^\s,]+)\s+but\s+got\s+([^\s,]+)", error_message, re.I)
+        if m:
+            return f"Expected: {m.group(1)} | Actual: {m.group(2)}"
+
+        return None
+
     def _clean_error_message(self, error_message):
         """Clean and format error message for Slack"""
         if not error_message:
@@ -1030,11 +1081,27 @@ class GeoReporter:
     def _get_failure_links(self, failed_test):
         """Generate direct links for failed test evidence"""
         screenshot_url = failed_test.get('screenshot_url')
-        
         links = []
         if screenshot_url:
             links.append(f"📸 <{screenshot_url}|View Screenshot>")
-        
+
+        # Include latest log link if available (prefer hosted absolute URL)
+        log_url = failed_test.get('log_url') or (failed_test.get('evidence', {}) or {}).get('log_path')
+        if log_url:
+            # If log_url is a relative path, convert to hosted GH Pages URL
+            if not str(log_url).startswith("http"):
+                gh_pages = os.getenv("GH_PAGES_BASE_URL", "https://geotravel-and-tours.github.io/geo-travel-automation")
+                log_url = f"{gh_pages}/{str(log_url).lstrip('./')}"
+            links.append(f"📄 <{log_url}|Download Log>")
+
+        # Include any additional evidence files (response dumps, json) if provided
+        resp_file_url = failed_test.get('response_file_url') or (failed_test.get('evidence', {}) or {}).get('response_file')
+        if resp_file_url:
+            if not str(resp_file_url).startswith("http"):
+                gh_pages = os.getenv("GH_PAGES_BASE_URL", "https://geotravel-and-tours.github.io/geo-travel-automation")
+                resp_file_url = f"{gh_pages}/{str(resp_file_url).lstrip('./')}"
+            links.append(f"🗂 <{resp_file_url}|Response Dump>")
+
         return " | ".join(links) if links else "No evidence captured"
 
 
