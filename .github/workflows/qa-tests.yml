@@ -52,6 +52,7 @@ jobs:
           TIMESTAMP=$(date +"%Y-%m-%d_%H-%M-%S")
           echo "RUN_TIMESTAMP=$TIMESTAMP" >> $GITHUB_ENV
           echo "GH_PAGES_TIMESTAMP=$TIMESTAMP" >> $GITHUB_ENV
+          echo "FOLDER_TIMESTAMP=$TIMESTAMP" >> $GITHUB_ENV
 
       # --- Run Tests ---
       - name: 🧪 Run test suites
@@ -64,8 +65,7 @@ jobs:
       - name: 📁 Prepare files for GitHub Pages
         run: |
           # Create timestamp
-          TIMESTAMP=$(date +"%Y-%m-%d_%H-%M-%S")
-          echo "RUN_TIMESTAMP=$TIMESTAMP" >> $GITHUB_ENV
+          TIMESTAMP="$RUN_TIMESTAMP"
           
           # Clean and create folder
           rm -rf gh-pages-content || true
