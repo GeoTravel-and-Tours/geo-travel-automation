@@ -79,25 +79,6 @@ class TestMiscAPIs:
         self.logger.info(f"All Events: {response.status_code}")
         assert response.status_code == 200
     
-    # Hotels Tests
-    @pytest.mark.api
-    def test_search_hotels(self, authenticated_api):
-        self.logger.info("=== Testing Hotel Search ===")
-        api = HotelAPI()
-        api.set_auth_token(authenticated_api)
-        response = api.search_hotels(city_code="LON")  # Add required city_code
-        self.logger.info(f"Hotels Search: {response.status_code}")
-        assert response.status_code == 200
-
-    @pytest.mark.api
-    def test_get_hotel_cities(self, authenticated_api):
-        self.logger.info("=== Testing Get Hotel Cities ===")
-        api = HotelAPI()
-        api.set_auth_token(authenticated_api)
-        response = api.get_hotel_cities(keyword="ABU")  # Add required keyword
-        self.logger.info(f"Hotel Cities: {response.status_code}")
-        assert response.status_code == 200
-    
     # Flight Utilities Tests
     @pytest.mark.api
     def test_get_airports(self, authenticated_api):

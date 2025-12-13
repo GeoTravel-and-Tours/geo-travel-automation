@@ -392,7 +392,7 @@ class PackageBookingFlow(BasePage):
             "full_name": "GEO Bot",
             "email": "geobot@yopmail.com", 
             "phone": "1234567890",
-            "travel_date": "05/11/2025"
+            "travel_date": "31/12/2025"
         }
 
         try:

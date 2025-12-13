@@ -122,7 +122,8 @@ class TestPartnersPackageSecurity:
             "infants": 0,
             "pricing_text": "Family Trip",
             "book_at_deal_price": False,
-            "is_full_payment": True
+            "is_full_payment": True,
+            "is_lockdown_payment": False
         }
         response = self.package_api.book_package(booking_data)
         
@@ -281,9 +282,11 @@ class TestPartnersPackageFunctionality:
             "infants": 0,
             "pricing_text": pricing_text,
             "book_at_deal_price": False,
-            "is_full_payment": True
+            "is_full_payment": True,
+            "is_lockdown_payment": False
         }
         booking_response = package_api.book_package(booking_data)
+        print(booking_response.text)
         
         # Booking should be successful (201 created)
         assert booking_response.status_code == 201, "Verified user should be able to book packages"
@@ -386,7 +389,8 @@ class TestPartnersPackageFunctionality:
                     "infants": 0,
                     "pricing_text": package['prices'][0]['pricing_text'] if package.get('prices') else "Standard",
                     "book_at_deal_price": False,
-                    "is_full_payment": True
+                    "is_full_payment": True,
+                    "is_lockdown_payment": False
                 }
                 
                 self.logger.info("🔵 CREATING NEW PACKAGE BOOKING")
@@ -488,7 +492,8 @@ class TestPartnersPackageFunctionality:
                     "infants": 0,
                     "pricing_text": package['prices'][0]['pricing_text'] if package.get('prices') else "Standard",
                     "book_at_deal_price": False,
-                    "is_full_payment": True
+                    "is_full_payment": True,
+                    "is_lockdown_payment": False
                 }
                 
                 self.logger.info("🔵 CREATING NEW PACKAGE BOOKING")
