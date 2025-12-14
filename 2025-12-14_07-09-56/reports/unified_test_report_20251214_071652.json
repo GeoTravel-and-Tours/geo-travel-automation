@@ -1,0 +1,391 @@
+{
+    "test_suite_name": "Unified UI Smoke + API + Partners API TEST REPORT",
+    "total_tests": 123,
+    "passed_tests": 114,
+    "failed_tests": 9,
+    "skipped_tests": 0,
+    "success_rate": 92.7,
+    "duration": 414.890303,
+    "start_time": "2025-12-14 07:09:56",
+    "end_time": "2025-12-14 07:16:51",
+    "suites_run": [
+        "smoke",
+        "api",
+        "partners_api"
+    ],
+    "suite_details": {
+        "smoke": {
+            "report": {
+                "test_suite_name": "Unified UI Smoke + API + Partners API TEST REPORT",
+                "total_tests": 28,
+                "passed_tests": 26,
+                "failed_tests": 2,
+                "skipped_tests": 0,
+                "success_rate": 92.85714285714286,
+                "duration": 270.6529,
+                "start_time": "2025-12-14 07:10:23",
+                "end_time": "2025-12-14 07:14:54",
+                "failed_tests_details": [
+                    {
+                        "test_name": "src/tests/smoke_tests/test_auth_flow_smoke.py::TestAuthFlowSmoke::test_successful_login_and_redirect",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Login should be successful with valid credentials\nassert False",
+                        "screenshot_path": "docs/screenshots/failures/assertionerror_srctestssmoke_teststest_auth_flow_smokepyTestAuthFlowSmoketest_successful_login_and_redirect_20251214_071057.png",
+                        "duration": 17.814245223999023,
+                        "timestamp": "07:10:57",
+                        "skip_reason": null,
+                        "category": "Functional",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20251214_070956.log"
+                        },
+                        "log_path": "reports/logs/geo_travel_20251214_070956.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-14_07-09-56/logs/geo_travel_20251214_070956.log",
+                        "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-14_07-09-56/screenshots/assertionerror_srctestssmoke_teststest_auth_flow_smokepyTestAuthFlowSmoketest_successful_login_and_redirect_20251214_071057.png",
+                        "suite": "smoke"
+                    },
+                    {
+                        "test_name": "src/tests/smoke_tests/test_package_booking_smoke.py::TestPackageBookingSmoke::test_complete_package_booking_flow",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Should successfully reach Flutterwave test mode\nassert False",
+                        "screenshot_path": "docs/screenshots/failures/assertionerror_srctestssmoke_teststest_package_booking_smokepyTestPackageBookingSmoketest_complete_package_booking_flow_20251214_071454.png",
+                        "duration": 101.71190142631531,
+                        "timestamp": "07:14:54",
+                        "skip_reason": null,
+                        "category": "Functional",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20251214_070956.log"
+                        },
+                        "log_path": "reports/logs/geo_travel_20251214_070956.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-14_07-09-56/logs/geo_travel_20251214_070956.log",
+                        "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-14_07-09-56/screenshots/assertionerror_srctestssmoke_teststest_package_booking_smokepyTestPackageBookingSmoketest_complete_package_booking_flow_20251214_071454.png",
+                        "suite": "smoke"
+                    }
+                ],
+                "skipped_tests_details": []
+            },
+            "timestamp": "2025-12-14 07:14:54"
+        },
+        "api": {
+            "report": {
+                "test_suite_name": "API SMOKE TEST",
+                "total_tests": 60,
+                "passed_tests": 60,
+                "failed_tests": 0,
+                "skipped_tests": 0,
+                "success_rate": 100.0,
+                "duration": 20.315258,
+                "start_time": "2025-12-14 07:14:54",
+                "end_time": "2025-12-14 07:15:15",
+                "failed_tests_details": [],
+                "skipped_tests_details": []
+            },
+            "timestamp": "2025-12-14 07:15:15"
+        },
+        "partners_api": {
+            "report": {
+                "test_suite_name": "PARTNERS API SMOKE TEST",
+                "total_tests": 35,
+                "passed_tests": 28,
+                "failed_tests": 7,
+                "skipped_tests": 0,
+                "success_rate": 80.0,
+                "duration": 86.806091,
+                "start_time": "2025-12-14 07:15:25",
+                "end_time": "2025-12-14 07:16:51",
+                "failed_tests_details": [
+                    {
+                        "test_name": "src/tests/partners_api_tests/test_partners_flight.py::TestPartnersFlightFunctionality::test_verified_user_can_search_flights",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Verified user should access flight search\nassert 500 == 200\n +  where 500 = <Response [500]>.status_code",
+                        "screenshot_path": null,
+                        "duration": 2.151312828063965,
+                        "timestamp": "07:15:34",
+                        "skip_reason": null,
+                        "category": "Partners API Server Error",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20251214_070956.log",
+                            "response_file": "reports/failed_responses/20251214_071534_500_api_flight_search.txt"
+                        },
+                        "log_path": "reports/logs/geo_travel_20251214_070956.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-14_07-09-56/logs/geo_travel_20251214_070956.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251214_071534_500_api_flight_search.txt",
+                        "suite": "partners_api"
+                    },
+                    {
+                        "test_name": "src/tests/partners_api_tests/test_partners_flight.py::TestPartnersFlightFunctionality::test_verified_user_can_book_flight",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: assert 500 == 200\n +  where 500 = <Response [500]>.status_code",
+                        "screenshot_path": null,
+                        "duration": 1.964559555053711,
+                        "timestamp": "07:15:36",
+                        "skip_reason": null,
+                        "category": "Partners API Server Error",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20251214_070956.log",
+                            "response_file": "reports/failed_responses/20251214_071536_500_api_flight_search.txt"
+                        },
+                        "log_path": "reports/logs/geo_travel_20251214_070956.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-14_07-09-56/logs/geo_travel_20251214_070956.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251214_071536_500_api_flight_search.txt",
+                        "suite": "partners_api"
+                    },
+                    {
+                        "test_name": "src/tests/partners_api_tests/test_partners_flight.py::TestPartnersFlightFunctionality::test_flight_search_counted_in_usage",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: assert 500 == 200\n +  where 500 = <Response [500]>.status_code",
+                        "screenshot_path": null,
+                        "duration": 2.572887897491455,
+                        "timestamp": "07:15:39",
+                        "skip_reason": null,
+                        "category": "Partners API Server Error",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20251214_070956.log",
+                            "response_file": "reports/failed_responses/20251214_071539_500_api_flight_search.txt"
+                        },
+                        "log_path": "reports/logs/geo_travel_20251214_070956.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-14_07-09-56/logs/geo_travel_20251214_070956.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251214_071539_500_api_flight_search.txt",
+                        "suite": "partners_api"
+                    },
+                    {
+                        "test_name": "src/tests/partners_api_tests/test_partners_flight.py::TestPartnersFlightFunctionality::test_flight_booking_counted_in_usage",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: assert 500 == 200\n +  where 500 = <Response [500]>.status_code",
+                        "screenshot_path": null,
+                        "duration": 2.2905311584472656,
+                        "timestamp": "07:15:42",
+                        "skip_reason": null,
+                        "category": "Partners API Server Error",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20251214_070956.log",
+                            "response_file": "reports/failed_responses/20251214_071542_500_api_flight_search.txt"
+                        },
+                        "log_path": "reports/logs/geo_travel_20251214_070956.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-14_07-09-56/logs/geo_travel_20251214_070956.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251214_071542_500_api_flight_search.txt",
+                        "suite": "partners_api"
+                    },
+                    {
+                        "test_name": "src/tests/partners_api_tests/test_partners_organization.py::TestPartnersOrganizationFunctionality::test_verified_user_can_reset_api_keys",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: New credentials should work for API calls\nassert 500 == 200\n +  where 500 = <Response [500]>.status_code",
+                        "screenshot_path": null,
+                        "duration": 2.9400055408477783,
+                        "timestamp": "07:15:48",
+                        "skip_reason": null,
+                        "category": "Partners API Server Error",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20251214_070956.log",
+                            "response_file": "reports/failed_responses/20251214_071548_500_api_flight_search.txt"
+                        },
+                        "log_path": "reports/logs/geo_travel_20251214_070956.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-14_07-09-56/logs/geo_travel_20251214_070956.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251214_071548_500_api_flight_search.txt",
+                        "suite": "partners_api"
+                    },
+                    {
+                        "test_name": "src/tests/partners_api_tests/test_partners_package.py::TestPartnersPackageFunctionality::test_verified_user_can_get_packages",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Verified user should be able to access package listings\nassert 503 == 200\n +  where 503 = <Response [503]>.status_code",
+                        "screenshot_path": null,
+                        "duration": 31.095258951187134,
+                        "timestamp": "07:16:26",
+                        "skip_reason": null,
+                        "category": "Partners API Service Unavailable",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20251214_070956.log",
+                            "response_file": "reports/failed_responses/20251214_071626_503_api_package_all.txt"
+                        },
+                        "log_path": "reports/logs/geo_travel_20251214_070956.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-14_07-09-56/logs/geo_travel_20251214_070956.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251214_071626_503_api_package_all.txt",
+                        "suite": "partners_api"
+                    },
+                    {
+                        "test_name": "src/tests/partners_api_tests/test_partners_package.py::TestPartnersPackageFunctionality::test_verified_user_can_book_package",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Verified user should be able to book packages\nassert 400 == 201\n +  where 400 = <Response [400]>.status_code",
+                        "screenshot_path": null,
+                        "duration": 1.7984824180603027,
+                        "timestamp": "07:16:41",
+                        "skip_reason": null,
+                        "category": "Partners API Request Validation",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20251214_070956.log",
+                            "response_file": "reports/failed_responses/20251214_071641_400_api_package_book.txt"
+                        },
+                        "log_path": "reports/logs/geo_travel_20251214_070956.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-14_07-09-56/logs/geo_travel_20251214_070956.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251214_071641_400_api_package_book.txt",
+                        "suite": "partners_api"
+                    }
+                ],
+                "skipped_tests_details": []
+            },
+            "timestamp": "2025-12-14 07:16:51"
+        }
+    },
+    "all_failed_tests": [
+        {
+            "test_name": "src/tests/smoke_tests/test_auth_flow_smoke.py::TestAuthFlowSmoke::test_successful_login_and_redirect",
+            "status": "FAIL",
+            "error_message": "AssertionError: Login should be successful with valid credentials\nassert False",
+            "screenshot_path": "docs/screenshots/failures/assertionerror_srctestssmoke_teststest_auth_flow_smokepyTestAuthFlowSmoketest_successful_login_and_redirect_20251214_071057.png",
+            "duration": 17.814245223999023,
+            "timestamp": "07:10:57",
+            "skip_reason": null,
+            "category": "Functional",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20251214_070956.log"
+            },
+            "log_path": "reports/logs/geo_travel_20251214_070956.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-14_07-09-56/logs/geo_travel_20251214_070956.log",
+            "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-14_07-09-56/screenshots/assertionerror_srctestssmoke_teststest_auth_flow_smokepyTestAuthFlowSmoketest_successful_login_and_redirect_20251214_071057.png",
+            "suite": "smoke"
+        },
+        {
+            "test_name": "src/tests/smoke_tests/test_package_booking_smoke.py::TestPackageBookingSmoke::test_complete_package_booking_flow",
+            "status": "FAIL",
+            "error_message": "AssertionError: Should successfully reach Flutterwave test mode\nassert False",
+            "screenshot_path": "docs/screenshots/failures/assertionerror_srctestssmoke_teststest_package_booking_smokepyTestPackageBookingSmoketest_complete_package_booking_flow_20251214_071454.png",
+            "duration": 101.71190142631531,
+            "timestamp": "07:14:54",
+            "skip_reason": null,
+            "category": "Functional",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20251214_070956.log"
+            },
+            "log_path": "reports/logs/geo_travel_20251214_070956.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-14_07-09-56/logs/geo_travel_20251214_070956.log",
+            "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-14_07-09-56/screenshots/assertionerror_srctestssmoke_teststest_package_booking_smokepyTestPackageBookingSmoketest_complete_package_booking_flow_20251214_071454.png",
+            "suite": "smoke"
+        },
+        {
+            "test_name": "src/tests/partners_api_tests/test_partners_flight.py::TestPartnersFlightFunctionality::test_verified_user_can_search_flights",
+            "status": "FAIL",
+            "error_message": "AssertionError: Verified user should access flight search\nassert 500 == 200\n +  where 500 = <Response [500]>.status_code",
+            "screenshot_path": null,
+            "duration": 2.151312828063965,
+            "timestamp": "07:15:34",
+            "skip_reason": null,
+            "category": "Partners API Server Error",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20251214_070956.log",
+                "response_file": "reports/failed_responses/20251214_071534_500_api_flight_search.txt"
+            },
+            "log_path": "reports/logs/geo_travel_20251214_070956.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-14_07-09-56/logs/geo_travel_20251214_070956.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251214_071534_500_api_flight_search.txt",
+            "suite": "partners_api"
+        },
+        {
+            "test_name": "src/tests/partners_api_tests/test_partners_flight.py::TestPartnersFlightFunctionality::test_verified_user_can_book_flight",
+            "status": "FAIL",
+            "error_message": "AssertionError: assert 500 == 200\n +  where 500 = <Response [500]>.status_code",
+            "screenshot_path": null,
+            "duration": 1.964559555053711,
+            "timestamp": "07:15:36",
+            "skip_reason": null,
+            "category": "Partners API Server Error",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20251214_070956.log",
+                "response_file": "reports/failed_responses/20251214_071536_500_api_flight_search.txt"
+            },
+            "log_path": "reports/logs/geo_travel_20251214_070956.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-14_07-09-56/logs/geo_travel_20251214_070956.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251214_071536_500_api_flight_search.txt",
+            "suite": "partners_api"
+        },
+        {
+            "test_name": "src/tests/partners_api_tests/test_partners_flight.py::TestPartnersFlightFunctionality::test_flight_search_counted_in_usage",
+            "status": "FAIL",
+            "error_message": "AssertionError: assert 500 == 200\n +  where 500 = <Response [500]>.status_code",
+            "screenshot_path": null,
+            "duration": 2.572887897491455,
+            "timestamp": "07:15:39",
+            "skip_reason": null,
+            "category": "Partners API Server Error",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20251214_070956.log",
+                "response_file": "reports/failed_responses/20251214_071539_500_api_flight_search.txt"
+            },
+            "log_path": "reports/logs/geo_travel_20251214_070956.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-14_07-09-56/logs/geo_travel_20251214_070956.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251214_071539_500_api_flight_search.txt",
+            "suite": "partners_api"
+        },
+        {
+            "test_name": "src/tests/partners_api_tests/test_partners_flight.py::TestPartnersFlightFunctionality::test_flight_booking_counted_in_usage",
+            "status": "FAIL",
+            "error_message": "AssertionError: assert 500 == 200\n +  where 500 = <Response [500]>.status_code",
+            "screenshot_path": null,
+            "duration": 2.2905311584472656,
+            "timestamp": "07:15:42",
+            "skip_reason": null,
+            "category": "Partners API Server Error",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20251214_070956.log",
+                "response_file": "reports/failed_responses/20251214_071542_500_api_flight_search.txt"
+            },
+            "log_path": "reports/logs/geo_travel_20251214_070956.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-14_07-09-56/logs/geo_travel_20251214_070956.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251214_071542_500_api_flight_search.txt",
+            "suite": "partners_api"
+        },
+        {
+            "test_name": "src/tests/partners_api_tests/test_partners_organization.py::TestPartnersOrganizationFunctionality::test_verified_user_can_reset_api_keys",
+            "status": "FAIL",
+            "error_message": "AssertionError: New credentials should work for API calls\nassert 500 == 200\n +  where 500 = <Response [500]>.status_code",
+            "screenshot_path": null,
+            "duration": 2.9400055408477783,
+            "timestamp": "07:15:48",
+            "skip_reason": null,
+            "category": "Partners API Server Error",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20251214_070956.log",
+                "response_file": "reports/failed_responses/20251214_071548_500_api_flight_search.txt"
+            },
+            "log_path": "reports/logs/geo_travel_20251214_070956.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-14_07-09-56/logs/geo_travel_20251214_070956.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251214_071548_500_api_flight_search.txt",
+            "suite": "partners_api"
+        },
+        {
+            "test_name": "src/tests/partners_api_tests/test_partners_package.py::TestPartnersPackageFunctionality::test_verified_user_can_get_packages",
+            "status": "FAIL",
+            "error_message": "AssertionError: Verified user should be able to access package listings\nassert 503 == 200\n +  where 503 = <Response [503]>.status_code",
+            "screenshot_path": null,
+            "duration": 31.095258951187134,
+            "timestamp": "07:16:26",
+            "skip_reason": null,
+            "category": "Partners API Service Unavailable",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20251214_070956.log",
+                "response_file": "reports/failed_responses/20251214_071626_503_api_package_all.txt"
+            },
+            "log_path": "reports/logs/geo_travel_20251214_070956.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-14_07-09-56/logs/geo_travel_20251214_070956.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251214_071626_503_api_package_all.txt",
+            "suite": "partners_api"
+        },
+        {
+            "test_name": "src/tests/partners_api_tests/test_partners_package.py::TestPartnersPackageFunctionality::test_verified_user_can_book_package",
+            "status": "FAIL",
+            "error_message": "AssertionError: Verified user should be able to book packages\nassert 400 == 201\n +  where 400 = <Response [400]>.status_code",
+            "screenshot_path": null,
+            "duration": 1.7984824180603027,
+            "timestamp": "07:16:41",
+            "skip_reason": null,
+            "category": "Partners API Request Validation",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20251214_070956.log",
+                "response_file": "reports/failed_responses/20251214_071641_400_api_package_book.txt"
+            },
+            "log_path": "reports/logs/geo_travel_20251214_070956.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-14_07-09-56/logs/geo_travel_20251214_070956.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251214_071641_400_api_package_book.txt",
+            "suite": "partners_api"
+        }
+    ],
+    "all_skipped_tests": []
+}
