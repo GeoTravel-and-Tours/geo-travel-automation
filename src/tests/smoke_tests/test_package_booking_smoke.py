@@ -126,7 +126,7 @@ class TestPackageBookingSmoke(TestBase):
             raise
 
     @pytest.mark.smoke
-    # @pytest.mark.dependency(depends=["homepage_loaded", "package_search_works", "booking_form_works"])
+    @pytest.mark.dependency(depends=["homepage_loaded", "package_search_works", "booking_form_works"])
     def test_complete_package_booking_flow(self):
         """Smoke Test 4: Comprehensive end-to-end package booking flow"""
         self.package_booking_flow.logger.info("=== COMPREHENSIVE TEST: Complete Package Booking Flow ===")
