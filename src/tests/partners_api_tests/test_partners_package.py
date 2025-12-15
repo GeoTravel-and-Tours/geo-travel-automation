@@ -286,7 +286,6 @@ class TestPartnersPackageFunctionality:
             "is_lockdown_payment": False
         }
         booking_response = package_api.book_package(booking_data)
-        print(booking_response.text)
         
         # Booking should be successful (201 created)
         assert booking_response.status_code == 201, "Verified user should be able to book packages"
