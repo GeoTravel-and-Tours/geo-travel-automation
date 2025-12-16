@@ -230,7 +230,6 @@ class TestHotelAPI:
         
         # If we get here, validate the response
         response_data = response.json()
-        print(response_data)
         hotels_data = response_data.get("data", {}).get("hotelDetailResult", {}).get("data", [])
         self.logger.success(f"✅ Found {len(hotels_data)} hotels with price filter")
 
@@ -359,7 +358,6 @@ class TestHotelAPI:
         
         # First search for a hotel to get valid hotelId
         search_response = self.hotel_api.search_hotels(**self.test_data["hotel_search_payload"])
-        print(search_response.text)
         if search_response.status_code != 200:
             pytest.skip("Hotel search failed, cannot test rating")
         
