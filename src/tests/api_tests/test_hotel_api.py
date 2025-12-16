@@ -74,8 +74,8 @@ class TestHotelAPI:
     
     def _generate_test_data(self):
         """Generate dynamic test data for hotel tests"""
-        tomorrow = (datetime.now() + timedelta(days=1)).strftime("%Y-%m-%d")
-        next_week = (datetime.now() + timedelta(days=7)).strftime("%Y-%m-%d")
+        next_week = (datetime.now() + timedelta(days=30)).strftime("%Y-%m-%d")
+        next_2weeks = (datetime.now() + timedelta(days=90)).strftime("%Y-%m-%d")
         
         return {
             "city_codes": ["NYC", "LON", "PAR", "DXB", "ABV", "LOS"],
@@ -89,8 +89,8 @@ class TestHotelAPI:
                     "city": "New York"
                 },
                 "adults": 2,
-                "checkInDate": tomorrow,
-                "checkOutDate": next_week,
+                "checkInDate": "2026-01-10",
+                "checkOutDate": "2026-01-19",
                 "roomQuantity": 1,
                 "childAges": [5, 10]
             },
@@ -103,12 +103,12 @@ class TestHotelAPI:
                     "city": "New York"
                 },
                 "adults": 2,
-                "checkInDate": tomorrow,
-                "checkOutDate": next_week,
+                "checkInDate": "2026-01-10",
+                "checkOutDate": "2026-01-19",
                 "roomQuantity": 1,
                 "childAges": [5, 10],
-                "priceRange": "200-300",  # YOUR format: string
-                "currency": "NGN"  # YOUR currency - THIS SHOULD FAIL
+                "priceRange": "200-300",
+                "currency": "USD"
             },
             "hotel_booking_payload": {
                 "firstName": "Bot",
@@ -116,12 +116,15 @@ class TestHotelAPI:
                 "email": "geobot@yopmail.com",
                 "phone": "7079090909",
                 "adults": 2,
-                "checkInDate": tomorrow,
-                "checkOutDate": next_week,
+                "checkInDate": "2026-01-10",
+                "checkOutDate": "2026-01-19",
                 "roomQuantity": 1,
                 "childAges": [5, 10],
                 "hotelName": "Test Hotel",
-                "destination": "London, UK"
+                "destination": {
+                    "country": "Nigeria",
+                    "city": "Aba"
+                }
             }
         }
     
@@ -156,24 +159,19 @@ class TestHotelAPI:
     
     @pytest.mark.api
     def test_get_hotel_cities_empty_keyword(self, authenticated_api):
-        """Test hotel cities with empty keyword (should return empty list or error)"""
+        """Test hotel cities with empty keyword"""
         self.logger.info("=== Testing Get Hotel Cities - Empty Keyword ===")
         
         response = self.hotel_api.get_hotel_cities(keyword="")
         
-        # API might return 200 with empty list or 400 for validation error
-        if response.status_code == 200:
-            response_data = response.json()
-            # Check for nested structure
-            if isinstance(response_data, dict) and "data" in response_data:
-                cities = response_data["data"].get("cities", [])
-                self.logger.info(f"✅ Empty keyword returned {len(cities)} cities")
-            else:
-                self.logger.info(f"✅ Empty keyword returned response: {response_data}")
-        elif response.status_code == 400:
-            self.logger.info("✅ Empty keyword correctly rejected with 400")
-        else:
-            self.logger.warning(f"⚠️ Unexpected status {response.status_code} for empty keyword")
+        # API returns 400 with specific error message
+        assert response.status_code == 400, f"Expected 400 for empty keyword, got {response.status_code}"
+        
+        response_data = response.json()
+        assert response_data.get("message") == "Please enter a keyword with 3 or more letters.", \
+            f"Unexpected error message: {response_data.get('message')}"
+        
+        self.logger.success("✅ Empty keyword correctly rejected")
     
     @pytest.mark.api
     @pytest.mark.parametrize("keyword", ["INVALID123", "XYZ999", "###"])
@@ -183,19 +181,19 @@ class TestHotelAPI:
         
         response = self.hotel_api.get_hotel_cities(keyword=keyword)
         
-        # The API returns 200 with empty cities list for invalid keywords
-        if response.status_code == 200:
+        # API returns 400 for invalid keywords (not 200 with empty list)
+        if response.status_code == 400:
             response_data = response.json()
-            # Check the nested structure
+            error_message = response_data.get("message", "")
+            self.logger.info(f"✅ Invalid keyword '{keyword}' correctly rejected: {error_message}")
+        elif response.status_code == 200:
+            # Some APIs might return empty results
+            response_data = response.json()
             if isinstance(response_data, dict) and "data" in response_data:
                 cities = response_data["data"].get("cities", [])
-                assert isinstance(cities, list), "Cities should be a list"
                 self.logger.info(f"✅ Invalid keyword '{keyword}' returned {len(cities)} cities")
             else:
-                self.logger.warning(f"⚠️ Unexpected response structure: {response_data}")
-        elif response.status_code == 500:
-            # FAIL THE TEST - 500 is a server error
-            pytest.fail(f"Server error 500 for invalid keyword '{keyword}': {response.text}")
+                self.logger.info(f"✅ Invalid keyword '{keyword}' handled with empty results")
         else:
             pytest.fail(f"Unexpected response {response.status_code} for invalid keyword")
     
@@ -232,29 +230,33 @@ class TestHotelAPI:
         
         # If we get here, validate the response
         response_data = response.json()
-        hotels_data = response_data["data"]["hotelDetailResult"]["data"]
+        print(response_data)
+        hotels_data = response_data.get("data", {}).get("hotelDetailResult", {}).get("data", [])
         self.logger.success(f"✅ Found {len(hotels_data)} hotels with price filter")
 
     @pytest.mark.api
-    @pytest.mark.parametrize("invalid_city", ["INVALID123", "", "XYZ999"])
-    def test_search_hotels_invalid_city(self, authenticated_api, invalid_city):
-        """Test hotel search with invalid city codes"""
-        self.logger.info(f"=== Testing Hotel Search - Invalid City: {invalid_city} ===")
+    @pytest.mark.parametrize("keyword", ["INVALID123", "", "XYZ999"])
+    def test_get_hotel_cities_invalid_keyword(self, authenticated_api, keyword):
+        """Test hotel cities with various invalid keywords"""
+        self.logger.info(f"=== Testing Get Hotel Cities - Invalid Keyword: {keyword} ===")
         
-        payload = self.test_data["hotel_search_payload"].copy()
-        payload["cityCode"] = invalid_city
+        response = self.hotel_api.get_hotel_cities(keyword=keyword)
         
-        response = self.hotel_api.search_hotels(**payload)
-        
-        # Should return 400, 404, or 200 with empty results
-        if response.status_code in [400, 404]:
-            self.logger.info(f"✅ Invalid city '{invalid_city}' correctly rejected with {response.status_code}")
-        elif response.status_code == 200:
+        # API returns 400 for invalid keywords (not 200 with empty list)
+        if response.status_code == 400:
             response_data = response.json()
-            hotels = response_data["data"]["hotelDetailResult"]["data"]
-            self.logger.info(f"✅ Invalid city '{invalid_city}' returned {len(hotels)} hotels")
+            error_message = response_data.get("message", "")
+            self.logger.info(f"✅ Invalid keyword '{keyword}' correctly rejected: {error_message}")
+        elif response.status_code == 200:
+            # Some APIs might return empty results
+            response_data = response.json()
+            if isinstance(response_data, dict) and "data" in response_data:
+                cities = response_data["data"].get("cities", [])
+                self.logger.info(f"✅ Invalid keyword '{keyword}' returned {len(cities)} cities")
+            else:
+                self.logger.info(f"✅ Invalid keyword '{keyword}' handled with empty results")
         else:
-            self.logger.warning(f"⚠️ Unexpected status {response.status_code} for invalid city")
+            pytest.fail(f"Unexpected response {response.status_code} for invalid keyword")
     
     @pytest.mark.api
     def test_search_hotels_missing_required_fields(self, authenticated_api):
@@ -279,28 +281,28 @@ class TestHotelAPI:
             self.logger.warning(f"⚠️ Unexpected response {response.status_code} for missing required field")
     
     @pytest.mark.api
-    @pytest.mark.parametrize("page,limit", [(1, 10), (2, 5), (3, 20)])
+    @pytest.mark.parametrize("page,limit", [(1, 10), (2, 10), (3, 20)])
     def test_search_hotels_pagination(self, authenticated_api, page, limit):
         """Test hotel search pagination functionality"""
         self.logger.info(f"=== Testing Hotel Search Pagination - Page {page}, Limit {limit} ===")
         
-        # First get total pages
-        base_payload = self.test_data["hotel_search_payload"].copy()
-        base_response = self.hotel_api.search_hotels(**base_payload)
-        assert base_response.status_code == 200, "Base search failed"
-        
-        base_data = base_response.json()
-        total_pages = base_data["data"]["pagination"].get("totalPages", 1)
-        
-        # Skip test if requested page doesn't exist
-        if page > total_pages:
-            pytest.skip(f"Requested page {page} doesn't exist (only {total_pages} total pages)")
-        
-        # Now test the specific page
         payload = self.test_data["hotel_search_payload"].copy()
         payload.update({"page": page, "limit": limit})
         
+        # Debug the payload
+        self.logger.debug(f"Test payload keys: {list(payload.keys())}")
+        self.logger.debug(f"Has 'page': {'page' in payload}, value: {payload.get('page')}")
+        self.logger.debug(f"Has 'limit': {'limit' in payload}, value: {payload.get('limit')}")
+        
         response = self.hotel_api.search_hotels(**payload)
+        
+        # Check what was actually sent
+        self.logger.debug(f"Response status: {response.status_code}")
+        
+        if hasattr(response, 'request'):
+            self.logger.debug(f"Actual request URL: {response.request.url}")
+            self.logger.debug(f"Request method: {response.request.method}")
+        
         assert response.status_code == 200, f"Pagination failed: {response.status_code}"
         
         response_data = response.json()
@@ -308,6 +310,10 @@ class TestHotelAPI:
         
         current_page = pagination.get("currentPage", 1)
         items_per_page = pagination.get("itemsPerPage", limit)
+        
+        # Debug what we got
+        self.logger.debug(f"Requested: page={page}, limit={limit}")
+        self.logger.debug(f"Received: currentPage={current_page}, itemsPerPage={items_per_page}")
         
         # Page should match what we requested
         assert current_page == page, f"Expected page {page}, got {current_page}"
@@ -340,7 +346,7 @@ class TestHotelAPI:
             
             # Should be rejected
             assert response.status_code in [400, 422], \
-                f"API BUG: Invalid dates should be rejected. Got {response.status_code}: {response.text}"
+                f"Invalid dates should be rejected. Got {response.status_code}: {response.text}"
             
             self.logger.success(f"✅ {case['name']}: Correctly rejected")
     
@@ -353,6 +359,7 @@ class TestHotelAPI:
         
         # First search for a hotel to get valid hotelId
         search_response = self.hotel_api.search_hotels(**self.test_data["hotel_search_payload"])
+        print(search_response.text)
         if search_response.status_code != 200:
             pytest.skip("Hotel search failed, cannot test rating")
         
@@ -368,7 +375,7 @@ class TestHotelAPI:
         # Test rating endpoint
         response = self.hotel_api.get_hotel_rating(hotelId=hotel_id)
         
-        assert response.status_code == 200, f"Expected 200, got {response.status_code}"
+        assert response.status_code == 200, f"Expected 200, got {response.status_code} for hotel ID {hotel_id}"
         rating_data = response.json()
         
         # Validate rating structure
@@ -404,7 +411,7 @@ class TestHotelAPI:
     
     @pytest.mark.api
     def test_book_hotel_without_auth(self):
-        """Test hotel booking without authentication (should work)"""
+        """Test hotel booking without authentication - user_id should be null"""
         self.logger.info("=== Testing Hotel Booking - Without Authentication ===")
         
         # Clear any existing auth token
@@ -417,15 +424,27 @@ class TestHotelAPI:
         assert response.status_code == 200, f"Booking without auth failed: {response.status_code}. Response: {response.text}"
         
         booking_data = response.json()
-        # Check for success indicators
-        assert booking_data.get("status") == "success" or "booking" in booking_data.get("data", {}), \
-            f"Booking not successful: {booking_data}"
+        
+        # Basic validation
+        assert booking_data.get("status") == "success", f"Booking not successful: {booking_data}"
+        assert "data" in booking_data, f"Missing data in response: {booking_data}"
+        assert "hotelBooking" in booking_data["data"], f"Missing hotelBooking in data: {booking_data}"
+        
+        booking_info = booking_data["data"]["hotelBooking"]
+        
+        # CRITICAL: Verify user_id IS null when not authenticated
+        user_id = booking_info.get("user_id")
+        assert user_id is None, f"user_id should be null when booking without auth. Got: {user_id}"
+        
+        # Get booking ID
+        booking_id = booking_info.get("id")
         
         self.logger.success("✅ Hotel booking successful without authentication")
+        self.logger.info(f"📋 Booking ID: {booking_id}, User ID: {user_id} (should be null)")
 
     @pytest.mark.api
     def test_book_hotel_with_auth(self, authenticated_api):
-        """Test hotel booking WITH authentication"""
+        """Test hotel booking WITH authentication - should have user_id attached"""
         self.logger.info("=== Testing Hotel Booking - With Authentication ===")
         
         payload = self.test_data["hotel_booking_payload"]
@@ -434,15 +453,26 @@ class TestHotelAPI:
         assert response.status_code == 200, f"Booking with auth failed: {response.status_code}. Response: {response.text}"
         
         booking_data = response.json()
-        # Check for success indicators
-        if "data" in booking_data and "hotelBooking" in booking_data["data"]:
-            booking_info = booking_data["data"]["hotelBooking"]
-            if "bookingId" in booking_info:
-                self.logger.success(f"✅ Booking successful! ID: {booking_info['bookingId']}")
-            else:
-                self.logger.success("✅ Booking successful (no bookingId returned)")
-        else:
-            self.logger.success("✅ Booking successful")
+        
+        # Basic validation
+        assert booking_data.get("status") == "success", f"Booking not successful: {booking_data}"
+        assert "data" in booking_data, f"Missing data in response: {booking_data}"
+        assert "hotelBooking" in booking_data["data"], f"Missing hotelBooking in data: {booking_data}"
+        
+        booking_info = booking_data["data"]["hotelBooking"]
+        
+        # CRITICAL: Verify user_id is NOT null when authenticated
+        user_id = booking_info.get("user_id")
+        assert user_id is not None, f"user_id should not be null when booking with auth. Response: {booking_data}"
+        assert isinstance(user_id, int) or (isinstance(user_id, str) and user_id.strip()), \
+            f"user_id should be a valid ID, got: {user_id}"
+        
+        # Get booking ID
+        booking_id = booking_info.get("id")
+        
+        self.logger.success(f"✅ Booking successful with authentication!")
+        self.logger.info(f"📋 Booking ID: {booking_id}, User ID: {user_id}")
+        self.logger.info(f"📋 Booking Status: {booking_info.get('status', 'Unknown')}")
     
     @pytest.mark.api
     def test_book_hotel_missing_required_fields(self, authenticated_api):

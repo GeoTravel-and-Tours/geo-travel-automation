@@ -51,7 +51,14 @@ class BaseAPI:
     def _request(self, method, endpoint, **kwargs):
         """Base request method with logging and error handling"""
         url = f"{self.base_url}{endpoint}"
-        kwargs['timeout'] = 30
+        
+        # Debug: Log query parameters
+        if 'params' in kwargs and kwargs['params']:
+            self.logger.debug(f"Query params being sent: {kwargs['params']}")
+        
+        # Debug: Log JSON body
+        if 'json' in kwargs and kwargs['json']:
+            self.logger.debug(f"JSON body being sent: {kwargs['json']}")
         
         # Merge headers
         headers = self.headers.copy()
@@ -63,9 +70,14 @@ class BaseAPI:
         try:
             kwargs['timeout'] = 30
             response = self.session.request(method, url, headers=headers, **kwargs)
+            
+            # Debug: Log the actual URL that was sent
+            self.logger.debug(f"Actual request URL: {response.request.url}")
+            self.logger.debug(f"Request method: {response.request.method}")
+            
             self.logger.info(f"API Response: {response.status_code}")
             
-            # Log response for debugging (be careful with sensitive data)
+            # Log response for debugging
             if response.status_code >= 400:
                 # Save response dump for troubleshooting
                 try:
