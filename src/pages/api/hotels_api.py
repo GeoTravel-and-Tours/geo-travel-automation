@@ -7,7 +7,12 @@ class HotelAPI(BaseAPI):
     
     def search_hotels(self, **params):
         """POST /api/hotels/search - Search for hotels"""
-        return self.post("/api/hotels/search", json=params)
+        query_params = {}
+        if "page" in params:
+            query_params["page"] = params["page"]
+        if "limit" in params:
+            query_params["limit"] = params["limit"]
+        return self.post("/api/hotels/search", params=query_params, json=params)
     
     def get_hotel_cities(self, **params):
         """GET /api/hotels/cities - Get hotel cities"""
