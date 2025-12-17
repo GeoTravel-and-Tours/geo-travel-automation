@@ -11,20 +11,18 @@ class AuthAPI(BaseAPI):
         self.token_extractor = TokenExtractor()
     
     def login(self, email=None, password=None):
-        """POST /api/auth/login - Dynamic token extraction from response or cookies"""
+        """POST /api/auth/login - Dynamic token extraction"""
         endpoint = "/api/auth/login"
-
-        # If no credentials provided, get from environment
+        
         if email is None or password is None:
             email, password = self.get_api_credentials_from_env()
-
+        
         payload = {"email": email, "password": password}
         self.logger.info(f"Attempting login with email: {email}")
-
+        
         response = self.post(endpoint, json=payload)
-
+        
         if response.status_code == 200:
-            # Use TokenExtractor for dynamic token extraction
             token, extraction_method = self.token_extractor.extract_token(response)
             
             if token:
@@ -32,15 +30,19 @@ class AuthAPI(BaseAPI):
                 self.token_extractor.log_extraction_attempt(token, extraction_method, is_valid)
                 
                 if is_valid:
-                    self.set_auth_token(token)
+                    # Determine token source dynamically
+                    if extraction_method == "cookies":
+                        token_source = "cookies"
+                    else:  # response_body or headers
+                        token_source = "response_body"
+                    
+                    self.set_auth_token(token, token_source=token_source)
                     self.logger.success(f"✅ Login successful - token set via {extraction_method}")
                 else:
                     self.logger.warning(f"⚠️ Token extracted via {extraction_method} but validation failed")
             else:
-                self.logger.warning("❌ Login successful (200) but no token found in response, cookies, or headers")
-        else:
-            self.logger.warning(f"❌ Login failed with status: {response.status_code}")
-
+                self.logger.warning("❌ Login successful (200) but no token found")
+        
         return response
     
     def logout(self, refresh_token):

@@ -101,12 +101,17 @@ class TestAuthAPI:
         assert len(auth_api.auth_token) > 0, "Auth token cannot be empty"
         
         # Verify Authorization header is properly set
-        assert 'Authorization' in auth_api.headers, "Authorization header must be set"
-        assert auth_api.headers['Authorization'].startswith('Bearer '), "Authorization header must start with 'Bearer '"
-        assert auth_api.auth_token in auth_api.headers['Authorization'], "Auth token must be in Authorization header"
+        if auth_api.token_source == "response_body":
+            assert 'Authorization' in auth_api.headers, "Authorization header must be set"
+            assert auth_api.headers['Authorization'].startswith('Bearer '), "Authorization header must start with 'Bearer '"
+            assert auth_api.auth_token in auth_api.headers['Authorization'], "Auth token must be in Authorization header"
+            self.logger.info(f"Authorization header: {auth_api.headers['Authorization'][:50]}...")
+        else:
+            assert 'Cookie' in auth_api.headers, "Cookie header must be set"
+            assert f'retail_access_token={auth_api.auth_token}' in auth_api.headers['Cookie'], "Auth token must be in Cookie header"
+            self.logger.info(f"Cookie header: {auth_api.headers['Cookie'][:50]}...")
         
         self.logger.info(f"✅ Auth token successfully set (length: {len(auth_api.auth_token)})")
-        self.logger.info(f"Authorization header: {auth_api.headers['Authorization'][:50]}...")
     
     @pytest.mark.api
     def test_dynamic_token_extraction(self, auth_api):

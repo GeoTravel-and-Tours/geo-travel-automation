@@ -1080,10 +1080,6 @@ class GeoReporter:
         
     def _get_failure_links(self, failed_test):
         """Generate direct links for failed test evidence"""
-        print(f"DEBUG failed_test keys: {failed_test.keys()}")
-        if 'evidence' in failed_test:
-            print(f"DEBUG evidence: {failed_test['evidence']}")
-            
         gh_pages = os.getenv("GH_PAGES_BASE_URL", "https://geotravel-and-tours.github.io/geo-travel-automation")
         timestamp = os.getenv("GH_PAGES_TIMESTAMP", "")
         
