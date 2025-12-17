@@ -24,12 +24,12 @@ class PackageBookingFlow(BasePage):
     COUNTRY_INPUT = (By.XPATH, "//input[@placeholder='Enter country']")
     COUNTRY_SEARCH_RESULT = (By.XPATH, "//h6[contains(text(),'NIGERIA')]")
     TRAVEL_DATE_SELECTOR = (By.CSS_SELECTOR, "div[class='w-full flex items-center px-3.5 min-h-12 h-full py-2 rounded-md border border-gray-300 cursor-pointer justify-between']")
-    SEARCH_PACKAGES_BUTTON = (By.CSS_SELECTOR, "body > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > form:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > button:nth-child(1)")
+    SEARCH_PACKAGES_BUTTON = (By.CSS_SELECTOR, "body > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > form:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > button:nth-child(1)")
 
     # Package Selection
     VIEW_PACKAGE_BUTTON = (By.XPATH, "(//button[normalize-space()='View package'])[1]")
-    PRICE_OPTION = (By.CSS_SELECTOR, "body > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2)")
-    BOOK_RESERVATION_BUTTON = (By.CSS_SELECTOR, "body > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > button:nth-child(2)")
+    PRICE_OPTION = (By.CSS_SELECTOR, "body > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2)")
+    BOOK_RESERVATION_BUTTON = (By.CSS_SELECTOR, "body > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > button:nth-child(2)")
 
     # Booking Form
     FULL_NAME_INPUT = (By.NAME, "fullName")
@@ -39,7 +39,7 @@ class PackageBookingFlow(BasePage):
     
     # Modal Locators
     MODAL_BACKGROUND = (By.CSS_SELECTOR, "div.fixed.inset-0.bg-black\\/60")
-    MODAL_FULL_NAME_INPUT = (By.XPATH, "//input[@placeholder='Enter your full name']")
+    MODAL_FULL_NAME_INPUT = (By.XPATH, "//input[contains(@placeholder,'Enter your full name')]")
     MODAL_EMAIL_INPUT = (By.XPATH, "//input[@placeholder='Enter your email address']")
     MODAL_TRAVEL_DATE_INPUT = (By.CSS_SELECTOR, "input[placeholder='Select a date ']")
     MODAL_PHONE_INPUT = (By.XPATH, "//input[@placeholder='Phone number']")
@@ -410,13 +410,16 @@ class PackageBookingFlow(BasePage):
             
             # Travel Date - Use calendar selection instead of direct input
             self.logger.info("Selecting travel date from calendar")
-            travel_date_field = self.driver.find_element(*self.MODAL_TRAVEL_DATE_INPUT)
-            travel_date_field.click()
-            self.logger.info("Clicked travel date field - waiting for calendar to open")
-            time.sleep(2)
+            travel_date_field = self.driver.find_elements(*self.MODAL_TRAVEL_DATE_INPUT)
+            if travel_date_field and travel_date_field[0].is_displayed():
+                self.logger.info("Travel date field is visible")
+                travel_date_field[0].click()
+                time.sleep(2)
+                # Select a date from the calendar popup
+                self.select_date_from_calendar(test_data["travel_date"])
+                time.sleep(2)
+                self.logger.info("Clicked travel date field - waiting for calendar to open")
 
-            # Select a date from the calendar popup
-            self.select_date_from_calendar(test_data["travel_date"])
 
             # Phone Number
             phone_field = self.driver.find_element(*self.MODAL_PHONE_INPUT)
