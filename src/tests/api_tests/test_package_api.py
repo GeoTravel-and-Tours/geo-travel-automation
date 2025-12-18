@@ -111,6 +111,7 @@ class TestPackageAPI:
         assert packages_response.status_code == 200
     
         packages_data = packages_response.json()
+        print(packages_data)
     
         # Extract packages from nested structure
         if isinstance(packages_data, dict) and 'data' in packages_data:
@@ -147,9 +148,10 @@ class TestPackageAPI:
     
             self.logger.info(f"Selected package: {package_title} (ID: {package_id})")
             self.logger.info(f"Using pricing text: {pricing_text}")
-    
-            # Determine a valid departure date. Prefer package's start_date if available.
-            departure_date = selected_package.get('start_date') or selected_package.get('available_from') or "2025-12-01"
+
+            # Determine a valid departure date. Prefer package's end_date if available.
+            departure_date = selected_package.get('end_date') or selected_package.get('available_from') or "2025-12-31"
+            print(f"Using departure date: {departure_date}")
 
             # CORRECT booking data using the extracted pricing text
             booking_data = {
@@ -169,9 +171,11 @@ class TestPackageAPI:
     
             response = authenticated_package_api.book_package(booking_data)
             self.logger.info(f"Book Package: {response.status_code}")
+            print(response.text)
     
             if response.status_code == 200:
                 response_data = response.json()
+                print(response_data)
                 self.logger.info(f"✅ Booking successful! Response: {response_data}")
                 
                 # Check for paymentLink in the data object
