@@ -1078,45 +1078,50 @@ class GeoReporter:
             json.dump(unified_report, f, indent=4, default=json_serializer)
         self._cleanup_old_reports()
         
-    def _get_failure_links(self, failed_test):
-        """Generate direct links for failed test evidence"""
-        gh_pages = os.getenv("GH_PAGES_BASE_URL", "https://geotravel-and-tours.github.io/geo-travel-automation")
-        timestamp = os.getenv("GH_PAGES_TIMESTAMP", "")
-        
-        links = []
-        
-        # SCREENSHOT: Look in multiple possible places
-        screenshot_path = failed_test.get('screenshot_path')
-        if screenshot_path:
-            screenshot_name = os.path.basename(screenshot_path)
-            if timestamp:
-                links.append(f"📸 <{gh_pages}/{timestamp}/screenshots/{screenshot_name}|View Screenshot>")
-            else:
-                links.append(f"📸 <{gh_pages}/screenshots/failures/{screenshot_name}|View Screenshot>")
-        
-        # LOG FILE: Check evidence dict first, then direct key
-        evidence = failed_test.get('evidence', {})
-        log_path = evidence.get('log_path')
-        if not log_path:
-            log_path = failed_test.get('log_path')
-        
-        if log_path:
-            log_name = os.path.basename(log_path)
-            if timestamp:
-                links.append(f"📄 <{gh_pages}/{timestamp}/logs/{log_name}|Download Log>")
-            else:
-                links.append(f"📄 <{gh_pages}/logs/{log_name}|Download Log>")
-        
-        # API RESPONSE: Check evidence dict
-        resp_path = evidence.get('response_file')
-        if resp_path:
-            resp_name = os.path.basename(resp_path)
-            if timestamp:
-                links.append(f"🗂 <{gh_pages}/{timestamp}/api_failed_responses/{resp_name}|Response Dump>")
-            else:
-                links.append(f"🗂 <{gh_pages}/failed_responses/{resp_name}|Response Dump>")
-        
-        return " | ".join(links) if links else "No evidence captured"
+        def _get_failure_links(self, failed_test):
+            """Generate direct links for failed test evidence"""
+            gh_pages = "https://geotravel-and-tours.github.io/geo-travel-automation"
+            test_name = failed_test.get('test_name', '').lower()
+            
+            links = []
+            
+            # Get timestamp from environment
+            timestamp = os.getenv("RUN_TIMESTAMP", "")
+            
+            # Determine test type
+            is_ui_test = 'smoke' in test_name and 'api' not in test_name
+            is_api_test = 'api' in test_name
+            
+            # UI TESTS - Only screenshot
+            if is_ui_test:
+                screenshot_path = failed_test.get('screenshot_path')
+                if screenshot_path:
+                    screenshot_name = os.path.basename(screenshot_path)
+                    if timestamp:
+                        # NEW structure: /TIMESTAMP/screenshots/
+                        links.append(f"📸 <{gh_pages}/{timestamp}/screenshots/{screenshot_name}|View Screenshot>")
+                    else:
+                        # OLD structure (fallback)
+                        links.append(f"📸 <{gh_pages}/screenshots/failures/{screenshot_name}|View Screenshot>")
+            
+            # API TESTS - Test Logs + Response Dump
+            elif is_api_test:
+                evidence = failed_test.get('evidence', {})
+                
+                # API response
+                resp_path = evidence.get('response_file')
+                if resp_path and timestamp:
+                    resp_name = os.path.basename(resp_path)
+                    links.append(f"🗂 <{gh_pages}/{timestamp}/api_failed_responses/{resp_name}|View Response>")
+                    
+                # Log file
+                log_path = evidence.get('log_path')
+                if log_path and timestamp:
+                    log_name = os.path.basename(log_path)
+                    links.append(f"📄 <{gh_pages}/{timestamp}/logs/{log_name}|View Log>")
+                
+            
+            return " | ".join(links) if links else "No evidence captured"
 
 
 
