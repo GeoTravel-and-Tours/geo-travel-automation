@@ -43,7 +43,12 @@ class CleanupManager:
             # "docs": {
             #     "directory": self.base_dir / "docs" / "screenshots" / "failures",
             #     "patterns": ["*.png", "*.jpg", "*.jpeg"],
-            # }
+            # },
+            # "failed_responses": {
+            #     "directory": self.base_dir / "reports" / "failed_responses",
+            #     "patterns": ["*.json", "*.txt"],
+            #     "recursive": True,
+            # },
         }
 
     def _setup_logger(self):
