@@ -160,8 +160,6 @@ class TestHotelAPI:
         
         payload = self.test_data["hotel_search_payload"].copy()
         response = hotel_api.search_hotels(**payload)
-        print(response.text)
-        print(payload)
         
         assert response.status_code == 200, f"Expected 200, got {response.status_code}"
         
