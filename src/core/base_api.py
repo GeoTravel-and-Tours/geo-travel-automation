@@ -21,32 +21,48 @@ class BaseAPI:
         self.logger = GeoLogger(self.__class__.__name__)
         self.token_extractor = TokenExtractor()
     
-    def set_auth_token(self, token):
-        """Set authentication token for API requests"""
+    def set_auth_token(self, token, token_source="cookies"):
+        """
+        Set authentication token dynamically based on source
+        
+        Args:
+            token: The auth token
+            token_source: Where token came from - "cookies" or "response_body"
+                        "cookies": token was from Set-Cookie header -> use Cookie header
+                        "response_body": token was in JSON response -> use Authorization header
+        """
         if not token or not isinstance(token, str):
             self.logger.warning("⚠️ Invalid token provided to set_auth_token()")
             return
         
         self.auth_token = token
-        # Set Authorization header for bearer token usage
-        self.headers['Authorization'] = f'Bearer {token}'
-        # Also set cookie expected by retail API clients
+        self.token_source = token_source  # Store where token came from
+        
+        if token_source == "cookies":
+            # Token came from cookies - use Cookie header
+            self.headers['Cookie'] = f'retail_access_token={token}'
+            # Remove Authorization header if it exists
+            self.headers.pop('Authorization', None)
+            self.logger.info(f"✅ Auth token set from cookies (Cookie header)")
+            
+        elif token_source == "response_body":
+            # Token came from response body - use Authorization header
+            self.headers['Authorization'] = f'Bearer {token}'
+            # Remove Cookie header if it exists
+            self.headers.pop('Cookie', None)
+            self.logger.info(f"✅ Auth token set from response body (Authorization header)")
+        
+        # Always set session cookie as backup
         try:
-            # requests.Session manages cookies via cookiejar
-            # Ensure cookie domain matches API host so it is sent on subsequent requests
             from urllib.parse import urlparse
             parsed = urlparse(self.base_url or '')
             domain = parsed.hostname if parsed.hostname else None
             if domain:
                 self.session.cookies.set('retail_access_token', token, domain=domain, path='/')
-                self.logger.debug(f"Set 'retail_access_token' cookie on session for domain: {domain}")
             else:
-                # Fallback: set cookie without domain
                 self.session.cookies.set('retail_access_token', token)
-                self.logger.debug("Set 'retail_access_token' cookie on session (no domain)")
         except Exception as e:
-            self.logger.debug(f"Could not set cookie on session: {e}")
-        self.logger.info(f"✅ Auth token set (length: {len(token)})")
+            self.logger.debug(f"Could not set session cookie: {e}")
     
     def _request(self, method, endpoint, **kwargs):
         """Base request method with logging and error handling"""
