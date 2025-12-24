@@ -1,0 +1,231 @@
+{
+    "test_suite_name": "Unified UI Smoke + API + Partners API TEST REPORT",
+    "total_tests": 109,
+    "passed_tests": 104,
+    "failed_tests": 2,
+    "skipped_tests": 3,
+    "success_rate": 95.4,
+    "duration": 292.735424,
+    "start_time": "2025-12-24 07:15:15",
+    "end_time": "2025-12-24 07:20:08",
+    "suites_run": [
+        "smoke",
+        "api"
+    ],
+    "suite_details": {
+        "smoke": {
+            "report": {
+                "test_suite_name": "Unified UI Smoke + API + Partners API TEST REPORT",
+                "total_tests": 28,
+                "passed_tests": 26,
+                "failed_tests": 1,
+                "skipped_tests": 1,
+                "success_rate": 92.85714285714286,
+                "duration": 238.83831,
+                "start_time": "2025-12-24 07:15:16",
+                "end_time": "2025-12-24 07:19:14",
+                "failed_tests_details": [
+                    {
+                        "test_name": "src/tests/smoke_tests/test_auth_flow_smoke.py::TestAuthFlowSmoke::test_successful_login_and_redirect",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Login should be successful with valid credentials\nassert False",
+                        "screenshot_path": "docs/screenshots/failures/assertionerror_srctestssmoke_teststest_auth_flow_smokepyTestAuthFlowSmoketest_successful_login_and_redirect_20251224_071542.png",
+                        "duration": 12.244980812072754,
+                        "timestamp": "07:15:42",
+                        "skip_reason": null,
+                        "category": "Functional",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20251224_071515.log"
+                        },
+                        "log_path": "reports/logs/geo_travel_20251224_071515.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-24_07-15-15/logs/geo_travel_20251224_071515.log",
+                        "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-24_07-15-15/screenshots/assertionerror_srctestssmoke_teststest_auth_flow_smokepyTestAuthFlowSmoketest_successful_login_and_redirect_20251224_071542.png",
+                        "suite": "smoke"
+                    }
+                ],
+                "skipped_tests_details": [
+                    {
+                        "test_name": "src/tests/smoke_tests/test_auth_flow_smoke.py::TestAuthFlowSmoke::test_logout_functionality",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/smoke_tests/test_auth_flow_smoke.py', 144, 'Skipped: Login failed - cannot proceed with logout test')",
+                        "screenshot_path": null,
+                        "duration": 12.207772254943848,
+                        "timestamp": "07:15:54",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/smoke_tests/test_auth_flow_smoke.py', 144, 'Skipped: Login failed - cannot proceed with logout test')",
+                        "category": null,
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20251224_071515.log"
+                        },
+                        "log_path": "reports/logs/geo_travel_20251224_071515.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-24_07-15-15/logs/geo_travel_20251224_071515.log",
+                        "suite": "smoke"
+                    }
+                ]
+            },
+            "timestamp": "2025-12-24 07:19:14"
+        },
+        "api": {
+            "report": {
+                "test_suite_name": "API SMOKE TEST",
+                "total_tests": 81,
+                "passed_tests": 78,
+                "failed_tests": 1,
+                "skipped_tests": 2,
+                "success_rate": 96.29629629629629,
+                "duration": 53.032795,
+                "start_time": "2025-12-24 07:19:15",
+                "end_time": "2025-12-24 07:20:08",
+                "failed_tests_details": [
+                    {
+                        "test_name": "src/tests/api_tests/test_package_api.py::TestPackageAPI::test_book_package",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: assert 400 in [200]\n +  where 400 = <Response [400]>.status_code",
+                        "screenshot_path": null,
+                        "duration": 0.15810441970825195,
+                        "timestamp": "07:20:07",
+                        "skip_reason": null,
+                        "category": "Request Validation",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20251224_071515.log",
+                            "response_file": "reports/failed_responses/20251224_072007_400_api_package_book.txt"
+                        },
+                        "log_path": "reports/logs/geo_travel_20251224_071515.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-24_07-15-15/logs/geo_travel_20251224_071515.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251224_072007_400_api_package_book.txt",
+                        "suite": "api"
+                    }
+                ],
+                "skipped_tests_details": [
+                    {
+                        "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_search_hotels_invalid_dates",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 249, 'Skipped: Too far in future: Skipped \u2014 scenario not properly handled yet (Internal Server Error: 500)')",
+                        "screenshot_path": null,
+                        "duration": 0.9431169033050537,
+                        "timestamp": "07:19:48",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 249, 'Skipped: Too far in future: Skipped \u2014 scenario not properly handled yet (Internal Server Error: 500)')",
+                        "category": null,
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20251224_071515.log",
+                            "response_file": "reports/failed_responses/20251224_071948_500_api_hotels_search.txt"
+                        },
+                        "log_path": "reports/logs/geo_travel_20251224_071515.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-24_07-15-15/logs/geo_travel_20251224_071515.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251224_071948_500_api_hotels_search.txt",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_get_hotel_rating_success",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 327, 'Skipped: Get Hotel Rating skipped \u2014 AMADEUS internal error (hotelId=WINYC789, status=500)')",
+                        "screenshot_path": null,
+                        "duration": 1.662414312362671,
+                        "timestamp": "07:19:49",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 327, 'Skipped: Get Hotel Rating skipped \u2014 AMADEUS internal error (hotelId=WINYC789, status=500)')",
+                        "category": null,
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20251224_071515.log",
+                            "response_file": "reports/failed_responses/20251224_071949_500_api_hotels_rating.txt"
+                        },
+                        "log_path": "reports/logs/geo_travel_20251224_071515.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-24_07-15-15/logs/geo_travel_20251224_071515.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251224_071949_500_api_hotels_rating.txt",
+                        "suite": "api"
+                    }
+                ]
+            },
+            "timestamp": "2025-12-24 07:20:08"
+        }
+    },
+    "all_failed_tests": [
+        {
+            "test_name": "src/tests/smoke_tests/test_auth_flow_smoke.py::TestAuthFlowSmoke::test_successful_login_and_redirect",
+            "status": "FAIL",
+            "error_message": "AssertionError: Login should be successful with valid credentials\nassert False",
+            "screenshot_path": "docs/screenshots/failures/assertionerror_srctestssmoke_teststest_auth_flow_smokepyTestAuthFlowSmoketest_successful_login_and_redirect_20251224_071542.png",
+            "duration": 12.244980812072754,
+            "timestamp": "07:15:42",
+            "skip_reason": null,
+            "category": "Functional",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20251224_071515.log"
+            },
+            "log_path": "reports/logs/geo_travel_20251224_071515.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-24_07-15-15/logs/geo_travel_20251224_071515.log",
+            "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-24_07-15-15/screenshots/assertionerror_srctestssmoke_teststest_auth_flow_smokepyTestAuthFlowSmoketest_successful_login_and_redirect_20251224_071542.png",
+            "suite": "smoke"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_package_api.py::TestPackageAPI::test_book_package",
+            "status": "FAIL",
+            "error_message": "AssertionError: assert 400 in [200]\n +  where 400 = <Response [400]>.status_code",
+            "screenshot_path": null,
+            "duration": 0.15810441970825195,
+            "timestamp": "07:20:07",
+            "skip_reason": null,
+            "category": "Request Validation",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20251224_071515.log",
+                "response_file": "reports/failed_responses/20251224_072007_400_api_package_book.txt"
+            },
+            "log_path": "reports/logs/geo_travel_20251224_071515.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-24_07-15-15/logs/geo_travel_20251224_071515.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251224_072007_400_api_package_book.txt",
+            "suite": "api"
+        }
+    ],
+    "all_skipped_tests": [
+        {
+            "test_name": "src/tests/smoke_tests/test_auth_flow_smoke.py::TestAuthFlowSmoke::test_logout_functionality",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/smoke_tests/test_auth_flow_smoke.py', 144, 'Skipped: Login failed - cannot proceed with logout test')",
+            "screenshot_path": null,
+            "duration": 12.207772254943848,
+            "timestamp": "07:15:54",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/smoke_tests/test_auth_flow_smoke.py', 144, 'Skipped: Login failed - cannot proceed with logout test')",
+            "category": null,
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20251224_071515.log"
+            },
+            "log_path": "reports/logs/geo_travel_20251224_071515.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-24_07-15-15/logs/geo_travel_20251224_071515.log",
+            "suite": "smoke"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_search_hotels_invalid_dates",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 249, 'Skipped: Too far in future: Skipped \u2014 scenario not properly handled yet (Internal Server Error: 500)')",
+            "screenshot_path": null,
+            "duration": 0.9431169033050537,
+            "timestamp": "07:19:48",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 249, 'Skipped: Too far in future: Skipped \u2014 scenario not properly handled yet (Internal Server Error: 500)')",
+            "category": null,
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20251224_071515.log",
+                "response_file": "reports/failed_responses/20251224_071948_500_api_hotels_search.txt"
+            },
+            "log_path": "reports/logs/geo_travel_20251224_071515.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-24_07-15-15/logs/geo_travel_20251224_071515.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251224_071948_500_api_hotels_search.txt",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_get_hotel_rating_success",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 327, 'Skipped: Get Hotel Rating skipped \u2014 AMADEUS internal error (hotelId=WINYC789, status=500)')",
+            "screenshot_path": null,
+            "duration": 1.662414312362671,
+            "timestamp": "07:19:49",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 327, 'Skipped: Get Hotel Rating skipped \u2014 AMADEUS internal error (hotelId=WINYC789, status=500)')",
+            "category": null,
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20251224_071515.log",
+                "response_file": "reports/failed_responses/20251224_071949_500_api_hotels_rating.txt"
+            },
+            "log_path": "reports/logs/geo_travel_20251224_071515.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-24_07-15-15/logs/geo_travel_20251224_071515.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251224_071949_500_api_hotels_rating.txt",
+            "suite": "api"
+        }
+    ]
+}
