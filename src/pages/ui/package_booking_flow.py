@@ -59,11 +59,19 @@ class PackageBookingFlow(BasePage):
     def click_package(self):
         """Click on Package button in navigation"""
         self.logger.info("Clicking Package button")
-        return self.element.click(self.PACKAGE_BUTTON)
+        try:
+            click_btn = self.element.click(self.PACKAGE_BUTTON)
+            self._last_interacted_element = click_btn
+            return click_btn
+        except Exception as e:
+            self.logger.error(f"Failed to click Package button: {e}")
+            raise
 
     def select_trip_type(self):
         """Select trip type as group"""
         self.logger.info("Selecting trip type as 'group'")
+        trip_dropdown_btn = None
+        group_option_btn = None
 
         try:
             # Wait for dropdown to be clickable
@@ -71,6 +79,7 @@ class PackageBookingFlow(BasePage):
                 EC.element_to_be_clickable(self.TRIP_TYPE_DROPDOWN)
             )
             trip_dropdown.click()
+            trip_dropdown_btn = trip_dropdown
             self.logger.info("Clicked trip type dropdown")
             time.sleep(2)
 
@@ -79,6 +88,7 @@ class PackageBookingFlow(BasePage):
                 EC.element_to_be_clickable(self.GROUP_OPTION)
             )
             group_option.click()
+            group_option_btn = group_option
             self.logger.info("Trip type selected: group")
             time.sleep(2)
 
@@ -86,12 +96,15 @@ class PackageBookingFlow(BasePage):
 
         except Exception as e:
             self.logger.error(f"Failed to select trip type: {e}")
-            self.screenshot.capture_screenshot_on_failure("trip_type_selection_error.png")
+            self._last_interacted_element = trip_dropdown_btn or group_option_btn
             raise
 
     def select_country(self, country_name):
         """Select country from dropdown"""
         self.logger.info(f"Selecting country: {country_name}")
+        country_selector_btn = None
+        country_input_btn = None
+        country_result_btn = None
 
         try:
             # Step 1: Click country selector
@@ -99,6 +112,7 @@ class PackageBookingFlow(BasePage):
                 EC.element_to_be_clickable(self.COUNTRY_SELECTOR)
             )
             country_selector.click()
+            country_selector_btn = country_selector
             self.logger.info("Clicked country selector")
             time.sleep(2)
 
@@ -107,6 +121,7 @@ class PackageBookingFlow(BasePage):
                 EC.element_to_be_clickable(self.COUNTRY_INPUT)
             )
             country_input.click()
+            country_input_btn = country_input
             self.logger.info("Clicked country input")
             time.sleep(1)
 
@@ -122,6 +137,7 @@ class PackageBookingFlow(BasePage):
                 EC.element_to_be_clickable(self.COUNTRY_SEARCH_RESULT)
             )
             country_result.click()
+            country_result_btn = country_result
             self.logger.info(f"Country selected: {country_name}")
             time.sleep(2)
 
@@ -129,36 +145,51 @@ class PackageBookingFlow(BasePage):
 
         except Exception as e:
             self.logger.error(f"Failed to select country {country_name}: {e}")
-            # Take screenshot for debugging
-            self.screenshot.capture_screenshot_on_failure(f"country_selection_error_{country_name}.png")
+            self._last_interacted_element = country_selector_btn or country_input_btn or country_result_btn
             raise
 
     def select_travel_date(self):
         """Open travel date selector and pick a date"""
         self.logger.info("Opening travel date selector")
-        self.element.click(self.TRAVEL_DATE_SELECTOR)
-        time.sleep(2)  # Wait for calendar to open
+        travel_date_btn = None
+        date_btn = None
 
-        # Find and click the first available future date
-        available_dates = self.driver.find_elements(
-            By.CSS_SELECTOR, "button:not([disabled])"
-        )
-        for date in available_dates:
-            if date.text.isdigit() and 1 <= int(date.text) <= 31:
-                # Pick a date in the future (assuming today is lower number)
-                if int(date.text) > 10:
-                    date.click()
-                    self.logger.info(f"Selected travel date: {date.text}")
-                    break
+        try:
+            # Click to open date picker
+            travel_date_btn = self.element.click(self.TRAVEL_DATE_SELECTOR)
+            time.sleep(2)  # Wait for calendar to open
 
-        time.sleep(2)  # Wait for date selection to process
-        return self
+            # Find and click the first available future date
+            available_dates = self.driver.find_elements(By.CSS_SELECTOR, "button:not([disabled])")
+            for date in available_dates:
+                if date.text.isdigit() and 1 <= int(date.text) <= 31:
+                    if int(date.text) > 10:  # pick future date
+                        date.click()
+                        date_btn = date
+                        self.logger.info(f"Selected travel date: {date.text}")
+                        break
+
+            self._last_interacted_element = date_btn or travel_date_btn
+            time.sleep(2)
+            return self
+
+        except Exception as e:
+            self._last_interacted_element = date_btn or travel_date_btn
+            self.logger.error(f"Failed to select travel date: {e}")
+            raise
+
 
     def search_packages(self):
         """Click search packages button"""
         self.logger.info("Clicking Search Packages button")
-        return self.element.click(self.SEARCH_PACKAGES_BUTTON)
-
+        try:
+            search_btn = self.element.click(self.SEARCH_PACKAGES_BUTTON)
+            self._last_interacted_element = search_btn
+            return search_btn
+        except Exception as e:
+            self.logger.error(f"Failed to click Search Packages button: {e}")
+            raise
+    
     def is_search_session_initialized(self, search_term="packages", timeout=30):
         """Check if search session is properly initialized with configurable search term"""
         try:
@@ -187,14 +218,20 @@ class PackageBookingFlow(BasePage):
     def click_view_package(self):
         """Click on View Package button"""
         self.logger.info("Clicking View Package button")
-        # Scroll further down (500 pixels past the element)
-        self.javascript.execute_script(
-            "arguments[0].scrollIntoView(true); window.scrollBy(0, 500);", 
-            self.driver.find_element(*self.VIEW_PACKAGE_BUTTON)
-        )
-        time.sleep(1)
-        return self.element.click(self.VIEW_PACKAGE_BUTTON)
-
+        try:
+            # Scroll further down (500 pixels past the element)
+            self.javascript.execute_script(
+                "arguments[0].scrollIntoView(true); window.scrollBy(0, 500);", 
+                self.driver.find_element(*self.VIEW_PACKAGE_BUTTON)
+            )
+            time.sleep(1)
+            click_view_package_btn = self.element.click(self.VIEW_PACKAGE_BUTTON)
+            self._last_interacted_element = click_view_package_btn
+            return click_view_package_btn
+        except Exception as e:
+            self.logger.error(f"Failed to click View Package button: {e}")
+            raise
+    
     def select_price_option(self):
         """Select price option with better click handling"""
         self.logger.info("Selecting price option")
@@ -240,6 +277,7 @@ class PackageBookingFlow(BasePage):
                 return True
             except Exception as e2:
                 self.logger.error(f"ActionChains also failed: {e2}")
+                self._last_interacted_element = price_option
                 return False
 
     # ===== BOOKING FLOW METHODS =====
@@ -263,6 +301,8 @@ class PackageBookingFlow(BasePage):
     def handle_second_modal(self):
         """Handle the second modal with terms and conditions"""
         self.logger.info("Handling second modal with terms and conditions")
+        close_btn = None
+        terms_checkbox_btn = None
         
         try:
             # Wait for second modal to appear
@@ -277,6 +317,7 @@ class PackageBookingFlow(BasePage):
                 EC.element_to_be_clickable(self.CLOSE_MODAL_BUTTON)
             )
             close_button.click()
+            close_btn = close_button
             self.logger.info("Closed modal successfully")
             time.sleep(2)
     
@@ -312,12 +353,12 @@ class PackageBookingFlow(BasePage):
                     EC.element_to_be_clickable(self.TERMS_CHECKBOX)
                 )
                 terms_checkbox.click()
+                terms_checkbox_btn = terms_checkbox
                 self.logger.info("Terms checkbox clicked via regular method")
     
         except Exception as e:
             self.logger.error(f"Error handling second modal: {str(e)}")
-            # Take screenshot for debugging
-            self.driver.save_screenshot("second_modal_error.png")
+            self._last_interacted_element = close_btn or terms_checkbox_btn
             raise
         
     def verify_payment_ready(self):
@@ -390,10 +431,11 @@ class PackageBookingFlow(BasePage):
         # Test data
         test_data = {
             "full_name": "GEO Bot",
-            "email": "geobot@yopmail.com", 
+            "email": "geo.qa.bot@gmail.com", 
             "phone": "1234567890",
             "travel_date": "31/12/2025"
         }
+        proceed_btn = None
 
         try:
             # Full Name
@@ -438,12 +480,12 @@ class PackageBookingFlow(BasePage):
                 EC.element_to_be_clickable(self.MODAL_PROCEED_BUTTON)
             )
             proceed_button.click()
+            proceed_btn = proceed_button
             self.logger.info("Clicked 'Proceed to checkout'")
 
         except Exception as e:
             self.logger.error(f"Error filling booking modal: {str(e)}")
-            # Take screenshot for debugging
-            self.screenshot.capture_screenshot_on_failure("booking_modal_error.png")
+            self._last_interacted_element = proceed_btn
             raise
         
     def select_date_from_calendar(self, date_string):
@@ -547,4 +589,14 @@ class PackageBookingFlow(BasePage):
             return True
         else:
             self.logger.error("❌ Payment flow failed")
+            return False
+        
+    def wait_for_booking_modal(self, timeout=10):
+        """Wait until booking modal is visible"""
+        try:
+            WebDriverWait(self.driver, timeout).until(
+                EC.visibility_of_element_located(self.MODAL_BACKGROUND)
+            )
+            return True
+        except TimeoutException:
             return False

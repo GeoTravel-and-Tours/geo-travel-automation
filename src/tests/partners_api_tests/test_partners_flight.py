@@ -90,7 +90,7 @@ class TestPartnersFlightSecurity:
             "flightId": "001b9a83e21b4db4a7f2b5f9",
             "passengers": [
                 {
-                    "email": "johndoe@yopmail.com",
+                    "email": "geo.qa.bot@gmail.com",
                     "title": "Mr",
                     "firstName": "John",
                     "middleName": "Kelvin", 

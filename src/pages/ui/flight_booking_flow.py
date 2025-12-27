@@ -737,7 +737,7 @@ class FlightBookingFlow(BasePage):
                 EC.element_to_be_clickable(self.EMAIL_INPUT)
             )
             email_input.clear()
-            email_input.send_keys("elonmusk@yopmail.com")
+            email_input.send_keys("geo.qa.bot@gmail.com")
 
             return True
         except Exception as e:

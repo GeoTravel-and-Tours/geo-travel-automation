@@ -37,6 +37,9 @@ class BasePage:
 
         # Environment
         self.base_url = EnvironmentConfig.get_base_url()
+        
+        # Storage for last interacted element
+        self._last_interacted_element = None  # general storage for last element
 
     # Simplified navigation methods
     def open(self, path=""):

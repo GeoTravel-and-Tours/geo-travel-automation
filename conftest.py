@@ -303,6 +303,18 @@ def pytest_runtest_makereport(item, call):
             test_path = str(item.fspath)
             is_api_test = "api_tests" in test_path.lower()
             
+            # try to find last interacted element in any page object
+            page_objects = [v for k, v in item.funcargs.items() if hasattr(v, "_last_interacted_element")]
+            for page in page_objects:
+                last_element = getattr(page, "_last_interacted_element", None)
+                if last_element:
+                    try:
+                        page.javascript.highlight_element(last_element)
+                        logger.info("Highlighted last interacted element on failure in {page.__class__.__name__}")
+                    except Exception:
+                        logger.warning("Could not highlight last interacted element in {page.__class__.__name__}")
+                    break  # only highlight first found
+            
             if not is_api_test:  # Only capture screenshots for UI tests
                 driver_instance = item.funcargs.get("driver", None)
                 # also look for common alternate driver fixture names

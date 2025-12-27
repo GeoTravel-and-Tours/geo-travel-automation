@@ -14,7 +14,7 @@ class TestPartnersAuth:
         self.verified_helper = VerifiedUserHelper()
         
         # Use ONE consistent email for ALL tests
-        self.test_email = f"geobot{random.randint(10000,99999)}@yopmail.com"
+        self.test_email = f"geopartners{random.randint(10000,99999)}@yopmail.com"
         self.test_password = "StrongPass123!"
         self.test_org_data = {
             "orgName": f"GEO Bot Ltd {random.randint(1000,9999)}",

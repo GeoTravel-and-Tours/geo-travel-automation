@@ -18,7 +18,7 @@ class TestPartnersOrganizationSecurity:
         self.flight_api = PartnersFlightAPI()
         
         # Use THE SAME email pattern as auth tests
-        self.test_email = f"geobot{random.randint(10000,99999)}@yopmail.com"
+        self.test_email = f"geopartners{random.randint(10000,99999)}@yopmail.com"
         self.test_password = "StrongPass123!"
         self.test_org_data = {
             "orgName": f"GEO Bot Ltd {random.randint(1000,9999)}",

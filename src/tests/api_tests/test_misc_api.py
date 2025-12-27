@@ -22,24 +22,31 @@ class TestMiscAPIs:
     
     @pytest.fixture
     def authenticated_api(self):
+        """Fixture that logs in and returns auth_api with proper token source"""
         auth_api = AuthAPI()
-        self.logger.info("🔐 Authenticating for API tests...")
         response = auth_api.login()
+        
         if response.status_code != 200:
             self.logger.error(f"❌ Login failed with status {response.status_code}")
-            pytest.skip("Login failed")
-        if not auth_api.auth_token:
-            self.logger.error("❌ Login succeeded but no auth token found")
-            pytest.skip("No auth token in response")
-        self.logger.success(f"✅ Authenticated successfully with token (length: {len(auth_api.auth_token)})")
-        return auth_api.auth_token
+            pytest.skip(f"Login failed with status {response.status_code}")
+        
+        self.logger.success(f"✅ Authenticated successfully (token length: {len(auth_api.auth_token)})")
+        return auth_api
+    
+    # Helper method to set auth token correctly on any API instance
+    def _set_auth_on_api(self, api_instance, auth_api):
+        """Set authentication on API instance with proper token source"""
+        if hasattr(auth_api, 'token_source') and auth_api.token_source:
+            api_instance.set_auth_token(auth_api.auth_token, token_source=auth_api.token_source)
+        else:
+            api_instance.set_auth_token(auth_api.auth_token)
     
     # Google Reviews Tests
     @pytest.mark.api
     def test_get_google_reviews(self, authenticated_api):
         self.logger.info("=== Testing Get Google Reviews ===")
         api = GoogleAPI()
-        api.set_auth_token(authenticated_api)
+        self._set_auth_on_api(api, authenticated_api)
         response = api.get_reviews()
         self.logger.info(f"Google Reviews: {response.status_code}")
         assert response.status_code == 200
@@ -49,7 +56,7 @@ class TestMiscAPIs:
     def test_get_commercial_deals(self, authenticated_api):
         self.logger.info("=== Testing Get Commercial Deals ===")
         api = CommercialAPI()
-        api.set_auth_token(authenticated_api)
+        self._set_auth_on_api(api, authenticated_api)
         response = api.get_all_deals(limit=5)
         self.logger.info(f"Commercial Deals: {response.status_code}")
         assert response.status_code == 200
@@ -58,7 +65,7 @@ class TestMiscAPIs:
     def test_get_single_commercial_deal(self, authenticated_api):
         self.logger.info("=== Testing Get Single Commercial Deal ===")
         api = CommercialAPI()
-        api.set_auth_token(authenticated_api)
+        self._set_auth_on_api(api, authenticated_api)
         all_deals = api.get_all_deals(limit=1)
         if all_deals.status_code == 200 and all_deals.json():
             data = all_deals.json()
@@ -74,7 +81,7 @@ class TestMiscAPIs:
     def test_get_all_events(self, authenticated_api):
         self.logger.info("=== Testing Get All Events ===")
         api = EventAPI()
-        api.set_auth_token(authenticated_api)
+        self._set_auth_on_api(api, authenticated_api)
         response = api.get_all_events(limit=5)
         self.logger.info(f"All Events: {response.status_code}")
         assert response.status_code == 200
@@ -84,7 +91,7 @@ class TestMiscAPIs:
     def test_get_airports(self, authenticated_api):
         self.logger.info("=== Testing Get Airports ===")
         api = FlightUtilsAPI()
-        api.set_auth_token(authenticated_api)
+        self._set_auth_on_api(api, authenticated_api)
         response = api.get_all_airports()
         self.logger.info(f"Airports: {response.status_code}")
         assert response.status_code == 200
@@ -93,7 +100,7 @@ class TestMiscAPIs:
     def test_get_airlines(self, authenticated_api):
         self.logger.info("=== Testing Get Airlines ===")
         api = FlightUtilsAPI()
-        api.set_auth_token(authenticated_api)
+        self._set_auth_on_api(api, authenticated_api)
         response = api.get_all_airlines()
         self.logger.info(f"Airlines: {response.status_code}")
         assert response.status_code == 200
@@ -103,7 +110,7 @@ class TestMiscAPIs:
     def test_get_all_blogs(self, authenticated_api):
         self.logger.info("=== Testing Get All Blogs ===")
         api = BlogAPI()
-        api.set_auth_token(authenticated_api)
+        self._set_auth_on_api(api, authenticated_api)
         response = api.get_all_blogs(limit=5)
         self.logger.info(f"All Blogs: {response.status_code}")
         assert response.status_code == 200
@@ -112,7 +119,7 @@ class TestMiscAPIs:
     def test_get_single_blog(self, authenticated_api):
         self.logger.info("=== Testing Get Single Blog ===")
         api = BlogAPI()
-        api.set_auth_token(authenticated_api)
+        self._set_auth_on_api(api, authenticated_api)
         all_blogs = api.get_all_blogs(limit=1)
         if all_blogs.status_code == 200:
             data = all_blogs.json()
@@ -133,7 +140,7 @@ class TestMiscAPIs:
     def test_get_blog_comments(self, authenticated_api):
         self.logger.info("=== Testing Get Blog Comments ===")
         api = BlogAPI()
-        api.set_auth_token(authenticated_api)
+        self._set_auth_on_api(api, authenticated_api)
         all_blogs = api.get_all_blogs(limit=1)
         if all_blogs.status_code == 200:
             data = all_blogs.json()
@@ -155,7 +162,7 @@ class TestMiscAPIs:
     def test_refresh_token(self, authenticated_api):
         self.logger.info("=== Testing Refresh Token ===")
         api = AuthAPI()
-        api.set_auth_token(authenticated_api)
+        self._set_auth_on_api(api, authenticated_api)
         response = api.refresh_token()
         self.logger.info(f"Refresh Token: {response.status_code}")
         assert response.status_code in [200, 400, 401]
@@ -165,7 +172,7 @@ class TestMiscAPIs:
     def test_get_user_profile(self, authenticated_api):
         self.logger.info("=== Testing Get User Profile ===")
         api = UserAPI()
-        api.set_auth_token(authenticated_api)
+        self._set_auth_on_api(api, authenticated_api)
         response = api.get_user_profile()
         self.logger.info(f"User Profile: {response.status_code}")
         assert response.status_code == 200
@@ -175,7 +182,7 @@ class TestMiscAPIs:
     def test_get_user_transactions(self, authenticated_api):
         self.logger.info("=== Testing Get User Transactions ===")
         api = TransactionAPI()
-        api.set_auth_token(authenticated_api)
+        self._set_auth_on_api(api, authenticated_api)
         response = api.get_user_transactions(limit=5)
         self.logger.info(f"User Transactions: {response.status_code}")
         assert response.status_code == 200
@@ -185,8 +192,9 @@ class TestMiscAPIs:
     def test_get_notifications(self, authenticated_api):
         self.logger.info("=== Testing Get Notifications ===")
         api = NotificationAPI()
-        api.set_auth_token(authenticated_api)
+        self._set_auth_on_api(api, authenticated_api)
         response = api.get_notifications()
+        print(response)
         self.logger.info(f"Notifications: {response.status_code}")
         assert response.status_code == 200
 
@@ -195,9 +203,9 @@ class TestMiscAPIs:
     def test_subscribe_newsletter(self, authenticated_api):
         self.logger.info("=== Testing Subscribe Newsletter ===")
         api = NewsletterAPI()
-        api.set_auth_token(authenticated_api)
+        self._set_auth_on_api(api, authenticated_api)
         subscribe_data = {
-            "email": "geobot@yopmail.com"
+            "email": "geo.qa.bot@gmail.com"
         }
         response = api.subscribe_newsletter(subscribe_data)
         self.logger.info(f"Newsletter Subscribe: {response.status_code}")
@@ -208,7 +216,7 @@ class TestMiscAPIs:
     def test_apply_voucher(self, authenticated_api):
         self.logger.info("=== Testing Apply Voucher ===")
         api = PriceAPI()
-        api.set_auth_token(authenticated_api)
+        self._set_auth_on_api(api, authenticated_api)
         voucher_data = {
             "code": "TEST10"
         }

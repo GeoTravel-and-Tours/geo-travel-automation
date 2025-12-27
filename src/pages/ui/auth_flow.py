@@ -4,6 +4,7 @@ from selenium.webdriver.common.by import By
 from src.core.base_page import BasePage
 import time
 import os
+from selenium.webdriver.support.ui import WebDriverWait
 
 
 class AuthFlow(BasePage):
@@ -78,11 +79,12 @@ class AuthFlow(BasePage):
             bool: True if login successful, False otherwise
         """
         self.logger.info(f"Attempting login for user: {username}")
+        login_btn = None
 
         try:
             self.element.type(self.EMAIL_INPUT, username)
             self.element.type(self.PASSWORD_INPUT, password)
-            self.element.click(self.LOGIN_BUTTON)
+            login_btn = self.element.click(self.LOGIN_BUTTON)
             self.logger.info("Login attempt completed")
 
             time.sleep(5)
@@ -90,6 +92,7 @@ class AuthFlow(BasePage):
 
         except Exception as e:
             self.logger.error(f"Login failed: {e}")
+            self._last_interacted_element = login_btn
             return False
 
     def _wait_for_any_dashboard_indicator(self, timeout=15):
@@ -201,7 +204,8 @@ class AuthFlow(BasePage):
 
         assert self.is_user_on_dashboard(), "User must be on dashboard to logout"
         time.sleep(5)
-
+        
+        logout_btn = None
         logout_locators = self.LOGOUT_BUTTON
 
         for locator in logout_locators:
@@ -215,10 +219,12 @@ class AuthFlow(BasePage):
 
                 try:
                     element.click()
+                    logout_btn = element
                     self.logger.info(f"Clicked logout via normal click: {locator}")
                 except Exception as e:
                     self.logger.warning(f"Normal click failed ({e}), trying JS click...")
                     self.javascript.execute_script("arguments[0].click();", element)
+                    logout_btn = element
                     self.logger.info("Clicked logout via JavaScript")
 
                 time.sleep(3)
@@ -234,6 +240,7 @@ class AuthFlow(BasePage):
 
             except Exception as e:
                 self.logger.debug(f"Logout attempt failed for {locator}: {e}")
+                self._last_interacted_element = logout_btn
                 continue
 
         self.logger.error("No logout button found or clickable.")
@@ -295,3 +302,28 @@ class AuthFlow(BasePage):
             self.logger.warning("Test credentials not found in environment")
 
         return email, password
+    
+    def wait_until_on_dashboard(self, timeout=10):
+        """Wait until user is on dashboard after login"""
+        try:
+            WebDriverWait(self.driver, timeout).until(
+                lambda d: self.is_user_on_dashboard()
+            )
+            return True
+        except Exception:
+            return False
+        
+    def wait_until_logged_out(self, timeout=10):
+        """Wait until user is logged out and redirected from dashboard"""
+        try:
+            WebDriverWait(self.driver, timeout).until(
+                lambda d: (
+                    "login" in d.current_url.lower()
+                    or "/auth" in d.current_url.lower()
+                    or not self.is_user_on_dashboard()
+                )
+            )
+            return True
+        except Exception:
+            return False
+

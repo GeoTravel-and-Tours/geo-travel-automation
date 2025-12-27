@@ -29,25 +29,18 @@ class TestHotelAPI:
     
     @pytest.fixture
     def authenticated_hotel_api(self):
-        """Fixture for authenticated HotelAPI instance"""
         auth_api = AuthAPI()
         response = auth_api.login()
         
         if response.status_code != 200:
+            self.logger.error(f"❌ Login failed with status {response.status_code}")
             pytest.skip(f"Login failed with status {response.status_code}")
-        
-        # Create HotelAPI and pass the token WITH SOURCE
-        api = HotelAPI()
-        
-        # Get extraction method from token extractor
-        token, extraction_method = auth_api.token_extractor.extract_token(response)
-        if token:
-            if extraction_method == "cookies":
-                api.set_auth_token(token, token_source="cookies")
-            else:
-                api.set_auth_token(token, token_source="response_body")
-        
-        return api
+        self.logger.success(f"✅ Authenticated successfully (token length: {len(auth_api.auth_token)})")
+            
+        hotel_api = HotelAPI()
+        hotel_api.set_auth_token(auth_api.auth_token)
+        hotel_api.set_auth_token(auth_api.auth_token, token_source=auth_api.token_source)
+        return hotel_api
     
     def _generate_test_data(self):
         """Generate dynamic test data for hotel tests"""
@@ -83,7 +76,7 @@ class TestHotelAPI:
             "hotel_booking_payload": {
                 "firstName": "Bot",
                 "lastName": "GEO",
-                "email": "geobot@yopmail.com",
+                "email": "geo.qa.bot@gmail.com",
                 "phone": "7079090909",
                 "adults": 2,
                 "checkInDate": "2026-01-10",
