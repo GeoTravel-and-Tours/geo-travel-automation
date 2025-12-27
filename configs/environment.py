@@ -77,10 +77,6 @@ class EnvironmentConfig:
     API_TIMEOUT = int(os.getenv("API_TIMEOUT", "30"))
     API_MAX_RETRIES = int(os.getenv("API_MAX_RETRIES", "3"))
     
-    # API Test Credentials (should be in .env file)
-    API_TEST_EMAIL = os.getenv("API_TEST_EMAIL", "test@example.com")
-    API_TEST_PASSWORD = os.getenv("API_TEST_PASSWORD", "testpass123")
-    
     # API Endpoints availability check
     API_HEALTH_ENDPOINTS = {
         "auth": "/api/auth/login",

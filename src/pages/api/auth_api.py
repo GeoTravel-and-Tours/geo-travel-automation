@@ -9,6 +9,7 @@ class AuthAPI(BaseAPI):
     def __init__(self):
         super().__init__()
         self.token_extractor = TokenExtractor()
+        self.token_source = None
     
     def login(self, email=None, password=None):
         """POST /api/auth/login - Dynamic token extraction"""
@@ -32,11 +33,11 @@ class AuthAPI(BaseAPI):
                 if is_valid:
                     # Determine token source dynamically
                     if extraction_method == "cookies":
-                        token_source = "cookies"
+                        self.token_source = "cookies"
                     else:  # response_body or headers
-                        token_source = "response_body"
+                        self.token_source = "response_body"
                     
-                    self.set_auth_token(token, token_source=token_source)
+                    self.set_auth_token(token, token_source=self.token_source)
                     self.logger.success(f"✅ Login successful - token set via {extraction_method}")
                 else:
                     self.logger.warning(f"⚠️ Token extracted via {extraction_method} but validation failed")

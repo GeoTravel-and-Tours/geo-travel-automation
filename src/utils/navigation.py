@@ -41,6 +41,10 @@ class NavigationUtils:
         """Get current URL"""
         self.logger.info("Getting current URL")
         return self.driver.current_url
+    
+    def current_url_contains(self, text):
+        return text.lower() in self.get_current_url().lower()
+
 
     def get_page_title(self):
         """Get page title"""

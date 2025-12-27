@@ -15,26 +15,19 @@ class TestFlightAPI:
     
     @pytest.fixture
     def authenticated_flight_api(self):
-        """Fixture that returns authenticated FlightAPI instance"""
         auth_api = AuthAPI()
-        self.logger.info("🔐 Authenticating for Flight API tests...")
-        # This will automatically use credentials from environment
         response = auth_api.login()
         
-        # If login fails, skip the test
         if response.status_code != 200:
             self.logger.error(f"❌ Login failed with status {response.status_code}")
-            pytest.skip(f"Login failed with status {response.status_code} - cannot run flight tests")
-        
-        if not auth_api.auth_token:
-            self.logger.error("❌ Login succeeded but no auth token found")
-            pytest.skip("No auth token in response")
-        
+            pytest.skip(f"Login failed with status {response.status_code}")
         self.logger.success(f"✅ Authenticated successfully (token length: {len(auth_api.auth_token)})")
+            
         flight_api = FlightAPI()
         flight_api.set_auth_token(auth_api.auth_token)
+        flight_api.set_auth_token(auth_api.auth_token, token_source=auth_api.token_source)
         return flight_api
-    
+
     def get_future_date(self, days=30):
         """Helper to get future dates for testing"""
         return (datetime.datetime.now() + timedelta(days=days)).strftime("%Y-%m-%d")
@@ -100,7 +93,7 @@ class TestFlightAPI:
         quote_data = {
             "flightId": "2",
             "flightTag": "flights:one-way:1:0:0:ECONOMY:LOS:LHR:2025-09-04",
-            "email": "geobot@yopmail.com"
+            "email": "geo.qa.bot@gmail.com"
         }
 
         # Create quote
@@ -118,7 +111,7 @@ class TestFlightAPI:
         """Test passenger email validation flow"""
         self.logger.info("=== Testing Passenger Email Validation ===")
         passenger_data = {
-            "email": "geobot@yopmail.com",
+            "email": "geo.qa.bot@gmail.com",
             "title": "Mr",
             "firstName": "GEO",
             "lastName": "Bot",
@@ -283,7 +276,7 @@ class TestFlightAPI:
                         "flightId": "1",  # Would need dynamic ID in real scenario
                         "flightTag": "test_tag",
                         "passengers": [{
-                            "email": "geobot@yopmail.com",
+                            "email": "geo.qa.bot@gmail.com",
                             "title": "Mr",
                             "firstName": "GEO",
                             "lastName": "Bot",
@@ -296,7 +289,7 @@ class TestFlightAPI:
                         "payer": {
                             "firstName": "GEO",
                             "lastName": "Bot", 
-                            "email": "geobot@yopmail.com",
+                            "email": "geo.qa.bot@gmail.com",
                             "phoneNumber": "1234567890"
                         }
                     }

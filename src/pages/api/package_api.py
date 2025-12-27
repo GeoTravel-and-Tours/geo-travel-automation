@@ -56,3 +56,12 @@ class PackageAPI(BaseAPI):
     def book_package(self, booking_data):
         """POST /api/package/book"""
         return self.post("/api/package/book", json=booking_data)
+    
+    # User Booked Packages
+    def get_user_booked_packages(self, **params):
+        """GET /api/package/user/booked-packages"""
+        return self.get("/api/package/user/booked-packages", params=params)
+    
+    def get_user_booked_packages_analytics(self):
+        """GET /api/package/user/booked-packages-analytics"""
+        return self.get("/api/package/user/booked-packages-analytics")

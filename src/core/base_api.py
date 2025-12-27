@@ -67,6 +67,7 @@ class BaseAPI:
     def _request(self, method, endpoint, **kwargs):
         """Base request method with logging and error handling"""
         url = f"{self.base_url}{endpoint}"
+        print(f"Auth headers being sent: {self.headers}")
         
         # Debug: Log query parameters
         if 'params' in kwargs and kwargs['params']:

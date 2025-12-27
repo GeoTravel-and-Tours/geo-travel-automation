@@ -36,24 +36,24 @@ class PaymentPage(BasePage):
     def proceed_to_payment(self):
         """Click proceed to payment button"""
         self.logger.info("Clicking 'Proceed to payment' button")
-        self.element.click(self.PROCEED_TO_PAYMENT_BUTTON)
-        time.sleep(3)
-        return self
-
+        try:
+            proceed_button = self.element.click(self.PROCEED_TO_PAYMENT_BUTTON)
+            self._last_interacted_element = proceed_button
+            return proceed_button
+        except Exception as e:
+            self.logger.error(f"Failed to click 'Proceed to payment' button: {e}")
+            raise
+    
     def complete_payment_flow(self):
         """Complete Flutterwave payment using card - STOPPED AT TEST MODE VERIFICATION"""
         try:
             self.logger.info("=== Starting Flutterwave Card Payment ===")
             
-
             # Wait for flutterwave to load completely
             WebDriverWait(self.driver, 20).until(
                 EC.url_contains("flutterwave")
             )
             self.logger.info("✅ Navigated to Flutterwave URL")
-
-            # Wait a bit for the page to fully initialize
-            time.sleep(3)
 
             # 🔥 SIMPLIFIED: Switch to the first iframe directly
             self.logger.info("🔍 Switching to Flutterwave iframe...")
@@ -65,27 +65,25 @@ class PaymentPage(BasePage):
             self.driver.switch_to.frame(iframe)
             self.logger.info("✅ Switched to Flutterwave iframe")
 
-            # Wait for content to load inside iframe
-            time.sleep(3)
-
-            # ✅ STOP HERE: Verify test mode only
-            self.logger.info("🔍 Verifying test mode...")
+            # Wait for test mode banner instead of fixed sleep
+            self.logger.info("🔍 Waiting for test mode banner...")
             test_banner = WebDriverWait(self.driver, 15).until(
                 EC.visibility_of_element_located(self.TEST_MODE_BANNER)
             )
-            
             assert test_banner.is_displayed(), "Test mode banner should be visible"
             self.logger.info("✅ Flutterwave test mode verified")
 
-            # 🔥 STOPPED - Don't proceed with actual payment
-            self.logger.info("✅ SUCCESS: Reached Flutterwave test mode - Payment flow ready")
-            
             # Switch back to main content
             self.driver.switch_to.default_content()
             self.logger.info("✅ Switched back to main content")
             
-            return True  # Return True since we successfully reached test mode
+            return True  # Successfully reached test mode
 
         except Exception as e:
             self.logger.error(f"❌ Failed to reach Flutterwave test mode: {e}")
+            # Ensure we switch back if an exception occurs
+            try:
+                self.driver.switch_to.default_content()
+            except:
+                pass
             return False

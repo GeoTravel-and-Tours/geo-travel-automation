@@ -114,7 +114,7 @@ class TestPartnersPackageSecurity:
         booking_data = {
             "package": "11",
             "full_name": "John Doe",
-            "email": "john@yopmail.com", 
+            "email": "geopartners@yopmail.com", 
             "phone": "+2348123456789",
             "departure_date": "2025-12-15",
             "adults": 2,
@@ -380,7 +380,7 @@ class TestPartnersPackageFunctionality:
                 booking_data = {
                     "package": str(package['id']),
                     "full_name": f"Verification Test User {random_suffix}",
-                    "email": f"verification{random_suffix}@yopmail.com",
+                    "email": f"botverification{random_suffix}@yopmail.com",
                     "phone": f"+23481{random.randint(1000000,9999999)}",
                     "departure_date": "2025-12-20",
                     "adults": 1,
@@ -477,7 +477,7 @@ class TestPartnersPackageFunctionality:
                 random_suffix = random.randint(10000, 99999)
                 
                 # Create unique test data
-                test_email = f"verification{random_suffix}@yopmail.com"
+                test_email = f"botverification{random_suffix}@yopmail.com"
                 test_full_name = f"Verification Test User {random_suffix}"
                 
                 booking_data = {
