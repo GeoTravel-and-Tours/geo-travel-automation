@@ -1,0 +1,195 @@
+{
+    "test_suite_name": "Unified UI Smoke + API + Partners API TEST REPORT",
+    "total_tests": 109,
+    "passed_tests": 105,
+    "failed_tests": 2,
+    "skipped_tests": 2,
+    "success_rate": 96.3,
+    "duration": 463.147146,
+    "start_time": "2025-12-27 17:05:49",
+    "end_time": "2025-12-27 17:13:32",
+    "suites_run": [
+        "smoke",
+        "api"
+    ],
+    "suite_details": {
+        "smoke": {
+            "report": {
+                "test_suite_name": "Unified UI Smoke + API + Partners API TEST REPORT",
+                "total_tests": 44,
+                "passed_tests": 42,
+                "failed_tests": 2,
+                "skipped_tests": 0,
+                "success_rate": 95.45454545454545,
+                "duration": 391.582497,
+                "start_time": "2025-12-27 17:05:49",
+                "end_time": "2025-12-27 17:12:21",
+                "failed_tests_details": [
+                    {
+                        "test_name": "src/tests/smoke_tests/test_visa_enquiries_smoke.py::TestVisaSmoke::test_visa_application_cancel_flow",
+                        "status": "FAIL",
+                        "error_message": "ElementClickInterceptedException: Message: element click intercepted: Element is not clickable at point (524, 983)\n  (Session info: chrome=143.0.7499.109); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementclickinterceptedexception\nStacktrace:\n#0 0x55972b74c61a <unknown>\n#1 0x55972b1c920b <unknown>\n#2 0x55972b221694 <unknown>\n#3 0x55972b21f558 <unknown>\n#4 0x55972b21cc7a <unknown>\n#5 0x55972b21bdb9 <unknown>\n#6 0x55972b20f0c2 <unknown>\n#7 0x55972b20ea67 <unknown>\n#8 0x55972b26620e <unknown>\n#9 0x55972b20d232 <unknown>\n#10 0x55972b20dee1 <unknown>\n#11 0x55972b7153f9 <unknown>\n#12 0x55972b71834d <unknown>\n#13 0x55972b6fe122 <unknown>\n#14 0x55972b718f2b <unknown>\n#15 0x55972b6e4c30 <unknown>\n#16 0x55972b739d78 <unknown>\n#17 0x55972b739f4c <unknown>\n#18 0x55972b74b973 <unknown>\n#19 0x7fd7c2e9caa4 <unknown>\n#20 0x7fd7c2f29c6c <unknown>\n",
+                        "screenshot_path": "docs/screenshots/failures/elementclickint_srctestssmoke_teststest_visa_enquiries_smokepyTestVisaSmoketest_visa_application_cancel_flow_20251227_171201.png",
+                        "duration": 10.591895580291748,
+                        "timestamp": "17:12:01",
+                        "skip_reason": null,
+                        "category": "UI Interaction",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20251227_170549.log"
+                        },
+                        "log_path": "reports/logs/geo_travel_20251227_170549.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-27_17-05-48/logs/geo_travel_20251227_170549.log",
+                        "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-27_17-05-48/screenshots/elementclickint_srctestssmoke_teststest_visa_enquiries_smokepyTestVisaSmoketest_visa_application_cancel_flow_20251227_171201.png",
+                        "suite": "smoke"
+                    },
+                    {
+                        "test_name": "src/tests/smoke_tests/test_visa_enquiries_smoke.py::TestVisaSmoke::test_visa_form_validation",
+                        "status": "FAIL",
+                        "error_message": "TimeoutException: Message: \n",
+                        "screenshot_path": "docs/screenshots/failures/timeoutexceptio_srctestssmoke_teststest_visa_enquiries_smokepyTestVisaSmoketest_visa_form_validation_20251227_171221.png",
+                        "duration": 19.029315948486328,
+                        "timestamp": "17:12:21",
+                        "skip_reason": null,
+                        "category": "UI Timeout",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20251227_170549.log"
+                        },
+                        "log_path": "reports/logs/geo_travel_20251227_170549.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-27_17-05-48/logs/geo_travel_20251227_170549.log",
+                        "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-27_17-05-48/screenshots/timeoutexceptio_srctestssmoke_teststest_visa_enquiries_smokepyTestVisaSmoketest_visa_form_validation_20251227_171221.png",
+                        "suite": "smoke"
+                    }
+                ],
+                "skipped_tests_details": []
+            },
+            "timestamp": "2025-12-27 17:12:21"
+        },
+        "api": {
+            "report": {
+                "test_suite_name": "API SMOKE TEST",
+                "total_tests": 65,
+                "passed_tests": 63,
+                "failed_tests": 0,
+                "skipped_tests": 2,
+                "success_rate": 96.92307692307692,
+                "duration": 71.028587,
+                "start_time": "2025-12-27 17:12:21",
+                "end_time": "2025-12-27 17:13:32",
+                "failed_tests_details": [],
+                "skipped_tests_details": [
+                    {
+                        "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_search_hotels_invalid_dates",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 242, 'Skipped: Too far in future: Skipped \u2014 scenario not properly handled yet (Internal Server Error: 500)')",
+                        "screenshot_path": null,
+                        "duration": 0.7355079650878906,
+                        "timestamp": "17:12:56",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 242, 'Skipped: Too far in future: Skipped \u2014 scenario not properly handled yet (Internal Server Error: 500)')",
+                        "category": null,
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20251227_170549.log",
+                            "response_file": "reports/failed_responses/20251227_171256_500_api_hotels_search.txt"
+                        },
+                        "log_path": "reports/logs/geo_travel_20251227_170549.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-27_17-05-48/logs/geo_travel_20251227_170549.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251227_171256_500_api_hotels_search.txt",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_get_hotel_rating_success",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 320, 'Skipped: Get Hotel Rating skipped \u2014 AMADEUS internal error (hotelId=FNNYCFIF, status=500)')",
+                        "screenshot_path": null,
+                        "duration": 16.226929664611816,
+                        "timestamp": "17:13:12",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 320, 'Skipped: Get Hotel Rating skipped \u2014 AMADEUS internal error (hotelId=FNNYCFIF, status=500)')",
+                        "category": null,
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20251227_170549.log",
+                            "response_file": "reports/failed_responses/20251227_171312_500_api_hotels_rating.txt"
+                        },
+                        "log_path": "reports/logs/geo_travel_20251227_170549.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-27_17-05-48/logs/geo_travel_20251227_170549.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251227_171312_500_api_hotels_rating.txt",
+                        "suite": "api"
+                    }
+                ]
+            },
+            "timestamp": "2025-12-27 17:13:32"
+        }
+    },
+    "all_failed_tests": [
+        {
+            "test_name": "src/tests/smoke_tests/test_visa_enquiries_smoke.py::TestVisaSmoke::test_visa_application_cancel_flow",
+            "status": "FAIL",
+            "error_message": "ElementClickInterceptedException: Message: element click intercepted: Element is not clickable at point (524, 983)\n  (Session info: chrome=143.0.7499.109); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementclickinterceptedexception\nStacktrace:\n#0 0x55972b74c61a <unknown>\n#1 0x55972b1c920b <unknown>\n#2 0x55972b221694 <unknown>\n#3 0x55972b21f558 <unknown>\n#4 0x55972b21cc7a <unknown>\n#5 0x55972b21bdb9 <unknown>\n#6 0x55972b20f0c2 <unknown>\n#7 0x55972b20ea67 <unknown>\n#8 0x55972b26620e <unknown>\n#9 0x55972b20d232 <unknown>\n#10 0x55972b20dee1 <unknown>\n#11 0x55972b7153f9 <unknown>\n#12 0x55972b71834d <unknown>\n#13 0x55972b6fe122 <unknown>\n#14 0x55972b718f2b <unknown>\n#15 0x55972b6e4c30 <unknown>\n#16 0x55972b739d78 <unknown>\n#17 0x55972b739f4c <unknown>\n#18 0x55972b74b973 <unknown>\n#19 0x7fd7c2e9caa4 <unknown>\n#20 0x7fd7c2f29c6c <unknown>\n",
+            "screenshot_path": "docs/screenshots/failures/elementclickint_srctestssmoke_teststest_visa_enquiries_smokepyTestVisaSmoketest_visa_application_cancel_flow_20251227_171201.png",
+            "duration": 10.591895580291748,
+            "timestamp": "17:12:01",
+            "skip_reason": null,
+            "category": "UI Interaction",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20251227_170549.log"
+            },
+            "log_path": "reports/logs/geo_travel_20251227_170549.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-27_17-05-48/logs/geo_travel_20251227_170549.log",
+            "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-27_17-05-48/screenshots/elementclickint_srctestssmoke_teststest_visa_enquiries_smokepyTestVisaSmoketest_visa_application_cancel_flow_20251227_171201.png",
+            "suite": "smoke"
+        },
+        {
+            "test_name": "src/tests/smoke_tests/test_visa_enquiries_smoke.py::TestVisaSmoke::test_visa_form_validation",
+            "status": "FAIL",
+            "error_message": "TimeoutException: Message: \n",
+            "screenshot_path": "docs/screenshots/failures/timeoutexceptio_srctestssmoke_teststest_visa_enquiries_smokepyTestVisaSmoketest_visa_form_validation_20251227_171221.png",
+            "duration": 19.029315948486328,
+            "timestamp": "17:12:21",
+            "skip_reason": null,
+            "category": "UI Timeout",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20251227_170549.log"
+            },
+            "log_path": "reports/logs/geo_travel_20251227_170549.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-27_17-05-48/logs/geo_travel_20251227_170549.log",
+            "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-27_17-05-48/screenshots/timeoutexceptio_srctestssmoke_teststest_visa_enquiries_smokepyTestVisaSmoketest_visa_form_validation_20251227_171221.png",
+            "suite": "smoke"
+        }
+    ],
+    "all_skipped_tests": [
+        {
+            "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_search_hotels_invalid_dates",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 242, 'Skipped: Too far in future: Skipped \u2014 scenario not properly handled yet (Internal Server Error: 500)')",
+            "screenshot_path": null,
+            "duration": 0.7355079650878906,
+            "timestamp": "17:12:56",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 242, 'Skipped: Too far in future: Skipped \u2014 scenario not properly handled yet (Internal Server Error: 500)')",
+            "category": null,
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20251227_170549.log",
+                "response_file": "reports/failed_responses/20251227_171256_500_api_hotels_search.txt"
+            },
+            "log_path": "reports/logs/geo_travel_20251227_170549.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-27_17-05-48/logs/geo_travel_20251227_170549.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251227_171256_500_api_hotels_search.txt",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_get_hotel_rating_success",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 320, 'Skipped: Get Hotel Rating skipped \u2014 AMADEUS internal error (hotelId=FNNYCFIF, status=500)')",
+            "screenshot_path": null,
+            "duration": 16.226929664611816,
+            "timestamp": "17:13:12",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 320, 'Skipped: Get Hotel Rating skipped \u2014 AMADEUS internal error (hotelId=FNNYCFIF, status=500)')",
+            "category": null,
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20251227_170549.log",
+                "response_file": "reports/failed_responses/20251227_171312_500_api_hotels_rating.txt"
+            },
+            "log_path": "reports/logs/geo_travel_20251227_170549.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-27_17-05-48/logs/geo_travel_20251227_170549.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251227_171312_500_api_hotels_rating.txt",
+            "suite": "api"
+        }
+    ]
+}
