@@ -1,0 +1,664 @@
+{
+    "test_suite_name": "Unified UI Smoke + API + Partners API TEST REPORT",
+    "total_tests": 136,
+    "passed_tests": 119,
+    "failed_tests": 15,
+    "skipped_tests": 2,
+    "success_rate": 87.5,
+    "duration": 504.023101,
+    "start_time": "2025-12-28 07:46:12",
+    "end_time": "2025-12-28 07:54:36",
+    "suites_run": [
+        "smoke",
+        "api"
+    ],
+    "suite_details": {
+        "smoke": {
+            "report": {
+                "test_suite_name": "Unified UI Smoke + API + Partners API TEST REPORT",
+                "total_tests": 44,
+                "passed_tests": 42,
+                "failed_tests": 2,
+                "skipped_tests": 0,
+                "success_rate": 95.45454545454545,
+                "duration": 407.801297,
+                "start_time": "2025-12-28 07:46:13",
+                "end_time": "2025-12-28 07:53:01",
+                "failed_tests_details": [
+                    {
+                        "test_name": "src/tests/smoke_tests/test_visa_enquiries_smoke.py::TestVisaSmoke::test_visa_application_cancel_flow",
+                        "status": "FAIL",
+                        "error_message": "ElementClickInterceptedException: Message: element click intercepted: Element is not clickable at point (524, 983)\n  (Session info: chrome=143.0.7499.109); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementclickinterceptedexception\nStacktrace:\n#0 0x555bb852c61a <unknown>\n#1 0x555bb7fa920b <unknown>\n#2 0x555bb8001694 <unknown>\n#3 0x555bb7fff558 <unknown>\n#4 0x555bb7ffcc7a <unknown>\n#5 0x555bb7ffbdb9 <unknown>\n#6 0x555bb7fef0c2 <unknown>\n#7 0x555bb7feea67 <unknown>\n#8 0x555bb804620e <unknown>\n#9 0x555bb7fed232 <unknown>\n#10 0x555bb7fedee1 <unknown>\n#11 0x555bb84f53f9 <unknown>\n#12 0x555bb84f834d <unknown>\n#13 0x555bb84de122 <unknown>\n#14 0x555bb84f8f2b <unknown>\n#15 0x555bb84c4c30 <unknown>\n#16 0x555bb8519d78 <unknown>\n#17 0x555bb8519f4c <unknown>\n#18 0x555bb852b973 <unknown>\n#19 0x7fb827a9caa4 <unknown>\n#20 0x7fb827b29c6c <unknown>\n",
+                        "screenshot_path": "docs/screenshots/failures/elementclickint_srctestssmoke_teststest_visa_enquiries_smokepyTestVisaSmoketest_visa_application_cancel_flow_20251228_075240.png",
+                        "duration": 11.515842914581299,
+                        "timestamp": "07:52:40",
+                        "skip_reason": null,
+                        "category": "UI Interaction",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20251228_074612.log"
+                        },
+                        "log_path": "reports/logs/geo_travel_20251228_074612.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-28_07-46-11/logs/geo_travel_20251228_074612.log",
+                        "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-28_07-46-11/screenshots/elementclickint_srctestssmoke_teststest_visa_enquiries_smokepyTestVisaSmoketest_visa_application_cancel_flow_20251228_075240.png",
+                        "suite": "smoke"
+                    },
+                    {
+                        "test_name": "src/tests/smoke_tests/test_visa_enquiries_smoke.py::TestVisaSmoke::test_visa_form_validation",
+                        "status": "FAIL",
+                        "error_message": "TimeoutException: Message: \n",
+                        "screenshot_path": "docs/screenshots/failures/timeoutexceptio_srctestssmoke_teststest_visa_enquiries_smokepyTestVisaSmoketest_visa_form_validation_20251228_075300.png",
+                        "duration": 19.94001817703247,
+                        "timestamp": "07:53:00",
+                        "skip_reason": null,
+                        "category": "UI Timeout",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20251228_074612.log"
+                        },
+                        "log_path": "reports/logs/geo_travel_20251228_074612.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-28_07-46-11/logs/geo_travel_20251228_074612.log",
+                        "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-28_07-46-11/screenshots/timeoutexceptio_srctestssmoke_teststest_visa_enquiries_smokepyTestVisaSmoketest_visa_form_validation_20251228_075300.png",
+                        "suite": "smoke"
+                    }
+                ],
+                "skipped_tests_details": []
+            },
+            "timestamp": "2025-12-28 07:53:01"
+        },
+        "api": {
+            "report": {
+                "test_suite_name": "API SMOKE TEST",
+                "total_tests": 92,
+                "passed_tests": 77,
+                "failed_tests": 13,
+                "skipped_tests": 2,
+                "success_rate": 83.69565217391305,
+                "duration": 94.844096,
+                "start_time": "2025-12-28 07:53:01",
+                "end_time": "2025-12-28 07:54:36",
+                "failed_tests_details": [
+                    {
+                        "test_name": "src/tests/api_tests/test_package_api.py::TestPackageAPI::test_book_package_and_verify_user_bookings",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Booking ID should be returned in response\nassert None is not None",
+                        "screenshot_path": null,
+                        "duration": 3.622030258178711,
+                        "timestamp": "07:54:25",
+                        "skip_reason": null,
+                        "category": "Functional Assertion",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20251228_074612.log",
+                            "response_file": "reports/failed_responses/20251228_075418_404_api_price_voucher_apply.txt"
+                        },
+                        "log_path": "reports/logs/geo_travel_20251228_074612.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-28_07-46-11/logs/geo_travel_20251228_074612.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251228_075418_404_api_price_voucher_apply.txt",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_create_visa_enquiry_without_auth",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Expected 201, got 200\nassert 200 == 201\n +  where 200 = <Response [200]>.status_code",
+                        "screenshot_path": null,
+                        "duration": 0.2854468822479248,
+                        "timestamp": "07:54:27",
+                        "skip_reason": null,
+                        "category": "Functional Assertion",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20251228_074612.log",
+                            "response_file": "reports/failed_responses/20251228_075426_401_api_package_user_booked-packages-analytics.txt"
+                        },
+                        "log_path": "reports/logs/geo_travel_20251228_074612.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-28_07-46-11/logs/geo_travel_20251228_074612.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251228_075426_401_api_package_user_booked-packages-analytics.txt",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_create_visa_enquiry_with_auth",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Expected 201, got 200\nassert 200 == 201\n +  where 200 = <Response [200]>.status_code",
+                        "screenshot_path": null,
+                        "duration": 0.3154447078704834,
+                        "timestamp": "07:54:28",
+                        "skip_reason": null,
+                        "category": "Functional Assertion",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20251228_074612.log",
+                            "response_file": "reports/failed_responses/20251228_075426_401_api_package_user_booked-packages-analytics.txt"
+                        },
+                        "log_path": "reports/logs/geo_travel_20251228_074612.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-28_07-46-11/logs/geo_travel_20251228_074612.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251228_075426_401_api_package_user_booked-packages-analytics.txt",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_create_visa_enquiry_missing_required_fields[first_name]",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Missing required field 'first_name' should return 400, got 200\nassert 200 == 400\n +  where 200 = <Response [200]>.status_code",
+                        "screenshot_path": null,
+                        "duration": 0.29157137870788574,
+                        "timestamp": "07:54:28",
+                        "skip_reason": null,
+                        "category": "Request Validation",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20251228_074612.log",
+                            "response_file": "reports/failed_responses/20251228_075426_401_api_package_user_booked-packages-analytics.txt"
+                        },
+                        "log_path": "reports/logs/geo_travel_20251228_074612.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-28_07-46-11/logs/geo_travel_20251228_074612.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251228_075426_401_api_package_user_booked-packages-analytics.txt",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_create_visa_enquiry_missing_required_fields[last_name]",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Missing required field 'last_name' should return 400, got 200\nassert 200 == 400\n +  where 200 = <Response [200]>.status_code",
+                        "screenshot_path": null,
+                        "duration": 0.30405116081237793,
+                        "timestamp": "07:54:28",
+                        "skip_reason": null,
+                        "category": "Request Validation",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20251228_074612.log",
+                            "response_file": "reports/failed_responses/20251228_075426_401_api_package_user_booked-packages-analytics.txt"
+                        },
+                        "log_path": "reports/logs/geo_travel_20251228_074612.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-28_07-46-11/logs/geo_travel_20251228_074612.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251228_075426_401_api_package_user_booked-packages-analytics.txt",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_make_payment_flutterwave_without_auth",
+                        "status": "FAIL",
+                        "error_message": "TypeError: TestVisaEnquiryAPI.test_create_visa_enquiry_without_auth() missing 1 required positional argument: 'visa_api'",
+                        "screenshot_path": null,
+                        "duration": 0.009915590286254883,
+                        "timestamp": "07:54:31",
+                        "skip_reason": null,
+                        "category": "Code Logic",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20251228_074612.log",
+                            "response_file": "reports/failed_responses/20251228_075431_400_api_visa_create.txt"
+                        },
+                        "log_path": "reports/logs/geo_travel_20251228_074612.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-28_07-46-11/logs/geo_travel_20251228_074612.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251228_075431_400_api_visa_create.txt",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_make_payment_bank_transfer_without_auth",
+                        "status": "FAIL",
+                        "error_message": "TypeError: TestVisaEnquiryAPI.test_create_visa_enquiry_without_auth() missing 1 required positional argument: 'visa_api'",
+                        "screenshot_path": null,
+                        "duration": 0.00943613052368164,
+                        "timestamp": "07:54:31",
+                        "skip_reason": null,
+                        "category": "Code Logic",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20251228_074612.log",
+                            "response_file": "reports/failed_responses/20251228_075431_400_api_visa_create.txt"
+                        },
+                        "log_path": "reports/logs/geo_travel_20251228_074612.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-28_07-46-11/logs/geo_travel_20251228_074612.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251228_075431_400_api_visa_create.txt",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_make_payment_flutterwave_with_auth",
+                        "status": "FAIL",
+                        "error_message": "TypeError: TestVisaEnquiryAPI.test_create_visa_enquiry_with_auth() missing 1 required positional argument: 'authenticated_visa_api'",
+                        "screenshot_path": null,
+                        "duration": 0.009902715682983398,
+                        "timestamp": "07:54:31",
+                        "skip_reason": null,
+                        "category": "Code Logic",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20251228_074612.log",
+                            "response_file": "reports/failed_responses/20251228_075431_400_api_visa_create.txt"
+                        },
+                        "log_path": "reports/logs/geo_travel_20251228_074612.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-28_07-46-11/logs/geo_travel_20251228_074612.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251228_075431_400_api_visa_create.txt",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_make_payment_invalid_method",
+                        "status": "FAIL",
+                        "error_message": "TypeError: TestVisaEnquiryAPI.test_create_visa_enquiry_without_auth() missing 1 required positional argument: 'visa_api'",
+                        "screenshot_path": null,
+                        "duration": 0.010183095932006836,
+                        "timestamp": "07:54:31",
+                        "skip_reason": null,
+                        "category": "Code Logic",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20251228_074612.log",
+                            "response_file": "reports/failed_responses/20251228_075431_404_api_visa_payment.txt"
+                        },
+                        "log_path": "reports/logs/geo_travel_20251228_074612.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-28_07-46-11/logs/geo_travel_20251228_074612.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251228_075431_404_api_visa_payment.txt",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_get_user_visa_applications_with_filters",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Filter Date range filter failed: 500\nassert 500 == 200\n +  where 500 = <Response [500]>.status_code",
+                        "screenshot_path": null,
+                        "duration": 0.6471588611602783,
+                        "timestamp": "07:54:33",
+                        "skip_reason": null,
+                        "category": "Server Error",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20251228_074612.log",
+                            "response_file": "reports/failed_responses/20251228_075433_500_api_visa_all_user.txt"
+                        },
+                        "log_path": "reports/logs/geo_travel_20251228_074612.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-28_07-46-11/logs/geo_travel_20251228_074612.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251228_075433_500_api_visa_all_user.txt",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_get_visa_application_by_id_with_auth",
+                        "status": "FAIL",
+                        "error_message": "TypeError: TestVisaEnquiryAPI.test_get_user_visa_applications_with_auth() missing 1 required positional argument: 'authenticated_visa_api'",
+                        "screenshot_path": null,
+                        "duration": 0.009743928909301758,
+                        "timestamp": "07:54:34",
+                        "skip_reason": null,
+                        "category": "Code Logic",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20251228_074612.log",
+                            "response_file": "reports/failed_responses/20251228_075433_500_api_visa_all_user.txt"
+                        },
+                        "log_path": "reports/logs/geo_travel_20251228_074612.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-28_07-46-11/logs/geo_travel_20251228_074612.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251228_075433_500_api_visa_all_user.txt",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_complete_visa_flow_with_auth",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Visa creation should succeed\nassert 200 == 201\n +  where 200 = <Response [200]>.status_code",
+                        "screenshot_path": null,
+                        "duration": 0.30109262466430664,
+                        "timestamp": "07:54:35",
+                        "skip_reason": null,
+                        "category": "Functional Assertion",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20251228_074612.log",
+                            "response_file": "reports/failed_responses/20251228_075435_401_api_visa.txt"
+                        },
+                        "log_path": "reports/logs/geo_travel_20251228_074612.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-28_07-46-11/logs/geo_travel_20251228_074612.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251228_075435_401_api_visa.txt",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_complete_visa_flow_without_auth",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Visa creation should succeed without auth\nassert 200 == 201\n +  where 200 = <Response [200]>.status_code",
+                        "screenshot_path": null,
+                        "duration": 0.27944421768188477,
+                        "timestamp": "07:54:36",
+                        "skip_reason": null,
+                        "category": "Functional Assertion",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20251228_074612.log",
+                            "response_file": "reports/failed_responses/20251228_075435_401_api_visa.txt"
+                        },
+                        "log_path": "reports/logs/geo_travel_20251228_074612.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-28_07-46-11/logs/geo_travel_20251228_074612.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251228_075435_401_api_visa.txt",
+                        "suite": "api"
+                    }
+                ],
+                "skipped_tests_details": [
+                    {
+                        "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_search_hotels_invalid_dates",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 242, 'Skipped: Too far in future: Skipped \u2014 scenario not properly handled yet (Internal Server Error: 500)')",
+                        "screenshot_path": null,
+                        "duration": 1.1375212669372559,
+                        "timestamp": "07:53:56",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 242, 'Skipped: Too far in future: Skipped \u2014 scenario not properly handled yet (Internal Server Error: 500)')",
+                        "category": null,
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20251228_074612.log",
+                            "response_file": "reports/failed_responses/20251228_075356_500_api_hotels_search.txt"
+                        },
+                        "log_path": "reports/logs/geo_travel_20251228_074612.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-28_07-46-11/logs/geo_travel_20251228_074612.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251228_075356_500_api_hotels_search.txt",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_get_hotel_rating_success",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 320, 'Skipped: Get Hotel Rating skipped \u2014 AMADEUS internal error (hotelId=RCNYCHAR, status=500)')",
+                        "screenshot_path": null,
+                        "duration": 1.704303503036499,
+                        "timestamp": "07:53:58",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 320, 'Skipped: Get Hotel Rating skipped \u2014 AMADEUS internal error (hotelId=RCNYCHAR, status=500)')",
+                        "category": null,
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20251228_074612.log",
+                            "response_file": "reports/failed_responses/20251228_075358_500_api_hotels_rating.txt"
+                        },
+                        "log_path": "reports/logs/geo_travel_20251228_074612.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-28_07-46-11/logs/geo_travel_20251228_074612.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251228_075358_500_api_hotels_rating.txt",
+                        "suite": "api"
+                    }
+                ]
+            },
+            "timestamp": "2025-12-28 07:54:36"
+        }
+    },
+    "all_failed_tests": [
+        {
+            "test_name": "src/tests/smoke_tests/test_visa_enquiries_smoke.py::TestVisaSmoke::test_visa_application_cancel_flow",
+            "status": "FAIL",
+            "error_message": "ElementClickInterceptedException: Message: element click intercepted: Element is not clickable at point (524, 983)\n  (Session info: chrome=143.0.7499.109); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementclickinterceptedexception\nStacktrace:\n#0 0x555bb852c61a <unknown>\n#1 0x555bb7fa920b <unknown>\n#2 0x555bb8001694 <unknown>\n#3 0x555bb7fff558 <unknown>\n#4 0x555bb7ffcc7a <unknown>\n#5 0x555bb7ffbdb9 <unknown>\n#6 0x555bb7fef0c2 <unknown>\n#7 0x555bb7feea67 <unknown>\n#8 0x555bb804620e <unknown>\n#9 0x555bb7fed232 <unknown>\n#10 0x555bb7fedee1 <unknown>\n#11 0x555bb84f53f9 <unknown>\n#12 0x555bb84f834d <unknown>\n#13 0x555bb84de122 <unknown>\n#14 0x555bb84f8f2b <unknown>\n#15 0x555bb84c4c30 <unknown>\n#16 0x555bb8519d78 <unknown>\n#17 0x555bb8519f4c <unknown>\n#18 0x555bb852b973 <unknown>\n#19 0x7fb827a9caa4 <unknown>\n#20 0x7fb827b29c6c <unknown>\n",
+            "screenshot_path": "docs/screenshots/failures/elementclickint_srctestssmoke_teststest_visa_enquiries_smokepyTestVisaSmoketest_visa_application_cancel_flow_20251228_075240.png",
+            "duration": 11.515842914581299,
+            "timestamp": "07:52:40",
+            "skip_reason": null,
+            "category": "UI Interaction",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20251228_074612.log"
+            },
+            "log_path": "reports/logs/geo_travel_20251228_074612.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-28_07-46-11/logs/geo_travel_20251228_074612.log",
+            "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-28_07-46-11/screenshots/elementclickint_srctestssmoke_teststest_visa_enquiries_smokepyTestVisaSmoketest_visa_application_cancel_flow_20251228_075240.png",
+            "suite": "smoke"
+        },
+        {
+            "test_name": "src/tests/smoke_tests/test_visa_enquiries_smoke.py::TestVisaSmoke::test_visa_form_validation",
+            "status": "FAIL",
+            "error_message": "TimeoutException: Message: \n",
+            "screenshot_path": "docs/screenshots/failures/timeoutexceptio_srctestssmoke_teststest_visa_enquiries_smokepyTestVisaSmoketest_visa_form_validation_20251228_075300.png",
+            "duration": 19.94001817703247,
+            "timestamp": "07:53:00",
+            "skip_reason": null,
+            "category": "UI Timeout",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20251228_074612.log"
+            },
+            "log_path": "reports/logs/geo_travel_20251228_074612.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-28_07-46-11/logs/geo_travel_20251228_074612.log",
+            "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-28_07-46-11/screenshots/timeoutexceptio_srctestssmoke_teststest_visa_enquiries_smokepyTestVisaSmoketest_visa_form_validation_20251228_075300.png",
+            "suite": "smoke"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_package_api.py::TestPackageAPI::test_book_package_and_verify_user_bookings",
+            "status": "FAIL",
+            "error_message": "AssertionError: Booking ID should be returned in response\nassert None is not None",
+            "screenshot_path": null,
+            "duration": 3.622030258178711,
+            "timestamp": "07:54:25",
+            "skip_reason": null,
+            "category": "Functional Assertion",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20251228_074612.log",
+                "response_file": "reports/failed_responses/20251228_075418_404_api_price_voucher_apply.txt"
+            },
+            "log_path": "reports/logs/geo_travel_20251228_074612.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-28_07-46-11/logs/geo_travel_20251228_074612.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251228_075418_404_api_price_voucher_apply.txt",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_create_visa_enquiry_without_auth",
+            "status": "FAIL",
+            "error_message": "AssertionError: Expected 201, got 200\nassert 200 == 201\n +  where 200 = <Response [200]>.status_code",
+            "screenshot_path": null,
+            "duration": 0.2854468822479248,
+            "timestamp": "07:54:27",
+            "skip_reason": null,
+            "category": "Functional Assertion",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20251228_074612.log",
+                "response_file": "reports/failed_responses/20251228_075426_401_api_package_user_booked-packages-analytics.txt"
+            },
+            "log_path": "reports/logs/geo_travel_20251228_074612.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-28_07-46-11/logs/geo_travel_20251228_074612.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251228_075426_401_api_package_user_booked-packages-analytics.txt",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_create_visa_enquiry_with_auth",
+            "status": "FAIL",
+            "error_message": "AssertionError: Expected 201, got 200\nassert 200 == 201\n +  where 200 = <Response [200]>.status_code",
+            "screenshot_path": null,
+            "duration": 0.3154447078704834,
+            "timestamp": "07:54:28",
+            "skip_reason": null,
+            "category": "Functional Assertion",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20251228_074612.log",
+                "response_file": "reports/failed_responses/20251228_075426_401_api_package_user_booked-packages-analytics.txt"
+            },
+            "log_path": "reports/logs/geo_travel_20251228_074612.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-28_07-46-11/logs/geo_travel_20251228_074612.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251228_075426_401_api_package_user_booked-packages-analytics.txt",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_create_visa_enquiry_missing_required_fields[first_name]",
+            "status": "FAIL",
+            "error_message": "AssertionError: Missing required field 'first_name' should return 400, got 200\nassert 200 == 400\n +  where 200 = <Response [200]>.status_code",
+            "screenshot_path": null,
+            "duration": 0.29157137870788574,
+            "timestamp": "07:54:28",
+            "skip_reason": null,
+            "category": "Request Validation",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20251228_074612.log",
+                "response_file": "reports/failed_responses/20251228_075426_401_api_package_user_booked-packages-analytics.txt"
+            },
+            "log_path": "reports/logs/geo_travel_20251228_074612.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-28_07-46-11/logs/geo_travel_20251228_074612.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251228_075426_401_api_package_user_booked-packages-analytics.txt",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_create_visa_enquiry_missing_required_fields[last_name]",
+            "status": "FAIL",
+            "error_message": "AssertionError: Missing required field 'last_name' should return 400, got 200\nassert 200 == 400\n +  where 200 = <Response [200]>.status_code",
+            "screenshot_path": null,
+            "duration": 0.30405116081237793,
+            "timestamp": "07:54:28",
+            "skip_reason": null,
+            "category": "Request Validation",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20251228_074612.log",
+                "response_file": "reports/failed_responses/20251228_075426_401_api_package_user_booked-packages-analytics.txt"
+            },
+            "log_path": "reports/logs/geo_travel_20251228_074612.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-28_07-46-11/logs/geo_travel_20251228_074612.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251228_075426_401_api_package_user_booked-packages-analytics.txt",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_make_payment_flutterwave_without_auth",
+            "status": "FAIL",
+            "error_message": "TypeError: TestVisaEnquiryAPI.test_create_visa_enquiry_without_auth() missing 1 required positional argument: 'visa_api'",
+            "screenshot_path": null,
+            "duration": 0.009915590286254883,
+            "timestamp": "07:54:31",
+            "skip_reason": null,
+            "category": "Code Logic",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20251228_074612.log",
+                "response_file": "reports/failed_responses/20251228_075431_400_api_visa_create.txt"
+            },
+            "log_path": "reports/logs/geo_travel_20251228_074612.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-28_07-46-11/logs/geo_travel_20251228_074612.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251228_075431_400_api_visa_create.txt",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_make_payment_bank_transfer_without_auth",
+            "status": "FAIL",
+            "error_message": "TypeError: TestVisaEnquiryAPI.test_create_visa_enquiry_without_auth() missing 1 required positional argument: 'visa_api'",
+            "screenshot_path": null,
+            "duration": 0.00943613052368164,
+            "timestamp": "07:54:31",
+            "skip_reason": null,
+            "category": "Code Logic",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20251228_074612.log",
+                "response_file": "reports/failed_responses/20251228_075431_400_api_visa_create.txt"
+            },
+            "log_path": "reports/logs/geo_travel_20251228_074612.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-28_07-46-11/logs/geo_travel_20251228_074612.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251228_075431_400_api_visa_create.txt",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_make_payment_flutterwave_with_auth",
+            "status": "FAIL",
+            "error_message": "TypeError: TestVisaEnquiryAPI.test_create_visa_enquiry_with_auth() missing 1 required positional argument: 'authenticated_visa_api'",
+            "screenshot_path": null,
+            "duration": 0.009902715682983398,
+            "timestamp": "07:54:31",
+            "skip_reason": null,
+            "category": "Code Logic",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20251228_074612.log",
+                "response_file": "reports/failed_responses/20251228_075431_400_api_visa_create.txt"
+            },
+            "log_path": "reports/logs/geo_travel_20251228_074612.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-28_07-46-11/logs/geo_travel_20251228_074612.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251228_075431_400_api_visa_create.txt",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_make_payment_invalid_method",
+            "status": "FAIL",
+            "error_message": "TypeError: TestVisaEnquiryAPI.test_create_visa_enquiry_without_auth() missing 1 required positional argument: 'visa_api'",
+            "screenshot_path": null,
+            "duration": 0.010183095932006836,
+            "timestamp": "07:54:31",
+            "skip_reason": null,
+            "category": "Code Logic",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20251228_074612.log",
+                "response_file": "reports/failed_responses/20251228_075431_404_api_visa_payment.txt"
+            },
+            "log_path": "reports/logs/geo_travel_20251228_074612.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-28_07-46-11/logs/geo_travel_20251228_074612.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251228_075431_404_api_visa_payment.txt",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_get_user_visa_applications_with_filters",
+            "status": "FAIL",
+            "error_message": "AssertionError: Filter Date range filter failed: 500\nassert 500 == 200\n +  where 500 = <Response [500]>.status_code",
+            "screenshot_path": null,
+            "duration": 0.6471588611602783,
+            "timestamp": "07:54:33",
+            "skip_reason": null,
+            "category": "Server Error",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20251228_074612.log",
+                "response_file": "reports/failed_responses/20251228_075433_500_api_visa_all_user.txt"
+            },
+            "log_path": "reports/logs/geo_travel_20251228_074612.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-28_07-46-11/logs/geo_travel_20251228_074612.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251228_075433_500_api_visa_all_user.txt",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_get_visa_application_by_id_with_auth",
+            "status": "FAIL",
+            "error_message": "TypeError: TestVisaEnquiryAPI.test_get_user_visa_applications_with_auth() missing 1 required positional argument: 'authenticated_visa_api'",
+            "screenshot_path": null,
+            "duration": 0.009743928909301758,
+            "timestamp": "07:54:34",
+            "skip_reason": null,
+            "category": "Code Logic",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20251228_074612.log",
+                "response_file": "reports/failed_responses/20251228_075433_500_api_visa_all_user.txt"
+            },
+            "log_path": "reports/logs/geo_travel_20251228_074612.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-28_07-46-11/logs/geo_travel_20251228_074612.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251228_075433_500_api_visa_all_user.txt",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_complete_visa_flow_with_auth",
+            "status": "FAIL",
+            "error_message": "AssertionError: Visa creation should succeed\nassert 200 == 201\n +  where 200 = <Response [200]>.status_code",
+            "screenshot_path": null,
+            "duration": 0.30109262466430664,
+            "timestamp": "07:54:35",
+            "skip_reason": null,
+            "category": "Functional Assertion",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20251228_074612.log",
+                "response_file": "reports/failed_responses/20251228_075435_401_api_visa.txt"
+            },
+            "log_path": "reports/logs/geo_travel_20251228_074612.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-28_07-46-11/logs/geo_travel_20251228_074612.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251228_075435_401_api_visa.txt",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_complete_visa_flow_without_auth",
+            "status": "FAIL",
+            "error_message": "AssertionError: Visa creation should succeed without auth\nassert 200 == 201\n +  where 200 = <Response [200]>.status_code",
+            "screenshot_path": null,
+            "duration": 0.27944421768188477,
+            "timestamp": "07:54:36",
+            "skip_reason": null,
+            "category": "Functional Assertion",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20251228_074612.log",
+                "response_file": "reports/failed_responses/20251228_075435_401_api_visa.txt"
+            },
+            "log_path": "reports/logs/geo_travel_20251228_074612.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-28_07-46-11/logs/geo_travel_20251228_074612.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251228_075435_401_api_visa.txt",
+            "suite": "api"
+        }
+    ],
+    "all_skipped_tests": [
+        {
+            "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_search_hotels_invalid_dates",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 242, 'Skipped: Too far in future: Skipped \u2014 scenario not properly handled yet (Internal Server Error: 500)')",
+            "screenshot_path": null,
+            "duration": 1.1375212669372559,
+            "timestamp": "07:53:56",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 242, 'Skipped: Too far in future: Skipped \u2014 scenario not properly handled yet (Internal Server Error: 500)')",
+            "category": null,
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20251228_074612.log",
+                "response_file": "reports/failed_responses/20251228_075356_500_api_hotels_search.txt"
+            },
+            "log_path": "reports/logs/geo_travel_20251228_074612.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-28_07-46-11/logs/geo_travel_20251228_074612.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251228_075356_500_api_hotels_search.txt",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_get_hotel_rating_success",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 320, 'Skipped: Get Hotel Rating skipped \u2014 AMADEUS internal error (hotelId=RCNYCHAR, status=500)')",
+            "screenshot_path": null,
+            "duration": 1.704303503036499,
+            "timestamp": "07:53:58",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 320, 'Skipped: Get Hotel Rating skipped \u2014 AMADEUS internal error (hotelId=RCNYCHAR, status=500)')",
+            "category": null,
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20251228_074612.log",
+                "response_file": "reports/failed_responses/20251228_075358_500_api_hotels_rating.txt"
+            },
+            "log_path": "reports/logs/geo_travel_20251228_074612.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-28_07-46-11/logs/geo_travel_20251228_074612.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251228_075358_500_api_hotels_rating.txt",
+            "suite": "api"
+        }
+    ]
+}
