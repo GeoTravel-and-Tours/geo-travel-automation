@@ -71,3 +71,14 @@ Reports and logs are saved in the `reports/`, `logs\` directory.
 * Keep dependencies up to date
 * Periodically clear old reports and logs
 * Extend existing modules rather than duplicating functionality
+
+---
+
+>  ‎
+> ⚠️ **PROPRIETARY CODE NOTICE**
+>
+> This repository contains internal QA automation tooling for Geo Travel.
+> It is publicly visible **only for GitHub Pages usage**.
+>
+> **Reuse, copying, or redistribution is strictly prohibited.**
+>  ‎
