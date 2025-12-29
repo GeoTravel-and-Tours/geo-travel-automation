@@ -368,6 +368,7 @@ class VisaPage(BasePage):
         
         try:
             cancel_button = self.waiter.wait_for_clickable(self.CANCEL_BTN, timeout=10)
+            self.javascript.scroll_to_element(cancel_button)
             cancel_button.click()
             cancel_btn = cancel_button
             
