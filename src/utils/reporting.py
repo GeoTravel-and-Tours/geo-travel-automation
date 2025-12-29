@@ -204,7 +204,11 @@ class GeoReporter:
                 test_result["log_path"] = str(log_path)
                 # Prefer an absolute hosted URL so Slack will render it as a clickable link.
                 gh_pages = os.getenv("GH_PAGES_BASE_URL", "https://geotravel-and-tours.github.io/geo-travel-automation")
-                test_result["log_url"] = f"{gh_pages}/reports/logs/{Path(log_path).name}"
+                timestamp = os.getenv("RUN_TIMESTAMP", "")
+                if timestamp:
+                    test_result["log_url"] = f"{gh_pages}/{timestamp}/logs/{Path(log_path).name}"
+                else:
+                    test_result["log_url"] = f"{gh_pages}/reports/logs/{Path(log_path).name}"
             # If a response dump file exists, provide its hosted URL too
             resp_file = evidence.get("response_file")
             if resp_file:
@@ -214,7 +218,11 @@ class GeoReporter:
                 test_result["response_file_url"] = f"{gh_pages}/reports/failed_responses/{Path(resp_file).name}"
         if screenshot_path:
             screenshot_filename = Path(screenshot_path).name
-            test_result["screenshot_url"] = f"https://geotravel-and-tours.github.io/geo-travel-automation/screenshots/failures/{screenshot_filename}"
+            timestamp = os.getenv("RUN_TIMESTAMP", "")
+            if timestamp:
+                test_result["screenshot_url"] = f"https://geotravel-and-tours.github.io/geo-travel-automation/{timestamp}/screenshots/{screenshot_filename}"
+            else:
+                test_result["screenshot_url"] = f"https://geotravel-and-tours.github.io/geo-travel-automation/screenshots/failures/{screenshot_filename}"
 
         self.test_results.append(test_result)
         self.logger.info(f"Test result added: {test_name} - {status} (Duration: {actual_duration:.2f}s)")
