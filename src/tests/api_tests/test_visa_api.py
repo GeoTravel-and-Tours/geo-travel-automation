@@ -24,7 +24,7 @@ class TestVisaEnquiryAPI:
     def _generate_test_data(self):
         """Generate dynamic test data for visa tests"""
         # Future travel dates
-        future_date = (datetime.now() + timedelta(days=30)).strftime("%Y-%m-%d")
+        future_date = (datetime.now() + timedelta(days=1)).strftime("%Y-%m-%d")
         
         return {
             "visa_enquiry_payload": {
@@ -304,7 +304,7 @@ class TestVisaEnquiryAPI:
         visa_id = create_data.get("data", {}).get("id")
         
         # Now make payment
-        payment_payload = {"visaId": visa_id, "paymentMethod": "Flutterwave"}
+        payment_payload = {"visaId": visa_id, "paymentMethod": "Bank Transfer"}
         response = visa_api.make_payment(payment_payload)
         
         # Should succeed without auth
@@ -478,8 +478,8 @@ class TestVisaEnquiryAPI:
             {"name": "Status filter - InProgress", "status": "InProgress"},
             {"name": "Type filter - Tourist", "type": "Tourist"},
             {"name": "Type filter - Business", "type": "Business"},
-            {"name": "Date range filter", "start_date": "2025-01-01", "end_date": "2025-12-31"},
             {"name": "Combined filters", "status": "Submitted", "type": "Work", "limit": 5},
+            {"name": "Date range filter", "start_date": "2025-01-01", "end_date": "2025-12-31"},
         ]
         
         for case in filter_cases:
