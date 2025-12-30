@@ -1,0 +1,31 @@
+name: Code Quality Checks
+on: [push, pull_request]
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v4
+      
+    - name: 🐍 Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+    
+    - name: 📦 Install quality tools
+      run: |
+        pip install black flake8 pylint mypy
+    
+    - name: 🔍 Black (formatting check only - NO AUTO-FIX)
+      run: black . --check --diff  # Shows what WOULD change
+    
+    - name: 📝 Flake8 (style violations)
+      run: flake8 . --show-source  # Shows problematic code
+    
+    - name: 🐛 Pylint (bug detection)
+      run: pylint scripts/ tests/ --fail-under=7.0
+    
+    - name: 🎯 Mypy (type checking - optional)
+      run: mypy . || true  # Won't fail the build
