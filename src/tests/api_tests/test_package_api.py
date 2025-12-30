@@ -190,6 +190,8 @@ class TestPackageAPI:
             "book_at_deal_price": False,
             "paymentMethod": payment_method
         }
+        
+        self.logger.info(f"Using payment method: {payment_method}")
 
         # Make the booking
         response = authenticated_package_api.book_package(booking_data)
@@ -201,13 +203,39 @@ class TestPackageAPI:
             
             # Get booking ID from response if available
             new_booking_id = None
-            if 'data' in response_data and 'booking' in response_data['data']:
-                new_booking_id = response_data['data']['booking'].get('id')
-            elif 'data' in response_data and 'id' in response_data['data']:
-                new_booking_id = response_data['data'].get('id')
+            if 'data' in response_data:
+                if 'bookedPackage' in response_data['data']:
+                    # Bank Transfer Structure
+                    new_booking_id = response_data['data']['bookedPackage'].get('id')
+                    self.logger.info("✅ Bank Transfer booking detected (nested bookedPackage)")
+                elif 'id' in response_data['data']:
+                    # Flutterwave Structure
+                    new_booking_id = response_data['data'].get('id')
+                    self.logger.info("✅ Flutterwave booking detected (direct ID in data)")
+                
+                # Verify payment method consistency
+                if payment_method == "Flutterwave":
+                    assert 'paymentLink' in response_data['data'], \
+                        f"Flutterwave should return paymentLink. Response keys: {list(response_data['data'].keys())}"
+                    self.logger.info("✅ Flutterwave payment - paymentLink present (as expected)")
+                    
+                elif payment_method == "Bank Transfer":
+                    assert 'paymentLink' not in response_data['data'], \
+                        f"Bank Transfer should NOT return paymentLink. Response keys: {list(response_data['data'].keys())}"
+                    self.logger.info("✅ Bank Transfer - no payment link (as expected)")
+                    
+                    # Additional check for Bank Transfer structure
+                    if 'bookedPackage' not in response_data['data']:
+                        self.logger.warning("⚠️ Bank Transfer booking missing 'bookedPackage' in response")
             
-            # Check for paymentLink
-            if 'data' in response_data and 'paymentLink' in response_data['data']:
+            if new_booking_id:
+                self.logger.info(f"✅ Extracted booking ID: {new_booking_id}")
+            else:
+                self.logger.warning("⚠️ Could not extract booking ID from response")
+                self.logger.debug(f"Full response structure: {response_data}")
+            
+            # Handle payment link verification (only for Flutterwave)
+            if payment_method == "Flutterwave" and 'data' in response_data and 'paymentLink' in response_data['data']:
                 payment_link = response_data['data']['paymentLink']
                 self.logger.info(f"Payment link: {payment_link}")
                 
@@ -216,6 +244,8 @@ class TestPackageAPI:
                     self.logger.success(f"✅ Payment link verification: {message}")
                 else:
                     self.logger.warning(f"⚠️ Payment link issue: {message}")
+            elif payment_method == "Bank Transfer":
+                self.logger.info("✅ Bank Transfer - skipping payment link verification")
             
             # VERIFICATION STEP: Check user's booked packages
             self.logger.info("=== Verifying booking appears in user's booked packages ===")
@@ -262,8 +292,15 @@ class TestPackageAPI:
             assert analytics_response.status_code == 200, "Should get user bookings analytics"
             self.logger.info(f"✅ User bookings analytics accessible")
 
-            # Only assert booking success at the end
+            # Final success assertion
             assert response_data.get('status') == 'success', "Booking should be successful"
+            self.logger.success(f"✅ Test completed successfully with {payment_method} payment!")
+        
+        else:
+            # Handle booking failure
+            self.logger.error(f"❌ Booking failed with status: {response.status_code}")
+            self.logger.error(f"Response: {response.text}")
+            pytest.fail(f"Booking failed with status {response.status_code}")
             
     @pytest.mark.api
     def test_book_package_without_auth_not_in_user_bookings(self):

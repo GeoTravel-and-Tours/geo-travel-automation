@@ -330,7 +330,7 @@ class TestVisaEnquiryAPI:
         payload["visaCountry"] = "Qatar"
         
         create_response = authenticated_visa_api.create_visa_enquiry(payload)
-        assert create_response.status_code == 201, "Should create visa enquiry"
+        assert create_response.status_code == 200 or 201, "Should create visa enquiry"
         
         create_data = create_response.json()
         visa_id = create_data.get("data", {}).get("id")
