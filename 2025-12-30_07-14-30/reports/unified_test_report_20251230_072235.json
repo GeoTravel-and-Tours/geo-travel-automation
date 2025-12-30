@@ -1,0 +1,270 @@
+{
+    "test_suite_name": "Unified UI Smoke + API + Partners API TEST REPORT",
+    "total_tests": 134,
+    "passed_tests": 128,
+    "failed_tests": 4,
+    "skipped_tests": 2,
+    "success_rate": 95.5,
+    "duration": 483.917978,
+    "start_time": "2025-12-30 07:14:30",
+    "end_time": "2025-12-30 07:22:34",
+    "suites_run": [
+        "smoke",
+        "api"
+    ],
+    "suite_details": {
+        "smoke": {
+            "report": {
+                "test_suite_name": "Unified UI Smoke + API + Partners API TEST REPORT",
+                "total_tests": 42,
+                "passed_tests": 41,
+                "failed_tests": 1,
+                "skipped_tests": 0,
+                "success_rate": 97.61904761904762,
+                "duration": 394.52613,
+                "start_time": "2025-12-30 07:14:31",
+                "end_time": "2025-12-30 07:21:05",
+                "failed_tests_details": [
+                    {
+                        "test_name": "src/tests/smoke_tests/test_package_booking_smoke.py::TestPackageBookingSmoke::test_complete_package_booking_flow",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Failed to reach Flutterwave test mode\nassert False",
+                        "screenshot_path": "docs/screenshots/failures/assertionerror_srctestssmoke_teststest_package_booking_smokepyTestPackageBookingSmoketest_complete_package_booking_flow_20251230_071904.png",
+                        "duration": 92.33198356628418,
+                        "timestamp": "07:19:04",
+                        "skip_reason": null,
+                        "category": "Functional",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20251230_071430.log"
+                        },
+                        "log_path": "reports/logs/geo_travel_20251230_071430.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-30_07-14-30/logs/geo_travel_20251230_071430.log",
+                        "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-30_07-14-30/screenshots/assertionerror_srctestssmoke_teststest_package_booking_smokepyTestPackageBookingSmoketest_complete_package_booking_flow_20251230_071904.png",
+                        "suite": "smoke"
+                    }
+                ],
+                "skipped_tests_details": []
+            },
+            "timestamp": "2025-12-30 07:21:05"
+        },
+        "api": {
+            "report": {
+                "test_suite_name": "API SMOKE TEST",
+                "total_tests": 92,
+                "passed_tests": 87,
+                "failed_tests": 3,
+                "skipped_tests": 2,
+                "success_rate": 94.56521739130434,
+                "duration": 88.367967,
+                "start_time": "2025-12-30 07:21:06",
+                "end_time": "2025-12-30 07:22:34",
+                "failed_tests_details": [
+                    {
+                        "test_name": "src/tests/api_tests/test_package_api.py::TestPackageAPI::test_book_package_and_verify_user_bookings",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Booking ID should be returned in response\nassert None is not None",
+                        "screenshot_path": null,
+                        "duration": 3.4418323040008545,
+                        "timestamp": "07:22:23",
+                        "skip_reason": null,
+                        "category": "Functional Assertion",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20251230_071430.log",
+                            "response_file": "reports/failed_responses/20251230_072217_404_api_price_voucher_apply.txt"
+                        },
+                        "log_path": "reports/logs/geo_travel_20251230_071430.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-30_07-14-30/logs/geo_travel_20251230_071430.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251230_072217_404_api_price_voucher_apply.txt",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_make_payment_flutterwave_with_auth",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Should create visa enquiry\nassert 200 == 201\n +  where 200 = <Response [200]>.status_code",
+                        "screenshot_path": null,
+                        "duration": 0.20296978950500488,
+                        "timestamp": "07:22:28",
+                        "skip_reason": null,
+                        "category": "Functional Assertion",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20251230_071430.log",
+                            "response_file": "reports/failed_responses/20251230_072227_400_api_visa_create.txt"
+                        },
+                        "log_path": "reports/logs/geo_travel_20251230_071430.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-30_07-14-30/logs/geo_travel_20251230_071430.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251230_072227_400_api_visa_create.txt",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_get_user_visa_applications_with_filters",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Filter Date range filter failed: 500\nassert 500 == 200\n +  where 500 = <Response [500]>.status_code",
+                        "screenshot_path": null,
+                        "duration": 0.4441959857940674,
+                        "timestamp": "07:22:31",
+                        "skip_reason": null,
+                        "category": "Server Error",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20251230_071430.log",
+                            "response_file": "reports/failed_responses/20251230_072231_500_api_visa_all_user.txt"
+                        },
+                        "log_path": "reports/logs/geo_travel_20251230_071430.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-30_07-14-30/logs/geo_travel_20251230_071430.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251230_072231_500_api_visa_all_user.txt",
+                        "suite": "api"
+                    }
+                ],
+                "skipped_tests_details": [
+                    {
+                        "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_search_hotels_invalid_dates",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 242, 'Skipped: Too far in future: Skipped \u2014 scenario not properly handled yet (Internal Server Error: 500)')",
+                        "screenshot_path": null,
+                        "duration": 0.9105312824249268,
+                        "timestamp": "07:21:41",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 242, 'Skipped: Too far in future: Skipped \u2014 scenario not properly handled yet (Internal Server Error: 500)')",
+                        "category": null,
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20251230_071430.log",
+                            "response_file": "reports/failed_responses/20251230_072141_500_api_hotels_search.txt"
+                        },
+                        "log_path": "reports/logs/geo_travel_20251230_071430.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-30_07-14-30/logs/geo_travel_20251230_071430.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251230_072141_500_api_hotels_search.txt",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_get_hotel_rating_success",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 320, 'Skipped: Get Hotel Rating skipped \u2014 AMADEUS internal error (hotelId=CYNYCETC, status=500)')",
+                        "screenshot_path": null,
+                        "duration": 16.377055644989014,
+                        "timestamp": "07:21:58",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 320, 'Skipped: Get Hotel Rating skipped \u2014 AMADEUS internal error (hotelId=CYNYCETC, status=500)')",
+                        "category": null,
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20251230_071430.log",
+                            "response_file": "reports/failed_responses/20251230_072157_500_api_hotels_rating.txt"
+                        },
+                        "log_path": "reports/logs/geo_travel_20251230_071430.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-30_07-14-30/logs/geo_travel_20251230_071430.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251230_072157_500_api_hotels_rating.txt",
+                        "suite": "api"
+                    }
+                ]
+            },
+            "timestamp": "2025-12-30 07:22:34"
+        }
+    },
+    "all_failed_tests": [
+        {
+            "test_name": "src/tests/smoke_tests/test_package_booking_smoke.py::TestPackageBookingSmoke::test_complete_package_booking_flow",
+            "status": "FAIL",
+            "error_message": "AssertionError: Failed to reach Flutterwave test mode\nassert False",
+            "screenshot_path": "docs/screenshots/failures/assertionerror_srctestssmoke_teststest_package_booking_smokepyTestPackageBookingSmoketest_complete_package_booking_flow_20251230_071904.png",
+            "duration": 92.33198356628418,
+            "timestamp": "07:19:04",
+            "skip_reason": null,
+            "category": "Functional",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20251230_071430.log"
+            },
+            "log_path": "reports/logs/geo_travel_20251230_071430.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-30_07-14-30/logs/geo_travel_20251230_071430.log",
+            "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-30_07-14-30/screenshots/assertionerror_srctestssmoke_teststest_package_booking_smokepyTestPackageBookingSmoketest_complete_package_booking_flow_20251230_071904.png",
+            "suite": "smoke"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_package_api.py::TestPackageAPI::test_book_package_and_verify_user_bookings",
+            "status": "FAIL",
+            "error_message": "AssertionError: Booking ID should be returned in response\nassert None is not None",
+            "screenshot_path": null,
+            "duration": 3.4418323040008545,
+            "timestamp": "07:22:23",
+            "skip_reason": null,
+            "category": "Functional Assertion",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20251230_071430.log",
+                "response_file": "reports/failed_responses/20251230_072217_404_api_price_voucher_apply.txt"
+            },
+            "log_path": "reports/logs/geo_travel_20251230_071430.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-30_07-14-30/logs/geo_travel_20251230_071430.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251230_072217_404_api_price_voucher_apply.txt",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_make_payment_flutterwave_with_auth",
+            "status": "FAIL",
+            "error_message": "AssertionError: Should create visa enquiry\nassert 200 == 201\n +  where 200 = <Response [200]>.status_code",
+            "screenshot_path": null,
+            "duration": 0.20296978950500488,
+            "timestamp": "07:22:28",
+            "skip_reason": null,
+            "category": "Functional Assertion",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20251230_071430.log",
+                "response_file": "reports/failed_responses/20251230_072227_400_api_visa_create.txt"
+            },
+            "log_path": "reports/logs/geo_travel_20251230_071430.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-30_07-14-30/logs/geo_travel_20251230_071430.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251230_072227_400_api_visa_create.txt",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_get_user_visa_applications_with_filters",
+            "status": "FAIL",
+            "error_message": "AssertionError: Filter Date range filter failed: 500\nassert 500 == 200\n +  where 500 = <Response [500]>.status_code",
+            "screenshot_path": null,
+            "duration": 0.4441959857940674,
+            "timestamp": "07:22:31",
+            "skip_reason": null,
+            "category": "Server Error",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20251230_071430.log",
+                "response_file": "reports/failed_responses/20251230_072231_500_api_visa_all_user.txt"
+            },
+            "log_path": "reports/logs/geo_travel_20251230_071430.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-30_07-14-30/logs/geo_travel_20251230_071430.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251230_072231_500_api_visa_all_user.txt",
+            "suite": "api"
+        }
+    ],
+    "all_skipped_tests": [
+        {
+            "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_search_hotels_invalid_dates",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 242, 'Skipped: Too far in future: Skipped \u2014 scenario not properly handled yet (Internal Server Error: 500)')",
+            "screenshot_path": null,
+            "duration": 0.9105312824249268,
+            "timestamp": "07:21:41",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 242, 'Skipped: Too far in future: Skipped \u2014 scenario not properly handled yet (Internal Server Error: 500)')",
+            "category": null,
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20251230_071430.log",
+                "response_file": "reports/failed_responses/20251230_072141_500_api_hotels_search.txt"
+            },
+            "log_path": "reports/logs/geo_travel_20251230_071430.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-30_07-14-30/logs/geo_travel_20251230_071430.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251230_072141_500_api_hotels_search.txt",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_get_hotel_rating_success",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 320, 'Skipped: Get Hotel Rating skipped \u2014 AMADEUS internal error (hotelId=CYNYCETC, status=500)')",
+            "screenshot_path": null,
+            "duration": 16.377055644989014,
+            "timestamp": "07:21:58",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 320, 'Skipped: Get Hotel Rating skipped \u2014 AMADEUS internal error (hotelId=CYNYCETC, status=500)')",
+            "category": null,
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20251230_071430.log",
+                "response_file": "reports/failed_responses/20251230_072157_500_api_hotels_rating.txt"
+            },
+            "log_path": "reports/logs/geo_travel_20251230_071430.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2025-12-30_07-14-30/logs/geo_travel_20251230_071430.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20251230_072157_500_api_hotels_rating.txt",
+            "suite": "api"
+        }
+    ]
+}
