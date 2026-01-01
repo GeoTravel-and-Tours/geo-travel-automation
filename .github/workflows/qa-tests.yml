@@ -164,6 +164,97 @@ jobs:
           echo "<p>Made with ❤️ by Only1JohnN</p>" >> gh-pages-content/index.html
           echo "<p>Simple file access</p>" >> gh-pages-content/index.html
           echo "</div></div></div></body></html>" >> gh-pages-content/index.html
+      
+      # ---  Auto-generate README for gh-pages ---
+      - name: 📝 Auto-generate README for gh-pages
+        run: |
+          # Create gh-pages-content directory if it doesn't exist
+          mkdir -p gh-pages-content
+
+          # Check if template exists, if not create a basic one
+          if [ ! -f "scripts/README_TEMPLATE.md" ]; then
+            echo "# GeoTravel QA Test Results (GitHub Pages)" > gh-pages-content/README.md
+            echo "" >> gh-pages-content/README.md
+            echo "*Template not found. This is an auto-generated README.*" >> gh-pages-content/README.md
+            echo "" >> gh-pages-content/README.md
+            echo "<!-- AUTO-GENERATED:START -->" >> gh-pages-content/README.md
+            echo "<!-- AUTO-GENERATED:END -->" >> gh-pages-content/README.md
+          else
+            # Copy template README
+            cp scripts/README_TEMPLATE.md gh-pages-content/README.md
+          fi
+          
+          # Generate dynamic content
+          DYNAMIC_CONTENT="## 📊 Test Results Status\n\n"
+          DYNAMIC_CONTENT+="### 🕒 Latest Run\n"
+          DYNAMIC_CONTENT+="- **Timestamp:** \`$RUN_TIMESTAMP\`\n"
+          DYNAMIC_CONTENT+="- **Link:** [$RUN_TIMESTAMP]($RUN_TIMESTAMP/)\n"
+          
+          # Count artifacts for latest run
+          LATEST_DIR="gh-pages-content/$RUN_TIMESTAMP"
+          if [ -d "$LATEST_DIR" ]; then
+            REPORTS_COUNT=$(find "$LATEST_DIR/reports" -maxdepth 1 -type f 2>/dev/null | wc -l)
+            API_FAIL_COUNT=$(find "$LATEST_DIR/api_failed_responses" -maxdepth 1 -type f 2>/dev/null | wc -l)
+            LOGS_COUNT=$(find "$LATEST_DIR/logs" -maxdepth 1 -type f 2>/dev/null | wc -l)
+            SCREENSHOTS_COUNT=$(find "$LATEST_DIR/screenshots" -maxdepth 1 -type f 2>/dev/null | wc -l)
+            
+            DYNAMIC_CONTENT+="- **Reports:** $REPORTS_COUNT\n"
+            DYNAMIC_CONTENT+="- **API Failures:** $API_FAIL_COUNT\n"
+            DYNAMIC_CONTENT+="- **Logs:** $LOGS_COUNT\n"
+            if [ $SCREENSHOTS_COUNT -gt 0 ]; then
+              DYNAMIC_CONTENT+="- **Screenshots:** $SCREENSHOTS_COUNT\n"
+            fi
+          fi
+          
+          DYNAMIC_CONTENT+="\n### 📂 Recent Runs (Last 10)\n"
+          
+          # List recent runs with artifact counts
+          COUNT=0
+          for dir in $(ls -d gh-pages-content/20*/ 2>/dev/null | sort -r); do
+            if [ $COUNT -ge 10 ]; then
+              break
+            fi
+            name=$(basename "$dir")
+            
+            # Count artifacts
+            REPORTS_COUNT=$(find "$dir/reports" -maxdepth 1 -type f 2>/dev/null | wc -l)
+            API_FAIL_COUNT=$(find "$dir/api_failed_responses" -maxdepth 1 -type f 2>/dev/null | wc -l)
+            
+            if [ $COUNT -eq 0 ]; then
+              DYNAMIC_CONTENT+="- **[$name]($name/)** – ${REPORTS_COUNT} reports, ${API_FAIL_COUNT} API failures\n"
+            else
+              DYNAMIC_CONTENT+="- [$name]($name/) – ${REPORTS_COUNT} reports, ${API_FAIL_COUNT} API failures\n"
+            fi
+            
+            COUNT=$((COUNT+1))
+          done
+          
+          if [ $COUNT -eq 0 ]; then
+            DYNAMIC_CONTENT+="*No test runs found yet.*\n"
+          fi
+          
+          DYNAMIC_CONTENT+="\n_Last updated: $(date -u)_\n"
+          
+          # Insert dynamic content into template
+          awk -v dynamic="$DYNAMIC_CONTENT" '
+          /<!-- AUTO-GENERATED:START -->/ {print; print ""; print dynamic; skip=1}
+          /<!-- AUTO-GENERATED:END -->/ {skip=0}
+          !skip {print}
+          ' gh-pages-content/README.md > gh-pages-content/README.tmp
+          
+          mv gh-pages-content/README.tmp gh-pages-content/README.md
+
+      # --- README generation complete ---
+      - name: ✅ Verify README generation
+        run: |
+          echo "Verifying README generation..."
+          if [ ! -f "gh-pages-content/README.md" ]; then
+            echo "❌ ERROR: README.md was not generated"
+            exit 1
+          fi
+          echo "✅ README.md successfully generated"
+          echo "Preview:"
+          head -20 gh-pages-content/README.md
 
       # --- Deploy to GitHub Pages ---
       - name: 🚀 Deploy to GitHub Pages
