@@ -67,7 +67,17 @@ class BaseAPI:
     def _request(self, method, endpoint, **kwargs):
         """Base request method with logging and error handling"""
         url = f"{self.base_url}{endpoint}"
+        
+        # Merge headers
+        headers = self.headers.copy()
+        if 'headers' in kwargs:
+            headers.update(kwargs.pop('headers'))
+        
         print(f"Auth headers being sent: {self.headers}")
+        self.logger.info(f"API Request: {method} {url}")
+        
+        kwargs['timeout'] = 30
+        response = self.session.request(method, url, headers=headers, **kwargs)
         
         # Debug: Log query parameters
         if 'params' in kwargs and kwargs['params']:
@@ -76,45 +86,9 @@ class BaseAPI:
         # Debug: Log JSON body
         if 'json' in kwargs and kwargs['json']:
             self.logger.debug(f"JSON body being sent: {kwargs['json']}")
-        
-        # Merge headers
-        headers = self.headers.copy()
-        if 'headers' in kwargs:
-            headers.update(kwargs.pop('headers'))
-        
-        self.logger.info(f"API Request: {method} {url}")
-        
-        try:
-            kwargs['timeout'] = 30
-            response = self.session.request(method, url, headers=headers, **kwargs)
             
-            # Debug: Log the actual URL that was sent
-            self.logger.debug(f"Actual request URL: {response.request.url}")
-            self.logger.debug(f"Request method: {response.request.method}")
-            
-            self.logger.info(f"API Response: {response.status_code}")
-            
-            # Log response for debugging
-            if response.status_code >= 400:
-                # Save response dump for troubleshooting
-                try:
-                    dump_dir = Path("reports/failed_responses")
-                    dump_dir.mkdir(parents=True, exist_ok=True)
-                    ts = datetime.now().strftime("%Y%m%d_%H%M%S")
-                    safe_endpoint = endpoint.strip('/').replace('/', '_') or 'root'
-                    dump_file = dump_dir / f"{ts}_{response.status_code}_{safe_endpoint}.txt"
-                    with open(dump_file, 'w', encoding='utf-8') as df:
-                        df.write(response.text or response.content.decode('utf-8', errors='replace'))
-                    self.logger.warning(f"API Error Response: {response.status_code} - saved dump: {dump_file}")
-                except Exception as e:
-                    self.logger.warning(f"API Error Response: {response.text}")
-                    self.logger.debug(f"Failed saving response dump: {e}")
-            
-            return response
-            
-        except requests.exceptions.RequestException as e:
-            self.logger.error(f"API Request failed: {str(e)}")
-            raise
+        self.logger.info(f"API Response: {response.status_code}")
+        self.logger.debug(f"Response text: {response.text}")
     
     def get(self, endpoint, **kwargs):
         return self._request('GET', endpoint, **kwargs)

@@ -269,6 +269,9 @@ class TestPartnersPackageFunctionality:
         
         self.logger.info(f"🔵 VERIFIED USER - Attempting package booking: {package_title} (ID: {package_id})")
         
+        # Use the package's end date as the departure date
+        departure_date_str = first_package['end_date']
+        
         # Create unique booking data to avoid conflicts
         random_suffix = random.randint(1000, 9999)
         booking_data = {
@@ -276,7 +279,7 @@ class TestPartnersPackageFunctionality:
             "full_name": f"Test Package User {random_suffix}",
             "email": f"testpackage{random_suffix}@yopmail.com",
             "phone": f"+23481{random.randint(1000000,9999999)}",
-            "departure_date": "2025-12-15",
+            "departure_date": departure_date_str,  # <-- always the package end date
             "adults": 2,
             "children": 1,
             "infants": 0,
