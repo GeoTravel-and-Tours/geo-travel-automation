@@ -33,17 +33,18 @@ Each test execution creates a **timestamped folder** containing all artifacts fo
 ### Example Run Folder
 
 #### Folder Structure
+```
 2026-01-01_07-14-22/
 ├── index.html
 ├── api_failed_responses/
 ├── logs/
 ├── reports/
 └── screenshots/
-
+```
 
 ### Root Files
-index.html # Main dashboard (latest run)
-README.md # This documentation
+**index.html**  - # Main dashboard (latest run)
+**README_TEMPLATE** file  - # This documentation
 
 ---
 
