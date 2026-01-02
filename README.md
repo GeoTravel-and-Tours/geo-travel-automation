@@ -64,17 +64,17 @@ This file is **regenerated on every successful workflow run**.
 ## 📊 Test Results Status
 
 ### 🕒 Latest Run
-- **Timestamp:** `2026-01-02_00-59-50`
-- **Link:** [2026-01-02_00-59-50](2026-01-02_00-59-50/)
+- **Timestamp:** `2026-01-02_07-15-05`
+- **Link:** [2026-01-02_07-15-05](2026-01-02_07-15-05/)
 - **Reports:** 4
-- **API Failures:** 19
+- **API Failures:** 20
 - **Logs:** 1
 - **Screenshots:** 21
 
 ### 📂 Recent Runs (Last 10)
-- **[2026-01-02_00-59-50](2026-01-02_00-59-50/)** – 4 reports, 19 API failures
+- **[2026-01-02_07-15-05](2026-01-02_07-15-05/)** – 4 reports, 20 API failures
 
-_Last updated: Fri Jan  2 01:10:45 UTC 2026_
+_Last updated: Fri Jan  2 07:25:59 UTC 2026_
 
 <!-- AUTO-GENERATED:END -->
 
