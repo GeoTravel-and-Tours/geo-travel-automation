@@ -32,27 +32,18 @@ Each test execution creates a **timestamped folder** containing all artifacts fo
 
 ### Example Run Folder
 
+#### Folder Structure
 2026-01-01_07-14-22/
-
-
-### Folder Structure
-├── index.html # Entry page for this specific run
-├── api_failed_responses/ # Raw failed API responses (.txt)
-├── logs/ # Execution logs
-│ └── geo_travel_.log
-├── reports/ # Test reports
-│ ├── api_test_report.html
-│ ├── partners_api_test_report.html
-│ ├── smoke_test_report.html
-│ └── unified_test_report_.json
-└── screenshots/ # Failure screenshots (if any)
+├── index.html
+├── api_failed_responses/
+├── logs/
+├── reports/
+└── screenshots/
 
 
 ### Root Files
 index.html # Main dashboard (latest run)
 README.md # This documentation
-
-text
 
 ---
 
@@ -136,7 +127,7 @@ This setup scales cleanly as test coverage grows.
 
 ## 👤 Maintainer
 
-**Adeniyi John Busayo**
+[Adeniyi John Busayo](https://www.linkedin.com/in/john-adeniyi/)
 QA Automation Engineer
 
 Generated with ❤️ by GitHub Actions
