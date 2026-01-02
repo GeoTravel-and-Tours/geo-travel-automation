@@ -296,9 +296,29 @@ def pytest_runtest_makereport(item, call):
 
         screenshot_path = None
         html_path = None
+        
+        # Only collect API dumps if test failed
+        recent_dumps = []
 
         # If failed, capture evidence with ScreenshotUtils (use same files for pytest-html and smoke reporter)
         if status == "FAIL":
+            try:
+                dumps_dir = Path("reports/failed_responses")
+                if dumps_dir.exists() and dumps_dir.is_dir():
+                    cutoff = time.time() - 120  # 2 minutes
+                    candidates = sorted(dumps_dir.iterdir(), key=lambda p: p.stat().st_mtime, reverse=True)
+                    for p in candidates:
+                        if p.stat().st_mtime >= cutoff:
+                            recent_dumps.append(str(p))
+                        else:
+                            break
+                if recent_dumps:
+                    setattr(item, "_recent_response_files", recent_dumps)
+            except Exception:
+                logger.exception("Failed scanning recent response dumps")
+        else:
+            logger.info(f"Skipping attaching API dumps for passed/expected-failure test: {nodeid}")
+
             # ✅ NEW: Skip screenshot capture for API tests
             test_path = str(item.fspath)
             is_api_test = "api_tests" in test_path.lower()
