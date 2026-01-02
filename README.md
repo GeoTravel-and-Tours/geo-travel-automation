@@ -32,27 +32,18 @@ Each test execution creates a **timestamped folder** containing all artifacts fo
 
 ### Example Run Folder
 
+#### Folder Structure
 2026-01-01_07-14-22/
-
-
-### Folder Structure
-├── index.html # Entry page for this specific run
-├── api_failed_responses/ # Raw failed API responses (.txt)
-├── logs/ # Execution logs
-│ └── geo_travel_.log
-├── reports/ # Test reports
-│ ├── api_test_report.html
-│ ├── partners_api_test_report.html
-│ ├── smoke_test_report.html
-│ └── unified_test_report_.json
-└── screenshots/ # Failure screenshots (if any)
+├── index.html
+├── api_failed_responses/
+├── logs/
+├── reports/
+└── screenshots/
 
 
 ### Root Files
 index.html # Main dashboard (latest run)
 README.md # This documentation
-
-text
 
 ---
 
@@ -68,24 +59,22 @@ This file is **regenerated on every successful workflow run**.
 
 ---
 
-## 📊 Test Results Status
-
 <!-- AUTO-GENERATED:START -->
 
 ## 📊 Test Results Status
 
 ### 🕒 Latest Run
-- **Timestamp:** `2026-01-01_23-59-36`
-- **Link:** [2026-01-01_23-59-36](2026-01-01_23-59-36/)
+- **Timestamp:** `2026-01-02_00-59-50`
+- **Link:** [2026-01-02_00-59-50](2026-01-02_00-59-50/)
 - **Reports:** 4
-- **API Failures:** 45
+- **API Failures:** 19
 - **Logs:** 1
-- **Screenshots:** 2
+- **Screenshots:** 21
 
 ### 📂 Recent Runs (Last 10)
-- **[2026-01-01_23-59-36](2026-01-01_23-59-36/)** – 4 reports, 45 API failures
+- **[2026-01-02_00-59-50](2026-01-02_00-59-50/)** – 4 reports, 19 API failures
 
-_Last updated: Fri Jan  2 00:10:50 UTC 2026_
+_Last updated: Fri Jan  2 01:10:45 UTC 2026_
 
 <!-- AUTO-GENERATED:END -->
 
@@ -150,7 +139,7 @@ This setup scales cleanly as test coverage grows.
 
 ## 👤 Maintainer
 
-**Adeniyi John Busayo**
+[Adeniyi John Busayo](https://www.linkedin.com/in/john-adeniyi/)
 QA Automation Engineer
 
 Generated with ❤️ by GitHub Actions
