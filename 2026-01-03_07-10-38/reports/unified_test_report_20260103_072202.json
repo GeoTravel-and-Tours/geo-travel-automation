@@ -1,0 +1,1860 @@
+{
+    "test_suite_name": "Unified UI Smoke + API + Partners API TEST REPORT",
+    "total_tests": 124,
+    "passed_tests": 69,
+    "failed_tests": 55,
+    "skipped_tests": 0,
+    "success_rate": 55.6,
+    "duration": 683.217245,
+    "start_time": "2026-01-03 07:10:39",
+    "end_time": "2026-01-03 07:22:02",
+    "suites_run": [
+        "smoke",
+        "api",
+        "partners_api"
+    ],
+    "suite_details": {
+        "smoke": {
+            "report": {
+                "test_suite_name": "Unified UI Smoke + API + Partners API TEST REPORT",
+                "total_tests": 42,
+                "passed_tests": 41,
+                "failed_tests": 1,
+                "skipped_tests": 0,
+                "success_rate": 97.61904761904762,
+                "duration": 390.552527,
+                "start_time": "2026-01-03 07:10:40",
+                "end_time": "2026-01-03 07:17:10",
+                "failed_tests_details": [
+                    {
+                        "test_name": "src/tests/smoke_tests/test_package_booking_smoke.py::TestPackageBookingSmoke::test_complete_package_booking_flow",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Failed to reach Flutterwave test mode\nassert False",
+                        "screenshot_path": null,
+                        "duration": 73.37728810310364,
+                        "timestamp": "07:15:05",
+                        "skip_reason": null,
+                        "category": "Functional",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20260103_071038.log"
+                        },
+                        "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+                        "suite": "smoke"
+                    }
+                ],
+                "skipped_tests_details": []
+            },
+            "timestamp": "2026-01-03 07:17:10"
+        },
+        "api": {
+            "report": {
+                "test_suite_name": "API SMOKE TEST",
+                "total_tests": 47,
+                "passed_tests": 0,
+                "failed_tests": 47,
+                "skipped_tests": 0,
+                "success_rate": 0.0,
+                "duration": 44.815328,
+                "start_time": "2026-01-03 07:17:10",
+                "end_time": "2026-01-03 07:17:55",
+                "failed_tests_details": [
+                    {
+                        "test_name": "src/tests/api_tests/test_auth_api.py::TestAuthAPI::test_login_success",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+                        "screenshot_path": null,
+                        "duration": 0.36096811294555664,
+                        "timestamp": "07:17:11",
+                        "skip_reason": null,
+                        "category": "Code Logic",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20260103_071038.log"
+                        },
+                        "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_auth_api.py::TestAuthAPI::test_login_invalid_credentials",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+                        "screenshot_path": null,
+                        "duration": 0.26066040992736816,
+                        "timestamp": "07:17:11",
+                        "skip_reason": null,
+                        "category": "Code Logic",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20260103_071038.log"
+                        },
+                        "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_auth_api.py::TestAuthAPI::test_login_empty_credentials",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+                        "screenshot_path": null,
+                        "duration": 0.25426602363586426,
+                        "timestamp": "07:17:11",
+                        "skip_reason": null,
+                        "category": "Code Logic",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20260103_071038.log"
+                        },
+                        "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_auth_api.py::TestAuthAPI::test_login_missing_password",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+                        "screenshot_path": null,
+                        "duration": 0.2492992877960205,
+                        "timestamp": "07:17:12",
+                        "skip_reason": null,
+                        "category": "Code Logic",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20260103_071038.log"
+                        },
+                        "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_auth_api.py::TestAuthAPI::test_auth_token_set_after_successful_login",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+                        "screenshot_path": null,
+                        "duration": 0.3218057155609131,
+                        "timestamp": "07:17:12",
+                        "skip_reason": null,
+                        "category": "Code Logic",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20260103_071038.log"
+                        },
+                        "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_auth_api.py::TestAuthAPI::test_dynamic_token_extraction",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+                        "screenshot_path": null,
+                        "duration": 0.3248569965362549,
+                        "timestamp": "07:17:12",
+                        "skip_reason": null,
+                        "category": "Code Logic",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20260103_071038.log"
+                        },
+                        "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_auth_api.py::TestAuthAPI::test_token_validation",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+                        "screenshot_path": null,
+                        "duration": 0.319943904876709,
+                        "timestamp": "07:17:13",
+                        "skip_reason": null,
+                        "category": "Code Logic",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20260103_071038.log"
+                        },
+                        "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_get_hotel_cities_empty_keyword",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+                        "screenshot_path": null,
+                        "duration": 0.7720954418182373,
+                        "timestamp": "07:17:17",
+                        "skip_reason": null,
+                        "category": "Code Logic",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20260103_071038.log"
+                        },
+                        "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_get_hotel_cities_invalid_keyword[INVALID123]",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+                        "screenshot_path": null,
+                        "duration": 0.5367496013641357,
+                        "timestamp": "07:17:18",
+                        "skip_reason": null,
+                        "category": "Code Logic",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20260103_071038.log"
+                        },
+                        "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_get_hotel_cities_invalid_keyword[XYZ999]",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+                        "screenshot_path": null,
+                        "duration": 0.5418920516967773,
+                        "timestamp": "07:17:18",
+                        "skip_reason": null,
+                        "category": "Code Logic",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20260103_071038.log"
+                        },
+                        "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_get_hotel_cities_invalid_keyword[###]",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+                        "screenshot_path": null,
+                        "duration": 0.5460855960845947,
+                        "timestamp": "07:17:19",
+                        "skip_reason": null,
+                        "category": "Code Logic",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20260103_071038.log"
+                        },
+                        "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_search_hotels_without_price",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+                        "screenshot_path": null,
+                        "duration": 1.9745879173278809,
+                        "timestamp": "07:17:21",
+                        "skip_reason": null,
+                        "category": "Code Logic",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20260103_071038.log"
+                        },
+                        "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_search_hotels_with_price_range_currency",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+                        "screenshot_path": null,
+                        "duration": 1.870751142501831,
+                        "timestamp": "07:17:23",
+                        "skip_reason": null,
+                        "category": "Code Logic",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20260103_071038.log"
+                        },
+                        "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_search_hotels_missing_required_fields",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+                        "screenshot_path": null,
+                        "duration": 1.6545913219451904,
+                        "timestamp": "07:17:24",
+                        "skip_reason": null,
+                        "category": "Code Logic",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20260103_071038.log"
+                        },
+                        "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_search_hotels_pagination[1-10]",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+                        "screenshot_path": null,
+                        "duration": 1.6071195602416992,
+                        "timestamp": "07:17:26",
+                        "skip_reason": null,
+                        "category": "Code Logic",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20260103_071038.log"
+                        },
+                        "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_search_hotels_pagination[2-10]",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+                        "screenshot_path": null,
+                        "duration": 2.2302916049957275,
+                        "timestamp": "07:17:28",
+                        "skip_reason": null,
+                        "category": "Code Logic",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20260103_071038.log"
+                        },
+                        "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_search_hotels_pagination[3-20]",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+                        "screenshot_path": null,
+                        "duration": 3.1363790035247803,
+                        "timestamp": "07:17:31",
+                        "skip_reason": null,
+                        "category": "Code Logic",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20260103_071038.log"
+                        },
+                        "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_search_hotels_invalid_dates",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+                        "screenshot_path": null,
+                        "duration": 0.2555227279663086,
+                        "timestamp": "07:17:31",
+                        "skip_reason": null,
+                        "category": "Code Logic",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20260103_071038.log"
+                        },
+                        "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_get_hotel_rating_success",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+                        "screenshot_path": null,
+                        "duration": 1.9832794666290283,
+                        "timestamp": "07:17:33",
+                        "skip_reason": null,
+                        "category": "Code Logic",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20260103_071038.log"
+                        },
+                        "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_get_hotel_rating_invalid_id[INVALID123]",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+                        "screenshot_path": null,
+                        "duration": 0.4284677505493164,
+                        "timestamp": "07:17:34",
+                        "skip_reason": null,
+                        "category": "Code Logic",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20260103_071038.log"
+                        },
+                        "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_get_hotel_rating_invalid_id[]",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+                        "screenshot_path": null,
+                        "duration": 0.5243513584136963,
+                        "timestamp": "07:17:34",
+                        "skip_reason": null,
+                        "category": "Code Logic",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20260103_071038.log"
+                        },
+                        "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_get_hotel_rating_invalid_id[999999]",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+                        "screenshot_path": null,
+                        "duration": 0.5577094554901123,
+                        "timestamp": "07:17:35",
+                        "skip_reason": null,
+                        "category": "Code Logic",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20260103_071038.log"
+                        },
+                        "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_book_hotel_without_auth",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+                        "screenshot_path": null,
+                        "duration": 0.2751791477203369,
+                        "timestamp": "07:17:35",
+                        "skip_reason": null,
+                        "category": "Code Logic",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20260103_071038.log"
+                        },
+                        "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_book_hotel_missing_required_fields",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+                        "screenshot_path": null,
+                        "duration": 0.2544281482696533,
+                        "timestamp": "07:17:36",
+                        "skip_reason": null,
+                        "category": "Code Logic",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20260103_071038.log"
+                        },
+                        "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_search_hotels_performance_without_auth",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+                        "screenshot_path": null,
+                        "duration": 2.050757646560669,
+                        "timestamp": "07:17:38",
+                        "skip_reason": null,
+                        "category": "Code Logic",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20260103_071038.log"
+                        },
+                        "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_hotel_endpoints_without_auth",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+                        "screenshot_path": null,
+                        "duration": 0.4891068935394287,
+                        "timestamp": "07:17:39",
+                        "skip_reason": null,
+                        "category": "Code Logic",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20260103_071038.log"
+                        },
+                        "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_package_api.py::TestPackageAPI::test_book_package_without_auth_not_in_user_bookings",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+                        "screenshot_path": null,
+                        "duration": 0.2511630058288574,
+                        "timestamp": "07:17:47",
+                        "skip_reason": null,
+                        "category": "Code Logic",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20260103_071038.log"
+                        },
+                        "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_create_visa_enquiry_without_auth",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+                        "screenshot_path": null,
+                        "duration": 0.2873342037200928,
+                        "timestamp": "07:17:48",
+                        "skip_reason": null,
+                        "category": "Code Logic",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20260103_071038.log"
+                        },
+                        "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_create_visa_enquiry_missing_required_fields[first_name]",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+                        "screenshot_path": null,
+                        "duration": 0.27571868896484375,
+                        "timestamp": "07:17:48",
+                        "skip_reason": null,
+                        "category": "Code Logic",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20260103_071038.log"
+                        },
+                        "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_create_visa_enquiry_missing_required_fields[last_name]",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+                        "screenshot_path": null,
+                        "duration": 0.28797411918640137,
+                        "timestamp": "07:17:48",
+                        "skip_reason": null,
+                        "category": "Code Logic",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20260103_071038.log"
+                        },
+                        "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_create_visa_enquiry_missing_required_fields[email]",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+                        "screenshot_path": null,
+                        "duration": 0.24797892570495605,
+                        "timestamp": "07:17:49",
+                        "skip_reason": null,
+                        "category": "Code Logic",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20260103_071038.log"
+                        },
+                        "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_create_visa_enquiry_missing_required_fields[phoneNumber]",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+                        "screenshot_path": null,
+                        "duration": 0.2572622299194336,
+                        "timestamp": "07:17:49",
+                        "skip_reason": null,
+                        "category": "Code Logic",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20260103_071038.log"
+                        },
+                        "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_create_visa_enquiry_missing_required_fields[visaCountry]",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+                        "screenshot_path": null,
+                        "duration": 0.2537112236022949,
+                        "timestamp": "07:17:49",
+                        "skip_reason": null,
+                        "category": "Code Logic",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20260103_071038.log"
+                        },
+                        "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_create_visa_enquiry_missing_required_fields[travel_date]",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+                        "screenshot_path": null,
+                        "duration": 0.2577207088470459,
+                        "timestamp": "07:17:49",
+                        "skip_reason": null,
+                        "category": "Code Logic",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20260103_071038.log"
+                        },
+                        "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_create_visa_enquiry_missing_required_fields[agree]",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+                        "screenshot_path": null,
+                        "duration": 0.252241849899292,
+                        "timestamp": "07:17:50",
+                        "skip_reason": null,
+                        "category": "Code Logic",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20260103_071038.log"
+                        },
+                        "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_create_visa_enquiry_missing_required_fields[type]",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+                        "screenshot_path": null,
+                        "duration": 0.2589278221130371,
+                        "timestamp": "07:17:50",
+                        "skip_reason": null,
+                        "category": "Code Logic",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20260103_071038.log"
+                        },
+                        "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_create_visa_enquiry_invalid_type[InvalidType]",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+                        "screenshot_path": null,
+                        "duration": 0.250532865524292,
+                        "timestamp": "07:17:50",
+                        "skip_reason": null,
+                        "category": "Code Logic",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20260103_071038.log"
+                        },
+                        "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_create_visa_enquiry_invalid_type[]",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+                        "screenshot_path": null,
+                        "duration": 0.28659677505493164,
+                        "timestamp": "07:17:51",
+                        "skip_reason": null,
+                        "category": "Code Logic",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20260103_071038.log"
+                        },
+                        "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_create_visa_enquiry_invalid_type[Vacation]",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+                        "screenshot_path": null,
+                        "duration": 0.25568699836730957,
+                        "timestamp": "07:17:51",
+                        "skip_reason": null,
+                        "category": "Code Logic",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20260103_071038.log"
+                        },
+                        "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_create_visa_enquiry_invalid_dates",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+                        "screenshot_path": null,
+                        "duration": 0.2763373851776123,
+                        "timestamp": "07:17:51",
+                        "skip_reason": null,
+                        "category": "Code Logic",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20260103_071038.log"
+                        },
+                        "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_make_payment_flutterwave_without_auth",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+                        "screenshot_path": null,
+                        "duration": 0.2813904285430908,
+                        "timestamp": "07:17:51",
+                        "skip_reason": null,
+                        "category": "Code Logic",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20260103_071038.log"
+                        },
+                        "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_make_payment_bank_transfer_without_auth",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+                        "screenshot_path": null,
+                        "duration": 0.2898874282836914,
+                        "timestamp": "07:17:52",
+                        "skip_reason": null,
+                        "category": "Code Logic",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20260103_071038.log"
+                        },
+                        "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_make_payment_invalid_visa_id",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+                        "screenshot_path": null,
+                        "duration": 0.26218223571777344,
+                        "timestamp": "07:17:52",
+                        "skip_reason": null,
+                        "category": "Code Logic",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20260103_071038.log"
+                        },
+                        "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_make_payment_invalid_method",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+                        "screenshot_path": null,
+                        "duration": 0.2761354446411133,
+                        "timestamp": "07:17:53",
+                        "skip_reason": null,
+                        "category": "Code Logic",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20260103_071038.log"
+                        },
+                        "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_get_user_visa_applications_without_auth",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+                        "screenshot_path": null,
+                        "duration": 0.26981377601623535,
+                        "timestamp": "07:17:53",
+                        "skip_reason": null,
+                        "category": "Code Logic",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20260103_071038.log"
+                        },
+                        "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_get_visa_application_by_id_without_auth",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+                        "screenshot_path": null,
+                        "duration": 0.2545351982116699,
+                        "timestamp": "07:17:54",
+                        "skip_reason": null,
+                        "category": "Code Logic",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20260103_071038.log"
+                        },
+                        "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_complete_visa_flow_without_auth",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+                        "screenshot_path": null,
+                        "duration": 0.2890167236328125,
+                        "timestamp": "07:17:55",
+                        "skip_reason": null,
+                        "category": "Code Logic",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20260103_071038.log"
+                        },
+                        "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+                        "suite": "api"
+                    }
+                ],
+                "skipped_tests_details": []
+            },
+            "timestamp": "2026-01-03 07:17:55"
+        },
+        "partners_api": {
+            "report": {
+                "test_suite_name": "PARTNERS API SMOKE TEST",
+                "total_tests": 35,
+                "passed_tests": 28,
+                "failed_tests": 7,
+                "skipped_tests": 0,
+                "success_rate": 80.0,
+                "duration": 235.995593,
+                "start_time": "2026-01-03 07:18:06",
+                "end_time": "2026-01-03 07:22:02",
+                "failed_tests_details": [
+                    {
+                        "test_name": "src/tests/partners_api_tests/test_partners_flight.py::TestPartnersFlightFunctionality::test_verified_user_can_search_flights",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Verified user should access flight search\nassert 503 == 200\n +  where 503 = <Response [503]>.status_code",
+                        "screenshot_path": null,
+                        "duration": 31.337401390075684,
+                        "timestamp": "07:18:46",
+                        "skip_reason": null,
+                        "category": "Partners API Service Unavailable",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                            "response_file": "reports/failed_responses/20260103_071846_503_api_flight_search.txt"
+                        },
+                        "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20260103_071846_503_api_flight_search.txt",
+                        "suite": "partners_api"
+                    },
+                    {
+                        "test_name": "src/tests/partners_api_tests/test_partners_flight.py::TestPartnersFlightFunctionality::test_verified_user_can_book_flight",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: assert 503 == 200\n +  where 503 = <Response [503]>.status_code",
+                        "screenshot_path": null,
+                        "duration": 31.34445548057556,
+                        "timestamp": "07:19:18",
+                        "skip_reason": null,
+                        "category": "Partners API Service Unavailable",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                            "response_file": "reports/failed_responses/20260103_071918_503_api_flight_search.txt"
+                        },
+                        "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20260103_071918_503_api_flight_search.txt",
+                        "suite": "partners_api"
+                    },
+                    {
+                        "test_name": "src/tests/partners_api_tests/test_partners_flight.py::TestPartnersFlightFunctionality::test_flight_search_counted_in_usage",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: assert 503 == 200\n +  where 503 = <Response [503]>.status_code",
+                        "screenshot_path": null,
+                        "duration": 31.84584331512451,
+                        "timestamp": "07:19:51",
+                        "skip_reason": null,
+                        "category": "Partners API Service Unavailable",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                            "response_file": "reports/failed_responses/20260103_071951_503_api_flight_search.txt"
+                        },
+                        "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20260103_071951_503_api_flight_search.txt",
+                        "suite": "partners_api"
+                    },
+                    {
+                        "test_name": "src/tests/partners_api_tests/test_partners_flight.py::TestPartnersFlightFunctionality::test_flight_booking_counted_in_usage",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: assert 503 == 200\n +  where 503 = <Response [503]>.status_code",
+                        "screenshot_path": null,
+                        "duration": 31.828790426254272,
+                        "timestamp": "07:20:24",
+                        "skip_reason": null,
+                        "category": "Partners API Service Unavailable",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                            "response_file": "reports/failed_responses/20260103_072024_503_api_flight_search.txt"
+                        },
+                        "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20260103_072024_503_api_flight_search.txt",
+                        "suite": "partners_api"
+                    },
+                    {
+                        "test_name": "src/tests/partners_api_tests/test_partners_organization.py::TestPartnersOrganizationFunctionality::test_verified_user_can_reset_api_keys",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: New credentials should work for API calls\nassert 503 == 200\n +  where 503 = <Response [503]>.status_code",
+                        "screenshot_path": null,
+                        "duration": 32.41247582435608,
+                        "timestamp": "07:21:01",
+                        "skip_reason": null,
+                        "category": "Partners API Service Unavailable",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                            "response_file": "reports/failed_responses/20260103_072101_503_api_flight_search.txt"
+                        },
+                        "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20260103_072101_503_api_flight_search.txt",
+                        "suite": "partners_api"
+                    },
+                    {
+                        "test_name": "src/tests/partners_api_tests/test_partners_package.py::TestPartnersPackageFunctionality::test_verified_user_can_get_packages",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Verified user should be able to access package listings\nassert 503 == 200\n +  where 503 = <Response [503]>.status_code",
+                        "screenshot_path": null,
+                        "duration": 31.311877250671387,
+                        "timestamp": "07:21:41",
+                        "skip_reason": null,
+                        "category": "Partners API Service Unavailable",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                            "response_file": "reports/failed_responses/20260103_072141_503_api_package_all.txt"
+                        },
+                        "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20260103_072141_503_api_package_all.txt",
+                        "suite": "partners_api"
+                    },
+                    {
+                        "test_name": "src/tests/partners_api_tests/test_partners_package.py::TestPartnersPackageFunctionality::test_verified_user_can_book_package",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Verified user should be able to book packages\nassert 400 == 201\n +  where 400 = <Response [400]>.status_code",
+                        "screenshot_path": null,
+                        "duration": 1.966322660446167,
+                        "timestamp": "07:21:50",
+                        "skip_reason": null,
+                        "category": "Partners API Request Validation",
+                        "evidence": {
+                            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                            "response_file": "reports/failed_responses/20260103_072150_400_api_package_book.txt"
+                        },
+                        "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20260103_072150_400_api_package_book.txt",
+                        "suite": "partners_api"
+                    }
+                ],
+                "skipped_tests_details": []
+            },
+            "timestamp": "2026-01-03 07:22:02"
+        }
+    },
+    "all_failed_tests": [
+        {
+            "test_name": "src/tests/smoke_tests/test_package_booking_smoke.py::TestPackageBookingSmoke::test_complete_package_booking_flow",
+            "status": "FAIL",
+            "error_message": "AssertionError: Failed to reach Flutterwave test mode\nassert False",
+            "screenshot_path": null,
+            "duration": 73.37728810310364,
+            "timestamp": "07:15:05",
+            "skip_reason": null,
+            "category": "Functional",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20260103_071038.log"
+            },
+            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+            "suite": "smoke"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_auth_api.py::TestAuthAPI::test_login_success",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+            "screenshot_path": null,
+            "duration": 0.36096811294555664,
+            "timestamp": "07:17:11",
+            "skip_reason": null,
+            "category": "Code Logic",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20260103_071038.log"
+            },
+            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_auth_api.py::TestAuthAPI::test_login_invalid_credentials",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+            "screenshot_path": null,
+            "duration": 0.26066040992736816,
+            "timestamp": "07:17:11",
+            "skip_reason": null,
+            "category": "Code Logic",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20260103_071038.log"
+            },
+            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_auth_api.py::TestAuthAPI::test_login_empty_credentials",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+            "screenshot_path": null,
+            "duration": 0.25426602363586426,
+            "timestamp": "07:17:11",
+            "skip_reason": null,
+            "category": "Code Logic",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20260103_071038.log"
+            },
+            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_auth_api.py::TestAuthAPI::test_login_missing_password",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+            "screenshot_path": null,
+            "duration": 0.2492992877960205,
+            "timestamp": "07:17:12",
+            "skip_reason": null,
+            "category": "Code Logic",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20260103_071038.log"
+            },
+            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_auth_api.py::TestAuthAPI::test_auth_token_set_after_successful_login",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+            "screenshot_path": null,
+            "duration": 0.3218057155609131,
+            "timestamp": "07:17:12",
+            "skip_reason": null,
+            "category": "Code Logic",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20260103_071038.log"
+            },
+            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_auth_api.py::TestAuthAPI::test_dynamic_token_extraction",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+            "screenshot_path": null,
+            "duration": 0.3248569965362549,
+            "timestamp": "07:17:12",
+            "skip_reason": null,
+            "category": "Code Logic",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20260103_071038.log"
+            },
+            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_auth_api.py::TestAuthAPI::test_token_validation",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+            "screenshot_path": null,
+            "duration": 0.319943904876709,
+            "timestamp": "07:17:13",
+            "skip_reason": null,
+            "category": "Code Logic",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20260103_071038.log"
+            },
+            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_get_hotel_cities_empty_keyword",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+            "screenshot_path": null,
+            "duration": 0.7720954418182373,
+            "timestamp": "07:17:17",
+            "skip_reason": null,
+            "category": "Code Logic",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20260103_071038.log"
+            },
+            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_get_hotel_cities_invalid_keyword[INVALID123]",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+            "screenshot_path": null,
+            "duration": 0.5367496013641357,
+            "timestamp": "07:17:18",
+            "skip_reason": null,
+            "category": "Code Logic",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20260103_071038.log"
+            },
+            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_get_hotel_cities_invalid_keyword[XYZ999]",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+            "screenshot_path": null,
+            "duration": 0.5418920516967773,
+            "timestamp": "07:17:18",
+            "skip_reason": null,
+            "category": "Code Logic",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20260103_071038.log"
+            },
+            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_get_hotel_cities_invalid_keyword[###]",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+            "screenshot_path": null,
+            "duration": 0.5460855960845947,
+            "timestamp": "07:17:19",
+            "skip_reason": null,
+            "category": "Code Logic",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20260103_071038.log"
+            },
+            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_search_hotels_without_price",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+            "screenshot_path": null,
+            "duration": 1.9745879173278809,
+            "timestamp": "07:17:21",
+            "skip_reason": null,
+            "category": "Code Logic",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20260103_071038.log"
+            },
+            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_search_hotels_with_price_range_currency",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+            "screenshot_path": null,
+            "duration": 1.870751142501831,
+            "timestamp": "07:17:23",
+            "skip_reason": null,
+            "category": "Code Logic",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20260103_071038.log"
+            },
+            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_search_hotels_missing_required_fields",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+            "screenshot_path": null,
+            "duration": 1.6545913219451904,
+            "timestamp": "07:17:24",
+            "skip_reason": null,
+            "category": "Code Logic",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20260103_071038.log"
+            },
+            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_search_hotels_pagination[1-10]",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+            "screenshot_path": null,
+            "duration": 1.6071195602416992,
+            "timestamp": "07:17:26",
+            "skip_reason": null,
+            "category": "Code Logic",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20260103_071038.log"
+            },
+            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_search_hotels_pagination[2-10]",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+            "screenshot_path": null,
+            "duration": 2.2302916049957275,
+            "timestamp": "07:17:28",
+            "skip_reason": null,
+            "category": "Code Logic",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20260103_071038.log"
+            },
+            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_search_hotels_pagination[3-20]",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+            "screenshot_path": null,
+            "duration": 3.1363790035247803,
+            "timestamp": "07:17:31",
+            "skip_reason": null,
+            "category": "Code Logic",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20260103_071038.log"
+            },
+            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_search_hotels_invalid_dates",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+            "screenshot_path": null,
+            "duration": 0.2555227279663086,
+            "timestamp": "07:17:31",
+            "skip_reason": null,
+            "category": "Code Logic",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20260103_071038.log"
+            },
+            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_get_hotel_rating_success",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+            "screenshot_path": null,
+            "duration": 1.9832794666290283,
+            "timestamp": "07:17:33",
+            "skip_reason": null,
+            "category": "Code Logic",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20260103_071038.log"
+            },
+            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_get_hotel_rating_invalid_id[INVALID123]",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+            "screenshot_path": null,
+            "duration": 0.4284677505493164,
+            "timestamp": "07:17:34",
+            "skip_reason": null,
+            "category": "Code Logic",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20260103_071038.log"
+            },
+            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_get_hotel_rating_invalid_id[]",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+            "screenshot_path": null,
+            "duration": 0.5243513584136963,
+            "timestamp": "07:17:34",
+            "skip_reason": null,
+            "category": "Code Logic",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20260103_071038.log"
+            },
+            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_get_hotel_rating_invalid_id[999999]",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+            "screenshot_path": null,
+            "duration": 0.5577094554901123,
+            "timestamp": "07:17:35",
+            "skip_reason": null,
+            "category": "Code Logic",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20260103_071038.log"
+            },
+            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_book_hotel_without_auth",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+            "screenshot_path": null,
+            "duration": 0.2751791477203369,
+            "timestamp": "07:17:35",
+            "skip_reason": null,
+            "category": "Code Logic",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20260103_071038.log"
+            },
+            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_book_hotel_missing_required_fields",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+            "screenshot_path": null,
+            "duration": 0.2544281482696533,
+            "timestamp": "07:17:36",
+            "skip_reason": null,
+            "category": "Code Logic",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20260103_071038.log"
+            },
+            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_search_hotels_performance_without_auth",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+            "screenshot_path": null,
+            "duration": 2.050757646560669,
+            "timestamp": "07:17:38",
+            "skip_reason": null,
+            "category": "Code Logic",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20260103_071038.log"
+            },
+            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_hotel_endpoints_without_auth",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+            "screenshot_path": null,
+            "duration": 0.4891068935394287,
+            "timestamp": "07:17:39",
+            "skip_reason": null,
+            "category": "Code Logic",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20260103_071038.log"
+            },
+            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_package_api.py::TestPackageAPI::test_book_package_without_auth_not_in_user_bookings",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+            "screenshot_path": null,
+            "duration": 0.2511630058288574,
+            "timestamp": "07:17:47",
+            "skip_reason": null,
+            "category": "Code Logic",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20260103_071038.log"
+            },
+            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_create_visa_enquiry_without_auth",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+            "screenshot_path": null,
+            "duration": 0.2873342037200928,
+            "timestamp": "07:17:48",
+            "skip_reason": null,
+            "category": "Code Logic",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20260103_071038.log"
+            },
+            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_create_visa_enquiry_missing_required_fields[first_name]",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+            "screenshot_path": null,
+            "duration": 0.27571868896484375,
+            "timestamp": "07:17:48",
+            "skip_reason": null,
+            "category": "Code Logic",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20260103_071038.log"
+            },
+            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_create_visa_enquiry_missing_required_fields[last_name]",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+            "screenshot_path": null,
+            "duration": 0.28797411918640137,
+            "timestamp": "07:17:48",
+            "skip_reason": null,
+            "category": "Code Logic",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20260103_071038.log"
+            },
+            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_create_visa_enquiry_missing_required_fields[email]",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+            "screenshot_path": null,
+            "duration": 0.24797892570495605,
+            "timestamp": "07:17:49",
+            "skip_reason": null,
+            "category": "Code Logic",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20260103_071038.log"
+            },
+            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_create_visa_enquiry_missing_required_fields[phoneNumber]",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+            "screenshot_path": null,
+            "duration": 0.2572622299194336,
+            "timestamp": "07:17:49",
+            "skip_reason": null,
+            "category": "Code Logic",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20260103_071038.log"
+            },
+            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_create_visa_enquiry_missing_required_fields[visaCountry]",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+            "screenshot_path": null,
+            "duration": 0.2537112236022949,
+            "timestamp": "07:17:49",
+            "skip_reason": null,
+            "category": "Code Logic",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20260103_071038.log"
+            },
+            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_create_visa_enquiry_missing_required_fields[travel_date]",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+            "screenshot_path": null,
+            "duration": 0.2577207088470459,
+            "timestamp": "07:17:49",
+            "skip_reason": null,
+            "category": "Code Logic",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20260103_071038.log"
+            },
+            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_create_visa_enquiry_missing_required_fields[agree]",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+            "screenshot_path": null,
+            "duration": 0.252241849899292,
+            "timestamp": "07:17:50",
+            "skip_reason": null,
+            "category": "Code Logic",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20260103_071038.log"
+            },
+            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_create_visa_enquiry_missing_required_fields[type]",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+            "screenshot_path": null,
+            "duration": 0.2589278221130371,
+            "timestamp": "07:17:50",
+            "skip_reason": null,
+            "category": "Code Logic",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20260103_071038.log"
+            },
+            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_create_visa_enquiry_invalid_type[InvalidType]",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+            "screenshot_path": null,
+            "duration": 0.250532865524292,
+            "timestamp": "07:17:50",
+            "skip_reason": null,
+            "category": "Code Logic",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20260103_071038.log"
+            },
+            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_create_visa_enquiry_invalid_type[]",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+            "screenshot_path": null,
+            "duration": 0.28659677505493164,
+            "timestamp": "07:17:51",
+            "skip_reason": null,
+            "category": "Code Logic",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20260103_071038.log"
+            },
+            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_create_visa_enquiry_invalid_type[Vacation]",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+            "screenshot_path": null,
+            "duration": 0.25568699836730957,
+            "timestamp": "07:17:51",
+            "skip_reason": null,
+            "category": "Code Logic",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20260103_071038.log"
+            },
+            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_create_visa_enquiry_invalid_dates",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+            "screenshot_path": null,
+            "duration": 0.2763373851776123,
+            "timestamp": "07:17:51",
+            "skip_reason": null,
+            "category": "Code Logic",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20260103_071038.log"
+            },
+            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_make_payment_flutterwave_without_auth",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+            "screenshot_path": null,
+            "duration": 0.2813904285430908,
+            "timestamp": "07:17:51",
+            "skip_reason": null,
+            "category": "Code Logic",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20260103_071038.log"
+            },
+            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_make_payment_bank_transfer_without_auth",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+            "screenshot_path": null,
+            "duration": 0.2898874282836914,
+            "timestamp": "07:17:52",
+            "skip_reason": null,
+            "category": "Code Logic",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20260103_071038.log"
+            },
+            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_make_payment_invalid_visa_id",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+            "screenshot_path": null,
+            "duration": 0.26218223571777344,
+            "timestamp": "07:17:52",
+            "skip_reason": null,
+            "category": "Code Logic",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20260103_071038.log"
+            },
+            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_make_payment_invalid_method",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+            "screenshot_path": null,
+            "duration": 0.2761354446411133,
+            "timestamp": "07:17:53",
+            "skip_reason": null,
+            "category": "Code Logic",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20260103_071038.log"
+            },
+            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_get_user_visa_applications_without_auth",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+            "screenshot_path": null,
+            "duration": 0.26981377601623535,
+            "timestamp": "07:17:53",
+            "skip_reason": null,
+            "category": "Code Logic",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20260103_071038.log"
+            },
+            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_get_visa_application_by_id_without_auth",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+            "screenshot_path": null,
+            "duration": 0.2545351982116699,
+            "timestamp": "07:17:54",
+            "skip_reason": null,
+            "category": "Code Logic",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20260103_071038.log"
+            },
+            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_complete_visa_flow_without_auth",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'status_code'",
+            "screenshot_path": null,
+            "duration": 0.2890167236328125,
+            "timestamp": "07:17:55",
+            "skip_reason": null,
+            "category": "Code Logic",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20260103_071038.log"
+            },
+            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/partners_api_tests/test_partners_flight.py::TestPartnersFlightFunctionality::test_verified_user_can_search_flights",
+            "status": "FAIL",
+            "error_message": "AssertionError: Verified user should access flight search\nassert 503 == 200\n +  where 503 = <Response [503]>.status_code",
+            "screenshot_path": null,
+            "duration": 31.337401390075684,
+            "timestamp": "07:18:46",
+            "skip_reason": null,
+            "category": "Partners API Service Unavailable",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                "response_file": "reports/failed_responses/20260103_071846_503_api_flight_search.txt"
+            },
+            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20260103_071846_503_api_flight_search.txt",
+            "suite": "partners_api"
+        },
+        {
+            "test_name": "src/tests/partners_api_tests/test_partners_flight.py::TestPartnersFlightFunctionality::test_verified_user_can_book_flight",
+            "status": "FAIL",
+            "error_message": "AssertionError: assert 503 == 200\n +  where 503 = <Response [503]>.status_code",
+            "screenshot_path": null,
+            "duration": 31.34445548057556,
+            "timestamp": "07:19:18",
+            "skip_reason": null,
+            "category": "Partners API Service Unavailable",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                "response_file": "reports/failed_responses/20260103_071918_503_api_flight_search.txt"
+            },
+            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20260103_071918_503_api_flight_search.txt",
+            "suite": "partners_api"
+        },
+        {
+            "test_name": "src/tests/partners_api_tests/test_partners_flight.py::TestPartnersFlightFunctionality::test_flight_search_counted_in_usage",
+            "status": "FAIL",
+            "error_message": "AssertionError: assert 503 == 200\n +  where 503 = <Response [503]>.status_code",
+            "screenshot_path": null,
+            "duration": 31.84584331512451,
+            "timestamp": "07:19:51",
+            "skip_reason": null,
+            "category": "Partners API Service Unavailable",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                "response_file": "reports/failed_responses/20260103_071951_503_api_flight_search.txt"
+            },
+            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20260103_071951_503_api_flight_search.txt",
+            "suite": "partners_api"
+        },
+        {
+            "test_name": "src/tests/partners_api_tests/test_partners_flight.py::TestPartnersFlightFunctionality::test_flight_booking_counted_in_usage",
+            "status": "FAIL",
+            "error_message": "AssertionError: assert 503 == 200\n +  where 503 = <Response [503]>.status_code",
+            "screenshot_path": null,
+            "duration": 31.828790426254272,
+            "timestamp": "07:20:24",
+            "skip_reason": null,
+            "category": "Partners API Service Unavailable",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                "response_file": "reports/failed_responses/20260103_072024_503_api_flight_search.txt"
+            },
+            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20260103_072024_503_api_flight_search.txt",
+            "suite": "partners_api"
+        },
+        {
+            "test_name": "src/tests/partners_api_tests/test_partners_organization.py::TestPartnersOrganizationFunctionality::test_verified_user_can_reset_api_keys",
+            "status": "FAIL",
+            "error_message": "AssertionError: New credentials should work for API calls\nassert 503 == 200\n +  where 503 = <Response [503]>.status_code",
+            "screenshot_path": null,
+            "duration": 32.41247582435608,
+            "timestamp": "07:21:01",
+            "skip_reason": null,
+            "category": "Partners API Service Unavailable",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                "response_file": "reports/failed_responses/20260103_072101_503_api_flight_search.txt"
+            },
+            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20260103_072101_503_api_flight_search.txt",
+            "suite": "partners_api"
+        },
+        {
+            "test_name": "src/tests/partners_api_tests/test_partners_package.py::TestPartnersPackageFunctionality::test_verified_user_can_get_packages",
+            "status": "FAIL",
+            "error_message": "AssertionError: Verified user should be able to access package listings\nassert 503 == 200\n +  where 503 = <Response [503]>.status_code",
+            "screenshot_path": null,
+            "duration": 31.311877250671387,
+            "timestamp": "07:21:41",
+            "skip_reason": null,
+            "category": "Partners API Service Unavailable",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                "response_file": "reports/failed_responses/20260103_072141_503_api_package_all.txt"
+            },
+            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20260103_072141_503_api_package_all.txt",
+            "suite": "partners_api"
+        },
+        {
+            "test_name": "src/tests/partners_api_tests/test_partners_package.py::TestPartnersPackageFunctionality::test_verified_user_can_book_package",
+            "status": "FAIL",
+            "error_message": "AssertionError: Verified user should be able to book packages\nassert 400 == 201\n +  where 400 = <Response [400]>.status_code",
+            "screenshot_path": null,
+            "duration": 1.966322660446167,
+            "timestamp": "07:21:50",
+            "skip_reason": null,
+            "category": "Partners API Request Validation",
+            "evidence": {
+                "log_path": "reports/logs/geo_travel_20260103_071038.log",
+                "response_file": "reports/failed_responses/20260103_072150_400_api_package_book.txt"
+            },
+            "log_path": "reports/logs/geo_travel_20260103_071038.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-03_07-10-38/logs/geo_travel_20260103_071038.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20260103_072150_400_api_package_book.txt",
+            "suite": "partners_api"
+        }
+    ],
+    "all_skipped_tests": []
+}

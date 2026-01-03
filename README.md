@@ -33,17 +33,18 @@ Each test execution creates a **timestamped folder** containing all artifacts fo
 ### Example Run Folder
 
 #### Folder Structure
+```
 2026-01-01_07-14-22/
 ├── index.html
 ├── api_failed_responses/
 ├── logs/
 ├── reports/
 └── screenshots/
-
+```
 
 ### Root Files
-index.html # Main dashboard (latest run)
-README.md # This documentation
+**index.html**  - # Main dashboard (latest run)
+**README_TEMPLATE** file  - # This documentation
 
 ---
 
@@ -64,17 +65,26 @@ This file is **regenerated on every successful workflow run**.
 ## 📊 Test Results Status
 
 ### 🕒 Latest Run
-- **Timestamp:** `2026-01-02_07-15-05`
-- **Link:** [2026-01-02_07-15-05](2026-01-02_07-15-05/)
+- **Timestamp:** `2026-01-03_07-10-38`
+- **Link:** [2026-01-03_07-10-38](2026-01-03_07-10-38/)
 - **Reports:** 4
 - **API Failures:** 20
 - **Logs:** 1
 - **Screenshots:** 21
 
 ### 📂 Recent Runs (Last 10)
-- **[2026-01-02_07-15-05](2026-01-02_07-15-05/)** – 4 reports, 20 API failures
+- **[2026-01-03_07-10-38](2026-01-03_07-10-38/)** – 4 reports, 20 API failures
+- [2026-01-02_07-15-05](2026-01-02_07-15-05/) – 4 reports, 20 API failures
+- [2026-01-02_00-59-50](2026-01-02_00-59-50/) – 4 reports, 19 API failures
+- [2026-01-01_23-59-36](2026-01-01_23-59-36/) – 4 reports, 45 API failures
+- [2026-01-01_23-13-53](2026-01-01_23-13-53/) – 3 reports, 20 API failures
+- [2026-01-01_07-14-22](2026-01-01_07-14-22/) – 4 reports, 47 API failures
+- [2025-12-31_07-14-47](2025-12-31_07-14-47/) – 3 reports, 30 API failures
+- [2025-12-30_07-14-30](2025-12-30_07-14-30/) – 3 reports, 29 API failures
+- [2025-12-29_07-17-35](2025-12-29_07-17-35/) – 3 reports, 26 API failures
+- [2025-12-28_17-29-04](2025-12-28_17-29-04/) – 3 reports, 29 API failures
 
-_Last updated: Fri Jan  2 07:25:59 UTC 2026_
+_Last updated: Sat Jan  3 07:22:04 UTC 2026_
 
 <!-- AUTO-GENERATED:END -->
 
