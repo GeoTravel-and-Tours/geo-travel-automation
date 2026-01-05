@@ -6,6 +6,7 @@ from datetime import timedelta
 from src.pages.api.flight_api import FlightAPI
 from src.pages.api.auth_api import AuthAPI
 from src.utils.logger import GeoLogger  # Import your logger
+from src.tests.test_data import get_flight_test_data
 
 class TestFlightAPI:
     
@@ -36,26 +37,27 @@ class TestFlightAPI:
     def test_flight_search_request(self, authenticated_flight_api):
         """Test flight search request creation"""
         self.logger.info("=== Testing Flight Search Request ===")
+        flight_data = get_flight_test_data()
         search_data = {
-            "origin": "LOS",
-            "destination": "LHR",
-            "cabin": "ECONOMY", 
-            "flight_type": "one-way",
-            "departure_date": self.get_future_date(30),  # 30 days from now
-            "adults": 1,
-            "children": 0,
-            "infants": 0
+            "origin": flight_data["origin"],
+            "destination": flight_data["destination"],
+            "cabin": flight_data["cabin"],
+            "flight_type": flight_data["flight_type"],
+            "departure_date": self.get_future_date(flight_data["departure_date_offset"]),
+            "adults": flight_data["adults"],
+            "children": flight_data["children"],
+            "infants": flight_data["infants"]
         }
-        
+
         response = authenticated_flight_api.search_request(search_data)
-        
+
         self.logger.info(f"Search Response: {response.status_code} - {response.text}")
-        
+
         assert response.status_code == 200
         response_data = response.json()
         assert 'search_id' in response_data.get('data', {})
         assert 'message' in response_data
-        
+
         self.logger.info("Flight search request test passed")
         self.logger.info(f"Search ID: {response_data['data']['search_id']}")
     

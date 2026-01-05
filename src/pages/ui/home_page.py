@@ -288,12 +288,37 @@ class HomePage(BasePage):
             return False
 
     def _check_not_error_page(self):
-        """Simple error page check"""
+        """Enhanced error page check"""
         try:
+            # Check for common error keywords in the page title
             title = self.driver.title.lower()
             obvious_errors = ["404", "500", "page not found", "server error"]
-            return not any(error in title for error in obvious_errors)
-        except:
+            if any(error in title for error in obvious_errors):
+                self.logger.error(f"Error detected in page title: {title}")
+                return False
+
+            # Check for specific error elements on the page
+            error_indicators = [
+                ("css selector", ".error-banner"),
+                ("css selector", ".error-message"),
+                ("xpath", "//*[contains(text(), 'Error')]"),
+            ]
+
+            for by, value in error_indicators:
+                if len(self.driver.find_elements(by, value)) > 0:
+                    self.logger.error(f"Error element detected: {by}={value}")
+                    return False
+
+            # Optional: Check HTTP status code if available
+            if hasattr(self.driver, "get_status_code"):
+                status_code = self.driver.get_status_code()
+                if status_code >= 400:
+                    self.logger.error(f"HTTP error detected: Status code {status_code}")
+                    return False
+
+            return True
+        except Exception as e:
+            self.logger.error(f"Error during error page check: {e}")
             return True
 
     def validate_as_geo_travel_page(self, min_confidence=60.0):

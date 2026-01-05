@@ -1,6 +1,7 @@
 # src/pages/api/visa_enquiries_api.py
 
 from ...core.base_api import BaseAPI
+from configs.environment import EnvironmentConfig
 
 class VisaEnquiryAPI(BaseAPI):
     """Visa Enquiry API client"""
@@ -30,8 +31,8 @@ class VisaEnquiryAPI(BaseAPI):
         """Verify payment link is accessible and returns valid response"""
         import requests
         try:
-            response = requests.get(payment_link, timeout=10, allow_redirects=True)
-            
+            response = requests.get(payment_link, timeout=EnvironmentConfig.API_TIMEOUT, allow_redirects=True)
+
             if response.status_code == 200:
                 # Check if it's a Flutterwave page
                 if 'flutterwave' in response.url or 'checkout' in response.text.lower():

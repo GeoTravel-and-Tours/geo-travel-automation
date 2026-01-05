@@ -243,7 +243,6 @@ def _handle_skipped_test(item, report):
 @pytest.hookimpl(hookwrapper=True)
 def pytest_runtest_makereport(item, call):
     """Capture test results for reporting, attach screenshots/html and latest log to pytest-html"""
-    from pytest_html import extras
     outcome = yield
     report = outcome.get_result()
 
@@ -512,3 +511,12 @@ def pytest_runtest_makereport(item, call):
             logger.warning(f"No reporter found for test: {nodeid}")
     except Exception:
         logger.exception("Failed adding deferred test result to reporter")
+
+    # Check if the test failed
+    if report.when == "call" and report.failed:
+        if hasattr(item, 'funcargs') and 'response' in item.funcargs:
+            response = item.funcargs['response']
+            if response is None:
+                report.longrepr = "API response is None. Possible server or request issue."
+            elif hasattr(response, 'status_code') and response.status_code >= 400:
+                report.longrepr = f"API Error: {response.status_code} - {response.text}"

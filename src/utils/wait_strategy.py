@@ -67,31 +67,46 @@ class WaitStrategy:
         except TimeoutException:
             self.logger.warning("Page load timeout, but continuing")
 
-    def wait_for_element(self, locator, element_name, timeout=10):
-        """Robust helper to wait for and get element with detailed logging"""
-        self.logger.info(f"Waiting for {element_name} (timeout: {timeout}s)...")
+    def wait_for_element(self, locator, element_name, timeout=10, retry_interval=2):
+        """Robust helper to wait for and get element with detailed logging and retries"""
+        self.logger.info(f"Waiting for {element_name} (timeout: {timeout}s, retry interval: {retry_interval}s)...")
 
-        try:
-            element = WebDriverWait(self.driver, timeout).until(
-                EC.presence_of_element_located(locator)
-            )
-            self.logger.info(f"✓ {element_name} found, waiting for it to be visible...")
+        end_time = time.time() + timeout
+        last_exception = None
 
-            element = WebDriverWait(self.driver, timeout).until(
-                EC.visibility_of_element_located(locator)
-            )
-            self.logger.info(f"✓ {element_name} is visible, waiting for it to be clickable...")
+        while time.time() < end_time:
+            try:
+                # Wait for presence
+                element = WebDriverWait(self.driver, retry_interval).until(
+                    EC.presence_of_element_located(locator)
+                )
+                self.logger.info(f"✓ {element_name} found, waiting for it to be visible...")
 
-            element = WebDriverWait(self.driver, timeout).until(
-                EC.element_to_be_clickable(locator)
-            )
-            self.logger.info(f"✓ {element_name} is clickable")
+                # Wait for visibility
+                element = WebDriverWait(self.driver, retry_interval).until(
+                    EC.visibility_of_element_located(locator)
+                )
+                self.logger.info(f"✓ {element_name} is visible, waiting for it to be clickable...")
 
-            return element
+                # Wait for clickability
+                element = WebDriverWait(self.driver, retry_interval).until(
+                    EC.element_to_be_clickable(locator)
+                )
+                self.logger.info(f"✓ {element_name} is clickable")
 
-        except TimeoutException:
-            self.logger.error(f"⏰ Timeout waiting for {element_name} after {timeout} seconds")
-            raise
-        except Exception as e:
-            self.logger.error(f"❌ Error getting {element_name}: {str(e)}")
-            raise
+                return element
+
+            except TimeoutException as e:
+                self.logger.warning(f"Retrying for {element_name}: {str(e)}")
+                last_exception = e
+            except Exception as e:
+                self.logger.error(f"❌ Error during wait for {element_name}: {str(e)}")
+                last_exception = e
+
+            time.sleep(retry_interval)
+
+        self.logger.error(f"⏰ Timeout waiting for {element_name} after {timeout} seconds")
+        if last_exception:
+            raise last_exception
+        else:
+            raise TimeoutException(f"Timeout waiting for {element_name}")

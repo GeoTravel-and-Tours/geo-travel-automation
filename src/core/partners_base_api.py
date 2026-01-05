@@ -46,8 +46,8 @@ class PartnersBaseAPI:
         if 'headers' in kwargs:
             headers.update(kwargs.pop('headers'))
         
-        # Set timeout (connect: 10s, read: 60s)
-        kwargs.setdefault('timeout', (10, self.timeout))
+        # Set timeout using EnvironmentConfig
+        kwargs.setdefault('timeout', (EnvironmentConfig.API_CONNECT_TIMEOUT, EnvironmentConfig.API_READ_TIMEOUT))
         
         self.logger.info(f"Partners API Request: {method} {url}")
         
@@ -106,7 +106,11 @@ class PartnersBaseAPI:
     def _request(self, method, endpoint, **kwargs):
         """Base request method with logging and error handling"""
         # ✅ UPDATED: Use retry logic
-        return self._request_with_retry(method, endpoint, max_retries=3, **kwargs)
+        response = self._request_with_retry(method, endpoint, max_retries=3, **kwargs)
+        if response is None:
+            self.logger.error("Response is None. Check the request or server.")
+            raise ValueError("API response is None")
+        return response
     
     def get(self, endpoint, **kwargs):
         return self._request('GET', endpoint, **kwargs)
