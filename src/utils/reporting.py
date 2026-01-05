@@ -224,6 +224,17 @@ class GeoReporter:
             else:
                 test_result["screenshot_url"] = f"https://geotravel-and-tours.github.io/geo-travel-automation/screenshots/failures/{screenshot_filename}"
 
+        # Attach API response for failed API tests
+        if status == "FAIL" and "API" in self.test_type.upper():
+            response_file = evidence.get("response_file") if evidence else None
+            if response_file:
+                test_result["response_file_url"] = f"https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/{Path(response_file).name}"
+
+        # Attach test-specific logs
+        if evidence and "log_path" in evidence:
+            log_path = evidence["log_path"]
+            test_result["log_url"] = f"https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/{Path(log_path).name}"
+
         self.test_results.append(test_result)
         self.logger.info(f"Test result added: {test_name} - {status} (Duration: {actual_duration:.2f}s)")
 
