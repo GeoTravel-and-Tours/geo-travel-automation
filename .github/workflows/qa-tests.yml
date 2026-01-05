@@ -260,6 +260,14 @@ jobs:
             REPORTS_COUNT=$(find "$dir/reports" -maxdepth 1 -type f 2>/dev/null | wc -l)
             API_FAIL_COUNT=$(find "$dir/api_failed_responses" -maxdepth 1 -type f 2>/dev/null | wc -l)
             
+            # Count actual test failures dynamically
+            if [ -f "$dir/test_results.json" ]; then
+              ACTUAL_FAIL_COUNT=$(jq '.tests[] | select(.status == "failed")' "$dir/test_results.json" | wc -l)
+              API_FAIL_COUNT=$ACTUAL_FAIL_COUNT
+            else
+              API_FAIL_COUNT=$(find "$dir/api_failed_responses" -maxdepth 1 -type f 2>/dev/null | wc -l)
+            fi
+            
             # Format: timestamp|reports|api_failures
             RUN_LIST+="$name|$REPORTS_COUNT|$API_FAIL_COUNT\n"
             TOTAL_RUNS=$((TOTAL_RUNS + 1))

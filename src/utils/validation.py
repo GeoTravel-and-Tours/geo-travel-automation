@@ -37,10 +37,14 @@ class ValidationUtils:
 
     def is_element_visible(self, locator, timeout=None):
         """Return True if element is visible to the user."""
-        element = self._safe_find(locator, timeout)
-        visible = element.is_displayed() if element else False
-        self.logger.info(f"Element visible ({locator}): {visible}")
-        return visible
+        try:
+            element = self._safe_find(locator, timeout)
+            visible = element.is_displayed() if element else False
+            self.logger.info(f"Element visible ({locator}): {visible}")
+            return visible
+        except Exception as e:
+            self.logger.error(f"Error checking visibility for {locator}: {e}")
+            return False
 
     def is_element_enabled(self, locator, timeout=None):
         """Return True if element is enabled and interactable."""
@@ -51,7 +55,11 @@ class ValidationUtils:
 
     def verify_text_present(self, locator, expected_text, timeout=None):
         """Return True if expected text is found within the element."""
-        element = self._safe_find(locator, timeout)
-        text_present = expected_text in element.text if element else False
-        self.logger.info(f"Text '{expected_text}' present in ({locator}): {text_present}")
-        return text_present
+        try:
+            element = self._safe_find(locator, timeout)
+            text_present = expected_text in element.text if element else False
+            self.logger.info(f"Text '{expected_text}' present in ({locator}): {text_present}")
+            return text_present
+        except Exception as e:
+            self.logger.error(f"Error verifying text for {locator}: {e}")
+            return False

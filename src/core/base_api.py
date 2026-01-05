@@ -65,30 +65,31 @@ class BaseAPI:
             self.logger.debug(f"Could not set session cookie: {e}")
     
     def _request(self, method, endpoint, **kwargs):
-        """Base request method with logging and error handling"""
+        """Base request method with logging, retry logic, and error handling"""
         url = f"{self.base_url}{endpoint}"
-        
-        # Merge headers
         headers = self.headers.copy()
         if 'headers' in kwargs:
             headers.update(kwargs.pop('headers'))
-        
-        print(f"Auth headers being sent: {self.headers}")
+
         self.logger.info(f"API Request: {method} {url}")
-        
         kwargs['timeout'] = 30
-        response = self.session.request(method, url, headers=headers, **kwargs)
-        
-        # Debug: Log query parameters
-        if 'params' in kwargs and kwargs['params']:
-            self.logger.debug(f"Query params being sent: {kwargs['params']}")
-        
-        # Debug: Log JSON body
-        if 'json' in kwargs and kwargs['json']:
-            self.logger.debug(f"JSON body being sent: {kwargs['json']}")
-            
-        self.logger.info(f"API Response: {response.status_code}")
-        self.logger.debug(f"Response text: {response.text}")
+
+        for attempt in range(3):
+            try:
+                response = self.session.request(method, url, headers=headers, **kwargs)
+                if response is None:
+                    raise ValueError("API response is None")
+
+                self.logger.info(f"API Response: {response.status_code}")
+                self.logger.debug(f"Response text: {response.text}")
+                return response
+
+            except Exception as e:
+                self.logger.warning(f"Attempt {attempt + 1} failed: {e}")
+                if attempt == 2:
+                    self.logger.error("Max retries reached. Raising exception.")
+                    raise
+                self.logger.info("Retrying...")
     
     def get(self, endpoint, **kwargs):
         return self._request('GET', endpoint, **kwargs)

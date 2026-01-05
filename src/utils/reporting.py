@@ -774,7 +774,7 @@ class GeoReporter:
             "test_make_payment_invalid_visa_id": "Making payment with invalid/non-existent visa ID",
             "test_make_payment_invalid_method": "Making payment with invalid payment methods",
             "test_get_user_visa_applications_with_auth": "Getting user's visa applications WITH authentication",
-            "test_get_user_visa_applications_without_auth": "Getting user's visa applications WITHOUT authentication (should reject)",
+            "test_get_user_visa_applications_without_auth": "Getting user's visa applications WITHOUT authentication",
             "test_get_user_visa_applications_with_filters": "Getting user's visa applications with various filters (status, type, date range)",
             "test_get_user_visa_applications_pagination": "Testing user visa applications pagination functionality",
             "test_get_visa_application_by_id_with_auth": "Getting specific visa application by ID WITH authentication",
@@ -833,139 +833,22 @@ class GeoReporter:
     
     def _get_test_category(self, test_name, error_message):
         """Categorize test failures based on error messages and test names"""
-        if not error_message:
-            return "Unknown"
+        category_mapping = {
+            "timeout": "API Timeout",
+            "connection": "API Connection",
+            "unauthorized": "Authentication",
+            "forbidden": "Authorization",
+            "not found": "Resource Not Found",
+            "bad request": "Request Validation",
+            "internal server": "Server Error",
+        }
 
         error_lower = error_message.lower()
-        test_lower = test_name.lower()
-        
-        # PARTNERS API SPECIFIC CATEGORIES
-        if "partners_api" in test_lower or "partners" in test_lower:
-            if "500" in error_lower or "internal server" in error_lower:
-                return "Partners API Server Error"
-            if "502" in error_lower or "bad gateway" in error_lower:
-                return "Partners API Gateway Error"
-            if "503" in error_lower or "service unavailable" in error_lower:
-                return "Partners API Service Unavailable"
-            if "404" in error_lower or "not found" in error_lower:
-                return "Partners API Resource Not Found"
-            if "400" in error_lower or "bad request" in error_lower:
-                return "Partners API Request Validation"
-            elif "401" in error_lower or "unauthorized" in error_lower:
-                return "Partners API Authentication"
-            elif "403" in error_lower or "forbidden" in error_lower:
-                return "Partners API Authorization" 
-            elif "token" in error_lower and ("invalid" in error_lower or "expired" in error_lower):
-                return "Partners Token Validation"
-            elif "verified" in error_lower and "unverified" in error_lower:
-                return "Partners Verification Status"
-            elif "api key" in error_lower or "api_secret" in error_lower:
-                return "Partners API Credentials"
-            elif "organization" in error_lower:
-                return "Partners Organization Access"
-            elif "flight" in error_lower and "search" in error_lower:
-                return "Partners Flight Search"
-            elif "flight" in error_lower and "book" in error_lower:
-                return "Partners Flight Booking" 
-            elif "package" in error_lower and "book" in error_lower:
-                return "Partners Package Booking"
-            elif "usage" in error_lower:
-                return "Partners Usage Tracking"
-            elif "KeyError" in error_lower or "IndexError" in error_lower:
-                return "Partners Response Parsing"
-            elif "AssertionError" in error_lower or "expected" in error_lower:
-                return "Partners Functional Assertion"
-            elif "TypeError" in error_lower or "AttributeError" in error_lower:
-                return "Partners Code Logic"
-            elif "timeout" in error_lower or "read timed out" in error_lower:
-                return "Partners API Timeout"
-            elif "connection" in error_lower or "refused" in error_lower:
-                return "Partners API Connection"
-            elif "valueerror" in error_lower or "bad request" in error_lower:
-                return "Partners Request Validation"
-            else:
-                return "Partners API Error"
-        
-        # Dependency/Skip related
-        if "skip" in error_lower or "skipped" in error_lower or "dependency" in error_lower:
-            return "Dependency Failure"
-        
-        # Environment/Setup issues
-        if "environment" in error_lower or "unavailable" in error_lower or "setup" in error_lower:
-            return "Environment Setup"
-        
-        # Network issues
-        if "network" in error_lower or "connection" in error_lower or "ssl" in error_lower:
-            return "Network Issue"
-        
-        # Data/State issues  
-        if "data" in error_lower or "state" in error_lower or "prerequisite" in error_lower:
-            return "Test Data"
+        for keyword, category in category_mapping.items():
+            if keyword in error_lower:
+                return category
 
-        # Airport Selection Failures
-        if "failed to select departure airport" in error_lower or "failed to select arrival airport" in error_lower:
-            return "Airport Selection"
-
-        # Search Functionality Failures  
-        if "search session" in error_lower and "initialized" in error_lower:
-            return "Search Initialization"
-
-        # Form Interaction Failures
-        if "failed to select" in error_lower and ("date" in error_lower or "calendar" in error_lower):
-            return "Date Selection"
-
-        # Dropdown/Selection Failures
-        if "failed to select" in error_lower and ("dropdown" in error_lower or "option" in error_lower):
-            return "Dropdown Interaction"
-
-        # API Test Categories
-        if "api" in test_lower:
-            if "timeout" in error_lower or "read timed out" in error_lower:
-                return "API Timeout"
-            elif "connection" in error_lower or "refused" in error_lower:
-                return "API Connection"
-            elif "401" in error_lower or "unauthorized" in error_lower:
-                return "Authentication"
-            if "503" in error_lower or "service unavailable" in error_lower:
-                return "API Service Unavailable"
-            elif "403" in error_lower or "forbidden" in error_lower:
-                return "Authorization"
-            elif "404" in error_lower or "not found" in error_lower:
-                return "Resource Not Found"
-            elif "400" in error_lower or "bad request" in error_lower:
-                return "Request Validation"
-            elif "500" in error_lower or "internal server" in error_lower:
-                return "Server Error"
-            elif "keyerror" in error_lower or "indexerror" in error_lower:
-                return "Response Parsing"
-            elif "assertionerror" in error_lower or "expected" in error_lower:
-                return "Functional Assertion"
-            elif "dependency" in error_lower or "login failed" in error_lower:
-                return "Dependency Failure"
-            elif "typeerror" in error_lower or "attributeerror" in error_lower:
-                return "Code Logic"
-            elif "connection" in error_lower or "refused" in error_lower:
-                return "API Connection"
-            else:
-                return "API Error"
-
-        # UI Test Categories  
-        elif "elementclickintercepted" in error_lower:
-            return "UI Interaction"
-        elif "timeout" in error_lower:
-            if "loader" in error_lower or "page load" in error_lower:
-                return "Page Load Performance"
-            return "UI Timeout"
-        elif "nosuchelement" in error_lower:
-            return "Element Visibility"
-        elif "staleelement" in error_lower:
-            return "DOM State"
-        elif "javascript" in error_lower:
-            return "JavaScript Execution"
-        elif "screenshot" in error_lower:
-            return "Visual Validation"
-        else:
-            return "Functional"
+        return "Unknown Error"
 
     def _get_fix_suggestion(self, category, test_name):
         """Provide fix suggestions based on failure category"""
@@ -1038,16 +921,16 @@ class GeoReporter:
         return None
 
     def _clean_error_message(self, error_message):
-        """Clean and format error message for Slack"""
+        """Clean and format error message for Slack, preserving useful context like stack traces."""
         if not error_message:
             return "No error message"
-        
+
         # SPECIAL HANDLING FOR SKIPPED TESTS - Clean file paths
         if "Skipped:" in error_message or "skipped" in error_message.lower():
             # Remove file paths and line numbers, keep only the reason
             lines = error_message.split("\n")
             clean_lines = []
-            
+
             for line in lines:
                 line = line.strip()
                 # Skip file path lines
@@ -1059,24 +942,24 @@ class GeoReporter:
                     clean_lines.append(reason)
                 elif line and not line.startswith('File "'):
                     clean_lines.append(line)
-            
+
             if clean_lines:
                 return " | ".join(clean_lines[:2])
-        
-        # Original error cleaning logic for non-skipped tests
+
+        # Enhanced error cleaning logic for non-skipped tests
         lines = error_message.split("\n")
         clean_lines = []
+        stack_trace_lines = []
 
         for line in lines:
             line = line.strip()
             if (
                 line.startswith('File "')
-                or line.startswith("self = <")
-                or "object at 0x" in line
-                or line.startswith("E   ")
-                or not line
+                or "line" in line
+                or "in" in line
             ):
-                continue
+                # Retain stack trace lines
+                stack_trace_lines.append(line)
 
             if (
                 "AssertionError" in line
@@ -1086,8 +969,12 @@ class GeoReporter:
             ):
                 clean_lines.append(line)
 
+        # Include up to 3 stack trace lines for context
+        if stack_trace_lines:
+            clean_lines.extend(stack_trace_lines[:3])
+
         if clean_lines:
-            return " | ".join(clean_lines[:3])
+            return " | ".join(clean_lines[:5])  # Limit to 5 lines total
         return error_message[:150] + ("..." if len(error_message) > 150 else "")
 
     def _cleanup_old_reports(self):

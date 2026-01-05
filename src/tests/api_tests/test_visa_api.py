@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 from src.pages.api.visa_enquiries_api import VisaEnquiryAPI
 from src.pages.api.auth_api import AuthAPI
 from src.utils.logger import GeoLogger
+from src.tests.test_data import generate_visa_test_data
 
 
 class TestVisaEnquiryAPI:
@@ -14,41 +15,12 @@ class TestVisaEnquiryAPI:
     def setup_method(self):
         """Setup before each test method"""
         self.logger = GeoLogger(self.__class__.__name__)
-        self.test_data = self._generate_test_data()
+        self.test_data = generate_visa_test_data()
         self.logger.info(f"🚀 Starting {self.__class__.__name__} test")
     
     def teardown_method(self):
         """Cleanup after each test method"""
         self.logger.info(f"✅ {self.__class__.__name__} test completed")
-    
-    def _generate_test_data(self):
-        """Generate dynamic test data for visa tests"""
-        # Future travel dates
-        future_date = (datetime.now() + timedelta(days=1)).strftime("%Y-%m-%d")
-        
-        return {
-            "visa_enquiry_payload": {
-                "visaCountry": "Kenya",
-                "first_name": "QA Bot",
-                "last_name": "GEO",
-                "travel_date": future_date,
-                "email": "geo.qa.bot@gmail.com",
-                "agree": True,
-                "phoneNumber": "7080702920",
-                "nationality": "Nigeria",
-                "passportAvailable": "Yes",
-                "message": "I would like to travel for business purposes",
-                "type": "Business"
-            },
-            "payment_payload_flutterwave": {
-                "visaId": None,  # Will be populated dynamically
-                "paymentMethod": "Flutterwave"
-            },
-            "payment_payload_bank_transfer": {
-                "visaId": None,  # Will be populated dynamically
-                "paymentMethod": "Bank Transfer"
-            }
-        }
     
     @pytest.fixture
     def visa_api(self):

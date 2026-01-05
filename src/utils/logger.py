@@ -301,9 +301,6 @@ class GeoLogger:
     def success(self, message):
         self.info(f"SUCCESS: {message}")
 
-    def failure(self, message):
-        self.error(f"FAILURE: {message}")
-
     # Test-specific logging methods
     def step(self, step_number, step_description):
         self.info(f"🔄 STEP {step_number}: {step_description}")
