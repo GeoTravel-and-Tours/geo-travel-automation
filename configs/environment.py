@@ -77,6 +77,10 @@ class EnvironmentConfig:
     API_TIMEOUT = int(os.getenv("API_TIMEOUT", "30"))
     API_MAX_RETRIES = int(os.getenv("API_MAX_RETRIES", "3"))
     
+    # API Timeout Configuration
+    API_CONNECT_TIMEOUT = int(os.getenv("API_CONNECT_TIMEOUT", "10"))
+    API_READ_TIMEOUT = int(os.getenv("API_READ_TIMEOUT", "60"))
+    
     # API Endpoints availability check
     API_HEALTH_ENDPOINTS = {
         "auth": "/api/auth/login",
