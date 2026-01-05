@@ -65,15 +65,16 @@ This file is **regenerated on every successful workflow run**.
 ## 📊 Test Results Status
 
 ### 🕒 Latest Run
-- **Timestamp:** `2026-01-04_07-12-59`
-- **Link:** [2026-01-04_07-12-59](2026-01-04_07-12-59/)
+- **Timestamp:** `2026-01-05_07-19-54`
+- **Link:** [2026-01-05_07-19-54](2026-01-05_07-19-54/)
 - **Reports:** 4
-- **API Failures:** 20
+- **API Failures:** 19
 - **Logs:** 1
 - **Screenshots:** 21
 
 ### 📂 Recent Runs (Last 10)
-- **[2026-01-04_07-12-59](2026-01-04_07-12-59/)** – 4 reports, 20 API failures
+- **[2026-01-05_07-19-54](2026-01-05_07-19-54/)** – 4 reports, 19 API failures
+- [2026-01-04_07-12-59](2026-01-04_07-12-59/) – 4 reports, 20 API failures
 - [2026-01-03_07-10-38](2026-01-03_07-10-38/) – 4 reports, 20 API failures
 - [2026-01-02_07-15-05](2026-01-02_07-15-05/) – 4 reports, 20 API failures
 - [2026-01-02_00-59-50](2026-01-02_00-59-50/) – 4 reports, 19 API failures
@@ -82,9 +83,8 @@ This file is **regenerated on every successful workflow run**.
 - [2026-01-01_07-14-22](2026-01-01_07-14-22/) – 4 reports, 47 API failures
 - [2025-12-31_07-14-47](2025-12-31_07-14-47/) – 3 reports, 30 API failures
 - [2025-12-30_07-14-30](2025-12-30_07-14-30/) – 3 reports, 29 API failures
-- [2025-12-29_07-17-35](2025-12-29_07-17-35/) – 3 reports, 26 API failures
 
-_Last updated: Sun Jan  4 07:23:36 UTC 2026_
+_Last updated: Mon Jan  5 07:30:25 UTC 2026_
 
 <!-- AUTO-GENERATED:END -->
 
