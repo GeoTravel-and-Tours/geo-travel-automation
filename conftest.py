@@ -300,46 +300,16 @@ def pytest_runtest_makereport(item, call):
 
         screenshot_path = None
         html_path = None
-        
-        # Only collect API dumps if test failed
+        evidence = {}
         recent_dumps = []
 
-        # If failed, capture evidence with ScreenshotUtils (use same files for pytest-html and smoke reporter)
+        # ========== HANDLE FAILED TESTS ==========
         if status == "FAIL":
-            try:
-                dumps_dir = Path("reports/failed_responses")
-                if dumps_dir.exists() and dumps_dir.is_dir():
-                    cutoff = time.time() - 120  # 2 minutes
-                    candidates = sorted(dumps_dir.iterdir(), key=lambda p: p.stat().st_mtime, reverse=True)
-                    for p in candidates:
-                        if p.stat().st_mtime >= cutoff:
-                            recent_dumps.append(str(p))
-                        else:
-                            break
-                if recent_dumps:
-                    setattr(item, "_recent_response_files", recent_dumps)
-            except Exception:
-                logger.exception("Failed scanning recent response dumps")
-        else:
-            logger.info(f"Skipping attaching API dumps for passed/expected-failure test: {nodeid}")
-
-            # ✅ NEW: Skip screenshot capture for API tests
             test_path = str(item.fspath)
             is_api_test = "api_tests" in test_path.lower()
             
-            # try to find last interacted element in any page object
-            page_objects = [v for k, v in item.funcargs.items() if hasattr(v, "_last_interacted_element")]
-            for page in page_objects:
-                last_element = getattr(page, "_last_interacted_element", None)
-                if last_element:
-                    try:
-                        page.javascript.highlight_element(last_element)
-                        logger.info(f"Highlighted last interacted element on failure in {page.__class__.__name__}")
-                    except Exception:
-                        logger.warning(f"Could not highlight last interacted element in {page.__class__.__name__}")
-                    break  # only highlight first found
-            
-            if not is_api_test:  # Only capture screenshots for UI tests
+            # ===== 1. CAPTURE SCREENSHOTS FOR UI TESTS =====
+            if not is_api_test:  # UI tests - capture screenshots
                 driver_instance = item.funcargs.get("driver", None)
                 # also look for common alternate driver fixture names
                 if not driver_instance:
@@ -384,30 +354,49 @@ def pytest_runtest_makereport(item, call):
                     logger.warning("No webdriver fixture available on test item; skipping screenshot capture")
             else:
                 logger.info(f"Skipping screenshot capture for API test: {nodeid}")
-        
-        suite_reporter = None
-        test_path = str(item.fspath)
-        logger.info(f"🔍 CRITICAL DEBUG: test_path = {test_path}")
-        
-        if "smoke_tests" in test_path:
-            suite_reporter = get_suite_reporter("smoke")
-        elif "partners_api_tests" in test_path:
-            suite_reporter = get_suite_reporter("partners_api")
-        elif "regression_tests" in test_path:
-            suite_reporter = get_suite_reporter("regression")
-        elif "sanity_tests" in test_path:
-            suite_reporter = get_suite_reporter("sanity")
-        elif "api_tests" in test_path:
-            suite_reporter = get_suite_reporter("api")
-        else:
-            # Fallback to smoke reporter
-            suite_reporter = get_suite_reporter("smoke")
             
-        # Defer recording result until after we've possibly attached latest logs
-        # (we will add test result after copying latest_log_path below)
-        deferred_suite_reporter = suite_reporter
-
-        # Save test-specific logs
+            # ===== 2. CAPTURE API RESPONSE DUMPS =====
+            is_api_endpoint_test = any(term in nodeid.lower() for term in ['api', 'auth', 'flight', 'hotel', 'package', 'visa'])
+            if is_api_endpoint_test:
+                try:
+                    dumps_dir = Path("reports/failed_responses")
+                    dumps_dir.mkdir(parents=True, exist_ok=True)
+                    
+                    safe_name = nodeid.replace("::", "_").replace("/", "_").replace(":", "_")
+                    timestamp = datetime.now().strftime("%H%M%S")
+                    dump_file = dumps_dir / f"{safe_name}_{timestamp}.json"
+                    
+                    # Try multiple methods to get response
+                    response_data = {
+                        "test_name": nodeid,
+                        "timestamp": datetime.now().isoformat(),
+                        "error_message": error_message,
+                        "response_captured": False
+                    }
+                    
+                    # Method 1: Check if auth_api has last_response
+                    if hasattr(item, 'funcargs'):
+                        for arg_name, arg_value in item.funcargs.items():
+                            if hasattr(arg_value, 'last_response'):
+                                response = arg_value.last_response
+                                response_data.update({
+                                    "status_code": response.status_code,
+                                    "body": response.text[:2000],  # Limit size
+                                    "response_captured": True
+                                })
+                                break
+                    
+                    with open(dump_file, "w", encoding="utf-8") as f:
+                        import json
+                        json.dump(response_data, f, indent=2, default=str)
+                    
+                    evidence["response_file"] = str(dump_file)
+                    logger.info(f"API failure record created: {dump_file}")
+                    
+                except Exception as e:
+                    logger.error(f"Failed to create API failure record: {e}")
+        
+        # ========== SAVE TEST-SPECIFIC LOGS (FOR ALL TEST STATUSES) ==========
         test_specific_log = None
         try:
             # Get test_log_handler from GeoLogger
@@ -417,6 +406,7 @@ def pytest_runtest_makereport(item, call):
                 test_specific_log = test_log_handler.save_test_logs(nodeid, "reports/logs")
                 if test_specific_log:
                     setattr(item, "_test_specific_log", test_specific_log)
+                    evidence["log_path"] = test_specific_log
                     logger.info(f"Saved test-specific logs: {test_specific_log}")
         except Exception as e:
             logger.error(f"Failed to save test-specific logs: {e}")
@@ -428,53 +418,7 @@ def pytest_runtest_makereport(item, call):
             except Exception as e:
                 logger.error(f"Failed to clear test logs: {e}")
 
-        # Attach test-specific evidence
-        evidence = {}
-        if test_specific_log:
-            evidence["log_path"] = test_specific_log
-
-        # For API tests, also capture response dumps
-        is_api_test = any(term in nodeid.lower() for term in ['api', 'auth', 'flight', 'hotel', 'package', 'visa'])
-        if status == "FAIL" and is_api_test:
-            try:
-                dumps_dir = Path("reports/failed_responses")
-                dumps_dir.mkdir(parents=True, exist_ok=True)
-                
-                safe_name = nodeid.replace("::", "_").replace("/", "_").replace(":", "_")
-                timestamp = datetime.now().strftime("%H%M%S")
-                dump_file = dumps_dir / f"{safe_name}_{timestamp}.json"
-                
-                # Try multiple methods to get response
-                response_data = {
-                    "test_name": nodeid,
-                    "timestamp": datetime.now().isoformat(),
-                    "error_message": error_message,
-                    "response_captured": False
-                }
-                
-                # Method 1: Check if auth_api has last_response
-                if hasattr(item, 'funcargs'):
-                    for arg_name, arg_value in item.funcargs.items():
-                        if hasattr(arg_value, 'last_response'):
-                            response = arg_value.last_response
-                            response_data.update({
-                                "status_code": response.status_code,
-                                "body": response.text[:2000],  # Limit size
-                                "response_captured": True
-                            })
-                            break
-                
-                with open(dump_file, "w", encoding="utf-8") as f:
-                    import json
-                    json.dump(response_data, f, indent=2, default=str)
-                
-                evidence["response_file"] = str(dump_file)
-                logger.info(f"API failure record created: {dump_file}")
-                
-            except Exception as e:
-                logger.error(f"Failed to create failure record: {e}")
-
-        # Attach latest log file to pytest-html (copy into reports/logs and add link + preview)
+        # ========== ATTACH LATEST LOG TO PYTEST-HTML ==========
         try:
             logs_dir = Path("logs")
             reports_dir = Path("reports")
@@ -528,50 +472,30 @@ def pytest_runtest_makereport(item, call):
                     logger.exception("Failed to read/attach log preview")
                 report.extras = extras_list
                 setattr(item, "_latest_log_path", str(latest_log_path))
-                # also make available for reporter evidence
-                setattr(item, "_latest_log_path_for_report", str(latest_log_path))
-                # Also collect any recent API response dumps as evidence (modified within last 2 minutes)
-                try:
-                    recent_dumps = []
-                    dumps_dir = Path("reports/failed_responses")
-                    if dumps_dir.exists() and dumps_dir.is_dir():
-                        cutoff = time.time() - 120  # 2 minutes
-                        candidates = sorted(dumps_dir.iterdir(), key=lambda p: p.stat().st_mtime, reverse=True)
-                        for p in candidates:
-                            if p.stat().st_mtime >= cutoff:
-                                recent_dumps.append(str(p))
-                            else:
-                                break
-                    if recent_dumps:
-                        setattr(item, "_recent_response_files", recent_dumps)
-                except Exception:
-                    logger.exception("Failed scanning recent response dumps")
         except Exception:
             logger.exception("Failed to attach latest log to pytest-html")
 
-    except Exception:
-        logger.exception("Unhandled exception in pytest_runtest_makereport")
-
-    # Now record result in the appropriate reporter with proper metadata (after log available)
-    try:
-        if deferred_suite_reporter:
-            # Use the evidence dict we already built
-            if not evidence:
-                # Build evidence dict if latest log was copied
-                latest_log_for_report = getattr(item, "_latest_log_path_for_report", None) or getattr(item, "_latest_log_path", None)
-                if latest_log_for_report:
-                    evidence = {"log_path": str(latest_log_for_report)}
-
-            # Also include recent response dumps if any
-            recent_response_files = getattr(item, "_recent_response_files", None)
-            if recent_response_files and "response_file" not in evidence:
-                if not evidence:
-                    evidence = {}
-                # attach the most recent response file
-                evidence["response_file"] = recent_response_files[0]
-
-            logger.info(f"🔍 DEBUG: About to add to {deferred_suite_reporter.test_suite_name}: {nodeid} - {status}")
-            deferred_suite_reporter.add_test_result(
+        # ========== SEND TO REPORTER ==========
+        suite_reporter = None
+        test_path = str(item.fspath)
+        
+        if "smoke_tests" in test_path:
+            suite_reporter = get_suite_reporter("smoke")
+        elif "partners_api_tests" in test_path:
+            suite_reporter = get_suite_reporter("partners_api")
+        elif "regression_tests" in test_path:
+            suite_reporter = get_suite_reporter("regression")
+        elif "sanity_tests" in test_path:
+            suite_reporter = get_suite_reporter("sanity")
+        elif "api_tests" in test_path:
+            suite_reporter = get_suite_reporter("api")
+        else:
+            # Fallback to smoke reporter
+            suite_reporter = get_suite_reporter("smoke")
+            
+        if suite_reporter:
+            logger.info(f"🔍 DEBUG: About to add to {suite_reporter.test_suite_name}: {nodeid} - {status}")
+            suite_reporter.add_test_result(
                 test_name=nodeid,
                 status=status,
                 error_message=error_message,
@@ -580,11 +504,12 @@ def pytest_runtest_makereport(item, call):
                 skip_reason=skip_reason,
                 evidence=evidence,
             )
-            logger.info(f"Added test result to {deferred_suite_reporter.test_suite_name}: {nodeid} - {status}")
+            logger.info(f"Added test result to {suite_reporter.test_suite_name}: {nodeid} - {status}")
         else:
             logger.warning(f"No reporter found for test: {nodeid}")
+
     except Exception:
-        logger.exception("Failed adding deferred test result to reporter")
+        logger.exception("Unhandled exception in pytest_runtest_makereport")
 
     # Check if the test failed
     if report.when == "call" and report.failed:
