@@ -4,6 +4,7 @@
 ├── .env
 ├── .github
 │   └── workflows
+│       ├── auto-assign.yml
 │       └── qa-tests.yml
 ├── .gitignore
 ├── .pytest_cache
@@ -15,14 +16,18 @@
 │           ├── lastfailed
 │           └── nodeids
 ├── CHANGELOG.md
+├── LICENSE
+├── LICENSE.md
 ├── PRE_PUSH_CHECKLIST.md
 ├── README.md
 ├── configs
 │   └── environment.py
 ├── conftest.py
+├── myenv
 ├── pytest.ini
 ├── requirements.txt
 ├── scripts
+│   ├── README_TEMPLATE.md
 │   ├── cleanup.py
 │   └── run_scheduled_tests.py
 ├── src
@@ -53,7 +58,8 @@
 │   │   │   │   └── partners_package_api.py
 │   │   │   ├── price_api.py
 │   │   │   ├── transactions_api.py
-│   │   │   └── users_api.py
+│   │   │   ├── users_api.py
+│   │   │   └── visa_enquiries_api.py
 │   │   └── ui
 │   │       ├── __init__.py
 │   │       ├── auth_flow.py
@@ -61,25 +67,29 @@
 │   │       ├── flight_booking_flow.py
 │   │       ├── home_page.py
 │   │       ├── package_booking_flow.py
-│   │       └── payment_flow.py
+│   │       ├── payment_flow.py
+│   │       └── visa_enquiries_flow.py
 │   ├── tests
 │   │   ├── api_tests
 │   │   │   ├── test_auth_api.py
 │   │   │   ├── test_flight_api.py
+│   │   │   ├── test_hotel_api.py
 │   │   │   ├── test_misc_api.py
 │   │   │   ├── test_package_api.py
-│   │   │   └── test_token_extraction.py
+│   │   │   └── test_visa_api.py
 │   │   ├── partners_api_tests
 │   │   │   ├── test_partners_auth_api.py
 │   │   │   ├── test_partners_flight.py
 │   │   │   ├── test_partners_organization.py
 │   │   │   └── test_partners_package.py
-│   │   └── smoke_tests
-│   │       ├── test_auth_flow_smoke.py
-│   │       ├── test_flight_booking_smoke.py
-│   │       ├── test_homepage_smoke.py
-│   │       ├── test_hotels_booking_smoke.py
-│   │       └── test_package_booking_smoke.py
+│   │   ├── smoke_tests
+│   │   │   ├── test_auth_flow_smoke.py
+│   │   │   ├── test_flight_booking_smoke.py
+│   │   │   ├── test_homepage_smoke.py
+│   │   │   ├── test_hotels_booking_smoke.py
+│   │   │   ├── test_package_booking_smoke.py
+│   │   │   └── test_visa_enquiries_smoke.py
+│   │   └── test_data.py
 │   └── utils
 │       ├── __init__.py
 │       ├── cleanup.py
@@ -99,4 +109,4 @@
 │       └── wait_strategy.py
 └── structure.txt
 
-20 directories, 80 files
+20 directories, 90 files

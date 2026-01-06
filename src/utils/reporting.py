@@ -1049,16 +1049,18 @@ class GeoReporter:
             log_name = Path(test_log_path).name
             links.append(f"📄 <{gh_pages}/{timestamp}/logs/{log_name}|View Test Log>")
         
-        # Determine test type
-        is_ui_test = 'smoke' in test_name and 'api' not in test_name
-        is_api_test = 'api' in test_name
+        # Determine test type BETTER
+        # UI tests are in smoke_tests/, regression_tests/, sanity_tests/
+        is_ui_test = any(folder in test_name for folder in ['smoke', 'regression', 'sanity'])
+        # API tests contain 'api' or are in api_tests/ folder
+        is_api_test = 'api' in test_name or 'api_tests' in test_name
         
         # UI TESTS - Test-specific screenshot
         if is_ui_test:
             screenshot_path = failed_test.get('screenshot_path')
             if screenshot_path and Path(screenshot_path).exists():
                 screenshot_name = Path(screenshot_path).name
-                links.append(f"📸 <{gh_pages}/{timestamp}/screenshots/{screenshot_name}|View Screenshot>")
+                links.append(f"📸 <{gh_pages}/{timestamp}/screenshots/failures/{screenshot_name}|View Screenshot>")
         
         # API TESTS - Test-specific response dump
         elif is_api_test:

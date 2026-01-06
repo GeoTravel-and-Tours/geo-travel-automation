@@ -134,9 +134,9 @@ jobs:
             cp reports/failed_responses/* "$RUN_DIR/api_failed_responses/" 2>/dev/null || true
           fi
           
-          # Copy logs
-          if [ -d "logs" ]; then
-            cp logs/* "$RUN_DIR/logs/" 2>/dev/null || true
+          # Copy logs - should copy test-specific logs from reports/logs/
+          if [ -d "reports/logs" ]; then
+              cp reports/logs/* "$RUN_DIR/logs/" 2>/dev/null || true
           fi
           
           # Copy reports

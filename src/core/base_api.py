@@ -77,6 +77,9 @@ class BaseAPI:
         for attempt in range(3):
             try:
                 response = self.session.request(method, url, headers=headers, **kwargs)
+                # Store last response for conftest.py to access
+                self.last_response = response
+                
                 if response is None:
                     raise ValueError("API response is None")
 

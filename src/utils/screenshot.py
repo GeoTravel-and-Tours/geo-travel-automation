@@ -27,7 +27,7 @@ class ScreenshotUtils:
         logger=None,
     ):
         self.driver = driver
-        self.screenshot_dir = Path("docs/screenshots")
+        self.screenshot_dir = Path("reports/screenshots")
         self.github_pages_base = github_pages_base or self._get_github_pages_url()
         self.logs_dir = Path(logs_dir)
         self.logger = logger or self._setup_default_logger()

@@ -377,6 +377,7 @@ def pytest_runtest_makereport(item, call):
                         setattr(item, "_screenshot_path", screenshot_path)
                         setattr(item, "_error_html_path", html_path)
                         logger.info(f"Captured failure evidence for {nodeid} -> {screenshot_path}, {html_path}")
+                        logger.info(f"🔍 SCREENSHOT DEBUG: Path = {screenshot_path}, Exists = {os.path.exists(screenshot_path) if screenshot_path else 'No path'}")
                     except Exception:
                         logger.exception("Failed capturing screenshot/html via ScreenshotUtils")
                 else:
@@ -433,24 +434,45 @@ def pytest_runtest_makereport(item, call):
             evidence["log_path"] = test_specific_log
 
         # For API tests, also capture response dumps
-        if status == "FAIL" and "api" in nodeid.lower():
-            response_dump = None
+        is_api_test = any(term in nodeid.lower() for term in ['api', 'auth', 'flight', 'hotel', 'package', 'visa'])
+        if status == "FAIL" and is_api_test:
             try:
                 dumps_dir = Path("reports/failed_responses")
-                if dumps_dir.exists():
-                    # Find most recent response dump for this test
-                    cutoff = time.time() - 120
-                    candidates = sorted(
-                        [p for p in dumps_dir.iterdir() 
-                         if p.stat().st_mtime >= cutoff],
-                        key=lambda p: p.stat().st_mtime,
-                        reverse=True
-                    )
-                    if candidates:
-                        response_dump = str(candidates[0])
-                        evidence["response_file"] = response_dump
+                dumps_dir.mkdir(parents=True, exist_ok=True)
+                
+                safe_name = nodeid.replace("::", "_").replace("/", "_").replace(":", "_")
+                timestamp = datetime.now().strftime("%H%M%S")
+                dump_file = dumps_dir / f"{safe_name}_{timestamp}.json"
+                
+                # Try multiple methods to get response
+                response_data = {
+                    "test_name": nodeid,
+                    "timestamp": datetime.now().isoformat(),
+                    "error_message": error_message,
+                    "response_captured": False
+                }
+                
+                # Method 1: Check if auth_api has last_response
+                if hasattr(item, 'funcargs'):
+                    for arg_name, arg_value in item.funcargs.items():
+                        if hasattr(arg_value, 'last_response'):
+                            response = arg_value.last_response
+                            response_data.update({
+                                "status_code": response.status_code,
+                                "body": response.text[:2000],  # Limit size
+                                "response_captured": True
+                            })
+                            break
+                
+                with open(dump_file, "w", encoding="utf-8") as f:
+                    import json
+                    json.dump(response_data, f, indent=2, default=str)
+                
+                evidence["response_file"] = str(dump_file)
+                logger.info(f"API failure record created: {dump_file}")
+                
             except Exception as e:
-                logger.error(f"Failed to capture response dump: {e}")
+                logger.error(f"Failed to create failure record: {e}")
 
         # Attach latest log file to pytest-html (copy into reports/logs and add link + preview)
         try:
