@@ -1,0 +1,20 @@
+2026-01-06 07:51:09 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🚀 Starting TestVisaEnquiryAPI test
+2026-01-06 07:51:09 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 DEBUG: Test phase - setup for src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_complete_visa_flow_without_auth - Skipped: False
+2026-01-06 07:51:09 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - === Testing Complete Visa Flow - Without Auth ===
+2026-01-06 07:51:09 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Step 1: Creating visa enquiry without auth...
+2026-01-06 07:51:09 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Request: POST https://api.stg.gowithgeo.com/api/visa/create
+2026-01-06 07:51:09 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Response: 200
+2026-01-06 07:51:09 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - SUCCESS: ✅ Visa enquiry created without auth: ID=393
+2026-01-06 07:51:09 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Step 2: Trying to get visa applications without auth...
+2026-01-06 07:51:09 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Request: GET https://api.stg.gowithgeo.com/api/visa/all/user
+2026-01-06 07:51:09 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Response: 401
+2026-01-06 07:51:09 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - SUCCESS: ✅ Correctly rejected unauthenticated access to user applications
+2026-01-06 07:51:09 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Step 3: Initiating Bank Transfer payment without auth...
+2026-01-06 07:51:09 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Request: POST https://api.stg.gowithgeo.com/api/visa/payment
+2026-01-06 07:51:10 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Response: 200
+2026-01-06 07:51:10 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - SUCCESS: ✅ Bank transfer reference generated: a5cd9252-cc3a-4c9d-92d9-89e70aaab1b5
+2026-01-06 07:51:10 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - SUCCESS: ✅ Complete visa flow without auth test passed!
+2026-01-06 07:51:10 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 DEBUG: Test phase - call for src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_complete_visa_flow_without_auth - Skipped: False
+2026-01-06 07:51:10 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Skipping attaching API dumps for passed/expected-failure test: src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_complete_visa_flow_without_auth
+2026-01-06 07:51:10 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Skipping screenshot capture for API test: src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_complete_visa_flow_without_auth
+2026-01-06 07:51:10 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 CRITICAL DEBUG: test_path = /home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_visa_api.py
