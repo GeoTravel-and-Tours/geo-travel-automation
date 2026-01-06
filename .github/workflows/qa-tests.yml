@@ -124,8 +124,9 @@ jobs:
           mkdir -p "$RUN_DIR/reports"
           
           # Copy screenshots
-          if [ -d "docs/screenshots/failures" ]; then
-            cp docs/screenshots/failures/* "$RUN_DIR/screenshots/" 2>/dev/null || true
+          if [ -d "reports/screenshots/failures" ]; then
+            mkdir -p "$RUN_DIR/screenshots/failures"
+            cp reports/screenshots/failures/* "$RUN_DIR/screenshots/failures/" 2>/dev/null || true
           fi
           
           # Copy API responses
@@ -152,8 +153,8 @@ jobs:
           
           # Add screenshots list
           echo "<h2>Screenshots</h2><ul>" >> "$RUN_DIR/index.html"
-          for file in "$RUN_DIR/screenshots"/*; do
-            [ -f "$file" ] && filename=$(basename "$file") && echo "<li><a href='screenshots/$filename'>$filename</a></li>" >> "$RUN_DIR/index.html"
+          for file in "$RUN_DIR/screenshots/failures"/*; do
+            [ -f "$file" ] && filename=$(basename "$file") && echo "<li><a href='screenshots/failures/$filename'>$filename</a></li>" >> "$RUN_DIR/index.html"
           done
           echo "</ul>" >> "$RUN_DIR/index.html"
           

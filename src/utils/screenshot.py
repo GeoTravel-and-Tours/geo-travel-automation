@@ -212,7 +212,8 @@ class ScreenshotUtils:
                 return {"screenshot": None, "html": None}
             
             timestamp = self._generate_timestamp()
-            clean_test_name = self._clean_filename(test_name)
+            clean_test_name = test_name.replace("::", "_").replace("/", "_").replace(":", "_")
+            clean_test_name = self._clean_filename(clean_test_name)
 
             # 1. Capture screenshot in failures folder
             # Extract error type for better naming
@@ -223,7 +224,16 @@ class ScreenshotUtils:
                 # Extract first word of error
                 error_type = error_message.split(':')[0].lower().replace(' ', '_')[:15]
 
-            screenshot_filename = f"{error_type}_{clean_test_name}_{timestamp}"
+            test_parts = test_name.split("::")
+            if len(test_parts) > 2:
+                method_name = test_parts[-1]
+                class_name = test_parts[-2].replace("Test", "")
+                readable_name = f"{class_name}_{method_name}"
+            else:
+                readable_name = clean_test_name
+                
+            safe_name = readable_name.replace("::", "_").replace("/", "_").replace(":", "_")[:50]
+            screenshot_filename = f"{safe_name}_{timestamp}"
             print(f"🔍 DEBUG: Attempting screenshot: {screenshot_filename}")
             
             screenshot_path = self.capture_screenshot(

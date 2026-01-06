@@ -7,6 +7,7 @@ import sys
 import shutil
 from pathlib import Path
 import html as html_escape
+import logging
 import pytest
 from datetime import datetime
 from pytest_html import extras
@@ -19,6 +20,7 @@ from configs.environment import EnvironmentConfig
 from src.utils.notifications import slack_notifier
 from configs.environment import EnvironmentConfig
 from src.utils.logger import GeoLogger
+import uuid
 
 logger = GeoLogger("conftest")
 
@@ -133,6 +135,9 @@ def pytest_sessionfinish(session, exitstatus):
 def pytest_runtest_setup(item):
     """Handle test setup - skip if environment is down"""
     global environment_available
+    
+    # Set current test in logger handler
+    logger.set_current_test(item.nodeid)
     
     if not environment_available:
         # NEW: Provide detailed skip reason
@@ -329,9 +334,9 @@ def pytest_runtest_makereport(item, call):
                 if last_element:
                     try:
                         page.javascript.highlight_element(last_element)
-                        logger.info("Highlighted last interacted element on failure in {page.__class__.__name__}")
+                        logger.info(f"Highlighted last interacted element on failure in {page.__class__.__name__}")
                     except Exception:
-                        logger.warning("Could not highlight last interacted element in {page.__class__.__name__}")
+                        logger.warning(f"Could not highlight last interacted element in {page.__class__.__name__}")
                     break  # only highlight first found
             
             if not is_api_test:  # Only capture screenshots for UI tests
@@ -400,6 +405,52 @@ def pytest_runtest_makereport(item, call):
         # Defer recording result until after we've possibly attached latest logs
         # (we will add test result after copying latest_log_path below)
         deferred_suite_reporter = suite_reporter
+
+        # Save test-specific logs
+        test_specific_log = None
+        try:
+            # Get test_log_handler from GeoLogger
+            test_log_handler = getattr(logger, 'test_handler', None)
+            
+            if test_log_handler:
+                test_specific_log = test_log_handler.save_test_logs(nodeid, "reports/logs")
+                if test_specific_log:
+                    setattr(item, "_test_specific_log", test_specific_log)
+                    logger.info(f"Saved test-specific logs: {test_specific_log}")
+        except Exception as e:
+            logger.error(f"Failed to save test-specific logs: {e}")
+
+        # Clear logs for this test to free memory
+        if test_log_handler and hasattr(test_log_handler, 'clear_test_logs'):
+            try:
+                test_log_handler.clear_test_logs(nodeid)
+            except Exception as e:
+                logger.error(f"Failed to clear test logs: {e}")
+
+        # Attach test-specific evidence
+        evidence = {}
+        if test_specific_log:
+            evidence["log_path"] = test_specific_log
+
+        # For API tests, also capture response dumps
+        if status == "FAIL" and "api" in nodeid.lower():
+            response_dump = None
+            try:
+                dumps_dir = Path("reports/failed_responses")
+                if dumps_dir.exists():
+                    # Find most recent response dump for this test
+                    cutoff = time.time() - 120
+                    candidates = sorted(
+                        [p for p in dumps_dir.iterdir() 
+                         if p.stat().st_mtime >= cutoff],
+                        key=lambda p: p.stat().st_mtime,
+                        reverse=True
+                    )
+                    if candidates:
+                        response_dump = str(candidates[0])
+                        evidence["response_file"] = response_dump
+            except Exception as e:
+                logger.error(f"Failed to capture response dump: {e}")
 
         # Attach latest log file to pytest-html (copy into reports/logs and add link + preview)
         try:
@@ -482,15 +533,16 @@ def pytest_runtest_makereport(item, call):
     # Now record result in the appropriate reporter with proper metadata (after log available)
     try:
         if deferred_suite_reporter:
-            # Build evidence dict if latest log was copied
-            latest_log_for_report = getattr(item, "_latest_log_path_for_report", None) or getattr(item, "_latest_log_path", None)
-            evidence = None
-            if latest_log_for_report:
-                evidence = {"log_path": str(latest_log_for_report)}
+            # Use the evidence dict we already built
+            if not evidence:
+                # Build evidence dict if latest log was copied
+                latest_log_for_report = getattr(item, "_latest_log_path_for_report", None) or getattr(item, "_latest_log_path", None)
+                if latest_log_for_report:
+                    evidence = {"log_path": str(latest_log_for_report)}
 
             # Also include recent response dumps if any
             recent_response_files = getattr(item, "_recent_response_files", None)
-            if recent_response_files:
+            if recent_response_files and "response_file" not in evidence:
                 if not evidence:
                     evidence = {}
                 # attach the most recent response file

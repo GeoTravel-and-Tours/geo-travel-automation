@@ -10,6 +10,57 @@ from logging.handlers import RotatingFileHandler
 from src.utils.cleanup import CleanupManager
 
 
+class TestAwareHandler(logging.Handler):
+    """Handler that captures logs for specific tests"""
+    
+    def __init__(self):
+        super().__init__()
+        self.test_logs = {}
+        self.current_test = None
+        
+    def set_current_test(self, test_name):
+        """Set current test being executed"""
+        self.current_test = test_name
+        
+    def emit(self, record):
+        """Capture log records for current test"""
+        if self.current_test:
+            log_entry = self.format(record)
+            if self.current_test not in self.test_logs:
+                self.test_logs[self.current_test] = []
+            self.test_logs[self.current_test].append(log_entry)
+            
+    def get_test_logs(self, test_name):
+        """Get logs for specific test"""
+        return self.test_logs.get(test_name, [])
+    
+    def save_test_logs(self, test_name, output_dir="reports/logs"):
+        """Save test-specific logs to file"""
+        logs = self.get_test_logs(test_name)
+        if not logs:
+            return None
+            
+        safe_name = test_name.replace("::", "_").replace("/", "_").replace(":", "_")
+        timestamp = datetime.now().strftime("%H%M%S")
+        filename = f"{safe_name}_{timestamp}.log"
+        
+        output_dir = Path(output_dir)
+        output_dir.mkdir(parents=True, exist_ok=True)
+        
+        log_file = output_dir / filename
+        with open(log_file, "w", encoding="utf-8") as f:
+            f.write("\n".join(logs))
+            
+        return str(log_file)
+    
+    def clear_test_logs(self, test_name):
+        """Clear logs for specific test to free memory"""
+        self.test_logs.pop(test_name, None)
+        # Also clear current test if it matches
+        if self.current_test == test_name:
+            self.current_test = None
+
+
 class GeoLogger:
     """
     Enhanced logging utility for Geo Travel automation with automated file management
@@ -205,6 +256,11 @@ class GeoLogger:
                 self.logger.addHandler(file_handler)
                 self._log_to_console(f"Log file created: {self.current_log_file}")
 
+        # Add test-aware handler
+        self.test_handler = TestAwareHandler()
+        self.test_handler.setFormatter(formatter)
+        self.logger.addHandler(self.test_handler)
+
         # Prevent propagation to root logger
         self.logger.propagate = False
 
@@ -212,6 +268,17 @@ class GeoLogger:
         self.logger._GeoLogger_configured = True
 
         return self.logger
+
+    def set_current_test(self, test_name):
+        """Set current test for test-aware logging"""
+        if hasattr(self, 'test_handler'):
+            self.test_handler.set_current_test(test_name)
+            
+    def get_test_logs(self, test_name):
+        """Get logs for specific test"""
+        if hasattr(self, 'test_handler'):
+            return self.test_handler.save_test_logs(test_name)
+        return None
 
     def get_log_statistics(self):
         """Get statistics about log files"""
@@ -403,6 +470,17 @@ def check_log_system_health():
     print("=" * 60)
 
     return stats
+
+
+# Test-aware logging convenience functions
+def set_current_test(test_name):
+    """Set the current test name for test-aware logging"""
+    logger.set_current_test(test_name)
+
+
+def get_test_logs(test_name):
+    """Get logs for a specific test"""
+    return logger.get_test_logs(test_name)
 
 
 # Example usage and self-test

@@ -1032,47 +1032,40 @@ class GeoReporter:
         self._cleanup_old_reports()
         
     def _get_failure_links(self, failed_test):
-        """Generate direct links for failed test evidence"""
+        """Generate direct links for failed test evidence using test-specific files"""
         gh_pages = "https://geotravel-and-tours.github.io/geo-travel-automation"
         test_name = failed_test.get('test_name', '').lower()
         
         links = []
         
-        # Get timestamp from environment
-        timestamp = os.getenv("RUN_TIMESTAMP", "")
+        # Get timestamp from environment or use today's date
+        timestamp = os.getenv("RUN_TIMESTAMP", datetime.now().strftime("%Y%m%d"))
+        
+        # Test-specific log file
+        evidence = failed_test.get('evidence', {})
+        test_log_path = evidence.get('log_path')
+        
+        if test_log_path and Path(test_log_path).exists():
+            log_name = Path(test_log_path).name
+            links.append(f"📄 <{gh_pages}/{timestamp}/logs/{log_name}|View Test Log>")
         
         # Determine test type
         is_ui_test = 'smoke' in test_name and 'api' not in test_name
         is_api_test = 'api' in test_name
         
-        # UI TESTS - Only screenshot
+        # UI TESTS - Test-specific screenshot
         if is_ui_test:
             screenshot_path = failed_test.get('screenshot_path')
-            if screenshot_path:
-                screenshot_name = os.path.basename(screenshot_path)
-                if timestamp:
-                    # NEW structure: /TIMESTAMP/screenshots/
-                    links.append(f"📸 <{gh_pages}/{timestamp}/screenshots/{screenshot_name}|View Screenshot>")
-                else:
-                    # OLD structure (fallback)
-                    links.append(f"📸 <{gh_pages}/screenshots/failures/{screenshot_name}|View Screenshot>")
+            if screenshot_path and Path(screenshot_path).exists():
+                screenshot_name = Path(screenshot_path).name
+                links.append(f"📸 <{gh_pages}/{timestamp}/screenshots/{screenshot_name}|View Screenshot>")
         
-        # API TESTS - Test Logs + Response Dump
+        # API TESTS - Test-specific response dump
         elif is_api_test:
-            evidence = failed_test.get('evidence', {})
-            
-            # API response
             resp_path = evidence.get('response_file')
-            if resp_path and timestamp:
-                resp_name = os.path.basename(resp_path)
+            if resp_path and Path(resp_path).exists():
+                resp_name = Path(resp_path).name
                 links.append(f"🗂 <{gh_pages}/{timestamp}/api_failed_responses/{resp_name}|View Response>")
-                
-            # Log file
-            log_path = evidence.get('log_path')
-            if log_path and timestamp:
-                log_name = os.path.basename(log_path)
-                links.append(f"📄 <{gh_pages}/{timestamp}/logs/{log_name}|View Log>")
-            
         
         return " | ".join(links) if links else "No evidence captured"
 
