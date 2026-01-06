@@ -62,6 +62,9 @@ class PartnersBaseAPI:
                     **kwargs
                 )
                 
+                # Store last response for conftest.py to access
+                self.last_response = response
+                
                 self.logger.info(f"Partners API Response: {response.status_code}")
                 
                 # Log response for debugging
