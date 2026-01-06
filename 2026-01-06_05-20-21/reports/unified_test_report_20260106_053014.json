@@ -1,0 +1,1571 @@
+{
+    "test_suite_name": "Unified UI Smoke + API + Partners API TEST REPORT",
+    "total_tests": 167,
+    "passed_tests": 107,
+    "failed_tests": 12,
+    "skipped_tests": 48,
+    "success_rate": 64.1,
+    "duration": 591.929921,
+    "start_time": "2026-01-06 05:20:22",
+    "end_time": "2026-01-06 05:30:13",
+    "suites_run": [
+        "smoke",
+        "api",
+        "partners_api"
+    ],
+    "suite_details": {
+        "smoke": {
+            "report": {
+                "test_suite_name": "Unified UI Smoke + API + Partners API TEST REPORT",
+                "total_tests": 41,
+                "passed_tests": 37,
+                "failed_tests": 2,
+                "skipped_tests": 2,
+                "success_rate": 90.2439024390244,
+                "duration": 328.002468,
+                "start_time": "2026-01-06 05:20:22",
+                "end_time": "2026-01-06 05:25:50",
+                "failed_tests_details": [
+                    {
+                        "test_name": "src/tests/smoke_tests/test_auth_flow_smoke.py::TestAuthFlowSmoke::test_successful_login_and_redirect",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Login should be successful with valid credentials\nassert False",
+                        "screenshot_path": null,
+                        "duration": 12.228883504867554,
+                        "timestamp": "05:20:50",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_smoke_tests_test_auth_flow_smoke.py_TestAuthFlowSmoke_test_successful_login_and_redirect_052050.log"
+                        },
+                        "log_path": "reports/logs/src_tests_smoke_tests_test_auth_flow_smoke.py_TestAuthFlowSmoke_test_successful_login_and_redirect_052050.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_auth_flow_smoke.py_TestAuthFlowSmoke_test_successful_login_and_redirect_052050.log",
+                        "suite": "smoke"
+                    },
+                    {
+                        "test_name": "src/tests/smoke_tests/test_package_booking_smoke.py::TestPackageBookingSmoke::test_package_search_functionality",
+                        "status": "FAIL",
+                        "error_message": "TimeoutException: Message: \nStacktrace:\n#0 0x55ce473c961a <unknown>\n#1 0x55ce46e4620b <unknown>\n#2 0x55ce46e9790f <unknown>\n#3 0x55ce46e97b51 <unknown>\n#4 0x55ce46ee5d84 <unknown>\n#5 0x55ce46ee320e <unknown>\n#6 0x55ce46e8a232 <unknown>\n#7 0x55ce46e8aee1 <unknown>\n#8 0x55ce473923f9 <unknown>\n#9 0x55ce4739534d <unknown>\n#10 0x55ce4737b122 <unknown>\n#11 0x55ce47395f2b <unknown>\n#12 0x55ce47361c30 <unknown>\n#13 0x55ce473b6d78 <unknown>\n#14 0x55ce473b6f4c <unknown>\n#15 0x55ce473c8973 <unknown>\n#16 0x7f0fcf69caa4 <unknown>\n#17 0x7f0fcf729c6c <unknown>\n",
+                        "screenshot_path": null,
+                        "duration": 24.59002137184143,
+                        "timestamp": "05:23:50",
+                        "skip_reason": null,
+                        "category": "API Timeout",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_package_search_functionality_052350.log"
+                        },
+                        "log_path": "reports/logs/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_package_search_functionality_052350.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_package_search_functionality_052350.log",
+                        "suite": "smoke"
+                    }
+                ],
+                "skipped_tests_details": [
+                    {
+                        "test_name": "src/tests/smoke_tests/test_auth_flow_smoke.py::TestAuthFlowSmoke::test_logout_functionality",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/smoke_tests/test_auth_flow_smoke.py', 159, 'Skipped: Login failed - cannot proceed with logout test')",
+                        "screenshot_path": "docs/screenshots/failures/AuthFlowSmoke_test_logout_functionality_20260106_052125.png",
+                        "duration": 12.064213991165161,
+                        "timestamp": "05:21:26",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/smoke_tests/test_auth_flow_smoke.py', 159, 'Skipped: Login failed - cannot proceed with logout test')",
+                        "category": null,
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_smoke_tests_test_auth_flow_smoke.py_TestAuthFlowSmoke_test_logout_functionality_052126.log"
+                        },
+                        "log_path": "reports/logs/src_tests_smoke_tests_test_auth_flow_smoke.py_TestAuthFlowSmoke_test_logout_functionality_052126.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_auth_flow_smoke.py_TestAuthFlowSmoke_test_logout_functionality_052126.log",
+                        "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-06_05-20-21/screenshots/AuthFlowSmoke_test_logout_functionality_20260106_052125.png",
+                        "suite": "smoke"
+                    },
+                    {
+                        "test_name": "src/tests/smoke_tests/test_package_booking_smoke.py::TestPackageBookingSmoke::test_complete_package_booking_flow",
+                        "status": "SKIP",
+                        "error_message": "('/opt/hostedtoolcache/Python/3.10.19/x64/lib/python3.10/site-packages/pytest_dependency.py', 101, 'Skipped: test_complete_package_booking_flow depends on package_search_works')",
+                        "screenshot_path": null,
+                        "duration": 0.0,
+                        "timestamp": "05:23:50",
+                        "skip_reason": "('/opt/hostedtoolcache/Python/3.10.19/x64/lib/python3.10/site-packages/pytest_dependency.py', 101, 'Skipped: test_complete_package_booking_flow depends on package_search_works')",
+                        "category": null,
+                        "suite": "smoke"
+                    }
+                ]
+            },
+            "timestamp": "2026-01-06 05:25:50"
+        },
+        "api": {
+            "report": {
+                "test_suite_name": "API SMOKE TEST",
+                "total_tests": 91,
+                "passed_tests": 41,
+                "failed_tests": 4,
+                "skipped_tests": 46,
+                "success_rate": 45.05494505494506,
+                "duration": 33.941299,
+                "start_time": "2026-01-06 05:25:50",
+                "end_time": "2026-01-06 05:26:24",
+                "failed_tests_details": [
+                    {
+                        "test_name": "src/tests/api_tests/test_auth_api.py::TestAuthAPI::test_login_success",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: assert 400 == 200\n +  where 400 = <Response [400]>.status_code",
+                        "screenshot_path": null,
+                        "duration": 0.13690423965454102,
+                        "timestamp": "05:25:50",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_login_success_052550.log"
+                        },
+                        "log_path": "reports/logs/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_login_success_052550.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_login_success_052550.log",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_auth_api.py::TestAuthAPI::test_auth_token_set_after_successful_login",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: assert 400 == 200\n +  where 400 = <Response [400]>.status_code",
+                        "screenshot_path": null,
+                        "duration": 0.13286519050598145,
+                        "timestamp": "05:25:51",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_auth_token_set_after_successful_login_052551.log"
+                        },
+                        "log_path": "reports/logs/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_auth_token_set_after_successful_login_052551.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_auth_token_set_after_successful_login_052551.log",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_auth_api.py::TestAuthAPI::test_dynamic_token_extraction",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: assert 400 == 200\n +  where 400 = <Response [400]>.status_code",
+                        "screenshot_path": null,
+                        "duration": 0.14366650581359863,
+                        "timestamp": "05:25:51",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_dynamic_token_extraction_052551.log"
+                        },
+                        "log_path": "reports/logs/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_dynamic_token_extraction_052551.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_dynamic_token_extraction_052551.log",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_auth_api.py::TestAuthAPI::test_token_validation",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: assert 400 == 200\n +  where 400 = <Response [400]>.status_code",
+                        "screenshot_path": null,
+                        "duration": 0.1354668140411377,
+                        "timestamp": "05:25:51",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_token_validation_052551.log"
+                        },
+                        "log_path": "reports/logs/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_token_validation_052551.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_token_validation_052551.log",
+                        "suite": "api"
+                    }
+                ],
+                "skipped_tests_details": [
+                    {
+                        "test_name": "src/tests/api_tests/test_flight_api.py::TestFlightAPI::test_flight_search_request",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_flight_api.py', 36, 'Skipped: Login failed with status 400')",
+                        "screenshot_path": null,
+                        "duration": 0.0,
+                        "timestamp": "05:25:51",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_flight_api.py', 36, 'Skipped: Login failed with status 400')",
+                        "category": null,
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_flight_api.py::TestFlightAPI::test_flight_search_flow",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_flight_api.py', 64, 'Skipped: Login failed with status 400')",
+                        "screenshot_path": null,
+                        "duration": 0.0,
+                        "timestamp": "05:25:51",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_flight_api.py', 64, 'Skipped: Login failed with status 400')",
+                        "category": null,
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_flight_api.py::TestFlightAPI::test_flight_quote_flow",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_flight_api.py', 91, 'Skipped: Login failed with status 400')",
+                        "screenshot_path": null,
+                        "duration": 0.0,
+                        "timestamp": "05:25:51",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_flight_api.py', 91, 'Skipped: Login failed with status 400')",
+                        "category": null,
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_flight_api.py::TestFlightAPI::test_passenger_email_validation",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_flight_api.py', 111, 'Skipped: Login failed with status 400')",
+                        "screenshot_path": null,
+                        "duration": 0.0,
+                        "timestamp": "05:25:51",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_flight_api.py', 111, 'Skipped: Login failed with status 400')",
+                        "category": null,
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_flight_api.py::TestFlightAPI::test_different_cabins",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_flight_api.py', 134, 'Skipped: Login failed with status 400')",
+                        "screenshot_path": null,
+                        "duration": 0.0,
+                        "timestamp": "05:25:52",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_flight_api.py', 134, 'Skipped: Login failed with status 400')",
+                        "category": null,
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_flight_api.py::TestFlightAPI::test_get_booked_flights",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_flight_api.py', 154, 'Skipped: Login failed with status 400')",
+                        "screenshot_path": null,
+                        "duration": 0.0,
+                        "timestamp": "05:25:52",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_flight_api.py', 154, 'Skipped: Login failed with status 400')",
+                        "category": null,
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_flight_api.py::TestFlightAPI::test_return_flight_search",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_flight_api.py', 184, 'Skipped: Login failed with status 400')",
+                        "screenshot_path": null,
+                        "duration": 0.0,
+                        "timestamp": "05:25:52",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_flight_api.py', 184, 'Skipped: Login failed with status 400')",
+                        "category": null,
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_flight_api.py::TestFlightAPI::test_passenger_combinations",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_flight_api.py', 230, 'Skipped: Login failed with status 400')",
+                        "screenshot_path": null,
+                        "duration": 0.0,
+                        "timestamp": "05:25:52",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_flight_api.py', 230, 'Skipped: Login failed with status 400')",
+                        "category": null,
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_flight_api.py::TestFlightAPI::test_initiate_booking_flow",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_flight_api.py', 253, 'Skipped: Login failed with status 400')",
+                        "screenshot_path": null,
+                        "duration": 0.0,
+                        "timestamp": "05:25:52",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_flight_api.py', 253, 'Skipped: Login failed with status 400')",
+                        "category": null,
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_flight_api.py::TestFlightAPI::test_error_scenarios",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_flight_api.py', 303, 'Skipped: Login failed with status 400')",
+                        "screenshot_path": null,
+                        "duration": 0.0,
+                        "timestamp": "05:25:52",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_flight_api.py', 303, 'Skipped: Login failed with status 400')",
+                        "category": null,
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_get_hotel_cities_success",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 95, 'Skipped: Login failed with status 400')",
+                        "screenshot_path": null,
+                        "duration": 0.0,
+                        "timestamp": "05:25:52",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 95, 'Skipped: Login failed with status 400')",
+                        "category": null,
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_search_hotels_invalid_dates",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 242, 'Skipped: Too far in future: Skipped \u2014 scenario not properly handled yet (Internal Server Error: 500)')",
+                        "screenshot_path": null,
+                        "duration": 0.8673484325408936,
+                        "timestamp": "05:26:06",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 242, 'Skipped: Too far in future: Skipped \u2014 scenario not properly handled yet (Internal Server Error: 500)')",
+                        "category": null,
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_search_hotels_invalid_dates_052606.log"
+                        },
+                        "log_path": "reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_search_hotels_invalid_dates_052606.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_search_hotels_invalid_dates_052606.log",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_get_hotel_rating_success",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 320, 'Skipped: Get Hotel Rating skipped \u2014 AMADEUS internal error (hotelId=FNNYCPSF, status=500)')",
+                        "screenshot_path": null,
+                        "duration": 2.148960828781128,
+                        "timestamp": "05:26:08",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 320, 'Skipped: Get Hotel Rating skipped \u2014 AMADEUS internal error (hotelId=FNNYCPSF, status=500)')",
+                        "category": null,
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_get_hotel_rating_success_052608.log"
+                        },
+                        "log_path": "reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_get_hotel_rating_success_052608.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_get_hotel_rating_success_052608.log",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_book_hotel_with_auth",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 385, 'Skipped: Login failed with status 400')",
+                        "screenshot_path": null,
+                        "duration": 0.0,
+                        "timestamp": "05:26:09",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 385, 'Skipped: Login failed with status 400')",
+                        "category": null,
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_search_hotels_performance_with_auth",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 453, 'Skipped: Login failed with status 400')",
+                        "screenshot_path": null,
+                        "duration": 0.0,
+                        "timestamp": "05:26:12",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 453, 'Skipped: Login failed with status 400')",
+                        "category": null,
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_hotel_endpoints_with_auth",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 485, 'Skipped: Login failed with status 400')",
+                        "screenshot_path": null,
+                        "duration": 0.0,
+                        "timestamp": "05:26:14",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 485, 'Skipped: Login failed with status 400')",
+                        "category": null,
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_misc_api.py::TestMiscAPIs::test_get_google_reviews",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_misc_api.py', 45, 'Skipped: Login failed with status 400')",
+                        "screenshot_path": null,
+                        "duration": 0.0,
+                        "timestamp": "05:26:14",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_misc_api.py', 45, 'Skipped: Login failed with status 400')",
+                        "category": null,
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_misc_api.py::TestMiscAPIs::test_get_commercial_deals",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_misc_api.py', 61, 'Skipped: Login failed with status 400')",
+                        "screenshot_path": null,
+                        "duration": 0.0,
+                        "timestamp": "05:26:14",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_misc_api.py', 61, 'Skipped: Login failed with status 400')",
+                        "category": null,
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_misc_api.py::TestMiscAPIs::test_get_single_commercial_deal",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_misc_api.py', 76, 'Skipped: Login failed with status 400')",
+                        "screenshot_path": null,
+                        "duration": 0.0,
+                        "timestamp": "05:26:14",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_misc_api.py', 76, 'Skipped: Login failed with status 400')",
+                        "category": null,
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_misc_api.py::TestMiscAPIs::test_get_all_events",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_misc_api.py', 98, 'Skipped: Login failed with status 400')",
+                        "screenshot_path": null,
+                        "duration": 0.0,
+                        "timestamp": "05:26:14",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_misc_api.py', 98, 'Skipped: Login failed with status 400')",
+                        "category": null,
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_misc_api.py::TestMiscAPIs::test_get_airports",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_misc_api.py', 114, 'Skipped: Login failed with status 400')",
+                        "screenshot_path": null,
+                        "duration": 0.0,
+                        "timestamp": "05:26:14",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_misc_api.py', 114, 'Skipped: Login failed with status 400')",
+                        "category": null,
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_misc_api.py::TestMiscAPIs::test_get_all_blogs",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_misc_api.py', 121, 'Skipped: Login failed with status 400')",
+                        "screenshot_path": null,
+                        "duration": 0.0,
+                        "timestamp": "05:26:15",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_misc_api.py', 121, 'Skipped: Login failed with status 400')",
+                        "category": null,
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_misc_api.py::TestMiscAPIs::test_get_single_blog",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_misc_api.py', 136, 'Skipped: Login failed with status 400')",
+                        "screenshot_path": null,
+                        "duration": 0.0,
+                        "timestamp": "05:26:15",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_misc_api.py', 136, 'Skipped: Login failed with status 400')",
+                        "category": null,
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_misc_api.py::TestMiscAPIs::test_get_blog_comments",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_misc_api.py', 163, 'Skipped: Login failed with status 400')",
+                        "screenshot_path": null,
+                        "duration": 0.0,
+                        "timestamp": "05:26:15",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_misc_api.py', 163, 'Skipped: Login failed with status 400')",
+                        "category": null,
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_misc_api.py::TestMiscAPIs::test_refresh_token",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_misc_api.py', 191, 'Skipped: Login failed with status 400')",
+                        "screenshot_path": null,
+                        "duration": 0.0,
+                        "timestamp": "05:26:15",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_misc_api.py', 191, 'Skipped: Login failed with status 400')",
+                        "category": null,
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_misc_api.py::TestMiscAPIs::test_get_user_profile",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_misc_api.py', 201, 'Skipped: Login failed with status 400')",
+                        "screenshot_path": null,
+                        "duration": 0.0,
+                        "timestamp": "05:26:15",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_misc_api.py', 201, 'Skipped: Login failed with status 400')",
+                        "category": null,
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_misc_api.py::TestMiscAPIs::test_get_user_transactions",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_misc_api.py', 211, 'Skipped: Login failed with status 400')",
+                        "screenshot_path": null,
+                        "duration": 0.0,
+                        "timestamp": "05:26:15",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_misc_api.py', 211, 'Skipped: Login failed with status 400')",
+                        "category": null,
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_misc_api.py::TestMiscAPIs::test_get_notifications",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_misc_api.py', 221, 'Skipped: Login failed with status 400')",
+                        "screenshot_path": null,
+                        "duration": 0.0,
+                        "timestamp": "05:26:15",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_misc_api.py', 221, 'Skipped: Login failed with status 400')",
+                        "category": null,
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_misc_api.py::TestMiscAPIs::test_subscribe_newsletter",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_misc_api.py', 232, 'Skipped: Login failed with status 400')",
+                        "screenshot_path": null,
+                        "duration": 0.0,
+                        "timestamp": "05:26:16",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_misc_api.py', 232, 'Skipped: Login failed with status 400')",
+                        "category": null,
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_misc_api.py::TestMiscAPIs::test_apply_voucher",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_misc_api.py', 245, 'Skipped: Login failed with status 400')",
+                        "screenshot_path": null,
+                        "duration": 0.0,
+                        "timestamp": "05:26:16",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_misc_api.py', 245, 'Skipped: Login failed with status 400')",
+                        "category": null,
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_package_api.py::TestPackageAPI::test_get_all_packages",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 30, 'Skipped: Login failed with status 400')",
+                        "screenshot_path": null,
+                        "duration": 0.0,
+                        "timestamp": "05:26:16",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 30, 'Skipped: Login failed with status 400')",
+                        "category": null,
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_package_api.py::TestPackageAPI::test_get_package_countries",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 37, 'Skipped: Login failed with status 400')",
+                        "screenshot_path": null,
+                        "duration": 0.0,
+                        "timestamp": "05:26:16",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 37, 'Skipped: Login failed with status 400')",
+                        "category": null,
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_package_api.py::TestPackageAPI::test_get_single_package",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 44, 'Skipped: Login failed with status 400')",
+                        "screenshot_path": null,
+                        "duration": 0.0,
+                        "timestamp": "05:26:16",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 44, 'Skipped: Login failed with status 400')",
+                        "category": null,
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_package_api.py::TestPackageAPI::test_search_packages",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 67, 'Skipped: Login failed with status 400')",
+                        "screenshot_path": null,
+                        "duration": 0.0,
+                        "timestamp": "05:26:16",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 67, 'Skipped: Login failed with status 400')",
+                        "category": null,
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_package_api.py::TestPackageAPI::test_get_all_deals",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 79, 'Skipped: Login failed with status 400')",
+                        "screenshot_path": null,
+                        "duration": 0.0,
+                        "timestamp": "05:26:16",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 79, 'Skipped: Login failed with status 400')",
+                        "category": null,
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_package_api.py::TestPackageAPI::test_get_single_deal",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 86, 'Skipped: Login failed with status 400')",
+                        "screenshot_path": null,
+                        "duration": 0.0,
+                        "timestamp": "05:26:16",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 86, 'Skipped: Login failed with status 400')",
+                        "category": null,
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_package_api.py::TestPackageAPI::test_book_package_and_verify_user_bookings",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 109, 'Skipped: Login failed with status 400')",
+                        "screenshot_path": null,
+                        "duration": 0.0,
+                        "timestamp": "05:26:17",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 109, 'Skipped: Login failed with status 400')",
+                        "category": null,
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_package_api.py::TestPackageAPI::test_get_user_booked_packages",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 371, 'Skipped: Login failed with status 400')",
+                        "screenshot_path": null,
+                        "duration": 0.0,
+                        "timestamp": "05:26:17",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 371, 'Skipped: Login failed with status 400')",
+                        "category": null,
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_package_api.py::TestPackageAPI::test_get_user_booked_packages_analytics",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 399, 'Skipped: Login failed with status 400')",
+                        "screenshot_path": null,
+                        "duration": 0.0,
+                        "timestamp": "05:26:17",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 399, 'Skipped: Login failed with status 400')",
+                        "category": null,
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_create_visa_enquiry_with_auth",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_visa_api.py', 101, 'Skipped: Login failed with status 400')",
+                        "screenshot_path": null,
+                        "duration": 0.0,
+                        "timestamp": "05:26:17",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_visa_api.py', 101, 'Skipped: Login failed with status 400')",
+                        "category": null,
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_make_payment_flutterwave_with_auth",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_visa_api.py', 294, 'Skipped: Login failed with status 400')",
+                        "screenshot_path": null,
+                        "duration": 0.0,
+                        "timestamp": "05:26:20",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_visa_api.py', 294, 'Skipped: Login failed with status 400')",
+                        "category": null,
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_get_user_visa_applications_with_auth",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_visa_api.py', 384, 'Skipped: Login failed with status 400')",
+                        "screenshot_path": null,
+                        "duration": 0.0,
+                        "timestamp": "05:26:22",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_visa_api.py', 384, 'Skipped: Login failed with status 400')",
+                        "category": null,
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_get_user_visa_applications_with_filters",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_visa_api.py', 442, 'Skipped: Login failed with status 400')",
+                        "screenshot_path": null,
+                        "duration": 0.0,
+                        "timestamp": "05:26:23",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_visa_api.py', 442, 'Skipped: Login failed with status 400')",
+                        "category": null,
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_get_user_visa_applications_pagination",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_visa_api.py', 473, 'Skipped: Login failed with status 400')",
+                        "screenshot_path": null,
+                        "duration": 0.0,
+                        "timestamp": "05:26:23",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_visa_api.py', 473, 'Skipped: Login failed with status 400')",
+                        "category": null,
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_get_visa_application_by_id_with_auth",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_visa_api.py', 507, 'Skipped: Login failed with status 400')",
+                        "screenshot_path": null,
+                        "duration": 0.0,
+                        "timestamp": "05:26:23",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_visa_api.py', 507, 'Skipped: Login failed with status 400')",
+                        "category": null,
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_complete_visa_flow_with_auth",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_visa_api.py', 575, 'Skipped: Login failed with status 400')",
+                        "screenshot_path": null,
+                        "duration": 0.0,
+                        "timestamp": "05:26:23",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_visa_api.py', 575, 'Skipped: Login failed with status 400')",
+                        "category": null,
+                        "suite": "api"
+                    }
+                ]
+            },
+            "timestamp": "2026-01-06 05:26:24"
+        },
+        "partners_api": {
+            "report": {
+                "test_suite_name": "PARTNERS API SMOKE TEST",
+                "total_tests": 35,
+                "passed_tests": 29,
+                "failed_tests": 6,
+                "skipped_tests": 0,
+                "success_rate": 82.85714285714286,
+                "duration": 220.428844,
+                "start_time": "2026-01-06 05:26:33",
+                "end_time": "2026-01-06 05:30:13",
+                "failed_tests_details": [
+                    {
+                        "test_name": "src/tests/partners_api_tests/test_partners_flight.py::TestPartnersFlightFunctionality::test_verified_user_can_search_flights",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Verified user should access flight search\nassert 503 == 200\n +  where 503 = <Response [503]>.status_code",
+                        "screenshot_path": null,
+                        "duration": 30.833762645721436,
+                        "timestamp": "05:27:09",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_partners_api_tests_test_partners_flight.py_TestPartnersFlightFunctionality_test_verified_user_can_search_flights_052709.log",
+                            "response_file": "reports/failed_responses/20260106_052709_503_api_flight_search.txt"
+                        },
+                        "log_path": "reports/logs/src_tests_partners_api_tests_test_partners_flight.py_TestPartnersFlightFunctionality_test_verified_user_can_search_flights_052709.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_partners_api_tests_test_partners_flight.py_TestPartnersFlightFunctionality_test_verified_user_can_search_flights_052709.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20260106_052709_503_api_flight_search.txt",
+                        "suite": "partners_api"
+                    },
+                    {
+                        "test_name": "src/tests/partners_api_tests/test_partners_flight.py::TestPartnersFlightFunctionality::test_verified_user_can_book_flight",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: assert 503 == 200\n +  where 503 = <Response [503]>.status_code",
+                        "screenshot_path": null,
+                        "duration": 30.840684413909912,
+                        "timestamp": "05:27:41",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_partners_api_tests_test_partners_flight.py_TestPartnersFlightFunctionality_test_verified_user_can_book_flight_052741.log",
+                            "response_file": "reports/failed_responses/20260106_052741_503_api_flight_search.txt"
+                        },
+                        "log_path": "reports/logs/src_tests_partners_api_tests_test_partners_flight.py_TestPartnersFlightFunctionality_test_verified_user_can_book_flight_052741.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_partners_api_tests_test_partners_flight.py_TestPartnersFlightFunctionality_test_verified_user_can_book_flight_052741.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20260106_052741_503_api_flight_search.txt",
+                        "suite": "partners_api"
+                    },
+                    {
+                        "test_name": "src/tests/partners_api_tests/test_partners_flight.py::TestPartnersFlightFunctionality::test_flight_search_counted_in_usage",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: assert 503 == 200\n +  where 503 = <Response [503]>.status_code",
+                        "screenshot_path": null,
+                        "duration": 31.172365427017212,
+                        "timestamp": "05:28:13",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_partners_api_tests_test_partners_flight.py_TestPartnersFlightFunctionality_test_flight_search_counted_in_usage_052813.log",
+                            "response_file": "reports/failed_responses/20260106_052813_503_api_flight_search.txt"
+                        },
+                        "log_path": "reports/logs/src_tests_partners_api_tests_test_partners_flight.py_TestPartnersFlightFunctionality_test_flight_search_counted_in_usage_052813.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_partners_api_tests_test_partners_flight.py_TestPartnersFlightFunctionality_test_flight_search_counted_in_usage_052813.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20260106_052813_503_api_flight_search.txt",
+                        "suite": "partners_api"
+                    },
+                    {
+                        "test_name": "src/tests/partners_api_tests/test_partners_flight.py::TestPartnersFlightFunctionality::test_flight_booking_counted_in_usage",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: assert 503 == 200\n +  where 503 = <Response [503]>.status_code",
+                        "screenshot_path": null,
+                        "duration": 31.18322467803955,
+                        "timestamp": "05:28:45",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_partners_api_tests_test_partners_flight.py_TestPartnersFlightFunctionality_test_flight_booking_counted_in_usage_052845.log",
+                            "response_file": "reports/failed_responses/20260106_052845_503_api_flight_search.txt"
+                        },
+                        "log_path": "reports/logs/src_tests_partners_api_tests_test_partners_flight.py_TestPartnersFlightFunctionality_test_flight_booking_counted_in_usage_052845.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_partners_api_tests_test_partners_flight.py_TestPartnersFlightFunctionality_test_flight_booking_counted_in_usage_052845.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20260106_052845_503_api_flight_search.txt",
+                        "suite": "partners_api"
+                    },
+                    {
+                        "test_name": "src/tests/partners_api_tests/test_partners_organization.py::TestPartnersOrganizationFunctionality::test_verified_user_can_reset_api_keys",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: New credentials should work for API calls\nassert 503 == 200\n +  where 503 = <Response [503]>.status_code",
+                        "screenshot_path": null,
+                        "duration": 31.549298524856567,
+                        "timestamp": "05:29:19",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_partners_api_tests_test_partners_organization.py_TestPartnersOrganizationFunctionality_test_verified_user_can_reset_api_keys_052919.log",
+                            "response_file": "reports/failed_responses/20260106_052919_503_api_flight_search.txt"
+                        },
+                        "log_path": "reports/logs/src_tests_partners_api_tests_test_partners_organization.py_TestPartnersOrganizationFunctionality_test_verified_user_can_reset_api_keys_052919.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_partners_api_tests_test_partners_organization.py_TestPartnersOrganizationFunctionality_test_verified_user_can_reset_api_keys_052919.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20260106_052919_503_api_flight_search.txt",
+                        "suite": "partners_api"
+                    },
+                    {
+                        "test_name": "src/tests/partners_api_tests/test_partners_package.py::TestPartnersPackageFunctionality::test_verified_user_can_get_packages",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Verified user should be able to access package listings\nassert 503 == 200\n +  where 503 = <Response [503]>.status_code",
+                        "screenshot_path": null,
+                        "duration": 30.833799600601196,
+                        "timestamp": "05:29:55",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_can_get_packages_052955.log",
+                            "response_file": "reports/failed_responses/20260106_052955_503_api_package_all.txt"
+                        },
+                        "log_path": "reports/logs/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_can_get_packages_052955.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_can_get_packages_052955.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20260106_052955_503_api_package_all.txt",
+                        "suite": "partners_api"
+                    }
+                ],
+                "skipped_tests_details": []
+            },
+            "timestamp": "2026-01-06 05:30:13"
+        }
+    },
+    "all_failed_tests": [
+        {
+            "test_name": "src/tests/smoke_tests/test_auth_flow_smoke.py::TestAuthFlowSmoke::test_successful_login_and_redirect",
+            "status": "FAIL",
+            "error_message": "AssertionError: Login should be successful with valid credentials\nassert False",
+            "screenshot_path": null,
+            "duration": 12.228883504867554,
+            "timestamp": "05:20:50",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_smoke_tests_test_auth_flow_smoke.py_TestAuthFlowSmoke_test_successful_login_and_redirect_052050.log"
+            },
+            "log_path": "reports/logs/src_tests_smoke_tests_test_auth_flow_smoke.py_TestAuthFlowSmoke_test_successful_login_and_redirect_052050.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_auth_flow_smoke.py_TestAuthFlowSmoke_test_successful_login_and_redirect_052050.log",
+            "suite": "smoke"
+        },
+        {
+            "test_name": "src/tests/smoke_tests/test_package_booking_smoke.py::TestPackageBookingSmoke::test_package_search_functionality",
+            "status": "FAIL",
+            "error_message": "TimeoutException: Message: \nStacktrace:\n#0 0x55ce473c961a <unknown>\n#1 0x55ce46e4620b <unknown>\n#2 0x55ce46e9790f <unknown>\n#3 0x55ce46e97b51 <unknown>\n#4 0x55ce46ee5d84 <unknown>\n#5 0x55ce46ee320e <unknown>\n#6 0x55ce46e8a232 <unknown>\n#7 0x55ce46e8aee1 <unknown>\n#8 0x55ce473923f9 <unknown>\n#9 0x55ce4739534d <unknown>\n#10 0x55ce4737b122 <unknown>\n#11 0x55ce47395f2b <unknown>\n#12 0x55ce47361c30 <unknown>\n#13 0x55ce473b6d78 <unknown>\n#14 0x55ce473b6f4c <unknown>\n#15 0x55ce473c8973 <unknown>\n#16 0x7f0fcf69caa4 <unknown>\n#17 0x7f0fcf729c6c <unknown>\n",
+            "screenshot_path": null,
+            "duration": 24.59002137184143,
+            "timestamp": "05:23:50",
+            "skip_reason": null,
+            "category": "API Timeout",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_package_search_functionality_052350.log"
+            },
+            "log_path": "reports/logs/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_package_search_functionality_052350.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_package_search_functionality_052350.log",
+            "suite": "smoke"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_auth_api.py::TestAuthAPI::test_login_success",
+            "status": "FAIL",
+            "error_message": "AssertionError: assert 400 == 200\n +  where 400 = <Response [400]>.status_code",
+            "screenshot_path": null,
+            "duration": 0.13690423965454102,
+            "timestamp": "05:25:50",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_login_success_052550.log"
+            },
+            "log_path": "reports/logs/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_login_success_052550.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_login_success_052550.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_auth_api.py::TestAuthAPI::test_auth_token_set_after_successful_login",
+            "status": "FAIL",
+            "error_message": "AssertionError: assert 400 == 200\n +  where 400 = <Response [400]>.status_code",
+            "screenshot_path": null,
+            "duration": 0.13286519050598145,
+            "timestamp": "05:25:51",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_auth_token_set_after_successful_login_052551.log"
+            },
+            "log_path": "reports/logs/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_auth_token_set_after_successful_login_052551.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_auth_token_set_after_successful_login_052551.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_auth_api.py::TestAuthAPI::test_dynamic_token_extraction",
+            "status": "FAIL",
+            "error_message": "AssertionError: assert 400 == 200\n +  where 400 = <Response [400]>.status_code",
+            "screenshot_path": null,
+            "duration": 0.14366650581359863,
+            "timestamp": "05:25:51",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_dynamic_token_extraction_052551.log"
+            },
+            "log_path": "reports/logs/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_dynamic_token_extraction_052551.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_dynamic_token_extraction_052551.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_auth_api.py::TestAuthAPI::test_token_validation",
+            "status": "FAIL",
+            "error_message": "AssertionError: assert 400 == 200\n +  where 400 = <Response [400]>.status_code",
+            "screenshot_path": null,
+            "duration": 0.1354668140411377,
+            "timestamp": "05:25:51",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_token_validation_052551.log"
+            },
+            "log_path": "reports/logs/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_token_validation_052551.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_token_validation_052551.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/partners_api_tests/test_partners_flight.py::TestPartnersFlightFunctionality::test_verified_user_can_search_flights",
+            "status": "FAIL",
+            "error_message": "AssertionError: Verified user should access flight search\nassert 503 == 200\n +  where 503 = <Response [503]>.status_code",
+            "screenshot_path": null,
+            "duration": 30.833762645721436,
+            "timestamp": "05:27:09",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_partners_api_tests_test_partners_flight.py_TestPartnersFlightFunctionality_test_verified_user_can_search_flights_052709.log",
+                "response_file": "reports/failed_responses/20260106_052709_503_api_flight_search.txt"
+            },
+            "log_path": "reports/logs/src_tests_partners_api_tests_test_partners_flight.py_TestPartnersFlightFunctionality_test_verified_user_can_search_flights_052709.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_partners_api_tests_test_partners_flight.py_TestPartnersFlightFunctionality_test_verified_user_can_search_flights_052709.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20260106_052709_503_api_flight_search.txt",
+            "suite": "partners_api"
+        },
+        {
+            "test_name": "src/tests/partners_api_tests/test_partners_flight.py::TestPartnersFlightFunctionality::test_verified_user_can_book_flight",
+            "status": "FAIL",
+            "error_message": "AssertionError: assert 503 == 200\n +  where 503 = <Response [503]>.status_code",
+            "screenshot_path": null,
+            "duration": 30.840684413909912,
+            "timestamp": "05:27:41",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_partners_api_tests_test_partners_flight.py_TestPartnersFlightFunctionality_test_verified_user_can_book_flight_052741.log",
+                "response_file": "reports/failed_responses/20260106_052741_503_api_flight_search.txt"
+            },
+            "log_path": "reports/logs/src_tests_partners_api_tests_test_partners_flight.py_TestPartnersFlightFunctionality_test_verified_user_can_book_flight_052741.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_partners_api_tests_test_partners_flight.py_TestPartnersFlightFunctionality_test_verified_user_can_book_flight_052741.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20260106_052741_503_api_flight_search.txt",
+            "suite": "partners_api"
+        },
+        {
+            "test_name": "src/tests/partners_api_tests/test_partners_flight.py::TestPartnersFlightFunctionality::test_flight_search_counted_in_usage",
+            "status": "FAIL",
+            "error_message": "AssertionError: assert 503 == 200\n +  where 503 = <Response [503]>.status_code",
+            "screenshot_path": null,
+            "duration": 31.172365427017212,
+            "timestamp": "05:28:13",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_partners_api_tests_test_partners_flight.py_TestPartnersFlightFunctionality_test_flight_search_counted_in_usage_052813.log",
+                "response_file": "reports/failed_responses/20260106_052813_503_api_flight_search.txt"
+            },
+            "log_path": "reports/logs/src_tests_partners_api_tests_test_partners_flight.py_TestPartnersFlightFunctionality_test_flight_search_counted_in_usage_052813.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_partners_api_tests_test_partners_flight.py_TestPartnersFlightFunctionality_test_flight_search_counted_in_usage_052813.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20260106_052813_503_api_flight_search.txt",
+            "suite": "partners_api"
+        },
+        {
+            "test_name": "src/tests/partners_api_tests/test_partners_flight.py::TestPartnersFlightFunctionality::test_flight_booking_counted_in_usage",
+            "status": "FAIL",
+            "error_message": "AssertionError: assert 503 == 200\n +  where 503 = <Response [503]>.status_code",
+            "screenshot_path": null,
+            "duration": 31.18322467803955,
+            "timestamp": "05:28:45",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_partners_api_tests_test_partners_flight.py_TestPartnersFlightFunctionality_test_flight_booking_counted_in_usage_052845.log",
+                "response_file": "reports/failed_responses/20260106_052845_503_api_flight_search.txt"
+            },
+            "log_path": "reports/logs/src_tests_partners_api_tests_test_partners_flight.py_TestPartnersFlightFunctionality_test_flight_booking_counted_in_usage_052845.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_partners_api_tests_test_partners_flight.py_TestPartnersFlightFunctionality_test_flight_booking_counted_in_usage_052845.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20260106_052845_503_api_flight_search.txt",
+            "suite": "partners_api"
+        },
+        {
+            "test_name": "src/tests/partners_api_tests/test_partners_organization.py::TestPartnersOrganizationFunctionality::test_verified_user_can_reset_api_keys",
+            "status": "FAIL",
+            "error_message": "AssertionError: New credentials should work for API calls\nassert 503 == 200\n +  where 503 = <Response [503]>.status_code",
+            "screenshot_path": null,
+            "duration": 31.549298524856567,
+            "timestamp": "05:29:19",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_partners_api_tests_test_partners_organization.py_TestPartnersOrganizationFunctionality_test_verified_user_can_reset_api_keys_052919.log",
+                "response_file": "reports/failed_responses/20260106_052919_503_api_flight_search.txt"
+            },
+            "log_path": "reports/logs/src_tests_partners_api_tests_test_partners_organization.py_TestPartnersOrganizationFunctionality_test_verified_user_can_reset_api_keys_052919.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_partners_api_tests_test_partners_organization.py_TestPartnersOrganizationFunctionality_test_verified_user_can_reset_api_keys_052919.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20260106_052919_503_api_flight_search.txt",
+            "suite": "partners_api"
+        },
+        {
+            "test_name": "src/tests/partners_api_tests/test_partners_package.py::TestPartnersPackageFunctionality::test_verified_user_can_get_packages",
+            "status": "FAIL",
+            "error_message": "AssertionError: Verified user should be able to access package listings\nassert 503 == 200\n +  where 503 = <Response [503]>.status_code",
+            "screenshot_path": null,
+            "duration": 30.833799600601196,
+            "timestamp": "05:29:55",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_can_get_packages_052955.log",
+                "response_file": "reports/failed_responses/20260106_052955_503_api_package_all.txt"
+            },
+            "log_path": "reports/logs/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_can_get_packages_052955.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_can_get_packages_052955.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/20260106_052955_503_api_package_all.txt",
+            "suite": "partners_api"
+        }
+    ],
+    "all_skipped_tests": [
+        {
+            "test_name": "src/tests/smoke_tests/test_auth_flow_smoke.py::TestAuthFlowSmoke::test_logout_functionality",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/smoke_tests/test_auth_flow_smoke.py', 159, 'Skipped: Login failed - cannot proceed with logout test')",
+            "screenshot_path": "docs/screenshots/failures/AuthFlowSmoke_test_logout_functionality_20260106_052125.png",
+            "duration": 12.064213991165161,
+            "timestamp": "05:21:26",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/smoke_tests/test_auth_flow_smoke.py', 159, 'Skipped: Login failed - cannot proceed with logout test')",
+            "category": null,
+            "evidence": {
+                "log_path": "reports/logs/src_tests_smoke_tests_test_auth_flow_smoke.py_TestAuthFlowSmoke_test_logout_functionality_052126.log"
+            },
+            "log_path": "reports/logs/src_tests_smoke_tests_test_auth_flow_smoke.py_TestAuthFlowSmoke_test_logout_functionality_052126.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_auth_flow_smoke.py_TestAuthFlowSmoke_test_logout_functionality_052126.log",
+            "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-06_05-20-21/screenshots/AuthFlowSmoke_test_logout_functionality_20260106_052125.png",
+            "suite": "smoke"
+        },
+        {
+            "test_name": "src/tests/smoke_tests/test_package_booking_smoke.py::TestPackageBookingSmoke::test_complete_package_booking_flow",
+            "status": "SKIP",
+            "error_message": "('/opt/hostedtoolcache/Python/3.10.19/x64/lib/python3.10/site-packages/pytest_dependency.py', 101, 'Skipped: test_complete_package_booking_flow depends on package_search_works')",
+            "screenshot_path": null,
+            "duration": 0.0,
+            "timestamp": "05:23:50",
+            "skip_reason": "('/opt/hostedtoolcache/Python/3.10.19/x64/lib/python3.10/site-packages/pytest_dependency.py', 101, 'Skipped: test_complete_package_booking_flow depends on package_search_works')",
+            "category": null,
+            "suite": "smoke"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_flight_api.py::TestFlightAPI::test_flight_search_request",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_flight_api.py', 36, 'Skipped: Login failed with status 400')",
+            "screenshot_path": null,
+            "duration": 0.0,
+            "timestamp": "05:25:51",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_flight_api.py', 36, 'Skipped: Login failed with status 400')",
+            "category": null,
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_flight_api.py::TestFlightAPI::test_flight_search_flow",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_flight_api.py', 64, 'Skipped: Login failed with status 400')",
+            "screenshot_path": null,
+            "duration": 0.0,
+            "timestamp": "05:25:51",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_flight_api.py', 64, 'Skipped: Login failed with status 400')",
+            "category": null,
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_flight_api.py::TestFlightAPI::test_flight_quote_flow",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_flight_api.py', 91, 'Skipped: Login failed with status 400')",
+            "screenshot_path": null,
+            "duration": 0.0,
+            "timestamp": "05:25:51",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_flight_api.py', 91, 'Skipped: Login failed with status 400')",
+            "category": null,
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_flight_api.py::TestFlightAPI::test_passenger_email_validation",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_flight_api.py', 111, 'Skipped: Login failed with status 400')",
+            "screenshot_path": null,
+            "duration": 0.0,
+            "timestamp": "05:25:51",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_flight_api.py', 111, 'Skipped: Login failed with status 400')",
+            "category": null,
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_flight_api.py::TestFlightAPI::test_different_cabins",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_flight_api.py', 134, 'Skipped: Login failed with status 400')",
+            "screenshot_path": null,
+            "duration": 0.0,
+            "timestamp": "05:25:52",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_flight_api.py', 134, 'Skipped: Login failed with status 400')",
+            "category": null,
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_flight_api.py::TestFlightAPI::test_get_booked_flights",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_flight_api.py', 154, 'Skipped: Login failed with status 400')",
+            "screenshot_path": null,
+            "duration": 0.0,
+            "timestamp": "05:25:52",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_flight_api.py', 154, 'Skipped: Login failed with status 400')",
+            "category": null,
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_flight_api.py::TestFlightAPI::test_return_flight_search",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_flight_api.py', 184, 'Skipped: Login failed with status 400')",
+            "screenshot_path": null,
+            "duration": 0.0,
+            "timestamp": "05:25:52",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_flight_api.py', 184, 'Skipped: Login failed with status 400')",
+            "category": null,
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_flight_api.py::TestFlightAPI::test_passenger_combinations",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_flight_api.py', 230, 'Skipped: Login failed with status 400')",
+            "screenshot_path": null,
+            "duration": 0.0,
+            "timestamp": "05:25:52",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_flight_api.py', 230, 'Skipped: Login failed with status 400')",
+            "category": null,
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_flight_api.py::TestFlightAPI::test_initiate_booking_flow",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_flight_api.py', 253, 'Skipped: Login failed with status 400')",
+            "screenshot_path": null,
+            "duration": 0.0,
+            "timestamp": "05:25:52",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_flight_api.py', 253, 'Skipped: Login failed with status 400')",
+            "category": null,
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_flight_api.py::TestFlightAPI::test_error_scenarios",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_flight_api.py', 303, 'Skipped: Login failed with status 400')",
+            "screenshot_path": null,
+            "duration": 0.0,
+            "timestamp": "05:25:52",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_flight_api.py', 303, 'Skipped: Login failed with status 400')",
+            "category": null,
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_get_hotel_cities_success",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 95, 'Skipped: Login failed with status 400')",
+            "screenshot_path": null,
+            "duration": 0.0,
+            "timestamp": "05:25:52",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 95, 'Skipped: Login failed with status 400')",
+            "category": null,
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_search_hotels_invalid_dates",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 242, 'Skipped: Too far in future: Skipped \u2014 scenario not properly handled yet (Internal Server Error: 500)')",
+            "screenshot_path": null,
+            "duration": 0.8673484325408936,
+            "timestamp": "05:26:06",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 242, 'Skipped: Too far in future: Skipped \u2014 scenario not properly handled yet (Internal Server Error: 500)')",
+            "category": null,
+            "evidence": {
+                "log_path": "reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_search_hotels_invalid_dates_052606.log"
+            },
+            "log_path": "reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_search_hotels_invalid_dates_052606.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_search_hotels_invalid_dates_052606.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_get_hotel_rating_success",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 320, 'Skipped: Get Hotel Rating skipped \u2014 AMADEUS internal error (hotelId=FNNYCPSF, status=500)')",
+            "screenshot_path": null,
+            "duration": 2.148960828781128,
+            "timestamp": "05:26:08",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 320, 'Skipped: Get Hotel Rating skipped \u2014 AMADEUS internal error (hotelId=FNNYCPSF, status=500)')",
+            "category": null,
+            "evidence": {
+                "log_path": "reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_get_hotel_rating_success_052608.log"
+            },
+            "log_path": "reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_get_hotel_rating_success_052608.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_get_hotel_rating_success_052608.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_book_hotel_with_auth",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 385, 'Skipped: Login failed with status 400')",
+            "screenshot_path": null,
+            "duration": 0.0,
+            "timestamp": "05:26:09",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 385, 'Skipped: Login failed with status 400')",
+            "category": null,
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_search_hotels_performance_with_auth",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 453, 'Skipped: Login failed with status 400')",
+            "screenshot_path": null,
+            "duration": 0.0,
+            "timestamp": "05:26:12",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 453, 'Skipped: Login failed with status 400')",
+            "category": null,
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_hotel_endpoints_with_auth",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 485, 'Skipped: Login failed with status 400')",
+            "screenshot_path": null,
+            "duration": 0.0,
+            "timestamp": "05:26:14",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 485, 'Skipped: Login failed with status 400')",
+            "category": null,
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_misc_api.py::TestMiscAPIs::test_get_google_reviews",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_misc_api.py', 45, 'Skipped: Login failed with status 400')",
+            "screenshot_path": null,
+            "duration": 0.0,
+            "timestamp": "05:26:14",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_misc_api.py', 45, 'Skipped: Login failed with status 400')",
+            "category": null,
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_misc_api.py::TestMiscAPIs::test_get_commercial_deals",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_misc_api.py', 61, 'Skipped: Login failed with status 400')",
+            "screenshot_path": null,
+            "duration": 0.0,
+            "timestamp": "05:26:14",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_misc_api.py', 61, 'Skipped: Login failed with status 400')",
+            "category": null,
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_misc_api.py::TestMiscAPIs::test_get_single_commercial_deal",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_misc_api.py', 76, 'Skipped: Login failed with status 400')",
+            "screenshot_path": null,
+            "duration": 0.0,
+            "timestamp": "05:26:14",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_misc_api.py', 76, 'Skipped: Login failed with status 400')",
+            "category": null,
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_misc_api.py::TestMiscAPIs::test_get_all_events",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_misc_api.py', 98, 'Skipped: Login failed with status 400')",
+            "screenshot_path": null,
+            "duration": 0.0,
+            "timestamp": "05:26:14",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_misc_api.py', 98, 'Skipped: Login failed with status 400')",
+            "category": null,
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_misc_api.py::TestMiscAPIs::test_get_airports",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_misc_api.py', 114, 'Skipped: Login failed with status 400')",
+            "screenshot_path": null,
+            "duration": 0.0,
+            "timestamp": "05:26:14",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_misc_api.py', 114, 'Skipped: Login failed with status 400')",
+            "category": null,
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_misc_api.py::TestMiscAPIs::test_get_all_blogs",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_misc_api.py', 121, 'Skipped: Login failed with status 400')",
+            "screenshot_path": null,
+            "duration": 0.0,
+            "timestamp": "05:26:15",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_misc_api.py', 121, 'Skipped: Login failed with status 400')",
+            "category": null,
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_misc_api.py::TestMiscAPIs::test_get_single_blog",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_misc_api.py', 136, 'Skipped: Login failed with status 400')",
+            "screenshot_path": null,
+            "duration": 0.0,
+            "timestamp": "05:26:15",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_misc_api.py', 136, 'Skipped: Login failed with status 400')",
+            "category": null,
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_misc_api.py::TestMiscAPIs::test_get_blog_comments",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_misc_api.py', 163, 'Skipped: Login failed with status 400')",
+            "screenshot_path": null,
+            "duration": 0.0,
+            "timestamp": "05:26:15",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_misc_api.py', 163, 'Skipped: Login failed with status 400')",
+            "category": null,
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_misc_api.py::TestMiscAPIs::test_refresh_token",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_misc_api.py', 191, 'Skipped: Login failed with status 400')",
+            "screenshot_path": null,
+            "duration": 0.0,
+            "timestamp": "05:26:15",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_misc_api.py', 191, 'Skipped: Login failed with status 400')",
+            "category": null,
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_misc_api.py::TestMiscAPIs::test_get_user_profile",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_misc_api.py', 201, 'Skipped: Login failed with status 400')",
+            "screenshot_path": null,
+            "duration": 0.0,
+            "timestamp": "05:26:15",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_misc_api.py', 201, 'Skipped: Login failed with status 400')",
+            "category": null,
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_misc_api.py::TestMiscAPIs::test_get_user_transactions",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_misc_api.py', 211, 'Skipped: Login failed with status 400')",
+            "screenshot_path": null,
+            "duration": 0.0,
+            "timestamp": "05:26:15",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_misc_api.py', 211, 'Skipped: Login failed with status 400')",
+            "category": null,
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_misc_api.py::TestMiscAPIs::test_get_notifications",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_misc_api.py', 221, 'Skipped: Login failed with status 400')",
+            "screenshot_path": null,
+            "duration": 0.0,
+            "timestamp": "05:26:15",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_misc_api.py', 221, 'Skipped: Login failed with status 400')",
+            "category": null,
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_misc_api.py::TestMiscAPIs::test_subscribe_newsletter",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_misc_api.py', 232, 'Skipped: Login failed with status 400')",
+            "screenshot_path": null,
+            "duration": 0.0,
+            "timestamp": "05:26:16",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_misc_api.py', 232, 'Skipped: Login failed with status 400')",
+            "category": null,
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_misc_api.py::TestMiscAPIs::test_apply_voucher",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_misc_api.py', 245, 'Skipped: Login failed with status 400')",
+            "screenshot_path": null,
+            "duration": 0.0,
+            "timestamp": "05:26:16",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_misc_api.py', 245, 'Skipped: Login failed with status 400')",
+            "category": null,
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_package_api.py::TestPackageAPI::test_get_all_packages",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 30, 'Skipped: Login failed with status 400')",
+            "screenshot_path": null,
+            "duration": 0.0,
+            "timestamp": "05:26:16",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 30, 'Skipped: Login failed with status 400')",
+            "category": null,
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_package_api.py::TestPackageAPI::test_get_package_countries",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 37, 'Skipped: Login failed with status 400')",
+            "screenshot_path": null,
+            "duration": 0.0,
+            "timestamp": "05:26:16",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 37, 'Skipped: Login failed with status 400')",
+            "category": null,
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_package_api.py::TestPackageAPI::test_get_single_package",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 44, 'Skipped: Login failed with status 400')",
+            "screenshot_path": null,
+            "duration": 0.0,
+            "timestamp": "05:26:16",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 44, 'Skipped: Login failed with status 400')",
+            "category": null,
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_package_api.py::TestPackageAPI::test_search_packages",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 67, 'Skipped: Login failed with status 400')",
+            "screenshot_path": null,
+            "duration": 0.0,
+            "timestamp": "05:26:16",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 67, 'Skipped: Login failed with status 400')",
+            "category": null,
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_package_api.py::TestPackageAPI::test_get_all_deals",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 79, 'Skipped: Login failed with status 400')",
+            "screenshot_path": null,
+            "duration": 0.0,
+            "timestamp": "05:26:16",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 79, 'Skipped: Login failed with status 400')",
+            "category": null,
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_package_api.py::TestPackageAPI::test_get_single_deal",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 86, 'Skipped: Login failed with status 400')",
+            "screenshot_path": null,
+            "duration": 0.0,
+            "timestamp": "05:26:16",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 86, 'Skipped: Login failed with status 400')",
+            "category": null,
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_package_api.py::TestPackageAPI::test_book_package_and_verify_user_bookings",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 109, 'Skipped: Login failed with status 400')",
+            "screenshot_path": null,
+            "duration": 0.0,
+            "timestamp": "05:26:17",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 109, 'Skipped: Login failed with status 400')",
+            "category": null,
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_package_api.py::TestPackageAPI::test_get_user_booked_packages",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 371, 'Skipped: Login failed with status 400')",
+            "screenshot_path": null,
+            "duration": 0.0,
+            "timestamp": "05:26:17",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 371, 'Skipped: Login failed with status 400')",
+            "category": null,
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_package_api.py::TestPackageAPI::test_get_user_booked_packages_analytics",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 399, 'Skipped: Login failed with status 400')",
+            "screenshot_path": null,
+            "duration": 0.0,
+            "timestamp": "05:26:17",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 399, 'Skipped: Login failed with status 400')",
+            "category": null,
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_create_visa_enquiry_with_auth",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_visa_api.py', 101, 'Skipped: Login failed with status 400')",
+            "screenshot_path": null,
+            "duration": 0.0,
+            "timestamp": "05:26:17",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_visa_api.py', 101, 'Skipped: Login failed with status 400')",
+            "category": null,
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_make_payment_flutterwave_with_auth",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_visa_api.py', 294, 'Skipped: Login failed with status 400')",
+            "screenshot_path": null,
+            "duration": 0.0,
+            "timestamp": "05:26:20",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_visa_api.py', 294, 'Skipped: Login failed with status 400')",
+            "category": null,
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_get_user_visa_applications_with_auth",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_visa_api.py', 384, 'Skipped: Login failed with status 400')",
+            "screenshot_path": null,
+            "duration": 0.0,
+            "timestamp": "05:26:22",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_visa_api.py', 384, 'Skipped: Login failed with status 400')",
+            "category": null,
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_get_user_visa_applications_with_filters",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_visa_api.py', 442, 'Skipped: Login failed with status 400')",
+            "screenshot_path": null,
+            "duration": 0.0,
+            "timestamp": "05:26:23",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_visa_api.py', 442, 'Skipped: Login failed with status 400')",
+            "category": null,
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_get_user_visa_applications_pagination",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_visa_api.py', 473, 'Skipped: Login failed with status 400')",
+            "screenshot_path": null,
+            "duration": 0.0,
+            "timestamp": "05:26:23",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_visa_api.py', 473, 'Skipped: Login failed with status 400')",
+            "category": null,
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_get_visa_application_by_id_with_auth",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_visa_api.py', 507, 'Skipped: Login failed with status 400')",
+            "screenshot_path": null,
+            "duration": 0.0,
+            "timestamp": "05:26:23",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_visa_api.py', 507, 'Skipped: Login failed with status 400')",
+            "category": null,
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_complete_visa_flow_with_auth",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_visa_api.py', 575, 'Skipped: Login failed with status 400')",
+            "screenshot_path": null,
+            "duration": 0.0,
+            "timestamp": "05:26:23",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_visa_api.py', 575, 'Skipped: Login failed with status 400')",
+            "category": null,
+            "suite": "api"
+        }
+    ]
+}
