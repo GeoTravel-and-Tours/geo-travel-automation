@@ -56,28 +56,28 @@ class TestVisaEnquiryAPI:
             del visa_api.headers['Authorization']
         if 'Cookie' in visa_api.headers:
             del visa_api.headers['Cookie']
-        
+
         payload = self.test_data["visa_enquiry_payload"].copy()
-        
+
         # Test different visa types
         visa_types = ["Tourist", "Business", "Work", "Student"]
         visa_countries = ["Kenya", "Uganda", "Tanzania", "Morocco", "Vietnam", "East Africa", "Other"]
-        
+
         payload["type"] = random.choice(visa_types)
         payload["visaCountry"] = random.choice(visa_countries)
-        
+
         response = visa_api.create_visa_enquiry(payload)
-        
+
         # Should succeed without auth
-        assert response.status_code == 200 or 201, f"Expected 200 or 201, got {response.status_code}"
-        
+        assert response.status_code in [200, 201], f"Expected 200 or 201, got {response.status_code}"
+
         response_data = response.json()
         assert response_data.get("status") == "success", "Response status should be 'success'"
-        
+
         # CRITICAL: When NOT authenticated, user_id MUST be null
         visa_data = response_data.get("data", {})
         user_id = visa_data.get("user_id")
-        
+
         # FAIL if user_id is NOT None when not authenticated
         assert user_id is None, (
             f"user_id should be null when creating visa enquiry without authentication.\n"
@@ -85,7 +85,7 @@ class TestVisaEnquiryAPI:
             f"Full response: {response_data}\n"
             f"This indicates the endpoint is incorrectly attaching a user."
         )
-        
+
         # Additional validations
         assert "id" in visa_data, "Response should include visa ID"
         assert visa_data["enquiryStatus"] == "Submitted", "Default status should be 'Submitted'"

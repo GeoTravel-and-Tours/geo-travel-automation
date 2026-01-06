@@ -124,8 +124,9 @@ jobs:
           mkdir -p "$RUN_DIR/reports"
           
           # Copy screenshots
-          if [ -d "docs/screenshots/failures" ]; then
-            cp docs/screenshots/failures/* "$RUN_DIR/screenshots/" 2>/dev/null || true
+          if [ -d "reports/screenshots/failures" ]; then
+            mkdir -p "$RUN_DIR/screenshots/failures"
+            cp reports/screenshots/failures/* "$RUN_DIR/screenshots/failures/" 2>/dev/null || true
           fi
           
           # Copy API responses
@@ -152,8 +153,8 @@ jobs:
           
           # Add screenshots list
           echo "<h2>Screenshots</h2><ul>" >> "$RUN_DIR/index.html"
-          for file in "$RUN_DIR/screenshots"/*; do
-            [ -f "$file" ] && filename=$(basename "$file") && echo "<li><a href='screenshots/$filename'>$filename</a></li>" >> "$RUN_DIR/index.html"
+          for file in "$RUN_DIR/screenshots/failures"/*; do
+            [ -f "$file" ] && filename=$(basename "$file") && echo "<li><a href='screenshots/failures/$filename'>$filename</a></li>" >> "$RUN_DIR/index.html"
           done
           echo "</ul>" >> "$RUN_DIR/index.html"
           
@@ -231,73 +232,102 @@ jobs:
           DYNAMIC_CONTENT+="### 🕒 Latest Run\n"
           DYNAMIC_CONTENT+="- **Timestamp:** \`$RUN_TIMESTAMP\`\n"
           DYNAMIC_CONTENT+="- **Link:** [$RUN_TIMESTAMP]($RUN_TIMESTAMP/)\n"
-          
+
           # Count artifacts for latest run
           LATEST_DIR="gh-pages-content/$RUN_TIMESTAMP"
           if [ -d "$LATEST_DIR" ]; then
-            REPORTS_COUNT=$(find "$LATEST_DIR/reports" -maxdepth 1 -type f 2>/dev/null | wc -l)
-            API_FAIL_COUNT=$(find "$LATEST_DIR/api_failed_responses" -maxdepth 1 -type f 2>/dev/null | wc -l)
-            LOGS_COUNT=$(find "$LATEST_DIR/logs" -maxdepth 1 -type f 2>/dev/null | wc -l)
-            SCREENSHOTS_COUNT=$(find "$LATEST_DIR/screenshots" -maxdepth 1 -type f 2>/dev/null | wc -l)
-            
-            DYNAMIC_CONTENT+="- **Reports:** $REPORTS_COUNT\n"
-            DYNAMIC_CONTENT+="- **API Failures:** $API_FAIL_COUNT\n"
-            DYNAMIC_CONTENT+="- **Logs:** $LOGS_COUNT\n"
-            if [ $SCREENSHOTS_COUNT -gt 0 ]; then
-              DYNAMIC_CONTENT+="- **Screenshots:** $SCREENSHOTS_COUNT\n"
-            fi
+              REPORTS_COUNT=$(find "$LATEST_DIR/reports" -maxdepth 1 -type f 2>/dev/null | wc -l)
+              API_FAIL_COUNT=$(find "$LATEST_DIR/api_failed_responses" -maxdepth 1 -type f 2>/dev/null | wc -l)
+              LOGS_COUNT=$(find "$LATEST_DIR/logs" -maxdepth 1 -type f 2>/dev/null | wc -l)
+              SCREENSHOTS_COUNT=$(find "$LATEST_DIR/screenshots/failures" -maxdepth 1 -type f 2>/dev/null | wc -l)
+              
+              DYNAMIC_CONTENT+="- **Reports:** $REPORTS_COUNT\n"
+              DYNAMIC_CONTENT+="- **API Response Dumps:** $API_FAIL_COUNT\n"
+              DYNAMIC_CONTENT+="- **Test Logs:** $LOGS_COUNT\n"
+              if [ $SCREENSHOTS_COUNT -gt 0 ]; then
+                  DYNAMIC_CONTENT+="- **Screenshots:** $SCREENSHOTS_COUNT\n"
+              fi
+              
+              # Determine run status
+              if [ $API_FAIL_COUNT -gt 0 ] || [ $SCREENSHOTS_COUNT -gt 0 ]; then
+                  DYNAMIC_CONTENT+="- **Status:** ⚠️ Had failures\n"
+              else
+                  DYNAMIC_CONTENT+="- **Status:** ✅ All tests passed\n"
+              fi
           fi
-          
+
           DYNAMIC_CONTENT+="\n### 📂 Recent Runs (Last 10)\n"
-          
+
           # Count total runs found
           TOTAL_RUNS=0
           RUN_LIST=""
-          
+
           # Get all timestamped folders
-          for dir in $(ls -d gh-pages-content/20*/ 2>/dev/null); do
-            name=$(basename "$dir")
-            REPORTS_COUNT=$(find "$dir/reports" -maxdepth 1 -type f 2>/dev/null | wc -l)
-            API_FAIL_COUNT=$(find "$dir/api_failed_responses" -maxdepth 1 -type f 2>/dev/null | wc -l)
-            
-            # Count actual test failures dynamically
-            if [ -f "$dir/test_results.json" ]; then
-              ACTUAL_FAIL_COUNT=$(jq '.tests[] | select(.status == "failed")' "$dir/test_results.json" | wc -l)
-              API_FAIL_COUNT=$ACTUAL_FAIL_COUNT
-            else
+          for dir in $(ls -d gh-pages-content/20*/ 2>/dev/null | sort -r); do
+              name=$(basename "$dir")
+              REPORTS_COUNT=$(find "$dir/reports" -maxdepth 1 -type f 2>/dev/null | wc -l)
+              LOGS_COUNT=$(find "$dir/logs" -maxdepth 1 -type f 2>/dev/null | wc -l)
               API_FAIL_COUNT=$(find "$dir/api_failed_responses" -maxdepth 1 -type f 2>/dev/null | wc -l)
-            fi
-            
-            # Format: timestamp|reports|api_failures
-            RUN_LIST+="$name|$REPORTS_COUNT|$API_FAIL_COUNT\n"
-            TOTAL_RUNS=$((TOTAL_RUNS + 1))
+              SCREENSHOTS_COUNT=$(find "$dir/screenshots/failures" -maxdepth 1 -type f 2>/dev/null | wc -l)
+              
+              # Determine status emoji
+              STATUS_EMOJI="✅"
+              if [ $API_FAIL_COUNT -gt 0 ] || [ $SCREENSHOTS_COUNT -gt 0 ]; then
+                  STATUS_EMOJI="⚠️"
+              fi
+              
+              # Format: timestamp|reports|logs|api_failures|screenshots|status
+              RUN_LIST+="$name|$REPORTS_COUNT|$LOGS_COUNT|$API_FAIL_COUNT|$SCREENSHOTS_COUNT|$STATUS_EMOJI\n"
+              TOTAL_RUNS=$((TOTAL_RUNS + 1))
           done
-          
+
           # Process the list
           COUNT=0
-          while IFS='|' read -r name reports_count api_fail_count; do
-            # Skip empty lines
-            [ -z "$name" ] && continue
-            
-            if [ $COUNT -ge 10 ]; then
-              break
-            fi
-            
-            if [ "$name" = "$RUN_TIMESTAMP" ]; then
-              # Current run - bold
-              DYNAMIC_CONTENT+="- **[$name]($name/)** – ${reports_count} reports, ${api_fail_count} API failures\n"
-            else
-              # Previous runs - normal
-              DYNAMIC_CONTENT+="- [$name]($name/) – ${reports_count} reports, ${api_fail_count} API failures\n"
-            fi
-            
-            COUNT=$((COUNT + 1))
-          done < <(echo -e "$RUN_LIST" | sort -r)
-          
+          while IFS='|' read -r name reports_count logs_count api_fail_count screenshots_count status_emoji; do
+              # Skip empty lines
+              [ -z "$name" ] && continue
+              
+              if [ $COUNT -ge 10 ]; then
+                  break
+              fi
+              
+              # Build run description
+              DESC=""
+              if [ $reports_count -gt 0 ]; then
+                  DESC+="$reports_count reports"
+              fi
+              if [ $logs_count -gt 0 ]; then
+                  [ -n "$DESC" ] && DESC+=", "
+                  DESC+="$logs_count logs"
+              fi
+              if [ $api_fail_count -gt 0 ]; then
+                  [ -n "$DESC" ] && DESC+=", "
+                  DESC+="$api_fail_count API dumps"
+              fi
+              if [ $screenshots_count -gt 0 ]; then
+                  [ -n "$DESC" ] && DESC+=", "
+                  DESC+="$screenshots_count screenshots"
+              fi
+              
+              if [ -z "$DESC" ]; then
+                  DESC="no artifacts"
+              fi
+              
+              if [ "$name" = "$RUN_TIMESTAMP" ]; then
+                  # Current run - bold
+                  DYNAMIC_CONTENT+="- **[$name]($name/)** – $DESC $status_emoji\n"
+              else
+                  # Previous runs - normal
+                  DYNAMIC_CONTENT+="- [$name]($name/) – $DESC $status_emoji\n"
+              fi
+              
+              COUNT=$((COUNT + 1))
+          done < <(echo -e "$RUN_LIST")
+
           if [ $TOTAL_RUNS -eq 0 ]; then
-            DYNAMIC_CONTENT+="*No test runs found yet.*\n"
+              DYNAMIC_CONTENT+="*No test runs found yet.*\n"
           fi
-          
+
           DYNAMIC_CONTENT+="\n_Last updated: $(date -u)_\n"
           
           # Insert dynamic content into template
