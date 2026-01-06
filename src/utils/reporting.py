@@ -1051,16 +1051,22 @@ class GeoReporter:
         
         # Determine test type BETTER
         # UI tests are in smoke_tests/, regression_tests/, sanity_tests/
-        is_ui_test = any(folder in test_name for folder in ['smoke', 'regression', 'sanity'])
+        test_name_lower = test_name.lower()
+        is_ui_test = any(folder in test_name_lower for folder in ['smoke', 'regression', 'sanity'])
         # API tests contain 'api' or are in api_tests/ folder
         is_api_test = 'api' in test_name or 'api_tests' in test_name
         
         # UI TESTS - Test-specific screenshot
         if is_ui_test:
             screenshot_path = failed_test.get('screenshot_path')
+            print(f"🔍 DEBUG is_ui_test: {is_ui_test}")
+            print(f"🔍 DEBUG screenshot_path: {screenshot_path}")
             if screenshot_path and Path(screenshot_path).exists():
+                print(f"🔍 DEBUG Screenshot exists!")
                 screenshot_name = Path(screenshot_path).name
                 links.append(f"📸 <{gh_pages}/{timestamp}/screenshots/failures/{screenshot_name}|View Screenshot>")
+            else:
+                print(f"🔍 DEBUG No screenshot or doesn't exist")
         
         # API TESTS - Test-specific response dump
         elif is_api_test:
