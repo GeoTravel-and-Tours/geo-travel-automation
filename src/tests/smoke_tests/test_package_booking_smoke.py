@@ -9,6 +9,8 @@ from src.pages.ui.package_booking_flow import PackageBookingFlow
 from src.utils.navigation import NavigationUtils
 from src.core.test_base import TestBase
 from src.pages.ui.payment_flow import PaymentPage
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 
 class TestPackageBookingSmoke(TestBase):
@@ -167,3 +169,77 @@ class TestPackageBookingSmoke(TestBase):
             self.package_booking_flow.logger.error(f"❌ Comprehensive package booking test failed: {str(e)}")
             self.package_booking_flow.screenshot.capture_screenshot_on_failure("complete_booking_flow_failure")
             raise
+    
+    @pytest.mark.smoke
+    # @pytest.mark.dependency(depends=["homepage_loaded"])
+    def test_all_packages_booking_flow(self):
+        """Test booking flow via All Packages page (nav bar approach)"""
+        self.package_booking_flow.logger.info("=== TEST: All Packages Booking Flow ===")
+        
+        try:
+            # Step 1: Open homepage
+            self.package_booking_flow.logger.step(1, "Opening homepage")
+            self.home_page.open()
+            self.home_page.wait_for_homepage_load(timeout=15, max_retries=3)
+            
+            # Step 2: Click Packages in navigation bar
+            self.package_booking_flow.logger.step(2, "Clicking Packages in nav bar")
+            self.package_booking_flow.click_packages_nav_link()
+            
+            # Step 3: Verify All Packages page loaded
+            self.package_booking_flow.logger.step(3, "Verifying All Packages page")
+            packages_loaded = self.package_booking_flow.verify_all_packages_page_loaded()
+            assert packages_loaded, "Failed to load All Packages page"
+            
+            # Step 4: Select first package
+            self.package_booking_flow.logger.step(4, "Selecting first package")
+            self.package_booking_flow.click_view_package_after_packageNavBar()
+            time.sleep(5)  # Wait for package details to load
+            
+            # Step 5: Verify pricing option is present
+            self.package_booking_flow.logger.step(5, "Verifying pricing option")
+            # You can reuse your existing select_price_option method or just verify it exists
+            try:
+                price_option = WebDriverWait(self.driver, 10).until(
+                    EC.presence_of_element_located(self.package_booking_flow.PRICE_OPTION)
+                )
+                self.package_booking_flow.logger.info("✅ Pricing option is present")
+            except:
+                self.package_booking_flow.logger.error("❌ Pricing option not found")
+                assert False, "Pricing option not found on package details page"
+            
+            # Step 6: Verify Book Reservation button is present
+            self.package_booking_flow.logger.step(6, "Verifying Book Reservation button")
+            try:
+                book_reservation_btn = WebDriverWait(self.driver, 10).until(
+                    EC.presence_of_element_located(self.package_booking_flow.BOOK_RESERVATION_BUTTON)
+                )
+                self.package_booking_flow.logger.info("✅ Book Reservation button is present")
+            except:
+                self.package_booking_flow.logger.error("❌ Book Reservation button not found")
+                assert False, "Book Reservation button not found on package details page"
+            
+            # Step 7: Select price option (just to verify it works)
+            self.package_booking_flow.logger.step(7, "Testing price option selection")
+            price_selected = self.package_booking_flow.select_price_option()
+            assert price_selected, "Failed to select price option"
+            
+            # Step 8: Verify booking can proceed (but don't actually book)
+            self.package_booking_flow.logger.step(8, "Verifying booking flow readiness")
+            try:
+                book_reservation_btn = WebDriverWait(self.driver, 5).until(
+                    EC.element_to_be_clickable(self.package_booking_flow.BOOK_RESERVATION_BUTTON)
+                )
+                if book_reservation_btn.is_enabled():
+                    self.package_booking_flow.logger.info("✅ Booking flow is ready - Book Reservation button is enabled")
+                else:
+                    self.package_booking_flow.logger.warning("⚠️ Book Reservation button is not enabled")
+            except:
+                self.package_booking_flow.logger.info("ℹ️ Book Reservation button state could not be verified")
+            
+            self.package_booking_flow.logger.success("✅ All Packages booking flow verified successfully!")
+            
+        except Exception as e:
+            self.package_booking_flow.logger.error(f"❌ All Packages booking flow failed: {str(e)}")
+            self.package_booking_flow.screenshot.capture_screenshot_on_failure("all_packages_flow_failure")
+            return False

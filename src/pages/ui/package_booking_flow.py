@@ -30,6 +30,11 @@ class PackageBookingFlow(BasePage):
     VIEW_PACKAGE_BUTTON = (By.XPATH, "(//button[normalize-space()='View package'])[1]")
     PRICE_OPTION = (By.CSS_SELECTOR, "body > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2)")
     BOOK_RESERVATION_BUTTON = (By.CSS_SELECTOR, "body > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > button:nth-child(2)")
+    
+    # Add these to your locators section:
+    PACKAGES_NAV_LINK = (By.XPATH, "//a[normalize-space()='Packages']")
+    ALL_PACKAGES_PAGE_INDICATOR = (By.XPATH, "//*[contains(text(), 'Packages') or contains(text(), 'packages')]")
+    FIRST_PACKAGE_VIEW_BUTTON = (By.XPATH, "(//button[contains(text(), 'View package')])[1]")
 
     # Booking Form
     FULL_NAME_INPUT = (By.NAME, "fullName")
@@ -232,6 +237,23 @@ class PackageBookingFlow(BasePage):
             self.logger.error(f"Failed to click View Package button: {e}")
             raise
     
+    def click_view_package_after_packageNavBar(self):
+        """Click on View Package button"""
+        self.logger.info("Clicking View Package button")
+        try:
+            # Scroll further down (500 pixels past the element)
+            self.javascript.execute_script(
+                "arguments[0].scrollIntoView(true); window.scrollBy(0, 100);", 
+                self.driver.find_element(*self.VIEW_PACKAGE_BUTTON)
+            )
+            time.sleep(1)
+            click_view_package_btn = self.element.click(self.VIEW_PACKAGE_BUTTON)
+            self._last_interacted_element = click_view_package_btn
+            return click_view_package_btn
+        except Exception as e:
+            self.logger.error(f"Failed to click View Package button: {e}")
+            raise
+    
     def select_price_option(self):
         """Select price option with better click handling"""
         self.logger.info("Selecting price option")
@@ -279,6 +301,30 @@ class PackageBookingFlow(BasePage):
                 self.logger.error(f"ActionChains also failed: {e2}")
                 self._last_interacted_element = price_option
                 return False
+    
+    def click_packages_nav_link(self):
+        """Click on Packages link in navigation bar to see all packages"""
+        self.logger.info("Clicking 'Packages' link in navigation")
+        try:
+            packages_link = self.element.click(self.PACKAGES_NAV_LINK)
+            self._last_interacted_element = packages_link
+            return packages_link
+        except Exception as e:
+            self.logger.error(f"Failed to click Packages nav link: {e}")
+            raise
+
+    def verify_all_packages_page_loaded(self, timeout=15):
+        """Verify we're on the All Packages page"""
+        self.logger.info("Verifying All Packages page loaded")
+        try:
+            WebDriverWait(self.driver, timeout).until(
+                EC.presence_of_element_located(self.ALL_PACKAGES_PAGE_INDICATOR)
+            )
+            self.logger.info("✅ Successfully loaded All Packages page")
+            return True
+        except TimeoutException:
+            self.logger.error("❌ All Packages page did not load")
+            return False
 
     # ===== BOOKING FLOW METHODS =====
 
@@ -600,3 +646,4 @@ class PackageBookingFlow(BasePage):
             return True
         except TimeoutException:
             return False
+
