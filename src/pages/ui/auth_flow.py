@@ -86,8 +86,9 @@ class AuthFlow(BasePage):
             self.element.type(self.PASSWORD_INPUT, password)
             login_btn = self.element.click(self.LOGIN_BUTTON)
             self.logger.info("Login attempt completed")
+            
+            self.wait_for_login_to_settle(timeout=20)
 
-            time.sleep(5)
             return self.is_login_successful()
 
         except Exception as e:
@@ -118,7 +119,7 @@ class AuthFlow(BasePage):
         self.logger.error(f"All {len(self.DASHBOARD_INDICATORS)} dashboard indicators failed")
         return False
 
-    def is_login_successful(self):
+    def is_login_successful(self, timeout=25):
         """
         Determine if login was successful.
 
@@ -128,21 +129,16 @@ class AuthFlow(BasePage):
         self.logger.info("🔍 Verifying login status...")
 
         try:
+            WebDriverWait(self.driver, timeout).until(
+                lambda d: (
+                    "login" not in d.current_url.lower()
+                    or self.get_toast_error_message(max_wait=1)
+                )
+            )
             current_url = self.navigator.get_current_url().lower()
-            on_login_page = "login" in current_url
-
-            if on_login_page:
-                error_msg = self.get_toast_error_message(max_wait=5)
-                if error_msg:
-                    self.logger.info(f"Expected login failure captured – Toast: {error_msg}")
-                else:
-                    self.logger.warning("Still on login page, but no error message detected.")
-                return False
-
             self.logger.info(f"Redirected from login page: {current_url}")
-            self.logger.info("Checking for dashboard indicators...")
-
-            if self._wait_for_any_dashboard_indicator(timeout=15):
+            
+            if self._wait_for_any_dashboard_indicator(timeout=25):
                 self.logger.success("Login confirmed – Dashboard detected.")
                 return True
 
@@ -178,7 +174,6 @@ class AuthFlow(BasePage):
                             last_valid_error = error_text
                             self.last_toast = error_text
 
-                            time.sleep(1.5)
                             return error_text
 
                 except Exception:
@@ -326,4 +321,22 @@ class AuthFlow(BasePage):
             return True
         except Exception:
             return False
-
+    
+    def wait_for_login_to_settle(self, timeout=15):
+        """
+        Wait until login request finishes:
+        - login button enabled again OR
+        - spinner disappears OR
+        - URL changes away from login
+        """
+        try:
+            WebDriverWait(self.driver, timeout).until(
+                lambda d: (
+                    not self.element.is_visible(self.LOGIN_BUTTON)
+                    or not self.element.is_enabled(self.LOGIN_BUTTON)
+                    or "login" not in d.current_url.lower()
+                )
+            )
+            return True
+        except Exception:
+            return False
