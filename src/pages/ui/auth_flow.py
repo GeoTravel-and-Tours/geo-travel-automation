@@ -231,22 +231,18 @@ class AuthFlow(BasePage):
         return False
 
     def is_user_on_dashboard(self):
-        """Check if user is on dashboard by verifying ANY of the dashboard indicators"""
+        """Check if user is on dashboard using UI or text indicators"""
         try:
-            for indicator in self.DASHBOARD_INDICATORS:
-                try:
-                    if self.element.is_visible(indicator):
-                        self.logger.info(f"Dashboard verified by: {indicator}")
-                        return True
-                except:
-                    continue
-                
-            self.logger.warning("No dashboard UI elements found, falling back to text check")
-            return self._fallback_dashboard_check()
+            if any(self.element.is_visible(ind) for ind in self.DASHBOARD_INDICATORS):
+                self.logger.info("Dashboard verified via UI element")
+                return True
 
+            self.logger.warning("No dashboard UI elements found, using text check")
+            return self._fallback_dashboard_check()
         except Exception as e:
             self.logger.error(f"Dashboard check failed: {e}")
             return False
+
 
     def _fallback_dashboard_check(self):
         """Fallback method to check dashboard by page content"""
@@ -266,7 +262,7 @@ class AuthFlow(BasePage):
             has_primary = any(primary_indicators)
             has_secondary = any(secondary_indicators)
 
-            if has_primary and has_secondary:
+            if any(primary_indicators) and any(secondary_indicators):
                 self.logger.info("User is on bookings dashboard (text-based check)")
                 return True
 
