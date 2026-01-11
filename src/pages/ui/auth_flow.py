@@ -117,26 +117,9 @@ class AuthFlow(BasePage):
         return False
 
     def is_login_successful(self, timeout=25):
-        """
-        Determine if login was successful.
-
-        Logic:
-        1. Watch briefly for login error toast.
-        2. If no error appears, wait for dashboard route or UI signal.
-        """
-
         self.logger.info("🔍 Verifying login status...")
 
         try:
-            try:
-                error = self.get_toast_error_message(max_wait=5)
-                if error:
-                    self.logger.error(f"Login failed with toast: {error}")
-                    return False
-            except Exception:
-                # No toast = continue to success path
-                pass
-
             WebDriverWait(self.driver, timeout).until(
                 lambda d: "/dashboard" in d.current_url.lower()
             )
@@ -148,13 +131,12 @@ class AuthFlow(BasePage):
                 self.logger.success("Login confirmed – Dashboard detected.")
                 return True
 
-            self.logger.error("Dashboard URL reached but UI not fully loaded.")
+            self.logger.error("Dashboard URL reached but UI not loaded.")
             return False
 
         except Exception as e:
-            self.logger.error(f"Exception while verifying login: {e}")
+            self.logger.error(f"Login did not reach dashboard: {e}")
             return False
-
         
     def get_last_toast(self):
         """Return the last captured toast message (if any)."""
