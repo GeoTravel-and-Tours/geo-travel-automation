@@ -26,16 +26,13 @@ class AuthFlow(BasePage):
 
     # ===== DASHBOARD / LOGOUT LOCATORS =====
     DASHBOARD_INDICATORS = [
-        (By.TAG_NAME, "h1"),
-        (By.TAG_NAME, "h2"),
-        (By.TAG_NAME, "span"),
-        (By.TAG_NAME, "button"),
-        (By.ID, "bookings-sidebar"),
-        (By.ID, "visa applications-sidebar"),
-        (By.ID, "transactions-sidebar"),
-        (By.ID, "rewards-sidebar"),
-        (By.ID, "notifications-sidebar"),
-        (By.ID, "account management-sidebar"),
+        (By.XPATH, "//span[contains(text(),'Bookings')]"),
+        (By.XPATH, "//span[contains(text(),'Packages')]"),
+        (By.XPATH, "//span[contains(text(),'Visa Applications')]"),
+        (By.XPATH, "//span[contains(text(),'Transactions')]"),
+        (By.XPATH, "//span[contains(text(),'Rewards')]"),
+        (By.XPATH, "//span[contains(text(),'Notifications')]"),
+        (By.XPATH, "//span[contains(text(),'Account Management')]"),
     ]
     
     LOGOUT_BUTTON = [
@@ -123,31 +120,41 @@ class AuthFlow(BasePage):
         """
         Determine if login was successful.
 
-        Returns:
-            bool: True if login succeeded, False otherwise.
+        Logic:
+        1. Watch briefly for login error toast.
+        2. If no error appears, wait for dashboard route or UI signal.
         """
+
         self.logger.info("🔍 Verifying login status...")
 
         try:
+            try:
+                error = self.get_toast_error_message(max_wait=5)
+                if error:
+                    self.logger.error(f"Login failed with toast: {error}")
+                    return False
+            except Exception:
+                # No toast = continue to success path
+                pass
+
             WebDriverWait(self.driver, timeout).until(
-                lambda d: (
-                    "login" not in d.current_url.lower()
-                    or self.get_toast_error_message(max_wait=1)
-                )
+                lambda d: "/dashboard" in d.current_url.lower()
             )
+
             current_url = self.navigator.get_current_url().lower()
-            self.logger.info(f"Redirected from login page: {current_url}")
-            
-            if self._wait_for_any_dashboard_indicator(timeout=25):
+            self.logger.info(f"Redirected to: {current_url}")
+
+            if self._wait_for_any_dashboard_indicator(timeout=10):
                 self.logger.success("Login confirmed – Dashboard detected.")
                 return True
 
-            self.logger.error("Redirected from login, but dashboard not detected.")
+            self.logger.error("Dashboard URL reached but UI not fully loaded.")
             return False
 
         except Exception as e:
             self.logger.error(f"Exception while verifying login: {e}")
             return False
+
         
     def get_last_toast(self):
         """Return the last captured toast message (if any)."""
