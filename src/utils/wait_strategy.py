@@ -27,7 +27,7 @@ class WaitStrategy:
             # Debug the locator
             self.logger.debug(f"Waiting for element: {locator}")
 
-            timeout = timeout
+            timeout = timeout or 15
             wait = WebDriverWait(self.driver, timeout)
 
             # Ensure locator is passed as single argument

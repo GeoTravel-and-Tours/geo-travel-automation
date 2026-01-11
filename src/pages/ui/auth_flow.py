@@ -233,16 +233,18 @@ class AuthFlow(BasePage):
     def is_user_on_dashboard(self):
         """Check if user is on dashboard using UI or text indicators"""
         try:
-            if any(self.element.is_visible(ind) for ind in self.DASHBOARD_INDICATORS):
-                self.logger.info("Dashboard verified via UI element")
-                return True
+            for ind in self.DASHBOARD_INDICATORS:
+                element = self.waiter.wait_for_visible(ind, timeout=5)
+                if element:
+                    self.logger.info(f"Dashboard verified via UI element: {ind}")
+                    return True
 
             self.logger.warning("No dashboard UI elements found, using text check")
             return self._fallback_dashboard_check()
+
         except Exception as e:
             self.logger.error(f"Dashboard check failed: {e}")
             return False
-
 
     def _fallback_dashboard_check(self):
         """Fallback method to check dashboard by page content"""
