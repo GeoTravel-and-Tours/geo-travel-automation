@@ -1,0 +1,327 @@
+{
+    "test_suite_name": "Unified UI Smoke + API + Partners API TEST REPORT",
+    "total_tests": 170,
+    "passed_tests": 163,
+    "failed_tests": 7,
+    "skipped_tests": 0,
+    "success_rate": 95.9,
+    "duration": 611.88961,
+    "start_time": "2026-01-11 17:55:40",
+    "end_time": "2026-01-11 18:05:52",
+    "suites_run": [
+        "smoke",
+        "api",
+        "partners_api"
+    ],
+    "suite_details": {
+        "smoke": {
+            "report": {
+                "test_suite_name": "Unified UI Smoke + API + Partners API TEST REPORT",
+                "total_tests": 44,
+                "passed_tests": 42,
+                "failed_tests": 2,
+                "skipped_tests": 0,
+                "success_rate": 95.45454545454545,
+                "duration": 439.947702,
+                "start_time": "2026-01-11 17:55:41",
+                "end_time": "2026-01-11 18:03:01",
+                "failed_tests_details": [
+                    {
+                        "test_name": "src/tests/smoke_tests/test_auth_flow_smoke.py::TestAuthFlowSmoke::test_successful_login_and_redirect",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: User should be redirected to dashboard after successful login\nassert False\n +  where False = wait_until_on_dashboard(timeout=10)\n +    where wait_until_on_dashboard = <src.pages.ui.auth_flow.AuthFlow object at 0x7f02d7132f20>.wait_until_on_dashboard\n +      where <src.pages.ui.auth_flow.AuthFlow object at 0x7f02d7132f20> = <test_auth_flow_smoke.TestAuthFlowSmoke object at 0x7f02d725ba00>.auth_flow",
+                        "screenshot_path": "reports/screenshots/failures/AuthFlowSmoke_test_successful_login_and_redirect_20260111_175611.png",
+                        "duration": 11.706934452056885,
+                        "timestamp": "17:56:11",
+                        "skip_reason": null,
+                        "category": "API Timeout",
+                        "evidence": {
+                            "response_file": "reports/failed_responses/src_tests_smoke_tests_test_auth_flow_smoke.py_TestAuthFlowSmoke_test_successful_login_and_redirect_175611.json",
+                            "log_path": "reports/logs/src_tests_smoke_tests_test_auth_flow_smoke.py_TestAuthFlowSmoke_test_successful_login_and_redirect_175611.log"
+                        },
+                        "log_path": "reports/logs/src_tests_smoke_tests_test_auth_flow_smoke.py_TestAuthFlowSmoke_test_successful_login_and_redirect_175611.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_auth_flow_smoke.py_TestAuthFlowSmoke_test_successful_login_and_redirect_175611.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_smoke_tests_test_auth_flow_smoke.py_TestAuthFlowSmoke_test_successful_login_and_redirect_175611.json",
+                        "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-11_17-55-40/screenshots/AuthFlowSmoke_test_successful_login_and_redirect_20260111_175611.png",
+                        "suite": "smoke"
+                    },
+                    {
+                        "test_name": "src/tests/smoke_tests/test_auth_flow_smoke.py::TestAuthFlowSmoke::test_logout_functionality",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Should be on dashboard after login\nassert False\n +  where False = is_user_on_dashboard()\n +    where is_user_on_dashboard = <src.pages.ui.auth_flow.AuthFlow object at 0x7f02d725dea0>.is_user_on_dashboard\n +      where <src.pages.ui.auth_flow.AuthFlow object at 0x7f02d725dea0> = <test_auth_flow_smoke.TestAuthFlowSmoke object at 0x7f02d725bb80>.auth_flow",
+                        "screenshot_path": "reports/screenshots/failures/AuthFlowSmoke_test_logout_functionality_20260111_175650.png",
+                        "duration": 1.5192720890045166,
+                        "timestamp": "17:56:50",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "response_file": "reports/failed_responses/src_tests_smoke_tests_test_auth_flow_smoke.py_TestAuthFlowSmoke_test_logout_functionality_175650.json",
+                            "log_path": "reports/logs/src_tests_smoke_tests_test_auth_flow_smoke.py_TestAuthFlowSmoke_test_logout_functionality_175650.log"
+                        },
+                        "log_path": "reports/logs/src_tests_smoke_tests_test_auth_flow_smoke.py_TestAuthFlowSmoke_test_logout_functionality_175650.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_auth_flow_smoke.py_TestAuthFlowSmoke_test_logout_functionality_175650.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_smoke_tests_test_auth_flow_smoke.py_TestAuthFlowSmoke_test_logout_functionality_175650.json",
+                        "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-11_17-55-40/screenshots/AuthFlowSmoke_test_logout_functionality_20260111_175650.png",
+                        "suite": "smoke"
+                    }
+                ],
+                "skipped_tests_details": []
+            },
+            "timestamp": "2026-01-11 18:03:01"
+        },
+        "api": {
+            "report": {
+                "test_suite_name": "API SMOKE TEST",
+                "total_tests": 91,
+                "passed_tests": 86,
+                "failed_tests": 5,
+                "skipped_tests": 0,
+                "success_rate": 94.5054945054945,
+                "duration": 74.463713,
+                "start_time": "2026-01-11 18:03:01",
+                "end_time": "2026-01-11 18:04:15",
+                "failed_tests_details": [
+                    {
+                        "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_get_hotel_rating_success",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'Response' object has no attribute 'copy'",
+                        "screenshot_path": null,
+                        "duration": 1.4323184490203857,
+                        "timestamp": "18:03:35",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "response_file": "reports/failed_responses/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_get_hotel_rating_success_180335.json",
+                            "log_path": "reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_get_hotel_rating_success_180335.log"
+                        },
+                        "log_path": "reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_get_hotel_rating_success_180335.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_get_hotel_rating_success_180335.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_get_hotel_rating_success_180335.json",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_search_hotels_performance_without_auth",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'Response' object has no attribute 'copy'",
+                        "screenshot_path": null,
+                        "duration": 1.4863431453704834,
+                        "timestamp": "18:03:38",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "response_file": "reports/failed_responses/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_search_hotels_performance_without_auth_180338.json",
+                            "log_path": "reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_search_hotels_performance_without_auth_180338.log"
+                        },
+                        "log_path": "reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_search_hotels_performance_without_auth_180338.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_search_hotels_performance_without_auth_180338.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_search_hotels_performance_without_auth_180338.json",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_search_hotels_performance_with_auth",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'Response' object has no attribute 'copy'",
+                        "screenshot_path": null,
+                        "duration": 1.6053264141082764,
+                        "timestamp": "18:03:40",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "response_file": "reports/failed_responses/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_search_hotels_performance_with_auth_180340.json",
+                            "log_path": "reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_search_hotels_performance_with_auth_180340.log"
+                        },
+                        "log_path": "reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_search_hotels_performance_with_auth_180340.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_search_hotels_performance_with_auth_180340.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_search_hotels_performance_with_auth_180340.json",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_hotel_endpoints_without_auth",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'Response' object has no attribute 'copy'",
+                        "screenshot_path": null,
+                        "duration": 2.275547504425049,
+                        "timestamp": "18:03:42",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "response_file": "reports/failed_responses/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_hotel_endpoints_without_auth_180342.json",
+                            "log_path": "reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_hotel_endpoints_without_auth_180342.log"
+                        },
+                        "log_path": "reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_hotel_endpoints_without_auth_180342.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_hotel_endpoints_without_auth_180342.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_hotel_endpoints_without_auth_180342.json",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_hotel_endpoints_with_auth",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'Response' object has no attribute 'copy'",
+                        "screenshot_path": null,
+                        "duration": 1.4669103622436523,
+                        "timestamp": "18:03:44",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "response_file": "reports/failed_responses/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_hotel_endpoints_with_auth_180344.json",
+                            "log_path": "reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_hotel_endpoints_with_auth_180344.log"
+                        },
+                        "log_path": "reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_hotel_endpoints_with_auth_180344.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_hotel_endpoints_with_auth_180344.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_hotel_endpoints_with_auth_180344.json",
+                        "suite": "api"
+                    }
+                ],
+                "skipped_tests_details": []
+            },
+            "timestamp": "2026-01-11 18:04:15"
+        },
+        "partners_api": {
+            "report": {
+                "test_suite_name": "PARTNERS API SMOKE TEST",
+                "total_tests": 35,
+                "passed_tests": 35,
+                "failed_tests": 0,
+                "skipped_tests": 0,
+                "success_rate": 100.0,
+                "duration": 86.750422,
+                "start_time": "2026-01-11 18:04:25",
+                "end_time": "2026-01-11 18:05:52",
+                "failed_tests_details": [],
+                "skipped_tests_details": []
+            },
+            "timestamp": "2026-01-11 18:05:52"
+        }
+    },
+    "all_failed_tests": [
+        {
+            "test_name": "src/tests/smoke_tests/test_auth_flow_smoke.py::TestAuthFlowSmoke::test_successful_login_and_redirect",
+            "status": "FAIL",
+            "error_message": "AssertionError: User should be redirected to dashboard after successful login\nassert False\n +  where False = wait_until_on_dashboard(timeout=10)\n +    where wait_until_on_dashboard = <src.pages.ui.auth_flow.AuthFlow object at 0x7f02d7132f20>.wait_until_on_dashboard\n +      where <src.pages.ui.auth_flow.AuthFlow object at 0x7f02d7132f20> = <test_auth_flow_smoke.TestAuthFlowSmoke object at 0x7f02d725ba00>.auth_flow",
+            "screenshot_path": "reports/screenshots/failures/AuthFlowSmoke_test_successful_login_and_redirect_20260111_175611.png",
+            "duration": 11.706934452056885,
+            "timestamp": "17:56:11",
+            "skip_reason": null,
+            "category": "API Timeout",
+            "evidence": {
+                "response_file": "reports/failed_responses/src_tests_smoke_tests_test_auth_flow_smoke.py_TestAuthFlowSmoke_test_successful_login_and_redirect_175611.json",
+                "log_path": "reports/logs/src_tests_smoke_tests_test_auth_flow_smoke.py_TestAuthFlowSmoke_test_successful_login_and_redirect_175611.log"
+            },
+            "log_path": "reports/logs/src_tests_smoke_tests_test_auth_flow_smoke.py_TestAuthFlowSmoke_test_successful_login_and_redirect_175611.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_auth_flow_smoke.py_TestAuthFlowSmoke_test_successful_login_and_redirect_175611.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_smoke_tests_test_auth_flow_smoke.py_TestAuthFlowSmoke_test_successful_login_and_redirect_175611.json",
+            "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-11_17-55-40/screenshots/AuthFlowSmoke_test_successful_login_and_redirect_20260111_175611.png",
+            "suite": "smoke"
+        },
+        {
+            "test_name": "src/tests/smoke_tests/test_auth_flow_smoke.py::TestAuthFlowSmoke::test_logout_functionality",
+            "status": "FAIL",
+            "error_message": "AssertionError: Should be on dashboard after login\nassert False\n +  where False = is_user_on_dashboard()\n +    where is_user_on_dashboard = <src.pages.ui.auth_flow.AuthFlow object at 0x7f02d725dea0>.is_user_on_dashboard\n +      where <src.pages.ui.auth_flow.AuthFlow object at 0x7f02d725dea0> = <test_auth_flow_smoke.TestAuthFlowSmoke object at 0x7f02d725bb80>.auth_flow",
+            "screenshot_path": "reports/screenshots/failures/AuthFlowSmoke_test_logout_functionality_20260111_175650.png",
+            "duration": 1.5192720890045166,
+            "timestamp": "17:56:50",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "response_file": "reports/failed_responses/src_tests_smoke_tests_test_auth_flow_smoke.py_TestAuthFlowSmoke_test_logout_functionality_175650.json",
+                "log_path": "reports/logs/src_tests_smoke_tests_test_auth_flow_smoke.py_TestAuthFlowSmoke_test_logout_functionality_175650.log"
+            },
+            "log_path": "reports/logs/src_tests_smoke_tests_test_auth_flow_smoke.py_TestAuthFlowSmoke_test_logout_functionality_175650.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_auth_flow_smoke.py_TestAuthFlowSmoke_test_logout_functionality_175650.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_smoke_tests_test_auth_flow_smoke.py_TestAuthFlowSmoke_test_logout_functionality_175650.json",
+            "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-11_17-55-40/screenshots/AuthFlowSmoke_test_logout_functionality_20260111_175650.png",
+            "suite": "smoke"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_get_hotel_rating_success",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'Response' object has no attribute 'copy'",
+            "screenshot_path": null,
+            "duration": 1.4323184490203857,
+            "timestamp": "18:03:35",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "response_file": "reports/failed_responses/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_get_hotel_rating_success_180335.json",
+                "log_path": "reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_get_hotel_rating_success_180335.log"
+            },
+            "log_path": "reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_get_hotel_rating_success_180335.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_get_hotel_rating_success_180335.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_get_hotel_rating_success_180335.json",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_search_hotels_performance_without_auth",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'Response' object has no attribute 'copy'",
+            "screenshot_path": null,
+            "duration": 1.4863431453704834,
+            "timestamp": "18:03:38",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "response_file": "reports/failed_responses/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_search_hotels_performance_without_auth_180338.json",
+                "log_path": "reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_search_hotels_performance_without_auth_180338.log"
+            },
+            "log_path": "reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_search_hotels_performance_without_auth_180338.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_search_hotels_performance_without_auth_180338.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_search_hotels_performance_without_auth_180338.json",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_search_hotels_performance_with_auth",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'Response' object has no attribute 'copy'",
+            "screenshot_path": null,
+            "duration": 1.6053264141082764,
+            "timestamp": "18:03:40",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "response_file": "reports/failed_responses/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_search_hotels_performance_with_auth_180340.json",
+                "log_path": "reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_search_hotels_performance_with_auth_180340.log"
+            },
+            "log_path": "reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_search_hotels_performance_with_auth_180340.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_search_hotels_performance_with_auth_180340.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_search_hotels_performance_with_auth_180340.json",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_hotel_endpoints_without_auth",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'Response' object has no attribute 'copy'",
+            "screenshot_path": null,
+            "duration": 2.275547504425049,
+            "timestamp": "18:03:42",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "response_file": "reports/failed_responses/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_hotel_endpoints_without_auth_180342.json",
+                "log_path": "reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_hotel_endpoints_without_auth_180342.log"
+            },
+            "log_path": "reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_hotel_endpoints_without_auth_180342.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_hotel_endpoints_without_auth_180342.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_hotel_endpoints_without_auth_180342.json",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_hotel_endpoints_with_auth",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'Response' object has no attribute 'copy'",
+            "screenshot_path": null,
+            "duration": 1.4669103622436523,
+            "timestamp": "18:03:44",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "response_file": "reports/failed_responses/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_hotel_endpoints_with_auth_180344.json",
+                "log_path": "reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_hotel_endpoints_with_auth_180344.log"
+            },
+            "log_path": "reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_hotel_endpoints_with_auth_180344.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_hotel_endpoints_with_auth_180344.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_hotel_endpoints_with_auth_180344.json",
+            "suite": "api"
+        }
+    ],
+    "all_skipped_tests": []
+}

@@ -1,0 +1,10 @@
+2026-01-11 18:05:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 DEBUG: Test phase - setup for src/tests/partners_api_tests/test_partners_package.py::TestPartnersPackageSecurity::test_unverified_user_blocked_from_package_listing - Skipped: False
+2026-01-11 18:05:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔵 CREATING UNVERIFIED USER: packagetest44582@yopmail.com
+2026-01-11 18:05:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Partners API Request: POST https://sandbox.api.developers.gowithgeo.com/api/auth/signup
+2026-01-11 18:05:37 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Partners API Response: 201
+2026-01-11 18:05:37 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔵 ATTEMPTING PACKAGE LISTING: packagetest44582@yopmail.com
+2026-01-11 18:05:37 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Partners API Request: GET https://sandbox.api.developers.gowithgeo.com/api/package/all
+2026-01-11 18:05:37 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Partners API Response: 401
+2026-01-11 18:05:37 - GeoTravelGlobalLogger - WARNING  - [logger.py:360] - Partners API Error: 401 - saved dump: reports/failed_responses/20260111_180537_401_api_package_all.txt
+2026-01-11 18:05:37 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - SUCCESS: ✅ Unverified user correctly blocked from package listing: packagetest44582@yopmail.com
+2026-01-11 18:05:37 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 DEBUG: Test phase - call for src/tests/partners_api_tests/test_partners_package.py::TestPartnersPackageSecurity::test_unverified_user_blocked_from_package_listing - Skipped: False
