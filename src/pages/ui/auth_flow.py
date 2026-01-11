@@ -26,16 +26,13 @@ class AuthFlow(BasePage):
 
     # ===== DASHBOARD / LOGOUT LOCATORS =====
     DASHBOARD_INDICATORS = [
-        (By.TAG_NAME, "h1"),
-        (By.TAG_NAME, "h2"),
-        (By.TAG_NAME, "span"),
-        (By.TAG_NAME, "button"),
-        (By.ID, "bookings-sidebar"),
-        (By.ID, "visa applications-sidebar"),
-        (By.ID, "transactions-sidebar"),
-        (By.ID, "rewards-sidebar"),
-        (By.ID, "notifications-sidebar"),
-        (By.ID, "account management-sidebar"),
+        (By.XPATH, "//span[contains(text(),'Bookings')]"),
+        (By.XPATH, "//span[contains(text(),'Packages')]"),
+        (By.XPATH, "//span[contains(text(),'Visa Applications')]"),
+        (By.XPATH, "//span[contains(text(),'Transactions')]"),
+        (By.XPATH, "//span[contains(text(),'Rewards')]"),
+        (By.XPATH, "//span[contains(text(),'Notifications')]"),
+        (By.XPATH, "//span[contains(text(),'Account Management')]"),
     ]
     
     LOGOUT_BUTTON = [
@@ -120,33 +117,25 @@ class AuthFlow(BasePage):
         return False
 
     def is_login_successful(self, timeout=25):
-        """
-        Determine if login was successful.
-
-        Returns:
-            bool: True if login succeeded, False otherwise.
-        """
         self.logger.info("🔍 Verifying login status...")
 
         try:
             WebDriverWait(self.driver, timeout).until(
-                lambda d: (
-                    "login" not in d.current_url.lower()
-                    or self.get_toast_error_message(max_wait=1)
-                )
+                lambda d: "/dashboard" in d.current_url.lower()
             )
+
             current_url = self.navigator.get_current_url().lower()
-            self.logger.info(f"Redirected from login page: {current_url}")
-            
-            if self._wait_for_any_dashboard_indicator(timeout=25):
+            self.logger.info(f"Redirected to: {current_url}")
+
+            if self._wait_for_any_dashboard_indicator(timeout=10):
                 self.logger.success("Login confirmed – Dashboard detected.")
                 return True
 
-            self.logger.error("Redirected from login, but dashboard not detected.")
+            self.logger.error("Dashboard URL reached but UI not loaded.")
             return False
 
         except Exception as e:
-            self.logger.error(f"Exception while verifying login: {e}")
+            self.logger.error(f"Login did not reach dashboard: {e}")
             return False
         
     def get_last_toast(self):
@@ -242,22 +231,18 @@ class AuthFlow(BasePage):
         return False
 
     def is_user_on_dashboard(self):
-        """Check if user is on dashboard by verifying ANY of the dashboard indicators"""
+        """Check if user is on dashboard using UI or text indicators"""
         try:
-            for indicator in self.DASHBOARD_INDICATORS:
-                try:
-                    if self.element.is_visible(indicator):
-                        self.logger.info(f"Dashboard verified by: {indicator}")
-                        return True
-                except:
-                    continue
-                
-            self.logger.warning("No dashboard UI elements found, falling back to text check")
-            return self._fallback_dashboard_check()
+            if any(self.element.is_visible(ind) for ind in self.DASHBOARD_INDICATORS):
+                self.logger.info("Dashboard verified via UI element")
+                return True
 
+            self.logger.warning("No dashboard UI elements found, using text check")
+            return self._fallback_dashboard_check()
         except Exception as e:
             self.logger.error(f"Dashboard check failed: {e}")
             return False
+
 
     def _fallback_dashboard_check(self):
         """Fallback method to check dashboard by page content"""
@@ -277,7 +262,7 @@ class AuthFlow(BasePage):
             has_primary = any(primary_indicators)
             has_secondary = any(secondary_indicators)
 
-            if has_primary and has_secondary:
+            if any(primary_indicators) and any(secondary_indicators):
                 self.logger.info("User is on bookings dashboard (text-based check)")
                 return True
 

@@ -42,3 +42,54 @@ def get_flight_test_data():
         "children": 0,
         "infants": 0
     }
+    
+def generate_hotel_test_data():
+    """Generate dynamic test data for hotel tests"""
+    current_date = datetime.now().strftime("%Y-%m-%d")
+    future_date = (datetime.now() + timedelta(days=1)).strftime("%Y-%m-%d")
+    
+    return {
+        "hotel_search_payload": {
+            "hotelName": "Any",
+            "cityCode": "NYC",
+            "countryOfResidence": "US",
+            "destination": {
+                "country": "US",
+                "city": "New York"
+            },
+            "adults": 2,
+            "checkInDate": current_date,
+            "checkOutDate": future_date,
+            "roomQuantity": 1
+        },
+        "hotel_search_payload_with_price": {
+            "hotelName": "Any",
+            "cityCode": "NYC",
+            "countryOfResidence": "US",
+            "destination": {
+                "country": "US",
+                "city": "New York"
+            },
+            "adults": 2,
+            "checkInDate": current_date,
+            "checkOutDate": future_date,
+            "roomQuantity": 1,
+            "priceRange": "200-300",
+            "currency": "USD"
+        },
+        "hotel_booking_payload": {
+            "firstName": "Bot",
+            "lastName": "GEO",
+            "email": "geo.qa.bot@gmail.com",
+            "phone": "7079090909",
+            "adults": 2,
+            "checkInDate": current_date,
+            "checkOutDate": future_date,
+            "roomQuantity": 1,
+            "hotelName": "Test Hotel",
+            "destination": {
+                "country": "Nigeria",
+                "city": "Aba"
+            }
+        }
+    }

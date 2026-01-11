@@ -3,10 +3,12 @@
 import os
 import pytest
 import json
+import time
 from datetime import datetime, timedelta
 from src.pages.api.hotels_api import HotelAPI
 from src.pages.api.auth_api import AuthAPI
 from src.utils.logger import GeoLogger
+from src.tests.test_data import generate_hotel_test_data
 
 
 class TestHotelAPI:
@@ -15,7 +17,7 @@ class TestHotelAPI:
     def setup_method(self):
         """Setup before each test method"""
         self.logger = GeoLogger(self.__class__.__name__)
-        self.test_data = self._generate_test_data()
+        self.test_data = generate_hotel_test_data()
         self.logger.info(f"🚀 Starting {self.__class__.__name__} test")
     
     def teardown_method(self):
@@ -41,54 +43,6 @@ class TestHotelAPI:
         hotel_api.set_auth_token(auth_api.auth_token)
         hotel_api.set_auth_token(auth_api.auth_token, token_source=auth_api.token_source)
         return hotel_api
-    
-    def _generate_test_data(self):
-        """Generate dynamic test data for hotel tests"""
-        return {
-            "hotel_search_payload": {
-                "hotelName": "Any",
-                "cityCode": "NYC",
-                "countryOfResidence": "US",
-                "destination": {
-                    "country": "US",
-                    "city": "New York"
-                },
-                "adults": 2,
-                "checkInDate": "2026-01-10",
-                "checkOutDate": "2026-01-19",
-                "roomQuantity": 1
-            },
-            "hotel_search_payload_with_price": {
-                "hotelName": "Any",
-                "cityCode": "NYC",
-                "countryOfResidence": "US",
-                "destination": {
-                    "country": "US",
-                    "city": "New York"
-                },
-                "adults": 2,
-                "checkInDate": "2026-01-10",
-                "checkOutDate": "2026-01-19",
-                "roomQuantity": 1,
-                "priceRange": "200-300",
-                "currency": "USD"
-            },
-            "hotel_booking_payload": {
-                "firstName": "Bot",
-                "lastName": "GEO",
-                "email": "geo.qa.bot@gmail.com",
-                "phone": "7079090909",
-                "adults": 2,
-                "checkInDate": "2026-01-10",
-                "checkOutDate": "2026-01-19",
-                "roomQuantity": 1,
-                "hotelName": "Test Hotel",
-                "destination": {
-                    "country": "Nigeria",
-                    "city": "Aba"
-                }
-            }
-        }
     
     # ==================== HOTEL CITIES TESTS ====================
     
@@ -164,7 +118,7 @@ class TestHotelAPI:
         """Test hotel search with price range and currency"""
         self.logger.info("Testing Hotel Search - With Price Range and Currency")
         
-        payload = self.test_data["hotel_search_payload_with_price"]
+        payload = self.test_data["hotel_search_payload_with_price"].copy()
         response = hotel_api.search_hotels(**payload)
         
         assert response.status_code == 200, f"Should return 200 when both priceRange and currency provided"
@@ -261,7 +215,7 @@ class TestHotelAPI:
         # Step 1: Search hotels
         search_response = hotel_api.search_hotels(
             **self.test_data["hotel_search_payload"]
-        )
+        ).copy()
 
         if search_response.status_code != 200:
             pytest.skip(
@@ -357,7 +311,7 @@ class TestHotelAPI:
         if 'Cookie' in hotel_api.headers:
             del hotel_api.headers['Cookie']
         
-        payload = self.test_data["hotel_booking_payload"]
+        payload = self.test_data["hotel_booking_payload"].copy()
         response = hotel_api.book_hotel(**payload)
         
         # Booking must succeed
@@ -387,7 +341,7 @@ class TestHotelAPI:
         """Test hotel booking WITH authentication - MUST have user_id attached"""
         self.logger.info("Testing Hotel Booking - With Authentication (MUST have user_id)")
         
-        payload = self.test_data["hotel_booking_payload"]
+        payload = self.test_data["hotel_booking_payload"].copy()
         response = authenticated_hotel_api.book_hotel(**payload)
         
         # Booking must succeed
@@ -438,10 +392,9 @@ class TestHotelAPI:
         """Test hotel search response time performance"""
         self.logger.info("Testing Hotel Search Performance Without Auth")
         
-        import time
         start_time = time.time()
         
-        response = hotel_api.search_hotels(**self.test_data["hotel_search_payload"])
+        response = hotel_api.search_hotels(**self.test_data["hotel_search_payload"]).copy()
         end_time = time.time()
         response_time = end_time - start_time
         
@@ -455,10 +408,9 @@ class TestHotelAPI:
         """Test hotel search response time performance with auth"""
         self.logger.info("Testing Hotel Search Performance With Auth")
         
-        import time
         start_time = time.time()
         
-        response = authenticated_hotel_api.search_hotels(**self.test_data["hotel_search_payload"])
+        response = authenticated_hotel_api.search_hotels(**self.test_data["hotel_search_payload"]).copy()
         end_time = time.time()
         response_time = end_time - start_time
         
@@ -478,7 +430,7 @@ class TestHotelAPI:
         self.logger.success("Cities endpoint accessible without authentication")
         
         # Test search endpoint
-        search_response = hotel_api.search_hotels(**self.test_data["hotel_search_payload"])
+        search_response = hotel_api.search_hotels(**self.test_data["hotel_search_payload"]).copy()
         assert search_response.status_code == 200, f"Expected 200, got {search_response.status_code}"
         self.logger.success("Search endpoint accessible without authentication")
     
@@ -493,6 +445,6 @@ class TestHotelAPI:
         self.logger.success("Cities endpoint accessible with authentication")
         
         # Test search endpoint
-        search_response = authenticated_hotel_api.search_hotels(**self.test_data["hotel_search_payload"])
+        search_response = authenticated_hotel_api.search_hotels(**self.test_data["hotel_search_payload"]).copy()
         assert search_response.status_code == 200, f"Expected 200, got {search_response.status_code}"
         self.logger.success("Search endpoint accessible with authentication")
