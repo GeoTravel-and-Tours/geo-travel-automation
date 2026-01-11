@@ -2,7 +2,6 @@
 
 import os
 import pytest
-import json
 import time
 from datetime import datetime, timedelta
 from src.pages.api.hotels_api import HotelAPI
@@ -118,15 +117,25 @@ class TestHotelAPI:
         """Test hotel search with price range and currency"""
         self.logger.info("Testing Hotel Search - With Price Range and Currency")
         
-        payload = self.test_data["hotel_search_payload_with_price"].copy()
+        payload = self.test_data["hotel_search_payload_with_price"]
         response = hotel_api.search_hotels(**payload)
         
-        assert response.status_code == 200, f"Should return 200 when both priceRange and currency provided"
+        # Basic status code check
+        assert response.status_code == 200, "Should return 200 when both priceRange and currency provided"
         
         response_data = response.json()
-        # hotels_data = response_data.get("data", {}).get("hotelDetailResult", {}).get("data", [])
+        
+        # Check the API returns some hotel offers (if available)
+        hotels_data = response_data.get("data", {}).get("hotelDetailResult", {}).get("data", [])
+        assert isinstance(hotels_data, list), "Hotels data should be a list"
+        
+        # Optionally check currency in first hotel (if data exists)
+        if hotels_data:
+            first_hotel_price = hotels_data[0].get("offers", [{}])[0].get("price", {})
+            assert first_hotel_price.get("currency") == payload.get("currency"), "Currency should match request"
         
         self.logger.success("Hotel search with price range and currency succeeded")
+
     
     @pytest.mark.api
     def test_search_hotels_missing_required_fields(self, hotel_api):
@@ -215,7 +224,7 @@ class TestHotelAPI:
         # Step 1: Search hotels
         search_response = hotel_api.search_hotels(
             **self.test_data["hotel_search_payload"]
-        ).copy()
+        )
 
         if search_response.status_code != 200:
             pytest.skip(
@@ -311,7 +320,7 @@ class TestHotelAPI:
         if 'Cookie' in hotel_api.headers:
             del hotel_api.headers['Cookie']
         
-        payload = self.test_data["hotel_booking_payload"].copy()
+        payload = self.test_data["hotel_booking_payload"]
         response = hotel_api.book_hotel(**payload)
         
         # Booking must succeed
@@ -341,7 +350,7 @@ class TestHotelAPI:
         """Test hotel booking WITH authentication - MUST have user_id attached"""
         self.logger.info("Testing Hotel Booking - With Authentication (MUST have user_id)")
         
-        payload = self.test_data["hotel_booking_payload"].copy()
+        payload = self.test_data["hotel_booking_payload"]
         response = authenticated_hotel_api.book_hotel(**payload)
         
         # Booking must succeed
@@ -394,7 +403,7 @@ class TestHotelAPI:
         
         start_time = time.time()
         
-        response = hotel_api.search_hotels(**self.test_data["hotel_search_payload"]).copy()
+        response = hotel_api.search_hotels(**self.test_data["hotel_search_payload"])
         end_time = time.time()
         response_time = end_time - start_time
         
@@ -410,7 +419,7 @@ class TestHotelAPI:
         
         start_time = time.time()
         
-        response = authenticated_hotel_api.search_hotels(**self.test_data["hotel_search_payload"]).copy()
+        response = authenticated_hotel_api.search_hotels(**self.test_data["hotel_search_payload"])
         end_time = time.time()
         response_time = end_time - start_time
         
@@ -430,7 +439,7 @@ class TestHotelAPI:
         self.logger.success("Cities endpoint accessible without authentication")
         
         # Test search endpoint
-        search_response = hotel_api.search_hotels(**self.test_data["hotel_search_payload"]).copy()
+        search_response = hotel_api.search_hotels(**self.test_data["hotel_search_payload"])
         assert search_response.status_code == 200, f"Expected 200, got {search_response.status_code}"
         self.logger.success("Search endpoint accessible without authentication")
     
@@ -445,6 +454,10 @@ class TestHotelAPI:
         self.logger.success("Cities endpoint accessible with authentication")
         
         # Test search endpoint
-        search_response = authenticated_hotel_api.search_hotels(**self.test_data["hotel_search_payload"]).copy()
+        search_response = authenticated_hotel_api.search_hotels(**self.test_data["hotel_search_payload"])
         assert search_response.status_code == 200, f"Expected 200, got {search_response.status_code}"
         self.logger.success("Search endpoint accessible with authentication")
+        
+        # Validate some data returned
+        response_data = search_response.json()
+        assert response_data["data"], "Expected hotels data, got empty list"
