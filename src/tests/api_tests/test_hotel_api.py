@@ -7,6 +7,7 @@ from datetime import datetime, timedelta
 from src.pages.api.hotels_api import HotelAPI
 from src.pages.api.auth_api import AuthAPI
 from src.utils.logger import GeoLogger
+from src.tests.test_data import generate_hotel_test_data
 
 
 class TestHotelAPI:
@@ -15,7 +16,7 @@ class TestHotelAPI:
     def setup_method(self):
         """Setup before each test method"""
         self.logger = GeoLogger(self.__class__.__name__)
-        self.test_data = self._generate_test_data()
+        self.test_data = generate_hotel_test_data()
         self.logger.info(f"🚀 Starting {self.__class__.__name__} test")
     
     def teardown_method(self):
@@ -41,54 +42,6 @@ class TestHotelAPI:
         hotel_api.set_auth_token(auth_api.auth_token)
         hotel_api.set_auth_token(auth_api.auth_token, token_source=auth_api.token_source)
         return hotel_api
-    
-    def _generate_test_data(self):
-        """Generate dynamic test data for hotel tests"""
-        return {
-            "hotel_search_payload": {
-                "hotelName": "Any",
-                "cityCode": "NYC",
-                "countryOfResidence": "US",
-                "destination": {
-                    "country": "US",
-                    "city": "New York"
-                },
-                "adults": 2,
-                "checkInDate": "2026-01-10",
-                "checkOutDate": "2026-01-19",
-                "roomQuantity": 1
-            },
-            "hotel_search_payload_with_price": {
-                "hotelName": "Any",
-                "cityCode": "NYC",
-                "countryOfResidence": "US",
-                "destination": {
-                    "country": "US",
-                    "city": "New York"
-                },
-                "adults": 2,
-                "checkInDate": "2026-01-10",
-                "checkOutDate": "2026-01-19",
-                "roomQuantity": 1,
-                "priceRange": "200-300",
-                "currency": "USD"
-            },
-            "hotel_booking_payload": {
-                "firstName": "Bot",
-                "lastName": "GEO",
-                "email": "geo.qa.bot@gmail.com",
-                "phone": "7079090909",
-                "adults": 2,
-                "checkInDate": "2026-01-10",
-                "checkOutDate": "2026-01-19",
-                "roomQuantity": 1,
-                "hotelName": "Test Hotel",
-                "destination": {
-                    "country": "Nigeria",
-                    "city": "Aba"
-                }
-            }
-        }
     
     # ==================== HOTEL CITIES TESTS ====================
     
