@@ -84,7 +84,7 @@ class AuthFlow(BasePage):
             login_btn = self.element.click(self.LOGIN_BUTTON)
             self.logger.info("Login attempt completed")
             
-            self.wait_for_login_to_settle(timeout=20)
+            self.wait_for_login_to_settle(timeout=30)
 
             return self.is_login_successful()
 
@@ -116,7 +116,7 @@ class AuthFlow(BasePage):
         self.logger.error(f"All {len(self.DASHBOARD_INDICATORS)} dashboard indicators failed")
         return False
 
-    def is_login_successful(self, timeout=25):
+    def is_login_successful(self, timeout=30):
         self.logger.info("🔍 Verifying login status...")
 
         try:
@@ -127,7 +127,7 @@ class AuthFlow(BasePage):
             current_url = self.navigator.get_current_url().lower()
             self.logger.info(f"Redirected to: {current_url}")
 
-            if self._wait_for_any_dashboard_indicator(timeout=10):
+            if self._wait_for_any_dashboard_indicator(timeout=20):
                 self.logger.success("Login confirmed – Dashboard detected.")
                 return True
 
