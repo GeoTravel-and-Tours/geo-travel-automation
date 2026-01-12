@@ -1,0 +1,38 @@
+2026-01-12 07:28:37 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🚀 Starting TestVisaEnquiryAPI test
+2026-01-12 07:28:37 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Retrieved credentials from environment for: geo.qa.bot@gmail.com
+2026-01-12 07:28:37 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Attempting login with email: geo.qa.bot@gmail.com
+2026-01-12 07:28:37 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Request: POST https://api.dev.gowithgeo.com/api/auth/login
+2026-01-12 07:28:37 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Response: 200
+2026-01-12 07:28:37 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Token extracted via response_body (length: 167, valid)
+2026-01-12 07:28:37 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - ✅ Auth token set from response body (Authorization header)
+2026-01-12 07:28:37 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - SUCCESS: ✅ Login successful - token set via response_body
+2026-01-12 07:28:37 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - SUCCESS: ✅ Authenticated successfully (token length: 167)
+2026-01-12 07:28:37 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - ✅ Auth token set from cookies (Cookie header)
+2026-01-12 07:28:37 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - ✅ Auth token set from response body (Authorization header)
+2026-01-12 07:28:37 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 DEBUG: Test phase - setup for src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_get_user_visa_applications_with_filters - Skipped: False
+2026-01-12 07:28:37 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - === Testing Get User Visa Applications - With Filters ===
+2026-01-12 07:28:37 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Testing: Status filter - Submitted
+2026-01-12 07:28:37 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Request: GET https://api.dev.gowithgeo.com/api/visa/all/user
+2026-01-12 07:28:38 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Response: 200
+2026-01-12 07:28:38 - GeoTravelGlobalLogger - INFO     - [logger.py:345] -   ✅ Filter applied: Status filter - Submitted, Found: 20 applications
+2026-01-12 07:28:38 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Testing: Status filter - InProgress
+2026-01-12 07:28:38 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Request: GET https://api.dev.gowithgeo.com/api/visa/all/user
+2026-01-12 07:28:38 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Response: 200
+2026-01-12 07:28:38 - GeoTravelGlobalLogger - INFO     - [logger.py:345] -   ✅ Filter applied: Status filter - InProgress, Found: 0 applications
+2026-01-12 07:28:38 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Testing: Type filter - Tourist
+2026-01-12 07:28:38 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Request: GET https://api.dev.gowithgeo.com/api/visa/all/user
+2026-01-12 07:28:38 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Response: 200
+2026-01-12 07:28:38 - GeoTravelGlobalLogger - INFO     - [logger.py:345] -   ✅ Filter applied: Type filter - Tourist, Found: 14 applications
+2026-01-12 07:28:38 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Testing: Type filter - Business
+2026-01-12 07:28:38 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Request: GET https://api.dev.gowithgeo.com/api/visa/all/user
+2026-01-12 07:28:38 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Response: 200
+2026-01-12 07:28:38 - GeoTravelGlobalLogger - INFO     - [logger.py:345] -   ✅ Filter applied: Type filter - Business, Found: 9 applications
+2026-01-12 07:28:38 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Testing: Combined filters
+2026-01-12 07:28:38 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Request: GET https://api.dev.gowithgeo.com/api/visa/all/user
+2026-01-12 07:28:39 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Response: 200
+2026-01-12 07:28:39 - GeoTravelGlobalLogger - INFO     - [logger.py:345] -   ✅ Filter applied: Combined filters, Found: 1 applications
+2026-01-12 07:28:39 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Testing: Date range filter
+2026-01-12 07:28:39 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Request: GET https://api.dev.gowithgeo.com/api/visa/all/user
+2026-01-12 07:28:39 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Response: 200
+2026-01-12 07:28:39 - GeoTravelGlobalLogger - INFO     - [logger.py:345] -   ✅ Filter applied: Date range filter, Found: 0 applications
+2026-01-12 07:28:39 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 DEBUG: Test phase - call for src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_get_user_visa_applications_with_filters - Skipped: False
