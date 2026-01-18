@@ -1,0 +1,26 @@
+2026-01-18 07:20:44 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🚀 Starting TestVisaEnquiryAPI test
+2026-01-18 07:20:44 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Retrieved credentials from environment for: geo.qa.bot@gmail.com
+2026-01-18 07:20:44 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Attempting login with email: geo.qa.bot@gmail.com
+2026-01-18 07:20:44 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Request: POST https://api.dev.gowithgeo.com/api/auth/login
+2026-01-18 07:20:45 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Response: 200
+2026-01-18 07:20:45 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Token extracted via response_body (length: 167, valid)
+2026-01-18 07:20:45 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - ✅ Auth token set from response body (Authorization header)
+2026-01-18 07:20:45 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - SUCCESS: ✅ Login successful - token set via response_body
+2026-01-18 07:20:45 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - SUCCESS: ✅ Authenticated successfully (token length: 167)
+2026-01-18 07:20:45 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - ✅ Auth token set from cookies (Cookie header)
+2026-01-18 07:20:45 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - ✅ Auth token set from response body (Authorization header)
+2026-01-18 07:20:45 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 DEBUG: Test phase - setup for src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_get_user_visa_applications_pagination - Skipped: False
+2026-01-18 07:20:45 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - === Testing User Visa Applications Pagination ===
+2026-01-18 07:20:45 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Testing pagination: Page 1, Limit 5
+2026-01-18 07:20:45 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Request: GET https://api.dev.gowithgeo.com/api/visa/all/user
+2026-01-18 07:20:45 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Response: 200
+2026-01-18 07:20:45 - GeoTravelGlobalLogger - INFO     - [logger.py:345] -   ✅ Page 1, Items per page: 5
+2026-01-18 07:20:45 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Testing pagination: Page 1, Limit 10
+2026-01-18 07:20:45 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Request: GET https://api.dev.gowithgeo.com/api/visa/all/user
+2026-01-18 07:20:45 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Response: 200
+2026-01-18 07:20:45 - GeoTravelGlobalLogger - INFO     - [logger.py:345] -   ✅ Page 1, Items per page: 10
+2026-01-18 07:20:45 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Testing pagination: Page 2, Limit 5
+2026-01-18 07:20:45 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Request: GET https://api.dev.gowithgeo.com/api/visa/all/user
+2026-01-18 07:20:46 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Response: 200
+2026-01-18 07:20:46 - GeoTravelGlobalLogger - INFO     - [logger.py:345] -   ✅ Page 2, Items per page: 5
+2026-01-18 07:20:46 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 DEBUG: Test phase - call for src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_get_user_visa_applications_pagination - Skipped: False
