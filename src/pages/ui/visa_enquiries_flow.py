@@ -38,7 +38,8 @@ class VisaPage(BasePage):
     PASSPORT_AVAILABILITY_DROPDOWN = (By.XPATH, "//fieldset[.//*[contains(text(), 'passport availability')]]//button")
     PASSPORT_OPTION_TEMPLATE = (By.XPATH, "//span[text()='{}' and @class]")
     
-    TRAVEL_DATE_INPUT = (By.CSS_SELECTOR, "body > div:nth-child(1) > main:nth-child(2) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > section:nth-child(1) > div:nth-child(2) > form:nth-child(2) > div:nth-child(4) > fieldset:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1)")
+    # TRAVEL_DATE_INPUT = (By.CSS_SELECTOR, "body > div:nth-child(1) > main:nth-child(2) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > section:nth-child(1) > div:nth-child(2) > form:nth-child(2) > div:nth-child(4) > fieldset:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1)")
+    TRAVEL_DATE_INPUT = (By.XPATH, "(//div[@class='flex items-center w-full px-3 py-1 text-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium focus-within:outline-none focus-within:ring-[1.5px] focus-within:ring-mainblue disabled:cursor-not-allowed disabled:opacity-50 border border-gray-300/70 rounded h-11 bg-white'])[1]")
     
     DESTINATION_COUNTRY_DROPDOWN = (By.XPATH, "//fieldset[.//*[contains(text(), 'destination country')]]//button")
     DESTINATION_OPTION_TEMPLATE = (By.XPATH, "//span[text()='{}' and ancestor::div[@role='listbox']]")

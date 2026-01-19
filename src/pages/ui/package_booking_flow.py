@@ -24,7 +24,8 @@ class PackageBookingFlow(BasePage):
     COUNTRY_INPUT = (By.XPATH, "//input[@placeholder='Enter country']")
     COUNTRY_SEARCH_RESULT = (By.XPATH, "//h6[contains(text(),'NIGERIA')]")
     TRAVEL_DATE_SELECTOR = (By.CSS_SELECTOR, "div[class='w-full flex items-center px-3.5 min-h-12 h-full py-2 rounded-md border border-gray-300 cursor-pointer justify-between']")
-    SEARCH_PACKAGES_BUTTON = (By.CSS_SELECTOR, "body > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > form:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > button:nth-child(1)")
+    # SEARCH_PACKAGES_BUTTON = (By.CSS_SELECTOR, "body > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > form:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > button:nth-child(1)")
+    SEARCH_PACKAGES_BUTTON = (By.XPATH, "(//button[@class='active:scale-95 transition-all items-center gap-2 justify-center whitespace-nowrap rounded-md text-sm font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-mainblue disabled:pointer-events-none disabled:opacity-50 cursor-pointer bg-mainblue text-white hover:bg-mainblue/80 h-10 px-4 py-2 hidden md:flex'])[1]")
 
     # Package Selection
     VIEW_PACKAGE_BUTTON = (By.XPATH, "(//button[normalize-space()='View package'])[1]")
