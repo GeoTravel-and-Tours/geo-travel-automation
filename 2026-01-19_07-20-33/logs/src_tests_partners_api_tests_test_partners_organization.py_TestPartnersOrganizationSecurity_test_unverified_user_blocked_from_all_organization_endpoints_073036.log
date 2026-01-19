@@ -1,0 +1,29 @@
+2026-01-19 07:30:35 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 DEBUG: Test phase - setup for src/tests/partners_api_tests/test_partners_organization.py::TestPartnersOrganizationSecurity::test_unverified_user_blocked_from_all_organization_endpoints - Skipped: False
+2026-01-19 07:30:35 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔵 CREATING USER: geopartners58386@yopmail.com
+2026-01-19 07:30:35 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Partners API Request: POST https://sandbox.api.developers.gowithgeo.com/api/auth/signup
+2026-01-19 07:30:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Partners API Response: 201
+2026-01-19 07:30:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔵 LOGIN ATTEMPT: geopartners58386@yopmail.com
+2026-01-19 07:30:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Partners API Request: POST https://sandbox.api.developers.gowithgeo.com/api/auth/login
+2026-01-19 07:30:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Partners API Response: 200
+2026-01-19 07:30:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔵 TESTING ORG ENDPOINTS FOR: geopartners58386@yopmail.com
+2026-01-19 07:30:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Partners API Request: GET https://sandbox.api.developers.gowithgeo.com/api/org/profile
+2026-01-19 07:30:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Partners API Response: 401
+2026-01-19 07:30:36 - GeoTravelGlobalLogger - WARNING  - [logger.py:360] - Partners API Error: 401 - saved dump: reports/failed_responses/20260119_073036_401_api_org_profile.txt
+2026-01-19 07:30:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - SUCCESS: ✅ Get Profile correctly blocked unverified user: geopartners58386@yopmail.com
+2026-01-19 07:30:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Partners API Request: GET https://sandbox.api.developers.gowithgeo.com/api/org/reset-api-keys
+2026-01-19 07:30:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Partners API Response: 401
+2026-01-19 07:30:36 - GeoTravelGlobalLogger - WARNING  - [logger.py:360] - Partners API Error: 401 - saved dump: reports/failed_responses/20260119_073036_401_api_org_reset-api-keys.txt
+2026-01-19 07:30:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - SUCCESS: ✅ Reset API Keys correctly blocked unverified user: geopartners58386@yopmail.com
+2026-01-19 07:30:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Partners API Request: GET https://sandbox.api.developers.gowithgeo.com/api/org/usage
+2026-01-19 07:30:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Partners API Response: 401
+2026-01-19 07:30:36 - GeoTravelGlobalLogger - WARNING  - [logger.py:360] - Partners API Error: 401 - saved dump: reports/failed_responses/20260119_073036_401_api_org_usage.txt
+2026-01-19 07:30:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - SUCCESS: ✅ Get Usage correctly blocked unverified user: geopartners58386@yopmail.com
+2026-01-19 07:30:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Partners API Request: GET https://sandbox.api.developers.gowithgeo.com/api/org/usage/daily
+2026-01-19 07:30:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Partners API Response: 401
+2026-01-19 07:30:36 - GeoTravelGlobalLogger - WARNING  - [logger.py:360] - Partners API Error: 401 - saved dump: reports/failed_responses/20260119_073036_401_api_org_usage_daily.txt
+2026-01-19 07:30:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - SUCCESS: ✅ Get Daily Usage correctly blocked unverified user: geopartners58386@yopmail.com
+2026-01-19 07:30:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Partners API Request: GET https://sandbox.api.developers.gowithgeo.com/api/org/usage/range
+2026-01-19 07:30:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Partners API Response: 401
+2026-01-19 07:30:36 - GeoTravelGlobalLogger - WARNING  - [logger.py:360] - Partners API Error: 401 - saved dump: reports/failed_responses/20260119_073036_401_api_org_usage_range.txt
+2026-01-19 07:30:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - SUCCESS: ✅ Get Usage Range correctly blocked unverified user: geopartners58386@yopmail.com
+2026-01-19 07:30:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 DEBUG: Test phase - call for src/tests/partners_api_tests/test_partners_organization.py::TestPartnersOrganizationSecurity::test_unverified_user_blocked_from_all_organization_endpoints - Skipped: False
