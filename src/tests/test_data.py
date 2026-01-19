@@ -46,7 +46,7 @@ def get_flight_test_data():
 def generate_hotel_test_data():
     """Generate dynamic test data for hotel tests"""
     current_date = datetime.now().strftime("%Y-%m-%d")
-    future_date = (datetime.now() + timedelta(days=1)).strftime("%Y-%m-%d")
+    future_date = (datetime.now() + timedelta(days=3)).strftime("%Y-%m-%d")
     
     return {
         "hotel_search_payload": {

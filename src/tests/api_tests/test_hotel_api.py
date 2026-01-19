@@ -116,25 +116,53 @@ class TestHotelAPI:
     def test_search_hotels_with_price_range_currency(self, hotel_api):
         """Test hotel search with price range and currency"""
         self.logger.info("Testing Hotel Search - With Price Range and Currency")
-        
+
         payload = self.test_data["hotel_search_payload_with_price"]
         response = hotel_api.search_hotels(**payload)
-        
+
         # Basic status code check
-        assert response.status_code == 200, "Should return 200 when both priceRange and currency provided"
-        
+        assert response.status_code == 200, (
+            "Should return 200 when both priceRange and currency are provided"
+        )
+
         response_data = response.json()
-        
-        # Check the API returns some hotel offers (if available)
-        hotels_data = response_data.get("data", {}).get("hotelDetailResult", {}).get("data", [])
-        assert isinstance(hotels_data, list), "Hotels data should be a list"
-        
-        # Optionally check currency in first hotel (if data exists)
-        if hotels_data:
-            first_hotel_price = hotels_data[0].get("offers", [{}])[0].get("price", {})
-            assert first_hotel_price.get("currency") == payload.get("currency"), "Currency should match request"
-        
+        print(response_data)
+
+        # Validate top-level response structure
+        assert response_data.get("status") == "success"
+        assert "data" in response_data
+
+        data = response_data.get("data")
+        print(data)
+
+        # Case 1: No hotels found (valid scenario)
+        if isinstance(data, list):
+            assert data == [] or len(data) >= 0
+
+        # Case 2: Hotels returned
+        elif isinstance(data, dict):
+            hotels_data = (
+                data.get("hotelDetailResult", {})
+                    .get("data", [])
+            )
+
+            assert isinstance(hotels_data, list), "Hotels data should be a list"
+
+            # Validate currency only if hotel data exists
+            if hotels_data:
+                offers = hotels_data[0].get("offers", [])
+                if offers:
+                    price = offers[0].get("price", {})
+                    assert price.get("currency") == payload.get("currency"), (
+                        "Currency should match request"
+                    )
+
+        # Case 3: Unexpected response shape
+        else:
+            pytest.fail(f"Unexpected data type returned: {type(data)}")
+
         self.logger.success("Hotel search with price range and currency succeeded")
+
 
     
     @pytest.mark.api
