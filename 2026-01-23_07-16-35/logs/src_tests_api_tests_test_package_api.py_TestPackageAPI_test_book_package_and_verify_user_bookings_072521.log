@@ -1,0 +1,40 @@
+2026-01-23 07:25:15 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Retrieved credentials from environment for: geo.qa.bot@gmail.com
+2026-01-23 07:25:15 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Attempting login with email: geo.qa.bot@gmail.com
+2026-01-23 07:25:15 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Request: POST https://api.dev.gowithgeo.com/api/auth/login
+2026-01-23 07:25:15 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Response: 200
+2026-01-23 07:25:15 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Token extracted via response_body (length: 167, valid)
+2026-01-23 07:25:15 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - ✅ Auth token set from response body (Authorization header)
+2026-01-23 07:25:15 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - SUCCESS: ✅ Login successful - token set via response_body
+2026-01-23 07:25:15 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - SUCCESS: ✅ Authenticated successfully (token length: 167)
+2026-01-23 07:25:15 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - ✅ Auth token set from cookies (Cookie header)
+2026-01-23 07:25:15 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - ✅ Auth token set from response body (Authorization header)
+2026-01-23 07:25:15 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 DEBUG: Test phase - setup for src/tests/api_tests/test_package_api.py::TestPackageAPI::test_book_package_and_verify_user_bookings - Skipped: False
+2026-01-23 07:25:15 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - === Testing Book Package and Verify User Bookings ===
+2026-01-23 07:25:15 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Request: GET https://api.dev.gowithgeo.com/api/package/all
+2026-01-23 07:25:16 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Response: 200
+2026-01-23 07:25:16 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Selected package: Christmas Eve (ID: 15)
+2026-01-23 07:25:16 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Using pricing text: Personalized
+2026-01-23 07:25:16 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Request: GET https://api.dev.gowithgeo.com/api/package/user/booked-packages
+2026-01-23 07:25:16 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Response: 200
+2026-01-23 07:25:16 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Initial user bookings count: 0
+2026-01-23 07:25:16 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Using payment method: Flutterwave
+2026-01-23 07:25:16 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Request: POST https://api.dev.gowithgeo.com/api/package/book
+2026-01-23 07:25:17 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Response: 200
+2026-01-23 07:25:17 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Book Package Response: 200
+2026-01-23 07:25:17 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - ✅ Booking successful! Response: {'status': 'success', 'message': 'Package booked successful', 'data': {'paymentLink': 'https://checkout-v2.dev-flutterwave.com/v3/hosted/pay/1ddaf0b7cfa85cfc114c', 'fulfillment_status': 'unfulfilled', 'booking_status': 'pending', 'enquiry_status': 'NEW', 'from_api_gateway': False, 'id': 453, 'user_details': {'email': 'geo.qa.bot@gmail.com', 'phone': '1234567890', 'full_name': 'GEO Bot'}, 'package_id': 15, 'book_at_deal_price': False, 'paid_full_price': True, 'paid_lockdown_price': False, 'amount_paid': 1000, 'amount_remaining': 0, 'invoice_id': 1329, 'departure_date': '2026-05-01', 'adults': 1, 'children': 0, 'infants': 0, 'user_id': 151, 'organization': None, 'updatedAt': '2026-01-23T07:25:16.627Z', 'createdAt': '2026-01-23T07:25:16.627Z', 'booking_code': 'GP-MKQK35CKJN78I6V9', 'fulfilled_by': None, 'enquiry_note': None, 'comment': None}}
+2026-01-23 07:25:17 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - ✅ Flutterwave booking detected (direct ID in data)
+2026-01-23 07:25:17 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - ✅ Flutterwave payment - paymentLink present (as expected)
+2026-01-23 07:25:17 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - ✅ Extracted booking ID: 453
+2026-01-23 07:25:17 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Payment link: https://checkout-v2.dev-flutterwave.com/v3/hosted/pay/1ddaf0b7cfa85cfc114c
+2026-01-23 07:25:17 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - SUCCESS: ✅ Payment link verification: Payment link is valid and points to Flutterwave
+2026-01-23 07:25:17 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - === Verifying booking appears in user's booked packages ===
+2026-01-23 07:25:20 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Request: GET https://api.dev.gowithgeo.com/api/package/user/booked-packages
+2026-01-23 07:25:21 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Response: 200
+2026-01-23 07:25:21 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Updated user bookings count: 28
+2026-01-23 07:25:21 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - SUCCESS: ✅ Booking count increased from 0 to 28
+2026-01-23 07:25:21 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - SUCCESS: ✅ New booking ID 453 found in user's booked packages
+2026-01-23 07:25:21 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Request: GET https://api.dev.gowithgeo.com/api/package/user/booked-packages-analytics
+2026-01-23 07:25:21 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Response: 200
+2026-01-23 07:25:21 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - ✅ User bookings analytics accessible
+2026-01-23 07:25:21 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - SUCCESS: ✅ Test completed successfully with Flutterwave payment!
+2026-01-23 07:25:21 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 DEBUG: Test phase - call for src/tests/api_tests/test_package_api.py::TestPackageAPI::test_book_package_and_verify_user_bookings - Skipped: False
