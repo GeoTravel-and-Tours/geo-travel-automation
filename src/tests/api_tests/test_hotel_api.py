@@ -126,14 +126,12 @@ class TestHotelAPI:
         )
 
         response_data = response.json()
-        print(response_data)
 
         # Validate top-level response structure
         assert response_data.get("status") == "success"
         assert "data" in response_data
 
         data = response_data.get("data")
-        print(data)
 
         # Case 1: No hotels found (valid scenario)
         if isinstance(data, list):
