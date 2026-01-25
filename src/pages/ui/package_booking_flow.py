@@ -29,8 +29,9 @@ class PackageBookingFlow(BasePage):
 
     # Package Selection
     VIEW_PACKAGE_BUTTON = (By.XPATH, "(//button[normalize-space()='View package'])[1]")
-    PRICE_OPTION = (By.CSS_SELECTOR, "body > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2)")
-    BOOK_RESERVATION_BUTTON = (By.CSS_SELECTOR, "body > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > button:nth-child(2)")
+    # PRICE_OPTION = (By.CSS_SELECTOR, "body > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2)")
+    PRICE_OPTION = (By.XPATH, "//body/div[contains(@data-sentry-component,\"layout\")]/div[contains(@class,\"m-0.5\")]/div[1]")
+    BOOK_RESERVATION_BUTTON = (By.CSS_SELECTOR, "body > div:nth-child(15) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2)")
     
     # Add these to your locators section:
     PACKAGES_NAV_LINK = (By.XPATH, "//a[normalize-space()='Packages']")
@@ -44,7 +45,7 @@ class PackageBookingFlow(BasePage):
     PROCEED_TO_PAYMENT_BUTTON = (By.CSS_SELECTOR, "body > div:nth-child(29) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > footer:nth-child(4) > div:nth-child(1) > button:nth-child(1)")
     
     # Modal Locators
-    MODAL_BACKGROUND = (By.CSS_SELECTOR, "div.fixed.inset-0.bg-black\\/60")
+    MODAL_BACKGROUND = (By.CSS_SELECTOR, ".overflow-y-auto.flex-grow")
     MODAL_FULL_NAME_INPUT = (By.XPATH, "//input[contains(@placeholder,'Enter your full name')]")
     MODAL_EMAIL_INPUT = (By.XPATH, "//input[@placeholder='Enter your email address']")
     MODAL_TRAVEL_DATE_INPUT = (By.CSS_SELECTOR, "input[placeholder='Select a date ']")
@@ -445,7 +446,7 @@ class PackageBookingFlow(BasePage):
                     block: 'center',
                     inline: 'center'
                 });
-                window.scrollBy(0, -100);  // Adjust for any fixed headers
+                window.scrollBy(0, -10);  // Adjust for any fixed headers
             """, book_reservation_button)
 
             time.sleep(2)  # Wait for scroll to complete

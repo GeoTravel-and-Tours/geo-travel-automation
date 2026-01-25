@@ -95,8 +95,6 @@ class TestVisaEnquiryAPI:
         self.logger.success(f"✅ Visa enquiry created successfully without auth!")
         self.logger.info(f"📋 Visa ID: {visa_id}, User ID: {user_id} (correctly null)")
         self.logger.info(f"📋 Type: {payload['type']}, Country: {payload['visaCountry']}")
-        
-        return visa_id
     
     @pytest.mark.api
     def test_create_visa_enquiry_with_auth(self, authenticated_visa_api):
@@ -113,7 +111,7 @@ class TestVisaEnquiryAPI:
         response = authenticated_visa_api.create_visa_enquiry(payload)
         
         # Should succeed with auth
-        assert response.status_code == 200 or 201, f"Expected 200 or 201, got {response.status_code}"
+        assert response.status_code in (200, 201), f"Expected 200 or 201, got {response.status_code}"
         
         response_data = response.json()
         assert response_data.get("status") == "success", "Response status should be 'success'"
@@ -138,8 +136,6 @@ class TestVisaEnquiryAPI:
         visa_id = visa_data["id"]
         self.logger.success(f"✅ Visa enquiry created successfully with auth!")
         self.logger.info(f"📋 Visa ID: {visa_id}, User ID: {user_id}")
-        
-        return visa_id
     
     @pytest.mark.api
     @pytest.mark.parametrize("missing_field", [
@@ -215,8 +211,8 @@ class TestVisaEnquiryAPI:
             if response.status_code == 400:
                 self.logger.success(f"✅ {case['name']}: Correctly rejected")
             elif response.status_code == 201:
-                pytest.fail(f"⚠️ {case['name']}: Accepted (API may not validate dates strictly)")
                 self.logger.info(f"⚠️ {case['name']}: Accepted (API may not validate dates strictly)")
+                pytest.fail(f"⚠️ {case['name']}: Accepted (API may not validate dates strictly)")
             else:
                 self.logger.warning(f"⚠️ {case['name']}: Unexpected status {response.status_code}")
     
@@ -233,19 +229,20 @@ class TestVisaEnquiryAPI:
         payload["visaCountry"] = "Kenya"
         
         create_response = visa_api.create_visa_enquiry(payload)
-        assert create_response.status_code == 200 or 201, "Should create visa enquiry"
+        assert create_response.status_code in (200, 201), "Should create visa enquiry"
         
         create_data = create_response.json()
         visa_id = create_data.get("data", {}).get("id")
         
         # Now make payment
-        payment_payload = {"visaId": visa_id, "paymentMethod": "Flutterwave"}
+        payment_payload = {"visaId": visa_id, "paymentMethod": "flutterwave"}
         response = visa_api.make_payment(payment_payload)
         
         # Should succeed without auth
         assert response.status_code == 200, f"Expected 200, got {response.status_code}"
         
         response_data = response.json()
+        assert response_data.get("message") == "Visa Enquiry Payment initiated successfully"
         assert "payment_link" in response_data.get("data", {}), "Flutterwave payment should return payment_link"
         
         payment_link = response_data["data"]["payment_link"]
@@ -270,19 +267,20 @@ class TestVisaEnquiryAPI:
         payload["visaCountry"] = "Kenya"
         
         create_response = visa_api.create_visa_enquiry(payload)
-        assert create_response.status_code == 200 or 201, "Should create visa enquiry"
+        assert create_response.status_code in (200, 201), "Should create visa enquiry"
         
         create_data = create_response.json()
         visa_id = create_data.get("data", {}).get("id")
         
         # Now make payment
-        payment_payload = {"visaId": visa_id, "paymentMethod": "Bank Transfer"}
+        payment_payload = {"visaId": visa_id, "paymentMethod": "manual payment"}
         response = visa_api.make_payment(payment_payload)
         
         # Should succeed without auth
         assert response.status_code == 200, f"Expected 200, got {response.status_code}"
         
         response_data = response.json()
+        assert response_data.get("message") == "Visa Enquiry Payment initiated successfully"
         assert "amount_to_pay" in response_data.get("data", {}), "Bank transfer should return amount_to_pay"
         assert "reference" in response_data.get("data", {}), "Bank transfer should return reference"
         
@@ -302,24 +300,58 @@ class TestVisaEnquiryAPI:
         payload["visaCountry"] = "Qatar"
         
         create_response = authenticated_visa_api.create_visa_enquiry(payload)
-        assert create_response.status_code == 200 or 201, "Should create visa enquiry"
+        assert create_response.status_code in (200, 201), "Should create visa enquiry"
         
         create_data = create_response.json()
         visa_id = create_data.get("data", {}).get("id")
         
         # Now make payment
-        payment_payload = {"visaId": visa_id, "paymentMethod": "Flutterwave"}
+        payment_payload = {"visaId": visa_id, "paymentMethod": "flutterwave"}
         response = authenticated_visa_api.make_payment(payment_payload)
         
         # Should succeed with auth
         assert response.status_code == 200, f"Expected 200, got {response.status_code}"
         
         response_data = response.json()
+        assert response_data.get("message") == "Visa Enquiry Payment initiated successfully"
         assert "payment_link" in response_data.get("data", {}), "Flutterwave payment should return payment_link"
         
         payment_link = response_data["data"]["payment_link"]
         self.logger.success(f"✅ Flutterwave payment initiated successfully with auth!")
         self.logger.info(f"📋 Payment link: {payment_link}")
+        
+    @pytest.mark.api
+    def test_make_payment_bank_transfer_with_auth(self, authenticated_visa_api):
+        """Test making payment with Bank Transfer WITH authentication"""
+        self.logger.info("=== Testing Make Payment (Bank Transfer) - With Auth ===")
+        
+        # Create visa enquiry directly in this test
+        payload = self.test_data["visa_enquiry_payload"].copy()
+        payload["type"] = "Tourist"
+        payload["visaCountry"] = "Qatar"
+        
+        create_response = authenticated_visa_api.create_visa_enquiry(payload)
+        assert create_response.status_code in (200, 201), "Should create visa enquiry"
+        
+        create_data = create_response.json()
+        visa_id = create_data.get("data", {}).get("id")
+        
+        # Now make payment
+        payment_payload = {"visaId": visa_id, "paymentMethod": "manual payment"}
+        response = authenticated_visa_api.make_payment(payment_payload)
+        
+        # Should succeed with auth
+        assert response.status_code == 200, f"Expected 200, got {response.status_code}"
+        
+        response_data = response.json()
+        assert response_data.get("message") == "Visa Enquiry Payment initiated successfully"
+        assert "amount_to_pay" in response_data.get("data", {}), "Bank transfer should return amount_to_pay"
+        assert "reference" in response_data.get("data", {}), "Bank transfer should return reference"
+        
+        payment_data = response_data["data"]
+        self.logger.success(f"✅ Bank Transfer payment initiated successfully!")
+        self.logger.info(f"📋 Amount to pay: {payment_data['amount_to_pay']}")
+        self.logger.info(f"📋 Reference: {payment_data['reference']}")
     
     @pytest.mark.api
     def test_make_payment_invalid_visa_id(self, visa_api):
@@ -328,7 +360,7 @@ class TestVisaEnquiryAPI:
         
         payment_payload = {
             "visaId": 999999,  # Non-existent visa ID
-            "paymentMethod": "Flutterwave"
+            "paymentMethod": "flutterwave"
         }
         
         response = visa_api.make_payment(payment_payload)
@@ -356,14 +388,10 @@ class TestVisaEnquiryAPI:
             payload["visaCountry"] = "Kenya"
             
             create_response = visa_api.create_visa_enquiry(payload)
-            assert create_response.status_code == 200 or 201, "Should create visa enquiry"
+            assert create_response.status_code in (200, 201), "Should create visa enquiry"
             
             create_data = create_response.json()
             visa_id = create_data.get("data", {}).get("id")
-            
-            # Now make payment
-            payment_payload = {"visaId": visa_id, "paymentMethod": "Flutterwave"}
-            response = visa_api.make_payment(payment_payload)
             
             payment_payload = {
                 "visaId": visa_id,
@@ -459,16 +487,15 @@ class TestVisaEnquiryAPI:
             
             response = authenticated_visa_api.get_user_visa_applications(**case)
             
-            assert response.status_code == 200, f"Filter {case['name']} failed: {response.status_code}"
+            assert response.status_code == 200, f"Filter {case} failed: {response.status_code}"
             
             response_data = response.json()
-            print(response_data)
             if response_data.get("status") == "success":
                 data = response_data.get("data", {})
                 visa_enquiries = data.get("visaEnquiries", [])
-                self.logger.info(f"  ✅ Filter applied: {case['name']}, Found: {len(visa_enquiries)} applications")
+                self.logger.info(f"  ✅ Filter applied: {case}, Found: {len(visa_enquiries)} applications")
             else:
-                self.logger.info(f"  ⚠️ Filter {case['name']} returned: {response_data.get('message')}")
+                self.logger.info(f"  ⚠️ Filter {case} returned: {response_data.get('message')}")
     
     @pytest.mark.api
     def test_get_user_visa_applications_pagination(self, authenticated_visa_api):
@@ -574,107 +601,125 @@ class TestVisaEnquiryAPI:
     
     @pytest.mark.api
     def test_complete_visa_flow_with_auth(self, authenticated_visa_api):
-        """Complete end-to-end visa flow with authentication"""
+        """Complete end-to-end visa flow with authentication (Flutterwave + Manual Payment)"""
         self.logger.info("=== Testing Complete Visa Flow - With Auth ===")
-        
-        # Step 1: Create visa enquiry
-        self.logger.info("Step 1: Creating visa enquiry...")
-        payload = self.test_data["visa_enquiry_payload"].copy()
-        payload["type"] = "Student"
-        payload["visaCountry"] = "Canada"
-        payload["message"] = "I want to study abroad"
-        
-        create_response = authenticated_visa_api.create_visa_enquiry(payload)
-        assert create_response.status_code == 200 or 201, "Visa creation should succeed"
-        
-        create_data = create_response.json()
-        visa_data = create_data.get("data", {})
-        visa_id = visa_data.get("id")
-        user_id = visa_data.get("user_id")
-        
-        assert visa_id is not None, "Visa ID should be returned"
-        assert user_id is not None, "User ID should be attached when authenticated"
-        
-        self.logger.success(f"✅ Visa enquiry created: ID={visa_id}, User ID={user_id}")
-        
-        # Step 2: Get user's visa applications (should include the new one)
-        self.logger.info("Step 2: Getting user's visa applications...")
-        list_response = authenticated_visa_api.get_user_visa_applications(limit=20)
-        assert list_response.status_code == 200, "Should get user applications"
-        
-        list_data = list_response.json()
-        visa_enquiries = list_data.get("data", {}).get("visaEnquiries", [])
-        
-        # Check if our new visa is in the list
-        visa_ids = [str(v.get("id")) for v in visa_enquiries]
-        assert str(visa_id) in visa_ids, f"New visa {visa_id} should appear in user's applications"
-        
-        self.logger.success(f"✅ Visa {visa_id} found in user's applications list")
-        
-        # Step 3: Initiate payment (Flutterwave)
-        self.logger.info("Step 3: Initiating Flutterwave payment...")
-        payment_payload = {"visaId": visa_id, "paymentMethod": "Flutterwave"}
-        payment_response = authenticated_visa_api.make_payment(payment_payload)
-        
-        assert payment_response.status_code == 200, "Payment initiation should succeed"
-        
-        payment_data = payment_response.json()
-        payment_link = payment_data.get("data", {}).get("payment_link")
-        
-        if payment_link:
-            self.logger.success(f"✅ Payment link generated: {payment_link[:50]}...")
-            
-            # Verify payment link
-            is_valid, message = authenticated_visa_api.verify_payment_link(payment_link)
-            if is_valid:
-                self.logger.success(f"✅ Payment link verification: {message}")
-            else:
-                self.logger.warning(f"⚠️ Payment link issue: {message}")
-        
-        self.logger.success("✅ Complete visa flow test passed!")
+
+        for payment_method in ["flutterwave", "manual payment"]:
+            self.logger.info(f"=== Flow for {payment_method.upper()} ===")
+
+            # Step 1: Create visa enquiry (FRESH per payment method)
+            self.logger.info("Step 1: Creating visa enquiry...")
+            payload = self.test_data["visa_enquiry_payload"].copy()
+            payload.update({
+                "type": "Student",
+                "visaCountry": "Canada",
+                "message": "I want to study abroad"
+            })
+
+            create_response = authenticated_visa_api.create_visa_enquiry(payload)
+            assert create_response.status_code in (200, 201)
+
+            visa_data = create_response.json().get("data", {})
+            visa_id = visa_data.get("id")
+            user_id = visa_data.get("user_id")
+
+            assert visa_id
+            assert user_id
+
+            self.logger.success(f"✅ Visa enquiry created: ID={visa_id}")
+
+            # Step 2: Verify visa appears in user's applications
+            self.logger.info("Step 2: Verifying visa appears in user's applications...")
+            list_response = authenticated_visa_api.get_user_visa_applications(limit=20)
+            assert list_response.status_code == 200
+
+            visa_ids = [
+                str(v.get("id"))
+                for v in list_response.json().get("data", {}).get("visaEnquiries", [])
+            ]
+            assert str(visa_id) in visa_ids
+
+            self.logger.success("✅ Visa found in user's applications")
+
+            # Step 3: Make payment
+            self.logger.info(f"Step 3: Initiating payment via {payment_method.upper()}")
+
+            payment_payload = {
+                "visaId": visa_id,
+                "paymentMethod": payment_method
+            }
+
+            payment_response = authenticated_visa_api.make_payment(payment_payload)
+            assert payment_response.status_code == 200
+
+            payment_data = payment_response.json()
+            data = payment_data.get("data", {})
+            payment_link = data.get("payment_link")
+
+            if payment_method == "flutterwave":
+                assert payment_link, "Flutterwave must return payment_link"
+
+                is_valid, message = authenticated_visa_api.verify_payment_link(payment_link)
+                assert is_valid, f"Invalid Flutterwave payment link: {message}"
+
+                self.logger.success("✅ Flutterwave payment link generated and verified")
+
+            else:  # manual payment
+                assert not payment_link, "Manual payment must not return payment_link"
+                self.logger.success("✅ Manual payment correctly returned no payment link")
+
+        self.logger.success("🎉 Complete visa flow test passed for BOTH payment methods")
+
     
     @pytest.mark.api
     def test_complete_visa_flow_without_auth(self, visa_api):
-        """Complete end-to-end visa flow without authentication"""
-        self.logger.info("=== Testing Complete Visa Flow - Without Auth ===")
-        
-        # Step 1: Create visa enquiry without auth
-        self.logger.info("Step 1: Creating visa enquiry without auth...")
-        payload = self.test_data["visa_enquiry_payload"].copy()
-        payload["type"] = "Tourist"
-        payload["visaCountry"] = "Qatar"
-        
-        create_response = visa_api.create_visa_enquiry(payload)
-        assert create_response.status_code == 200 or 201, "Visa creation should succeed without auth"
-        
-        create_data = create_response.json()
-        visa_data = create_data.get("data", {})
-        visa_id = visa_data.get("id")
-        user_id = visa_data.get("user_id")
-        
-        assert visa_id is not None, "Visa ID should be returned"
-        assert user_id is None, "User ID should be null when not authenticated"
-        
-        self.logger.success(f"✅ Visa enquiry created without auth: ID={visa_id}")
-        
-        # Step 2: Try to get user's visa applications (should fail with 401)
-        self.logger.info("Step 2: Trying to get visa applications without auth...")
-        list_response = visa_api.get_user_visa_applications()
-        assert list_response.status_code == 401, "Should reject unauthenticated access"
-        
-        self.logger.success("✅ Correctly rejected unauthenticated access to user applications")
-        
-        # Step 3: Initiate payment without auth
-        self.logger.info("Step 3: Initiating Bank Transfer payment without auth...")
-        payment_payload = {"visaId": visa_id, "paymentMethod": "Bank Transfer"}
-        payment_response = visa_api.make_payment(payment_payload)
-        
-        assert payment_response.status_code == 200, "Payment should work without auth"
-        
-        payment_data = payment_response.json()
-        reference = payment_data.get("data", {}).get("reference")
-        
-        if reference:
-            self.logger.success(f"✅ Bank transfer reference generated: {reference}")
-        
-        self.logger.success("✅ Complete visa flow without auth test passed!")
+        """Complete end-to-end visa flow WITHOUT authentication (Flutterwave + Manual Payment)"""
+        self.logger.info("=== Testing Complete Visa Flow - WITHOUT Auth ===")
+
+        for payment_method in ["flutterwave", "manual payment"]:
+            self.logger.info(f"--- Flow for {payment_method.upper()} ---")
+
+            # Step 1: Create visa enquiry without auth
+            payload = self.test_data["visa_enquiry_payload"].copy()
+            payload.update({
+                "type": "Tourist",
+                "visaCountry": "Qatar"
+            })
+
+            create_response = visa_api.create_visa_enquiry(payload)
+            assert create_response.status_code in (200, 201), "Visa creation should succeed without auth"
+
+            visa_data = create_response.json().get("data", {})
+            visa_id = visa_data.get("id")
+            user_id = visa_data.get("user_id")
+            assert visa_id is not None, "Visa ID should be returned"
+            assert user_id is None, "User ID must be null without authentication"
+            self.logger.success(f"✅ Visa enquiry created: ID={visa_id}, User ID={user_id}")
+
+            # Step 2: Fetch user applications (should fail)
+            list_response = visa_api.get_user_visa_applications()
+            assert list_response.status_code == 401, "Unauthenticated access should be rejected"
+            self.logger.success("✅ Unauthenticated access correctly rejected (401)")
+
+            # Step 3: Make payment
+            payment_payload = {"visaId": visa_id, "paymentMethod": payment_method}
+            payment_response = visa_api.make_payment(payment_payload)
+            assert payment_response.status_code == 200, "Payment initiation failed without auth"
+
+            payment_data = payment_response.json().get("data", {})
+
+            if payment_method == "flutterwave":
+                payment_link = payment_data.get("payment_link")
+                assert payment_link, "Flutterwave must return payment_link"
+                # Optionally verify payment link
+                is_valid, msg = visa_api.verify_payment_link(payment_link)
+                assert is_valid, f"Invalid Flutterwave payment link: {msg}"
+                self.logger.success("✅ Flutterwave payment link generated and verified without auth")
+            else:  # manual payment
+                amount = payment_data.get("amount_to_pay")
+                reference = payment_data.get("reference")
+                assert amount is not None, "Manual payment must return amount_to_pay"
+                assert reference is not None, "Manual payment must return reference"
+                self.logger.success(f"✅ Manual payment initialized without auth: Amount={amount}, Reference={reference}")
+
+        self.logger.success("✅ Complete visa flow without auth test passed for BOTH payment methods")

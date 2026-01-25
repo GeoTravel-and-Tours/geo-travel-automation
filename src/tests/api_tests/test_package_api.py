@@ -172,7 +172,7 @@ class TestPackageAPI:
         # Determine a valid departure date
         departure_date = selected_package.get('end_date') or selected_package.get('available_from') or "2025-12-31"
         # paymentMethod should choose randomly between Flutterwave and Bank Transfer
-        payment_method = random.choice(["Flutterwave", "Bank Transfer"])
+        payment_method = random.choice(["flutterwave", "manual payment"])
 
         # Booking data
         booking_data = {
@@ -214,12 +214,12 @@ class TestPackageAPI:
                     self.logger.info("✅ Flutterwave booking detected (direct ID in data)")
                 
                 # Verify payment method consistency
-                if payment_method == "Flutterwave":
+                if payment_method == "flutterwave":
                     assert 'paymentLink' in response_data['data'], \
                         f"Flutterwave should return paymentLink. Response keys: {list(response_data['data'].keys())}"
                     self.logger.info("✅ Flutterwave payment - paymentLink present (as expected)")
                     
-                elif payment_method == "Bank Transfer":
+                elif payment_method == "manual payment":
                     assert 'paymentLink' not in response_data['data'], \
                         f"Bank Transfer should NOT return paymentLink. Response keys: {list(response_data['data'].keys())}"
                     self.logger.info("✅ Bank Transfer - no payment link (as expected)")
@@ -244,7 +244,7 @@ class TestPackageAPI:
                     self.logger.success(f"✅ Payment link verification: {message}")
                 else:
                     self.logger.warning(f"⚠️ Payment link issue: {message}")
-            elif payment_method == "Bank Transfer":
+            elif payment_method == "manual payment":
                 self.logger.info("✅ Bank Transfer - skipping payment link verification")
             
             # VERIFICATION STEP: Check user's booked packages
@@ -383,7 +383,6 @@ class TestPackageAPI:
         
         if response.status_code == 200:
             data = response.json()
-            print(data)
             self.logger.info(f"Response structure: {list(data.keys()) if isinstance(data, dict) else 'list'}")
             
             # Log some info about the bookings
