@@ -1,0 +1,395 @@
+{
+    "test_suite_name": "Unified UI Smoke + API + Partners API TEST REPORT",
+    "total_tests": 170,
+    "passed_tests": 161,
+    "failed_tests": 8,
+    "skipped_tests": 1,
+    "success_rate": 94.7,
+    "duration": 689.928955,
+    "start_time": "2026-01-25 07:13:17",
+    "end_time": "2026-01-25 07:24:47",
+    "suites_run": [
+        "smoke",
+        "api",
+        "partners_api"
+    ],
+    "suite_details": {
+        "smoke": {
+            "report": {
+                "test_suite_name": "Unified UI Smoke + API + Partners API TEST REPORT",
+                "total_tests": 44,
+                "passed_tests": 43,
+                "failed_tests": 1,
+                "skipped_tests": 0,
+                "success_rate": 97.72727272727273,
+                "duration": 457.907312,
+                "start_time": "2026-01-25 07:13:45",
+                "end_time": "2026-01-25 07:21:23",
+                "failed_tests_details": [
+                    {
+                        "test_name": "src/tests/smoke_tests/test_package_booking_smoke.py::TestPackageBookingSmoke::test_complete_package_booking_flow",
+                        "status": "FAIL",
+                        "error_message": "UnboundLocalError: local variable 'price_option' referenced before assignment",
+                        "screenshot_path": "reports/screenshots/failures/PackageBookingSmoke_test_complete_package_booking__20260125_071857.png",
+                        "duration": 52.615490674972534,
+                        "timestamp": "07:18:57",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "response_file": "reports/failed_responses/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_complete_package_booking_flow_071857.json",
+                            "log_path": "reports/logs/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_complete_package_booking_flow_071857.log"
+                        },
+                        "log_path": "reports/logs/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_complete_package_booking_flow_071857.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_complete_package_booking_flow_071857.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_complete_package_booking_flow_071857.json",
+                        "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-25_07-13-17/screenshots/PackageBookingSmoke_test_complete_package_booking__20260125_071857.png",
+                        "suite": "smoke"
+                    }
+                ],
+                "skipped_tests_details": []
+            },
+            "timestamp": "2026-01-25 07:21:23"
+        },
+        "api": {
+            "report": {
+                "test_suite_name": "API SMOKE TEST",
+                "total_tests": 91,
+                "passed_tests": 83,
+                "failed_tests": 7,
+                "skipped_tests": 1,
+                "success_rate": 91.20879120879121,
+                "duration": 92.589195,
+                "start_time": "2026-01-25 07:21:23",
+                "end_time": "2026-01-25 07:22:56",
+                "failed_tests_details": [
+                    {
+                        "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_hotel_endpoints_with_auth",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Expected hotels data, got empty list\nassert []",
+                        "screenshot_path": null,
+                        "duration": 2.157122850418091,
+                        "timestamp": "07:22:23",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "response_file": "reports/failed_responses/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_hotel_endpoints_with_auth_072223.json",
+                            "log_path": "reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_hotel_endpoints_with_auth_072223.log"
+                        },
+                        "log_path": "reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_hotel_endpoints_with_auth_072223.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_hotel_endpoints_with_auth_072223.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_hotel_endpoints_with_auth_072223.json",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_package_api.py::TestPackageAPI::test_book_package_and_verify_user_bookings",
+                        "status": "FAIL",
+                        "error_message": "Failed: Booking failed with status 400",
+                        "screenshot_path": null,
+                        "duration": 0.7174241542816162,
+                        "timestamp": "07:22:38",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "response_file": "reports/failed_responses/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_book_package_and_verify_user_bookings_072238.json",
+                            "log_path": "reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_book_package_and_verify_user_bookings_072238.log"
+                        },
+                        "log_path": "reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_book_package_and_verify_user_bookings_072238.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_book_package_and_verify_user_bookings_072238.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_book_package_and_verify_user_bookings_072238.json",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_make_payment_flutterwave_without_auth",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Expected 200, got 400\nassert 400 == 200\n +  where 400 = <Response [400]>.status_code",
+                        "screenshot_path": null,
+                        "duration": 0.4948599338531494,
+                        "timestamp": "07:22:45",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "response_file": "reports/failed_responses/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_make_payment_flutterwave_without_auth_072245.json",
+                            "log_path": "reports/logs/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_make_payment_flutterwave_without_auth_072245.log"
+                        },
+                        "log_path": "reports/logs/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_make_payment_flutterwave_without_auth_072245.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_make_payment_flutterwave_without_auth_072245.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_make_payment_flutterwave_without_auth_072245.json",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_make_payment_bank_transfer_without_auth",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Expected 200, got 400\nassert 400 == 200\n +  where 400 = <Response [400]>.status_code",
+                        "screenshot_path": null,
+                        "duration": 0.4884169101715088,
+                        "timestamp": "07:22:46",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "response_file": "reports/failed_responses/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_make_payment_bank_transfer_without_auth_072246.json",
+                            "log_path": "reports/logs/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_make_payment_bank_transfer_without_auth_072246.log"
+                        },
+                        "log_path": "reports/logs/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_make_payment_bank_transfer_without_auth_072246.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_make_payment_bank_transfer_without_auth_072246.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_make_payment_bank_transfer_without_auth_072246.json",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_make_payment_flutterwave_with_auth",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Expected 200, got 400\nassert 400 == 200\n +  where 400 = <Response [400]>.status_code",
+                        "screenshot_path": null,
+                        "duration": 0.7986881732940674,
+                        "timestamp": "07:22:47",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "response_file": "reports/failed_responses/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_make_payment_flutterwave_with_auth_072247.json",
+                            "log_path": "reports/logs/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_make_payment_flutterwave_with_auth_072247.log"
+                        },
+                        "log_path": "reports/logs/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_make_payment_flutterwave_with_auth_072247.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_make_payment_flutterwave_with_auth_072247.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_make_payment_flutterwave_with_auth_072247.json",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_complete_visa_flow_with_auth",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Payment initiation should succeed\nassert 400 == 200\n +  where 400 = <Response [400]>.status_code",
+                        "screenshot_path": null,
+                        "duration": 1.1110737323760986,
+                        "timestamp": "07:22:55",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "response_file": "reports/failed_responses/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_complete_visa_flow_with_auth_072255.json",
+                            "log_path": "reports/logs/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_complete_visa_flow_with_auth_072255.log"
+                        },
+                        "log_path": "reports/logs/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_complete_visa_flow_with_auth_072255.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_complete_visa_flow_with_auth_072255.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_complete_visa_flow_with_auth_072255.json",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_complete_visa_flow_without_auth",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Payment should work without auth\nassert 400 == 200\n +  where 400 = <Response [400]>.status_code",
+                        "screenshot_path": null,
+                        "duration": 0.5863900184631348,
+                        "timestamp": "07:22:56",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "response_file": "reports/failed_responses/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_complete_visa_flow_without_auth_072256.json",
+                            "log_path": "reports/logs/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_complete_visa_flow_without_auth_072256.log"
+                        },
+                        "log_path": "reports/logs/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_complete_visa_flow_without_auth_072256.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_complete_visa_flow_without_auth_072256.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_complete_visa_flow_without_auth_072256.json",
+                        "suite": "api"
+                    }
+                ],
+                "skipped_tests_details": [
+                    {
+                        "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_get_hotel_rating_success",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 311, 'Skipped: Get Hotel Rating skipped \u2014 AMADEUS internal error (hotelId=RCNYCRIR, status=500)')",
+                        "screenshot_path": null,
+                        "duration": 2.251758098602295,
+                        "timestamp": "07:22:11",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 311, 'Skipped: Get Hotel Rating skipped \u2014 AMADEUS internal error (hotelId=RCNYCRIR, status=500)')",
+                        "category": null,
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_get_hotel_rating_success_072211.log"
+                        },
+                        "log_path": "reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_get_hotel_rating_success_072211.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_get_hotel_rating_success_072211.log",
+                        "suite": "api"
+                    }
+                ]
+            },
+            "timestamp": "2026-01-25 07:22:56"
+        },
+        "partners_api": {
+            "report": {
+                "test_suite_name": "PARTNERS API SMOKE TEST",
+                "total_tests": 35,
+                "passed_tests": 35,
+                "failed_tests": 0,
+                "skipped_tests": 0,
+                "success_rate": 100.0,
+                "duration": 102.264258,
+                "start_time": "2026-01-25 07:23:05",
+                "end_time": "2026-01-25 07:24:47",
+                "failed_tests_details": [],
+                "skipped_tests_details": []
+            },
+            "timestamp": "2026-01-25 07:24:47"
+        }
+    },
+    "all_failed_tests": [
+        {
+            "test_name": "src/tests/smoke_tests/test_package_booking_smoke.py::TestPackageBookingSmoke::test_complete_package_booking_flow",
+            "status": "FAIL",
+            "error_message": "UnboundLocalError: local variable 'price_option' referenced before assignment",
+            "screenshot_path": "reports/screenshots/failures/PackageBookingSmoke_test_complete_package_booking__20260125_071857.png",
+            "duration": 52.615490674972534,
+            "timestamp": "07:18:57",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "response_file": "reports/failed_responses/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_complete_package_booking_flow_071857.json",
+                "log_path": "reports/logs/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_complete_package_booking_flow_071857.log"
+            },
+            "log_path": "reports/logs/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_complete_package_booking_flow_071857.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_complete_package_booking_flow_071857.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_complete_package_booking_flow_071857.json",
+            "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-01-25_07-13-17/screenshots/PackageBookingSmoke_test_complete_package_booking__20260125_071857.png",
+            "suite": "smoke"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_hotel_endpoints_with_auth",
+            "status": "FAIL",
+            "error_message": "AssertionError: Expected hotels data, got empty list\nassert []",
+            "screenshot_path": null,
+            "duration": 2.157122850418091,
+            "timestamp": "07:22:23",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "response_file": "reports/failed_responses/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_hotel_endpoints_with_auth_072223.json",
+                "log_path": "reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_hotel_endpoints_with_auth_072223.log"
+            },
+            "log_path": "reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_hotel_endpoints_with_auth_072223.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_hotel_endpoints_with_auth_072223.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_hotel_endpoints_with_auth_072223.json",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_package_api.py::TestPackageAPI::test_book_package_and_verify_user_bookings",
+            "status": "FAIL",
+            "error_message": "Failed: Booking failed with status 400",
+            "screenshot_path": null,
+            "duration": 0.7174241542816162,
+            "timestamp": "07:22:38",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "response_file": "reports/failed_responses/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_book_package_and_verify_user_bookings_072238.json",
+                "log_path": "reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_book_package_and_verify_user_bookings_072238.log"
+            },
+            "log_path": "reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_book_package_and_verify_user_bookings_072238.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_book_package_and_verify_user_bookings_072238.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_book_package_and_verify_user_bookings_072238.json",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_make_payment_flutterwave_without_auth",
+            "status": "FAIL",
+            "error_message": "AssertionError: Expected 200, got 400\nassert 400 == 200\n +  where 400 = <Response [400]>.status_code",
+            "screenshot_path": null,
+            "duration": 0.4948599338531494,
+            "timestamp": "07:22:45",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "response_file": "reports/failed_responses/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_make_payment_flutterwave_without_auth_072245.json",
+                "log_path": "reports/logs/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_make_payment_flutterwave_without_auth_072245.log"
+            },
+            "log_path": "reports/logs/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_make_payment_flutterwave_without_auth_072245.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_make_payment_flutterwave_without_auth_072245.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_make_payment_flutterwave_without_auth_072245.json",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_make_payment_bank_transfer_without_auth",
+            "status": "FAIL",
+            "error_message": "AssertionError: Expected 200, got 400\nassert 400 == 200\n +  where 400 = <Response [400]>.status_code",
+            "screenshot_path": null,
+            "duration": 0.4884169101715088,
+            "timestamp": "07:22:46",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "response_file": "reports/failed_responses/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_make_payment_bank_transfer_without_auth_072246.json",
+                "log_path": "reports/logs/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_make_payment_bank_transfer_without_auth_072246.log"
+            },
+            "log_path": "reports/logs/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_make_payment_bank_transfer_without_auth_072246.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_make_payment_bank_transfer_without_auth_072246.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_make_payment_bank_transfer_without_auth_072246.json",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_make_payment_flutterwave_with_auth",
+            "status": "FAIL",
+            "error_message": "AssertionError: Expected 200, got 400\nassert 400 == 200\n +  where 400 = <Response [400]>.status_code",
+            "screenshot_path": null,
+            "duration": 0.7986881732940674,
+            "timestamp": "07:22:47",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "response_file": "reports/failed_responses/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_make_payment_flutterwave_with_auth_072247.json",
+                "log_path": "reports/logs/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_make_payment_flutterwave_with_auth_072247.log"
+            },
+            "log_path": "reports/logs/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_make_payment_flutterwave_with_auth_072247.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_make_payment_flutterwave_with_auth_072247.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_make_payment_flutterwave_with_auth_072247.json",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_complete_visa_flow_with_auth",
+            "status": "FAIL",
+            "error_message": "AssertionError: Payment initiation should succeed\nassert 400 == 200\n +  where 400 = <Response [400]>.status_code",
+            "screenshot_path": null,
+            "duration": 1.1110737323760986,
+            "timestamp": "07:22:55",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "response_file": "reports/failed_responses/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_complete_visa_flow_with_auth_072255.json",
+                "log_path": "reports/logs/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_complete_visa_flow_with_auth_072255.log"
+            },
+            "log_path": "reports/logs/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_complete_visa_flow_with_auth_072255.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_complete_visa_flow_with_auth_072255.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_complete_visa_flow_with_auth_072255.json",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_complete_visa_flow_without_auth",
+            "status": "FAIL",
+            "error_message": "AssertionError: Payment should work without auth\nassert 400 == 200\n +  where 400 = <Response [400]>.status_code",
+            "screenshot_path": null,
+            "duration": 0.5863900184631348,
+            "timestamp": "07:22:56",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "response_file": "reports/failed_responses/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_complete_visa_flow_without_auth_072256.json",
+                "log_path": "reports/logs/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_complete_visa_flow_without_auth_072256.log"
+            },
+            "log_path": "reports/logs/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_complete_visa_flow_without_auth_072256.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_complete_visa_flow_without_auth_072256.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_complete_visa_flow_without_auth_072256.json",
+            "suite": "api"
+        }
+    ],
+    "all_skipped_tests": [
+        {
+            "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_get_hotel_rating_success",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 311, 'Skipped: Get Hotel Rating skipped \u2014 AMADEUS internal error (hotelId=RCNYCRIR, status=500)')",
+            "screenshot_path": null,
+            "duration": 2.251758098602295,
+            "timestamp": "07:22:11",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 311, 'Skipped: Get Hotel Rating skipped \u2014 AMADEUS internal error (hotelId=RCNYCRIR, status=500)')",
+            "category": null,
+            "evidence": {
+                "log_path": "reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_get_hotel_rating_success_072211.log"
+            },
+            "log_path": "reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_get_hotel_rating_success_072211.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_get_hotel_rating_success_072211.log",
+            "suite": "api"
+        }
+    ]
+}
