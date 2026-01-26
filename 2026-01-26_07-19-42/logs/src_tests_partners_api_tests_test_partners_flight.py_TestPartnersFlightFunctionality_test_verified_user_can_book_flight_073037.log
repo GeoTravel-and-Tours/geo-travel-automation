@@ -1,0 +1,70 @@
+2026-01-26 07:30:18 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - VerifiedUserHelper initialized
+2026-01-26 07:30:18 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Obtaining access token from verified account
+2026-01-26 07:30:18 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Partners API Request: POST https://sandbox.api.developers.gowithgeo.com/api/auth/login
+2026-01-26 07:30:18 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Partners API Response: 200
+2026-01-26 07:30:18 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Token extracted via response_body (length: 232, valid)
+2026-01-26 07:30:18 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - ✅ Auth token set (length: 232)
+2026-01-26 07:30:18 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - SUCCESS: ✅ Login successful - token set via response_body
+2026-01-26 07:30:18 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Access token obtained successfully via response_body
+2026-01-26 07:30:18 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - ✅ Auth token set (length: 232)
+2026-01-26 07:30:18 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 DEBUG: Test phase - setup for src/tests/partners_api_tests/test_partners_flight.py::TestPartnersFlightFunctionality::test_verified_user_can_book_flight - Skipped: False
+2026-01-26 07:30:18 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Initializing API credentials...
+2026-01-26 07:30:18 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Obtaining access token from verified account
+2026-01-26 07:30:18 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Partners API Request: POST https://sandbox.api.developers.gowithgeo.com/api/auth/login
+2026-01-26 07:30:19 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Partners API Response: 200
+2026-01-26 07:30:19 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Token extracted via response_body (length: 232, valid)
+2026-01-26 07:30:19 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - ✅ Auth token set (length: 232)
+2026-01-26 07:30:19 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - SUCCESS: ✅ Login successful - token set via response_body
+2026-01-26 07:30:19 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Access token obtained successfully via response_body
+2026-01-26 07:30:19 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - ✅ Auth token set (length: 232)
+2026-01-26 07:30:19 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Partners API Request: GET https://sandbox.api.developers.gowithgeo.com/api/org/profile
+2026-01-26 07:30:19 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Partners API Response: 200
+2026-01-26 07:30:19 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Partners API Request: GET https://sandbox.api.developers.gowithgeo.com/api/org/reset-api-keys
+2026-01-26 07:30:20 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Partners API Response: 201
+2026-01-26 07:30:20 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - TEST API credentials updated
+2026-01-26 07:30:20 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API credentials initialized successfully
+2026-01-26 07:30:20 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Creating flight API with test credentials
+2026-01-26 07:30:20 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔵 VERIFIED USER - Searching for flight to book
+2026-01-26 07:30:20 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Flight API Headers: {'Content-Type': 'application/json', 'Accept': 'application/json', 'x-api-key': 'pk_test_c3a6189166e367f40bf2de0fc2d8a0b5', 'x-api-secret': 'sk_test_2aa299ecb9a88b9066aaef00d6bff280f01a5c2240bfdfc47f202e20ab604476_geo', 'x-app-id': 'dfea3391-1897-4b62-af68-8226c6e62e69'}
+2026-01-26 07:30:20 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 SENDING THESE HEADERS: {'Content-Type': 'application/json', 'Accept': 'application/json', 'x-api-key': 'pk_test_c3a6189166e367f40bf2de0fc2d8a0b5', 'x-api-secret': 'sk_test_2aa299ecb9a88b9066aaef00d6bff280f01a5c2240bfdfc47f202e20ab604476_geo', 'x-app-id': 'dfea3391-1897-4b62-af68-8226c6e62e69'}
+2026-01-26 07:30:20 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Partners API Request: POST https://sandbox.api.developers.gowithgeo.com/api/flight/search
+2026-01-26 07:30:21 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Partners API Response: 200
+2026-01-26 07:30:21 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔵 VERIFIED USER - Attempting flight booking: 1
+2026-01-26 07:30:21 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 DEBUG - Booking payload being sent:
+2026-01-26 07:30:21 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - {
+  "flightTag": "flights:one_way:1:0:0:ECONOMY:LHR:LOS:2026-01-27",
+  "flightId": "1",
+  "passengers": [
+    {
+      "email": "testflight7994@yopmail.com",
+      "title": "Mr",
+      "firstName": "GEO",
+      "middleName": "QA",
+      "lastName": "Bot",
+      "dob": "1990-01-01",
+      "gender": "male",
+      "phoneCode": "234",
+      "phoneNumber": "1234567994",
+      "number": "P751160368",
+      "issuingDate": "2024-01-01",
+      "expiryDate": "2028-01-01",
+      "issuingCountry": "NG",
+      "nationalityCountry": "NG",
+      "documentType": "passport",
+      "holder": true
+    }
+  ]
+}
+2026-01-26 07:30:21 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 DEBUG - Flight API base URL: https://sandbox.api.developers.gowithgeo.com
+2026-01-26 07:30:21 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 DEBUG - Flight API headers: {'Content-Type': 'application/json', 'Accept': 'application/json', 'X-Client-Type': 'corporate'}
+2026-01-26 07:30:21 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Flight API Headers: {'Content-Type': 'application/json', 'Accept': 'application/json', 'x-api-key': 'pk_test_c3a6189166e367f40bf2de0fc2d8a0b5', 'x-api-secret': 'sk_test_2aa299ecb9a88b9066aaef00d6bff280f01a5c2240bfdfc47f202e20ab604476_geo', 'x-app-id': 'dfea3391-1897-4b62-af68-8226c6e62e69'}
+2026-01-26 07:30:21 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 SENDING THESE HEADERS: {'Content-Type': 'application/json', 'Accept': 'application/json', 'x-api-key': 'pk_test_c3a6189166e367f40bf2de0fc2d8a0b5', 'x-api-secret': 'sk_test_2aa299ecb9a88b9066aaef00d6bff280f01a5c2240bfdfc47f202e20ab604476_geo', 'x-app-id': 'dfea3391-1897-4b62-af68-8226c6e62e69'}
+2026-01-26 07:30:21 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Partners API Request: POST https://sandbox.api.developers.gowithgeo.com/api/flight/book
+2026-01-26 07:30:37 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Partners API Response: 201
+2026-01-26 07:30:37 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Booking Response Status: 201
+2026-01-26 07:30:37 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Booking Response Body: {"message":"Flight booking successful","data":{"type":"flight-order","id":"eJzTd9e39A_xCnQBAAsmAmE","associatedRecords":[{"reference":"9OTJQD","creationDate":"2026-01-26T07:30:00.000","originSystemCode":"GDS","flightOfferId":"1"},{"reference":"9OTJQD","creationDate":"2026-01-26T07:30:00.000","originSystemCode":"AT","flightOfferId":"1"}],"flightOffers":[{"type":"flight-offer","id":"1","source":"GDS","nonHomogeneous":false,"lastTicketingDate":"2026-01-27","itineraries":[{"segments":[{"departure":{"iataCode":"LHR","terminal":"4","at":"2026-01-27T17:10:00"},"arrival":{"iataCode":"CMN","terminal":"2","at":"2026-01-27T21:30:00"},"carrierCode":"AT","number":"801","aircraft":{"code":"7M8"},"id":"118","numberOfStops":0,"co2Emissions":[{"weight":116,"weightUnit":"KG","cabin":"ECONOMY"}]},{"departure":{"iataCode":"CMN","terminal":"1","at":"2026-01-28T01:10:00"},"arrival":{"iataCode":"LOS","terminal":"2I","at":"2026-01-28T05:45:00"},"carrierCode":"AT","number":"555","aircraft":{"code":"73H"},"id":"119","numberOfStops":0,"co2Emissions":[{"weight":240,"weightUnit":"KG","cabin":"ECONOMY"}]}]}],"price":{"currency":"NGN","total":"703042.00","base":"116829.00","fees":[{"amount":"0.00","type":"TICKETING"},{"amount":"0.00","type":"SUPPLIER"},{"amount":"0.00","type":"FORM_OF_PAYMENT"}],"grandTotal":"703042.00","billingCurrency":"NGN"},"pricingOptions":{"fareType":["PUBLISHED"],"includedCheckedBagsOnly":true},"validatingAirlineCodes":["AT"],"travelerPricings":[{"travelerId":"1","fareOption":"STANDARD","travelerType":"ADULT","price":{"currency":"NGN","total":"703042.00","base":"116829.00","taxes":[{"amount":"172371.00","code":"GB"},{"amount":"28562.00","code":"MA"},{"amount":"18499.00","code":"NG"},{"amount":"97275.00","code":"UB"},{"amount":"16371.00","code":"W3"},{"amount":"231782.00","code":"YQ"},{"amount":"21353.00","code":"YR"}]},"fareDetailsBySegment":[{"segmentId":"118","fareBasis":"OL0WE1PA","brandedFare":"EESSENTIAL","class":"O","includedCheckedBags":{"quantity":1}},{"segmentId":"119","fareBasis":"OL0WE1PA","brandedFare":"EESSENTIAL","class":"O","includedCheckedBags":{"quantity":1}}]}]}],"travelers":[{"id":"1","dateOfBirth":"1990-01-01","gender":"MALE","name":{"firstName":"GEO","lastName":"Bot"},"documents":[{"number":"P751160368","issuanceDate":"2024-01-01","expiryDate":"2028-01-01","issuanceCountry":"NG","issuanceLocation":"Nigeria","nationality":"NG","birthPlace":"Nigeria","documentType":"PASSPORT","holder":true}],"contact":{"purpose":"STANDARD","phones":[{"deviceType":"MOBILE","countryCallingCode":"234","number":"1234567994"}],"emailAddress":"testflight7994@yopmail.com"}}],"remarks":{"general":[{"subType":"GENERAL_MISCELLANEOUS","text":"ONLINE BOOKING FROM GEOTRAVELS & TOURS"}]},"ticketingAgreement":{"option":"DELAY_TO_CANCEL","delay":"6D"},"contacts":[{"addresseeName":{"firstName":"GeoTravel Gowithgeo"},"address":{"lines":["Alfred Rewane Kingsway, 8"],"postalCode":"101233","countryCode":"NG","cityName":"Lagos"},"purpose":"STANDARD","phones":[{"deviceType":"LANDLINE","countryCallingCode":"00234","number":"9092470278"},{"deviceType":"MOBILE","countryCallingCode":"234","number":"09087675823"}],"companyName":"GEOTRAVELS & TOURS","emailAddress":"corporate@gowithgeo.com"}]}}
+2026-01-26 07:30:37 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - SUCCESS: ✅ Flight booking created successfully (201)
+2026-01-26 07:30:37 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - SUCCESS: ✅ Verified user can book flights
+2026-01-26 07:30:37 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 📋 Flight booking reference: 9OTJQD
+2026-01-26 07:30:37 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 📋 Flight booking ID: eJzTd9e39A_xCnQBAAsmAmE
+2026-01-26 07:30:37 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 DEBUG: Test phase - call for src/tests/partners_api_tests/test_partners_flight.py::TestPartnersFlightFunctionality::test_verified_user_can_book_flight - Skipped: False
