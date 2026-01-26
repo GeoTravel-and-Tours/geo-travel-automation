@@ -171,8 +171,8 @@ class TestPackageAPI:
         
         # Determine a valid departure date
         departure_date = selected_package.get('end_date') or selected_package.get('available_from') or "2025-12-31"
-        # paymentMethod should choose randomly between Flutterwave and Bank Transfer
-        payment_method = random.choice(["flutterwave", "manual payment"])
+        # paymentMethod should choose randomly between Flutterwave, Bank Transfer, and Paystack
+        payment_method = random.choice(["flutterwave", "manual payment", "paystack"])
 
         # Booking data
         booking_data = {
@@ -218,6 +218,11 @@ class TestPackageAPI:
                     assert 'paymentLink' in response_data['data'], \
                         f"Flutterwave should return paymentLink. Response keys: {list(response_data['data'].keys())}"
                     self.logger.info("✅ Flutterwave payment - paymentLink present (as expected)")
+                
+                elif payment_method == "paystack":
+                    assert 'paymentLink' in response_data['data'], \
+                        f"Paystack should return paymentLink. Response keys: {list(response_data['data'].keys())}"
+                    self.logger.info("✅ Paystack payment - paymentLink present (as expected)")
                     
                 elif payment_method == "manual payment":
                     assert 'paymentLink' not in response_data['data'], \
@@ -236,6 +241,15 @@ class TestPackageAPI:
             
             # Handle payment link verification (only for Flutterwave)
             if payment_method == "Flutterwave" and 'data' in response_data and 'paymentLink' in response_data['data']:
+                payment_link = response_data['data']['paymentLink']
+                self.logger.info(f"Payment link: {payment_link}")
+                
+                is_valid, message = authenticated_package_api.verify_payment_link(payment_link)
+                if is_valid:
+                    self.logger.success(f"✅ Payment link verification: {message}")
+                else:
+                    self.logger.warning(f"⚠️ Payment link issue: {message}")
+            elif payment_method == "paystack" and 'data' in response_data and 'paymentLink' in response_data['data']:
                 payment_link = response_data['data']['paymentLink']
                 self.logger.info(f"Payment link: {payment_link}")
                 
