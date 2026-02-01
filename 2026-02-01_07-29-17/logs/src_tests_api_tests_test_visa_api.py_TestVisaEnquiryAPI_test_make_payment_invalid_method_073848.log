@@ -1,0 +1,22 @@
+2026-02-01 07:38:46 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🚀 Starting TestVisaEnquiryAPI test
+2026-02-01 07:38:46 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 DEBUG: Test phase - setup for src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_make_payment_invalid_method - Skipped: False
+2026-02-01 07:38:46 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - === Testing Make Payment - Invalid Method ===
+2026-02-01 07:38:46 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Testing invalid payment method: 'PayPal'
+2026-02-01 07:38:46 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Request: POST https://api.dev.gowithgeo.com/api/visa/create
+2026-02-01 07:38:47 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Response: 200
+2026-02-01 07:38:47 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Request: POST https://api.dev.gowithgeo.com/api/visa/payment
+2026-02-01 07:38:47 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Response: 400
+2026-02-01 07:38:47 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - SUCCESS: ✅ Invalid payment method 'PayPal' correctly rejected
+2026-02-01 07:38:47 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Testing invalid payment method: 'CreditCard'
+2026-02-01 07:38:47 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Request: POST https://api.dev.gowithgeo.com/api/visa/create
+2026-02-01 07:38:47 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Response: 200
+2026-02-01 07:38:47 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Request: POST https://api.dev.gowithgeo.com/api/visa/payment
+2026-02-01 07:38:47 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Response: 400
+2026-02-01 07:38:47 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - SUCCESS: ✅ Invalid payment method 'CreditCard' correctly rejected
+2026-02-01 07:38:47 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Testing invalid payment method: ''
+2026-02-01 07:38:47 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Request: POST https://api.dev.gowithgeo.com/api/visa/create
+2026-02-01 07:38:47 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Response: 200
+2026-02-01 07:38:47 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Request: POST https://api.dev.gowithgeo.com/api/visa/payment
+2026-02-01 07:38:48 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Response: 400
+2026-02-01 07:38:48 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - SUCCESS: ✅ Invalid payment method '' correctly rejected
+2026-02-01 07:38:48 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 DEBUG: Test phase - call for src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_make_payment_invalid_method - Skipped: False
