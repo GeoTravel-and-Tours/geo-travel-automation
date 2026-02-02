@@ -1,0 +1,16 @@
+2026-02-02 07:50:22 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🚀 Starting TestVisaEnquiryAPI test
+2026-02-02 07:50:22 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 DEBUG: Test phase - setup for src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_create_visa_enquiry_invalid_dates - Skipped: False
+2026-02-02 07:50:22 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - === Testing Create Visa Enquiry - Invalid Dates ===
+2026-02-02 07:50:22 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Testing: Past travel date
+2026-02-02 07:50:22 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Request: POST https://api.dev.gowithgeo.com/api/visa/create
+2026-02-02 07:50:22 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Response: 200
+2026-02-02 07:50:22 - GeoTravelGlobalLogger - WARNING  - [logger.py:360] - ⚠️ Past travel date: Unexpected status 200
+2026-02-02 07:50:22 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Testing: Invalid date format
+2026-02-02 07:50:22 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Request: POST https://api.dev.gowithgeo.com/api/visa/create
+2026-02-02 07:50:22 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Response: 400
+2026-02-02 07:50:22 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - SUCCESS: ✅ Invalid date format: Correctly rejected
+2026-02-02 07:50:22 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Testing: Empty date
+2026-02-02 07:50:22 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Request: POST https://api.dev.gowithgeo.com/api/visa/create
+2026-02-02 07:50:22 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Response: 400
+2026-02-02 07:50:22 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - SUCCESS: ✅ Empty date: Correctly rejected
+2026-02-02 07:50:22 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 DEBUG: Test phase - call for src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_create_visa_enquiry_invalid_dates - Skipped: False
