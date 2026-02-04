@@ -1,6 +1,7 @@
 # src/tests/test_data.py
 
 from datetime import datetime, timedelta
+import random
 
 def generate_visa_test_data():
     """Generate dynamic test data for visa tests"""
@@ -42,7 +43,14 @@ def get_flight_test_data():
         "children": 0,
         "infants": 0
     }
-    
+
+
+ADJECTIVES = ["Grand", "Royal", "Golden", "Silver", "Urban", "Ocean", "Emerald", "Crystal"]
+NOUNS = ["Palace", "Suites", "Inn", "Resort", "Lodge", "Heights", "Stay", "Haven"]
+
+def generate_hotel_name():
+    return f"{random.choice(ADJECTIVES)} {random.choice(NOUNS)}"
+
 def generate_hotel_test_data():
     """Generate dynamic test data for hotel tests"""
     current_date = datetime.now().strftime("%Y-%m-%d")
@@ -86,7 +94,7 @@ def generate_hotel_test_data():
             "checkInDate": current_date,
             "checkOutDate": future_date,
             "roomQuantity": 1,
-            "hotelName": "Test Hotel",
+            "hotelName": generate_hotel_name(),
             "destination": {
                 "country": "Nigeria",
                 "city": "Aba"
