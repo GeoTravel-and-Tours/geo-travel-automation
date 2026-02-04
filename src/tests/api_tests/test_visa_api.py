@@ -257,6 +257,44 @@ class TestVisaEnquiryAPI:
             self.logger.warning(f"⚠️ Payment link issue: {message}")
     
     @pytest.mark.api
+    def test_make_payment_paystack_without_auth(self, visa_api):
+        """Test making payment with Paystack WITHOUT authentication"""
+        self.logger.info("=== Testing Make Payment (Paystack) - Without Auth ===")
+        
+        # Create visa enquiry directly
+        payload = self.test_data["visa_enquiry_payload"].copy()
+        payload["type"] = "Business"
+        payload["visaCountry"] = "Kenya"
+        
+        create_response = visa_api.create_visa_enquiry(payload)
+        assert create_response.status_code in (200, 201), "Should create visa enquiry"
+        
+        create_data = create_response.json()
+        visa_id = create_data.get("data", {}).get("id")
+        
+        # Now make payment
+        payment_payload = {"visaId": visa_id, "paymentMethod": "paystack"}
+        response = visa_api.make_payment(payment_payload)
+        
+        # Should succeed without auth
+        assert response.status_code == 200, f"Expected 200, got {response.status_code}"
+        
+        response_data = response.json()
+        assert response_data.get("message") == "Visa Enquiry Payment initiated successfully"
+        assert "payment_link" in response_data.get("data", {}), "Paystack payment should return payment_link"
+        
+        payment_link = response_data["data"]["payment_link"]
+        self.logger.success(f"✅ Paystack payment initiated successfully!")
+        self.logger.info(f"📋 Payment link: {payment_link}")
+        
+        # Verify payment link is accessible
+        is_valid, message = visa_api.verify_payment_link(payment_link)
+        if is_valid:
+            self.logger.success(f"✅ Payment link verification: {message}")
+        else:
+            self.logger.warning(f"⚠️ Payment link issue: {message}")
+    
+    @pytest.mark.api
     def test_make_payment_bank_transfer_without_auth(self, visa_api):
         """Test making payment with Bank Transfer WITHOUT authentication"""
         self.logger.info("=== Testing Make Payment (Bank Transfer) - Without Auth ===")
@@ -318,6 +356,37 @@ class TestVisaEnquiryAPI:
         
         payment_link = response_data["data"]["payment_link"]
         self.logger.success(f"✅ Flutterwave payment initiated successfully with auth!")
+        self.logger.info(f"📋 Payment link: {payment_link}")
+        
+    @pytest.mark.api
+    def test_make_payment_paystack_with_auth(self, authenticated_visa_api):
+        """Test making payment with Paystack WITH authentication"""
+        self.logger.info("=== Testing Make Payment (Paystack) - With Auth ===")
+        
+        # Create visa enquiry directly in this test
+        payload = self.test_data["visa_enquiry_payload"].copy()
+        payload["type"] = "Tourist"
+        payload["visaCountry"] = "Qatar"
+        
+        create_response = authenticated_visa_api.create_visa_enquiry(payload)
+        assert create_response.status_code in (200, 201), "Should create visa enquiry"
+        
+        create_data = create_response.json()
+        visa_id = create_data.get("data", {}).get("id")
+        
+        # Now make payment
+        payment_payload = {"visaId": visa_id, "paymentMethod": "paystack"}
+        response = authenticated_visa_api.make_payment(payment_payload)
+        
+        # Should succeed with auth
+        assert response.status_code == 200, f"Expected 200, got {response.status_code}"
+        
+        response_data = response.json()
+        assert response_data.get("message") == "Visa Enquiry Payment initiated successfully"
+        assert "payment_link" in response_data.get("data", {}), "Paystack payment should return payment_link"
+        
+        payment_link = response_data["data"]["payment_link"]
+        self.logger.success(f"✅ Paystack payment initiated successfully with auth!")
         self.logger.info(f"📋 Payment link: {payment_link}")
         
     @pytest.mark.api
@@ -663,6 +732,14 @@ class TestVisaEnquiryAPI:
                 assert is_valid, f"Invalid Flutterwave payment link: {message}"
 
                 self.logger.success("✅ Flutterwave payment link generated and verified")
+            
+            elif payment_method == "paystack":
+                assert payment_link, "Paystack must return payment_link"
+
+                is_valid, message = authenticated_visa_api.verify_payment_link(payment_link)
+                assert is_valid, f"Invalid Paystack payment link: {message}"
+
+                self.logger.success("✅ Paystack payment link generated and verified")
 
             else:  # manual payment
                 assert not payment_link, "Manual payment must not return payment_link"
@@ -715,6 +792,13 @@ class TestVisaEnquiryAPI:
                 is_valid, msg = visa_api.verify_payment_link(payment_link)
                 assert is_valid, f"Invalid Flutterwave payment link: {msg}"
                 self.logger.success("✅ Flutterwave payment link generated and verified without auth")
+            elif payment_method == "paystack":
+                payment_link = payment_data.get("payment_link")
+                assert payment_link, "Paystack must return payment_link"
+                # Optionally verify payment link
+                is_valid, msg = visa_api.verify_payment_link(payment_link)
+                assert is_valid, f"Invalid Paystack payment link: {msg}"
+                self.logger.success("✅ Paystack payment link generated and verified without auth")
             else:  # manual payment
                 amount = payment_data.get("amount_to_pay")
                 reference = payment_data.get("reference")

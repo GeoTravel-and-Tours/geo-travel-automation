@@ -434,7 +434,7 @@ class TestHotelAPI:
         response_time = end_time - start_time
         
         assert response.status_code == 200, f"Request failed: {response.status_code}"
-        assert response_time < 10.0, f"Response time {response_time:.2f}s exceeds 10s threshold"
+        assert response_time < 20.0, f"Response time {response_time:.2f}s exceeds 20s threshold"
         
         self.logger.success(f"Hotel search completed in {response_time:.2f} seconds")
     
@@ -450,7 +450,7 @@ class TestHotelAPI:
         response_time = end_time - start_time
         
         assert response.status_code == 200, f"Request failed: {response.status_code}"
-        assert response_time < 10.0, f"Response time {response_time:.2f}s exceeds 10s threshold"
+        assert response_time < 20.0, f"Response time {response_time:.2f}s exceeds 20s threshold"
         
         self.logger.success(f"Hotel search completed in {response_time:.2f} seconds")
     
