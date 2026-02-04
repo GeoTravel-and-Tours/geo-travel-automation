@@ -65,7 +65,7 @@ def generate_hotel_test_data():
                 "country": "US",
                 "city": "New York"
             },
-            "adults": 2,
+            "adults": random.randint(1, 4),
             "checkInDate": current_date,
             "checkOutDate": future_date,
             "roomQuantity": 1
@@ -78,7 +78,7 @@ def generate_hotel_test_data():
                 "country": "US",
                 "city": "New York"
             },
-            "adults": 2,
+            "adults": random.randint(1, 4),
             "checkInDate": current_date,
             "checkOutDate": future_date,
             "roomQuantity": 1,
@@ -89,8 +89,8 @@ def generate_hotel_test_data():
             "firstName": "Bot",
             "lastName": "GEO",
             "email": "geo.qa.bot@gmail.com",
-            "phone": "7079090909",
-            "adults": 2,
+            "phone": "07080702920",
+            "adults": random.randint(1, 4),
             "checkInDate": current_date,
             "checkOutDate": future_date,
             "roomQuantity": 1,
