@@ -1,0 +1,17 @@
+2026-02-08 07:38:49 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Retrieved credentials from environment for: geo.qa.bot@gmail.com
+2026-02-08 07:38:49 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Attempting login with email: geo.qa.bot@gmail.com
+2026-02-08 07:38:49 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Request: POST https://api.dev.gowithgeo.com/api/auth/login
+2026-02-08 07:38:49 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Response: 200
+2026-02-08 07:38:49 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Token extracted via response_body (length: 167, valid)
+2026-02-08 07:38:49 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - ✅ Auth token set from response body (Authorization header)
+2026-02-08 07:38:49 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - SUCCESS: ✅ Login successful - token set via response_body
+2026-02-08 07:38:49 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - SUCCESS: ✅ Authenticated successfully (token length: 167)
+2026-02-08 07:38:49 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - ✅ Auth token set from cookies (Cookie header)
+2026-02-08 07:38:49 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - ✅ Auth token set from response body (Authorization header)
+2026-02-08 07:38:49 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 DEBUG: Test phase - setup for src/tests/api_tests/test_flight_api.py::TestFlightAPI::test_get_booked_flights - Skipped: False
+2026-02-08 07:38:49 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - === Testing Get Booked Flights ===
+2026-02-08 07:38:49 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Request: GET https://api.dev.gowithgeo.com/api/flight/user/booked-flights?limit=10&page=1&category=Upcoming
+2026-02-08 07:38:50 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Response: 200
+2026-02-08 07:38:50 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Booked Flights Response: 200 - {"status":"success","message":"Flights retrieved successful","data":{"flights":[],"pagination":{"currentPage":1,"totalItems":0,"totalPages":0,"itemsPerPage":10}}}
+2026-02-08 07:38:50 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Booked flights retrieved successfully
+2026-02-08 07:38:50 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 DEBUG: Test phase - call for src/tests/api_tests/test_flight_api.py::TestFlightAPI::test_get_booked_flights - Skipped: False
