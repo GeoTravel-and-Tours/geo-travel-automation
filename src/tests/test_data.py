@@ -51,11 +51,11 @@ NOUNS = ["Palace", "Suites", "Inn", "Resort", "Lodge", "Heights", "Stay", "Haven
 def generate_hotel_name():
     return f"{random.choice(ADJECTIVES)} {random.choice(NOUNS)}"
 
-def generate_hotel_test_data():
+def generate_hotel_test_data(hotel_id=None):
     """Generate dynamic test data for hotel tests"""
     current_date = datetime.now().strftime("%Y-%m-%d")
     future_date = (datetime.now() + timedelta(days=3)).strftime("%Y-%m-%d")
-    
+
     return {
         "hotel_search_payload": {
             "hotelName": "Any",
@@ -95,6 +95,7 @@ def generate_hotel_test_data():
             "checkOutDate": future_date,
             "roomQuantity": 1,
             "hotelName": generate_hotel_name(),
+            "hotelId": hotel_id,  # Will be populated from search results
             "destination": {
                 "country": "Nigeria",
                 "city": "Aba"

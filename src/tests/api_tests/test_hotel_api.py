@@ -354,6 +354,27 @@ class TestHotelAPI:
         """Test hotel booking WITHOUT authentication - user_id MUST be null"""
         self.logger.info("Testing Hotel Booking - Without Authentication (MUST have null user_id)")
         
+        # Step 1: Search hotels to get valid hotelId
+        search_response = hotel_api.search_hotels(
+            **self.test_data["hotel_search_payload"]
+        )
+        
+        # Ensure search was successful
+        assert search_response.status_code == 200, f"Search failed with {search_response.status_code}"
+        search_data = search_response.json()
+        assert search_data.get("status") == "success", "Hotel search status must be 'success'"
+        
+        # Extract hotelId from search results
+        hotels = search_data.get("data", {}).get("hotelDetailResult", {}).get("data", [])
+        assert len(hotels) > 0, "No hotels found in search results"
+        
+        # Use the first available hotel's ID
+        hotel_id = hotels[0]["hotel"]["hotelId"]
+        
+        # Update booking payload with the actual hotelId
+        booking_payload = self.test_data["hotel_booking_payload"].copy()
+        booking_payload["hotelId"] = hotel_id
+        
         # Ensure no auth token
         hotel_api.auth_token = None
         if 'Authorization' in hotel_api.headers:
@@ -361,8 +382,7 @@ class TestHotelAPI:
         if 'Cookie' in hotel_api.headers:
             del hotel_api.headers['Cookie']
         
-        payload = self.test_data["hotel_booking_payload"]
-        response = hotel_api.book_hotel(**payload)
+        response = hotel_api.book_hotel(**booking_payload)
         
         # Booking must succeed
         assert response.status_code == 200, f"Expected 200, got {response.status_code}"
@@ -385,14 +405,34 @@ class TestHotelAPI:
         
         self.logger.success(f"✅ Booking successful without authentication!")
         self.logger.info(f"📋 Booking ID: {booking_info.get('id')}, User ID: {user_id} (correctly null)")
-    
+        
     @pytest.mark.api
     def test_book_hotel_with_auth(self, authenticated_hotel_api):
         """Test hotel booking WITH authentication - MUST have user_id attached"""
         self.logger.info("Testing Hotel Booking - With Authentication (MUST have user_id)")
         
-        payload = self.test_data["hotel_booking_payload"]
-        response = authenticated_hotel_api.book_hotel(**payload)
+        # Step 1: Search hotels to get valid hotelId
+        search_response = authenticated_hotel_api.search_hotels(
+            **self.test_data["hotel_search_payload"]
+        )
+        
+        # Ensure search was successful
+        assert search_response.status_code == 200, f"Search failed with {search_response.status_code}"
+        search_data = search_response.json()
+        assert search_data.get("status") == "success", "Hotel search status must be 'success'"
+        
+        # Extract hotelId from search results
+        hotels = search_data.get("data", {}).get("hotelDetailResult", {}).get("data", [])
+        assert len(hotels) > 0, "No hotels found in search results"
+        
+        # Use the first available hotel's ID
+        hotel_id = hotels[0]["hotel"]["hotelId"]
+        
+        # Update booking payload with the actual hotelId
+        booking_payload = self.test_data["hotel_booking_payload"].copy()
+        booking_payload["hotelId"] = hotel_id
+        
+        response = authenticated_hotel_api.book_hotel(**booking_payload)
         
         # Booking must succeed
         assert response.status_code == 200, f"Expected 200, got {response.status_code}"
