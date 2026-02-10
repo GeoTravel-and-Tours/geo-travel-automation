@@ -1,0 +1,20 @@
+2026-02-10 08:00:02 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🚀 Starting TestVisaEnquiryAPI test
+2026-02-10 08:00:02 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Retrieved credentials from environment for: geo.qa.bot@gmail.com
+2026-02-10 08:00:02 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Attempting login with email: geo.qa.bot@gmail.com
+2026-02-10 08:00:02 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Request: POST https://api.dev.gowithgeo.com/api/auth/login
+2026-02-10 08:00:03 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Response: 200
+2026-02-10 08:00:03 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Token extracted via response_body (length: 167, valid)
+2026-02-10 08:00:03 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - ✅ Auth token set from response body (Authorization header)
+2026-02-10 08:00:03 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - SUCCESS: ✅ Login successful - token set via response_body
+2026-02-10 08:00:03 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - SUCCESS: ✅ Authenticated successfully (token length: 167)
+2026-02-10 08:00:03 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - ✅ Auth token set from cookies (Cookie header)
+2026-02-10 08:00:03 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - ✅ Auth token set from response body (Authorization header)
+2026-02-10 08:00:03 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 DEBUG: Test phase - setup for src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_get_visa_application_by_id_with_auth - Skipped: False
+2026-02-10 08:00:03 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - === Testing Get Visa Application by ID - With Auth ===
+2026-02-10 08:00:03 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Request: GET https://api.dev.gowithgeo.com/api/visa/all/user
+2026-02-10 08:00:03 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Response: 200
+2026-02-10 08:00:03 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Request: GET https://api.dev.gowithgeo.com/api/visa
+2026-02-10 08:00:03 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Response: 200
+2026-02-10 08:00:03 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - SUCCESS: ✅ Successfully retrieved visa application 587
+2026-02-10 08:00:03 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Response: {'status': 'success', 'message': 'Visa retrieved successful', 'data': {'id': 587, 'visaCountry': 'QATAR', 'first_name': 'QA Bot', 'last_name': 'GEO', 'travel_date': '2026-02-11', 'email': 'geo.qa.bot@gmail.com', 'phoneNumber': '7080702920', 'nationality': 'Nigeria', 'passportAvailable': 'Yes', 'invoice_id': 1490, 'paymentStatus': 'UNPAID', 'user_id': 151, 'enquiryStatus': 'Submitted', 'message': 'I would like to travel for business purposes', 'amount': 25000, 'agree': True, 'application_id': 'VISA-000128', 'type': 'Tourist', 'appointment_date': None, 'passport_bio_page': None, 'bank_statement': None, 'travel_itinerary': None, 'flight_reservation': None, 'accommodation_proof': None, 'last_updated': '2026-02-10T07:59:54.781Z', 'createdAt': '2026-02-10T07:59:54.781Z', 'updatedAt': '2026-02-10T07:59:55.405Z'}}
+2026-02-10 08:00:03 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 DEBUG: Test phase - call for src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_get_visa_application_by_id_with_auth - Skipped: False
