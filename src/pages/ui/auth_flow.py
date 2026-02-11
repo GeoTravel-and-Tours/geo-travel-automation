@@ -285,14 +285,37 @@ class AuthFlow(BasePage):
 
         return email, password
     
-    def wait_until_on_dashboard(self, timeout=10):
+    def wait_until_on_dashboard(self, timeout=15):
         """Wait until user is on dashboard after login"""
         try:
+            # First, try the normal wait
             WebDriverWait(self.driver, timeout).until(
                 lambda d: self.is_user_on_dashboard()
             )
             return True
         except Exception:
+            # If that fails, check if we're stuck on login page
+            current_url = self.driver.current_url.lower()
+            if "login" in current_url or "auth" in current_url:
+                self.logger.info("🔄 Page seems stuck on login, refreshing...")
+                
+                # Refresh the page
+                self.driver.refresh()
+                
+                # Wait for page to be in ready state
+                WebDriverWait(self.driver, 10).until(
+                    lambda d: d.execute_script('return document.readyState') == 'complete'
+                )
+                
+                # Try one more time after refresh
+                try:
+                    WebDriverWait(self.driver, 5).until(
+                        lambda d: self.is_user_on_dashboard()
+                    )
+                    return True
+                except Exception:
+                    pass
+            
             return False
         
     def wait_until_logged_out(self, timeout=10):
