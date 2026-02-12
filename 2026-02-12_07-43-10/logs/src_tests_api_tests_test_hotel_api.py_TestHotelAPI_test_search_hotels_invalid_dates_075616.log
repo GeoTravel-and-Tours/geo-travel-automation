@@ -1,0 +1,26 @@
+2026-02-12 07:55:44 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🚀 Starting TestHotelAPI test
+2026-02-12 07:55:44 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 DEBUG: Test phase - setup for src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_search_hotels_invalid_dates - Skipped: False
+2026-02-12 07:55:44 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Testing Hotel Search - Invalid Dates
+2026-02-12 07:55:44 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Testing: Check-out before check-in
+2026-02-12 07:55:44 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Request: POST https://api.dev.gowithgeo.com/api/hotels/search
+2026-02-12 07:55:45 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Response: 400
+2026-02-12 07:55:45 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - SUCCESS: Check-out before check-in: Correctly rejected (Invalid dates should be rejected. Got 400)
+2026-02-12 07:55:45 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Testing: Same day check-in/out
+2026-02-12 07:55:45 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Request: POST https://api.dev.gowithgeo.com/api/hotels/search
+2026-02-12 07:55:45 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Response: 400
+2026-02-12 07:55:45 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - SUCCESS: Same day check-in/out: Correctly rejected (Invalid dates should be rejected. Got 400)
+2026-02-12 07:55:45 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Testing: Past check-in date
+2026-02-12 07:55:45 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Request: POST https://api.dev.gowithgeo.com/api/hotels/search
+2026-02-12 07:55:45 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Response: 400
+2026-02-12 07:55:45 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - SUCCESS: Past check-in date: Correctly rejected (Invalid dates should be rejected. Got 400)
+2026-02-12 07:55:45 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Testing: Invalid date format
+2026-02-12 07:55:45 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Request: POST https://api.dev.gowithgeo.com/api/hotels/search
+2026-02-12 07:55:45 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Response: 400
+2026-02-12 07:55:45 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - SUCCESS: Invalid date format: Correctly rejected (Invalid dates should be rejected. Got 400)
+2026-02-12 07:55:45 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Testing: Too far in future
+2026-02-12 07:55:45 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Request: POST https://api.dev.gowithgeo.com/api/hotels/search
+2026-02-12 07:56:15 - GeoTravelGlobalLogger - WARNING  - [logger.py:360] - Attempt 1 failed: HTTPSConnectionPool(host='api.dev.gowithgeo.com', port=443): Read timed out. (read timeout=30)
+2026-02-12 07:56:15 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Retrying...
+2026-02-12 07:56:16 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Response: 400
+2026-02-12 07:56:16 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - SUCCESS: Too far in future: Correctly rejected (Invalid dates should be rejected. Got 400)
+2026-02-12 07:56:16 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 DEBUG: Test phase - call for src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_search_hotels_invalid_dates - Skipped: False

@@ -1,0 +1,12 @@
+2026-02-12 07:56:22 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🚀 Starting TestHotelAPI test
+2026-02-12 07:56:22 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 DEBUG: Test phase - setup for src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_book_hotel_without_auth - Skipped: False
+2026-02-12 07:56:22 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Testing Hotel Booking - Without Authentication (MUST have null user_id)
+2026-02-12 07:56:22 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Request: POST https://api.dev.gowithgeo.com/api/hotels/search
+2026-02-12 07:56:52 - GeoTravelGlobalLogger - WARNING  - [logger.py:360] - Attempt 1 failed: HTTPSConnectionPool(host='api.dev.gowithgeo.com', port=443): Read timed out. (read timeout=30)
+2026-02-12 07:56:52 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Retrying...
+2026-02-12 07:56:55 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Response: 200
+2026-02-12 07:56:55 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Request: POST https://api.dev.gowithgeo.com/api/hotels/book
+2026-02-12 07:56:56 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Response: 200
+2026-02-12 07:56:56 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - SUCCESS: ✅ Booking successful without authentication!
+2026-02-12 07:56:56 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 📋 Booking ID: 118, User ID: None (correctly null)
+2026-02-12 07:56:56 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 DEBUG: Test phase - call for src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_book_hotel_without_auth - Skipped: False
