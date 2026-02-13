@@ -1,0 +1,179 @@
+{
+    "test_suite_name": "Unified UI Smoke + API + Partners API TEST REPORT",
+    "total_tests": 173,
+    "passed_tests": 170,
+    "failed_tests": 2,
+    "skipped_tests": 1,
+    "success_rate": 98.3,
+    "duration": 817.823669,
+    "start_time": "2026-02-13 07:41:18",
+    "end_time": "2026-02-13 07:54:55",
+    "suites_run": [
+        "smoke",
+        "api",
+        "partners_api"
+    ],
+    "suite_details": {
+        "smoke": {
+            "report": {
+                "test_suite_name": "Unified UI Smoke + API + Partners API TEST REPORT",
+                "total_tests": 44,
+                "passed_tests": 43,
+                "failed_tests": 1,
+                "skipped_tests": 0,
+                "success_rate": 97.72727272727273,
+                "duration": 439.210314,
+                "start_time": "2026-02-13 07:41:48",
+                "end_time": "2026-02-13 07:49:08",
+                "failed_tests_details": [
+                    {
+                        "test_name": "src/tests/smoke_tests/test_package_booking_smoke.py::TestPackageBookingSmoke::test_complete_package_booking_flow",
+                        "status": "FAIL",
+                        "error_message": "TimeoutException: Message: \nStacktrace:\n#0 0x55a1be669a4a <unknown>\n#1 0x55a1be0826a2 <unknown>\n#2 0x55a1be0d7a8d <unknown>\n#3 0x55a1be0d7cd1 <unknown>\n#4 0x55a1be1235c4 <unknown>\n#5 0x55a1be1207f0 <unknown>\n#6 0x55a1be0c98b2 <unknown>\n#7 0x55a1be0ca6a1 <unknown>\n#8 0x55a1be62f8a9 <unknown>\n#9 0x55a1be6327b1 <unknown>\n#10 0x55a1be61bea9 <unknown>\n#11 0x55a1be63336e <unknown>\n#12 0x55a1be602410 <unknown>\n#13 0x55a1be6570c8 <unknown>\n#14 0x55a1be65729b <unknown>\n#15 0x55a1be668db8 <unknown>\n#16 0x7fb72b69caa4 <unknown>\n#17 0x7fb72b729c6c <unknown>\n",
+                        "screenshot_path": "reports/screenshots/failures/PackageBookingSmoke_test_complete_package_booking__20260213_074642.png",
+                        "duration": 64.8699939250946,
+                        "timestamp": "07:46:42",
+                        "skip_reason": null,
+                        "category": "API Timeout",
+                        "evidence": {
+                            "response_file": "reports/failed_responses/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_complete_package_booking_flow_074642.json",
+                            "log_path": "reports/logs/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_complete_package_booking_flow_074642.log"
+                        },
+                        "log_path": "reports/logs/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_complete_package_booking_flow_074642.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_complete_package_booking_flow_074642.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_complete_package_booking_flow_074642.json",
+                        "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-02-13_07-41-17/screenshots/PackageBookingSmoke_test_complete_package_booking__20260213_074642.png",
+                        "suite": "smoke"
+                    }
+                ],
+                "skipped_tests_details": []
+            },
+            "timestamp": "2026-02-13 07:49:08"
+        },
+        "api": {
+            "report": {
+                "test_suite_name": "API SMOKE TEST",
+                "total_tests": 94,
+                "passed_tests": 92,
+                "failed_tests": 1,
+                "skipped_tests": 1,
+                "success_rate": 97.87234042553192,
+                "duration": 241.135092,
+                "start_time": "2026-02-13 07:49:08",
+                "end_time": "2026-02-13 07:53:09",
+                "failed_tests_details": [
+                    {
+                        "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_hotel_endpoints_with_auth",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Expected hotels data, got empty list\nassert []",
+                        "screenshot_path": null,
+                        "duration": 4.973875045776367,
+                        "timestamp": "07:51:46",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "response_file": "reports/failed_responses/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_hotel_endpoints_with_auth_075146.json",
+                            "log_path": "reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_hotel_endpoints_with_auth_075146.log"
+                        },
+                        "log_path": "reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_hotel_endpoints_with_auth_075146.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_hotel_endpoints_with_auth_075146.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_hotel_endpoints_with_auth_075146.json",
+                        "suite": "api"
+                    }
+                ],
+                "skipped_tests_details": [
+                    {
+                        "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_get_hotel_rating_success",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 324, 'Skipped: Get Hotel Rating skipped \u2014 AMADEUS internal error (hotelId=SINYC713, status=500)')",
+                        "screenshot_path": null,
+                        "duration": 2.308238983154297,
+                        "timestamp": "07:51:13",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 324, 'Skipped: Get Hotel Rating skipped \u2014 AMADEUS internal error (hotelId=SINYC713, status=500)')",
+                        "category": null,
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_get_hotel_rating_success_075113.log"
+                        },
+                        "log_path": "reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_get_hotel_rating_success_075113.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_get_hotel_rating_success_075113.log",
+                        "suite": "api"
+                    }
+                ]
+            },
+            "timestamp": "2026-02-13 07:53:09"
+        },
+        "partners_api": {
+            "report": {
+                "test_suite_name": "PARTNERS API SMOKE TEST",
+                "total_tests": 35,
+                "passed_tests": 35,
+                "failed_tests": 0,
+                "skipped_tests": 0,
+                "success_rate": 100.0,
+                "duration": 106.096625,
+                "start_time": "2026-02-13 07:53:09",
+                "end_time": "2026-02-13 07:54:55",
+                "failed_tests_details": [],
+                "skipped_tests_details": []
+            },
+            "timestamp": "2026-02-13 07:54:55"
+        }
+    },
+    "all_failed_tests": [
+        {
+            "test_name": "src/tests/smoke_tests/test_package_booking_smoke.py::TestPackageBookingSmoke::test_complete_package_booking_flow",
+            "status": "FAIL",
+            "error_message": "TimeoutException: Message: \nStacktrace:\n#0 0x55a1be669a4a <unknown>\n#1 0x55a1be0826a2 <unknown>\n#2 0x55a1be0d7a8d <unknown>\n#3 0x55a1be0d7cd1 <unknown>\n#4 0x55a1be1235c4 <unknown>\n#5 0x55a1be1207f0 <unknown>\n#6 0x55a1be0c98b2 <unknown>\n#7 0x55a1be0ca6a1 <unknown>\n#8 0x55a1be62f8a9 <unknown>\n#9 0x55a1be6327b1 <unknown>\n#10 0x55a1be61bea9 <unknown>\n#11 0x55a1be63336e <unknown>\n#12 0x55a1be602410 <unknown>\n#13 0x55a1be6570c8 <unknown>\n#14 0x55a1be65729b <unknown>\n#15 0x55a1be668db8 <unknown>\n#16 0x7fb72b69caa4 <unknown>\n#17 0x7fb72b729c6c <unknown>\n",
+            "screenshot_path": "reports/screenshots/failures/PackageBookingSmoke_test_complete_package_booking__20260213_074642.png",
+            "duration": 64.8699939250946,
+            "timestamp": "07:46:42",
+            "skip_reason": null,
+            "category": "API Timeout",
+            "evidence": {
+                "response_file": "reports/failed_responses/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_complete_package_booking_flow_074642.json",
+                "log_path": "reports/logs/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_complete_package_booking_flow_074642.log"
+            },
+            "log_path": "reports/logs/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_complete_package_booking_flow_074642.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_complete_package_booking_flow_074642.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_complete_package_booking_flow_074642.json",
+            "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-02-13_07-41-17/screenshots/PackageBookingSmoke_test_complete_package_booking__20260213_074642.png",
+            "suite": "smoke"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_hotel_endpoints_with_auth",
+            "status": "FAIL",
+            "error_message": "AssertionError: Expected hotels data, got empty list\nassert []",
+            "screenshot_path": null,
+            "duration": 4.973875045776367,
+            "timestamp": "07:51:46",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "response_file": "reports/failed_responses/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_hotel_endpoints_with_auth_075146.json",
+                "log_path": "reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_hotel_endpoints_with_auth_075146.log"
+            },
+            "log_path": "reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_hotel_endpoints_with_auth_075146.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_hotel_endpoints_with_auth_075146.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_hotel_endpoints_with_auth_075146.json",
+            "suite": "api"
+        }
+    ],
+    "all_skipped_tests": [
+        {
+            "test_name": "src/tests/api_tests/test_hotel_api.py::TestHotelAPI::test_get_hotel_rating_success",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 324, 'Skipped: Get Hotel Rating skipped \u2014 AMADEUS internal error (hotelId=SINYC713, status=500)')",
+            "screenshot_path": null,
+            "duration": 2.308238983154297,
+            "timestamp": "07:51:13",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_hotel_api.py', 324, 'Skipped: Get Hotel Rating skipped \u2014 AMADEUS internal error (hotelId=SINYC713, status=500)')",
+            "category": null,
+            "evidence": {
+                "log_path": "reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_get_hotel_rating_success_075113.log"
+            },
+            "log_path": "reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_get_hotel_rating_success_075113.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_hotel_api.py_TestHotelAPI_test_get_hotel_rating_success_075113.log",
+            "suite": "api"
+        }
+    ]
+}
