@@ -130,18 +130,18 @@ The framework is designed to scale with your project:
 ## 📊 Sample Reports
 
 ### HTML Report
-![Live Test Result Dashboard Screenshot](docs/screenshots/sample_html_report.png)
+![Live Test Result Dashboard Screenshot](src/img/sample_html_report.png)
 
 ### Slack Notifications
 
 #### Server/App Not Accessible
-![Server Not Accessible](docs/screenshots/slack_server_not_accessible.png)
+![Server Not Accessible](src/img/slack_server_not_accessible.png)
 
 #### Failure
-![Failure Notification](docs/screenshots/slack_failure_notification.png)
+![Failure Notification](src/img/slack_failure_notification.png)
 
 #### Total Pass
-![Total Pass Notification](docs/screenshots/slack_total_pass_notification.png)
+![Total Pass Notification](src/img/slack_total_pass_notification.png)
 
 ---
 
