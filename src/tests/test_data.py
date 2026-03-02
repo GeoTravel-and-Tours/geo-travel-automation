@@ -44,9 +44,19 @@ def get_flight_test_data():
         "infants": 0
     }
 
-
 ADJECTIVES = ["Grand", "Royal", "Golden", "Silver", "Urban", "Ocean", "Emerald", "Crystal"]
 NOUNS = ["Palace", "Suites", "Inn", "Resort", "Lodge", "Heights", "Stay", "Haven"]
+
+# Common currency test cases
+CURRENCIES = ["USD", "NGN", "EUR", "GBP", "JPY", "CAD", "AUD"]
+
+# Test cities with their codes
+TEST_CITIES = [
+    {"name": "Abuja", "code": "ABV", "country": "NG"},
+    {"name": "New York", "code": "NYC", "country": "US"},
+    {"name": "London", "code": "LON", "country": "GB"},
+    {"name": "Dubai", "code": "DXB", "country": "AE"},
+]
 
 def generate_hotel_name():
     return f"{random.choice(ADJECTIVES)} {random.choice(NOUNS)}"
@@ -55,28 +65,36 @@ def generate_hotel_test_data(hotel_id=None):
     """Generate dynamic test data for hotel tests"""
     current_date = datetime.now().strftime("%Y-%m-%d")
     future_date = (datetime.now() + timedelta(days=3)).strftime("%Y-%m-%d")
-
+    next_month = (datetime.now() + timedelta(days=30)).strftime("%Y-%m-%d")
+    next_month_plus_10 = (datetime.now() + timedelta(days=40)).strftime("%Y-%m-%d")
+    
+    # Pick a random test city
+    test_city = random.choice(TEST_CITIES)
+    
     return {
+        # Basic search payload
         "hotel_search_payload": {
             "hotelName": "Any",
-            "cityCode": "NYC",
+            "cityCode": test_city["code"],
             "countryOfResidence": "US",
             "destination": {
-                "country": "US",
-                "city": "New York"
+                "country": test_city["country"],
+                "city": test_city["name"]
             },
             "adults": random.randint(1, 4),
             "checkInDate": current_date,
             "checkOutDate": future_date,
             "roomQuantity": 1
         },
+        
+        # Search with price range
         "hotel_search_payload_with_price": {
             "hotelName": "Any",
-            "cityCode": "NYC",
+            "cityCode": test_city["code"],
             "countryOfResidence": "US",
             "destination": {
-                "country": "US",
-                "city": "New York"
+                "country": test_city["country"],
+                "city": test_city["name"]
             },
             "adults": random.randint(1, 4),
             "checkInDate": current_date,
@@ -85,6 +103,32 @@ def generate_hotel_test_data(hotel_id=None):
             "priceRange": "200-300",
             "currency": "USD"
         },
+        
+        # Hotel offers payload (for details endpoint)
+        "hotel_offers_payload": {
+            "hotelId": "SINYC713",  # Will be replaced with actual hotelId
+            "adults": 2,
+            "checkInDate": next_month,
+            "checkOutDate": next_month_plus_10,
+            "countryOfResidence": "US",
+            "roomQuantity": 1,
+            "childAges": [5, 10],
+            "currency": "NGN"  # Different from response currency to trigger conversion
+        },
+        
+        # Hotel offers with same currency (should NOT show conversion fields)
+        "hotel_offers_same_currency_payload": {
+            "hotelId": "SINYC713",  # Will be replaced
+            "adults": 2,
+            "checkInDate": next_month,
+            "checkOutDate": next_month_plus_10,
+            "countryOfResidence": "US",
+            "roomQuantity": 1,
+            "childAges": [5, 10],
+            "currency": "USD"  # Same as response currency
+        },
+        
+        # Booking payload
         "hotel_booking_payload": {
             "firstName": "Bot",
             "lastName": "GEO",
@@ -99,6 +143,29 @@ def generate_hotel_test_data(hotel_id=None):
             "destination": {
                 "country": "Nigeria",
                 "city": "Aba"
-            }
-        }
+            },
+            "dob": "1990-01-01",
+            "gender": "Male",
+            "alternativePhone": "07080702921",
+            "nationality": "Nigerian",
+            "otherGuests": []
+        },
+        
+        # Invalid test cases
+        "invalid_date_cases": [
+            {"name": "Check-out before check-in", 
+             "checkInDate": "2026-01-19", "checkOutDate": "2026-01-10"},
+            {"name": "Same day check-in/out", 
+             "checkInDate": "2026-01-10", "checkOutDate": "2026-01-10"},
+            {"name": "Past check-in date", 
+             "checkInDate": "2020-01-01", "checkOutDate": "2026-01-10"},
+            {"name": "Invalid date format", 
+             "checkInDate": "01-01-2026", "checkOutDate": "10-01-2026"},
+            {"name": "Too far in future", 
+             "checkInDate": "2030-01-01", "checkOutDate": "2030-01-10"},
+        ],
+        
+        "invalid_currencies": ["INVALID", "123", "US", ""],
+        "test_cities": TEST_CITIES,
+        "test_currencies": CURRENCIES
     }

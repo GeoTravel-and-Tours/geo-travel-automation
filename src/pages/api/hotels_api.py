@@ -25,3 +25,14 @@ class HotelAPI(BaseAPI):
     def book_hotel(self, **params):
         """POST /api/hotels/book - Book a hotel"""
         return self.post("/api/hotels/book", json=params)
+    
+    def get_hotel_offers(self, **params):
+        """
+        POST /api/hotels/offerReq - Get detailed hotel offers with pricing
+        
+        Key features:
+        - Returns hotel details with room offers
+        - Includes currency conversion when requested currency differs
+        - Adds requestedCurrencyTotalPrice and currencyConversion fields
+        """
+        return self.post("/api/hotels/offerReq", json=params)

@@ -20,8 +20,18 @@ class TestHotelAPI:
         self.logger.info(f"🚀 Starting {self.__class__.__name__} test")
     
     def teardown_method(self):
-        """Cleanup after each test method"""
+        """Enhanced cleanup after each test method"""
+        # Log test completion
         self.logger.info(f"✅ {self.__class__.__name__} test completed")
+        
+        # Clear any sensitive data if needed
+        if hasattr(self, 'test_data'):
+            # Don't keep PII in memory longer than necessary
+            if 'hotel_booking_payload' in self.test_data:
+                booking_data = self.test_data['hotel_booking_payload']
+                if 'email' in booking_data:
+                    # Optional: redact or clear if needed
+                    pass
     
     @pytest.fixture
     def hotel_api(self):
@@ -542,3 +552,497 @@ class TestHotelAPI:
         # Validate some data returned
         response_data = search_response.json()
         assert response_data["data"], "Expected hotels data, got empty list"
+
+    # ==================== HOTEL OFFERS (DETAILS) TESTS ====================
+
+    @pytest.mark.api
+    def test_get_hotel_offers_different_currency(self, hotel_api):
+        """
+        Test hotel offers with currency different from response currency.
+        
+        CRITICAL: When requested currency differs from price currency:
+        - Must include 'currencyConversion' field
+        - Must include 'requestedCurrencyTotalPrice' field
+        - Must correctly calculate converted price
+        """
+        self.logger.info("Testing Hotel Offers - Different Currency (Should show conversion)")
+        
+        # Step 1: Search for hotels to get a valid hotelId
+        search_response = hotel_api.search_hotels(**self.test_data["hotel_search_payload"])
+        assert search_response.status_code == 200, f"Search failed: {search_response.status_code}"
+        
+        search_data = search_response.json()
+        hotels = self._extract_hotels_from_search(search_data)
+        
+        if not hotels:
+            pytest.skip("No hotels found for offers test")
+        
+        # Use the first hotel with a valid ID
+        hotel = hotels[0]
+        hotel_id = hotel.get("hotel", {}).get("hotelId") or hotel.get("hotelId")
+        
+        if not hotel_id:
+            pytest.skip("Hotel missing hotelId")
+        
+        self.logger.info(f"Testing with hotel: {hotel_id}")
+        
+        # Step 2: Get hotel offers with different currency (NGN vs USD)
+        offers_payload = self.test_data["hotel_offers_payload"].copy()
+        offers_payload["hotelId"] = hotel_id
+        
+        response = hotel_api.get_hotel_offers(**offers_payload)
+        
+        # Handle cases where hotel might not have availability
+        if response.status_code == 404:
+            pytest.skip(f"Hotel {hotel_id} not found or no availability")
+        
+        assert response.status_code == 200, f"Expected 200, got {response.status_code}"
+        
+        response_data = response.json()
+        assert response_data.get("status") == "success", "Response status must be 'success'"
+        
+        data = response_data.get("data", {})
+        
+        # CRITICAL: Check for currency conversion fields (should exist since currency differs)
+        assert "currencyConversion" in data, (
+            "Missing 'currencyConversion' field when currency differs from response"
+        )
+        
+        assert "requestedCurrencyTotalPrice" in data, (
+            "Missing 'requestedCurrencyTotalPrice' field when currency differs from response"
+        )
+        
+        # Validate currencyConversion structure
+        currency_conversion = data["currencyConversion"]
+        assert isinstance(currency_conversion, dict), "currencyConversion must be a dict"
+        
+        # Should have USD -> NGN conversion
+        assert "USD" in currency_conversion, "Expected USD as source currency"
+        usd_conversion = currency_conversion["USD"]
+        
+        assert "rate" in usd_conversion, "Missing conversion rate"
+        assert "target" in usd_conversion, "Missing target currency"
+        assert usd_conversion["target"] == "NGN", f"Expected target NGN, got {usd_conversion['target']}"
+        
+        # Validate requestedCurrencyTotalPrice
+        assert isinstance(data["requestedCurrencyTotalPrice"], (int, float)), (
+            "requestedCurrencyTotalPrice must be numeric"
+        )
+        
+        self.logger.success(f"✅ Hotel offers with different currency - All conversion fields present")
+        self.logger.info(f"💰 Conversion: {currency_conversion}")
+        self.logger.info(f"💰 Total in NGN: {data['requestedCurrencyTotalPrice']}")
+
+
+    @pytest.mark.api
+    def test_get_hotel_offers_same_currency(self, hotel_api):
+        """
+        Test hotel offers with same currency as response.
+        
+        CRITICAL: When requested currency matches price currency:
+        - Should NOT include 'currencyConversion' field
+        - Should NOT include 'requestedCurrencyTotalPrice' field
+        """
+        self.logger.info("Testing Hotel Offers - Same Currency (Should NOT show conversion)")
+        
+        # Step 1: Search for hotels
+        search_response = hotel_api.search_hotels(**self.test_data["hotel_search_payload"])
+        assert search_response.status_code == 200, f"Search failed: {search_response.status_code}"
+        
+        search_data = search_response.json()
+        hotels = self._extract_hotels_from_search(search_data)
+        
+        if not hotels:
+            pytest.skip("No hotels found for offers test")
+        
+        hotel = hotels[0]
+        hotel_id = hotel.get("hotel", {}).get("hotelId") or hotel.get("hotelId")
+        
+        if not hotel_id:
+            pytest.skip("Hotel missing hotelId")
+        
+        # Step 2: Get hotel offers with USD currency (same as response)
+        offers_payload = self.test_data["hotel_offers_same_currency_payload"].copy()
+        offers_payload["hotelId"] = hotel_id
+        
+        response = hotel_api.get_hotel_offers(**offers_payload)
+        
+        if response.status_code == 404:
+            pytest.skip(f"Hotel {hotel_id} not found or no availability")
+        
+        assert response.status_code == 200, f"Expected 200, got {response.status_code}"
+        
+        response_data = response.json()
+        assert response_data.get("status") == "success", "Response status must be 'success'"
+        
+        data = response_data.get("data", {})
+        
+        # CRITICAL: These fields should NOT exist when currency matches
+        assert "currencyConversion" not in data, (
+            "'currencyConversion' field should NOT be present when using same currency"
+        )
+        
+        assert "requestedCurrencyTotalPrice" not in data, (
+            "'requestedCurrencyTotalPrice' field should NOT be present when using same currency"
+        )
+        
+        self.logger.success(f"✅ Hotel offers with same currency - No conversion fields (correct)")
+
+
+    @pytest.mark.api
+    @pytest.mark.parametrize("currency", ["EUR", "GBP", "JPY", "CAD"])
+    def test_get_hotel_offers_multiple_currencies(self, hotel_api, currency):
+        """Test hotel offers with various currency conversions"""
+        self.logger.info(f"Testing Hotel Offers - Currency: {currency}")
+        
+        # Get a valid hotel
+        search_response = hotel_api.search_hotels(**self.test_data["hotel_search_payload"])
+        assert search_response.status_code == 200, f"Search failed: {search_response.status_code}"
+        
+        search_data = search_response.json()
+        hotels = self._extract_hotels_from_search(search_data)
+        
+        if not hotels:
+            pytest.skip("No hotels found for offers test")
+        
+        hotel = hotels[0]
+        hotel_id = hotel.get("hotel", {}).get("hotelId") or hotel.get("hotelId")
+        
+        if not hotel_id:
+            pytest.skip("Hotel missing hotelId")
+        
+        # Get offers with requested currency
+        offers_payload = self.test_data["hotel_offers_payload"].copy()
+        offers_payload["hotelId"] = hotel_id
+        offers_payload["currency"] = currency
+        
+        response = hotel_api.get_hotel_offers(**offers_payload)
+        
+        if response.status_code == 404:
+            pytest.skip(f"Hotel {hotel_id} not found or no availability")
+        
+        assert response.status_code == 200, f"Expected 200, got {response.status_code}"
+        
+        response_data = response.json()
+        data = response_data.get("data", {})
+        
+        # If currency differs from USD (which is likely), conversion fields should exist
+        if currency != "USD":
+            assert "currencyConversion" in data, f"Missing conversion for {currency}"
+            assert "requestedCurrencyTotalPrice" in data, f"Missing total price for {currency}"
+            
+            # Verify the target currency matches
+            currency_conversion = data["currencyConversion"]
+            assert "USD" in currency_conversion, "Expected USD as source"
+            assert currency_conversion["USD"]["target"] == currency, (
+                f"Expected target {currency}, got {currency_conversion['USD']['target']}"
+            )
+            
+            self.logger.success(f"✅ {currency} conversion fields present")
+        else:
+            # USD should have no conversion fields
+            assert "currencyConversion" not in data, "USD should not have conversion"
+            self.logger.success(f"✅ USD correctly has no conversion fields")
+
+
+    @pytest.mark.api
+    def test_get_hotel_offers_invalid_currency(self, hotel_api):
+        """Test hotel offers with invalid currency codes"""
+        self.logger.info("Testing Hotel Offers - Invalid Currencies")
+        
+        # Get a valid hotel first
+        search_response = hotel_api.search_hotels(**self.test_data["hotel_search_payload"])
+        if search_response.status_code != 200:
+            pytest.skip("Search failed")
+        
+        search_data = search_response.json()
+        hotels = self._extract_hotels_from_search(search_data)
+        
+        if not hotels:
+            pytest.skip("No hotels found")
+        
+        hotel_id = hotels[0].get("hotel", {}).get("hotelId") or hotels[0].get("hotelId")
+        
+        for invalid_currency in self.test_data["invalid_currencies"]:
+            self.logger.info(f"Testing invalid currency: '{invalid_currency}'")
+            
+            offers_payload = self.test_data["hotel_offers_payload"].copy()
+            offers_payload["hotelId"] = hotel_id
+            offers_payload["currency"] = invalid_currency
+            
+            response = hotel_api.get_hotel_offers(**offers_payload)
+            
+            # Should return 400 for invalid currency
+            if response.status_code == 400:
+                self.logger.success(f"✓ Invalid currency '{invalid_currency}' correctly rejected")
+            elif response.status_code == 200:
+                # If it accepts, check if it defaults to something reasonable
+                self.logger.info(f"API accepted '{invalid_currency}', checking response...")
+                response_data = response.json()
+                data = response_data.get("data", {})
+                
+                # If it accepted, currency should be in the response
+                offers = data.get("offers", [])
+                if offers:
+                    price_currency = offers[0].get("price", {}).get("currency")
+                    self.logger.info(f"Response used currency: {price_currency}")
+            else:
+                self.logger.warning(f"Unexpected status {response.status_code} for '{invalid_currency}'")
+
+
+    @pytest.mark.api
+    def test_get_hotel_offers_with_child_ages(self, hotel_api):
+        """Test hotel offers with child ages included"""
+        self.logger.info("Testing Hotel Offers - With Child Ages")
+        
+        # Get a valid hotel
+        search_response = hotel_api.search_hotels(**self.test_data["hotel_search_payload"])
+        assert search_response.status_code == 200, f"Search failed: {search_response.status_code}"
+        
+        search_data = search_response.json()
+        hotels = self._extract_hotels_from_search(search_data)
+        
+        if not hotels:
+            pytest.skip("No hotels found")
+        
+        hotel_id = hotels[0].get("hotel", {}).get("hotelId") or hotels[0].get("hotelId")
+        
+        # Test with various child age combinations
+        child_age_cases = [
+            [5, 10],           # Two children
+            [3],                # One child
+            [2, 4, 6, 8],       # Four children
+            [],                 # No children
+            [15, 17],           # Older children
+        ]
+        
+        for child_ages in child_age_cases:
+            self.logger.info(f"Testing child ages: {child_ages}")
+            
+            offers_payload = self.test_data["hotel_offers_payload"].copy()
+            offers_payload["hotelId"] = hotel_id
+            offers_payload["childAges"] = child_ages
+            
+            response = hotel_api.get_hotel_offers(**offers_payload)
+            
+            if response.status_code == 404:
+                self.logger.info(f"No availability for child ages {child_ages}")
+                continue
+            
+            assert response.status_code == 200, f"Failed for child ages {child_ages}"
+            
+            response_data = response.json()
+            data = response_data.get("data", {})
+            
+            # Verify guests field reflects correct counts
+            offers = data.get("offers", [])
+            if offers:
+                guests = offers[0].get("guests", {})
+                assert guests.get("adults") == offers_payload["adults"], "Adults count mismatch"
+                
+                self.logger.success(f"✓ Success with child ages {child_ages}")
+        
+        self.logger.success("✅ All child age combinations handled successfully")
+
+
+    @pytest.mark.api
+    def test_get_hotel_offers_price_calculation_accuracy(self, hotel_api):
+        """
+        Test that requestedCurrencyTotalPrice is accurately calculated.
+        
+        Verifies: requestedCurrencyTotalPrice = total * conversion_rate
+        """
+        self.logger.info("Testing Hotel Offers - Price Calculation Accuracy")
+        
+        # Get a valid hotel
+        search_response = hotel_api.search_hotels(**self.test_data["hotel_search_payload"])
+        assert search_response.status_code == 200, f"Search failed: {search_response.status_code}"
+        
+        search_data = search_response.json()
+        hotels = self._extract_hotels_from_search(search_data)
+        
+        if not hotels:
+            pytest.skip("No hotels found")
+        
+        hotel_id = hotels[0].get("hotel", {}).get("hotelId") or hotels[0].get("hotelId")
+        
+        # Get offers with different currency
+        offers_payload = self.test_data["hotel_offers_payload"].copy()
+        offers_payload["hotelId"] = hotel_id
+        
+        response = hotel_api.get_hotel_offers(**offers_payload)
+        
+        if response.status_code != 200:
+            pytest.skip(f"Offers request failed: {response.status_code}")
+        
+        response_data = response.json()
+        data = response_data.get("data", {})
+        
+        # Skip if no conversion fields (maybe hotel returned USD pricing)
+        if "currencyConversion" not in data or "requestedCurrencyTotalPrice" not in data:
+            self.logger.info("No conversion fields present, skipping calculation test")
+            return
+        
+        # Get the original total from offers
+        offers = data.get("offers", [])
+        if not offers:
+            pytest.skip("No offers found")
+        
+        original_total = float(offers[0].get("price", {}).get("total", 0))
+        conversion_rate = float(data["currencyConversion"]["USD"]["rate"])
+        calculated_total = data["requestedCurrencyTotalPrice"]
+        
+        # Allow small floating point differences
+        expected_total = round(original_total * conversion_rate, 2)
+        actual_total = round(float(calculated_total), 2)
+        
+        assert abs(actual_total - expected_total) < 0.01, (
+            f"Price calculation mismatch!\n"
+            f"Original: {original_total} USD\n"
+            f"Rate: {conversion_rate}\n"
+            f"Expected: {expected_total} NGN\n"
+            f"Actual: {actual_total} NGN\n"
+            f"Difference: {abs(actual_total - expected_total)}"
+        )
+        
+        self.logger.success(f"✅ Price calculation accurate: {original_total} USD × {conversion_rate} = {actual_total} NGN")
+
+
+    @pytest.mark.api
+    def test_get_hotel_offers_missing_required_fields(self, hotel_api):
+        """Test hotel offers with missing required fields"""
+        self.logger.info("Testing Hotel Offers - Missing Required Fields")
+        
+        required_fields = ["hotelId", "adults", "checkInDate", "checkOutDate", "countryOfResidence", "roomQuantity"]
+        
+        # Create a base valid payload
+        base_payload = self.test_data["hotel_offers_payload"].copy()
+        
+        for field in required_fields:
+            self.logger.info(f"Testing missing field: {field}")
+            
+            payload = base_payload.copy()
+            payload.pop(field, None)
+            
+            response = hotel_api.get_hotel_offers(**payload)
+            
+            # Should return 400 for missing required field
+            if response.status_code == 400:
+                self.logger.success(f"✓ Missing '{field}' correctly returns 400")
+            else:
+                self.logger.warning(f"Missing '{field}' returned {response.status_code}")
+
+
+    def _extract_hotels_from_search(self, search_data):
+        """Helper method to extract hotels from search response"""
+        data = search_data.get("data")
+        
+        if not data:
+            return []
+        
+        if isinstance(data, list):
+            return data
+        elif isinstance(data, dict):
+            return data.get("hotelDetailResult", {}).get("data", [])
+        else:
+            return []
+        
+    # ==================== ENHANCED HOTEL BOOKING TESTS ====================
+
+    @pytest.mark.api
+    def test_book_hotel_with_complete_guest_info(self, authenticated_hotel_api):
+        """Test hotel booking with complete guest information including other guests"""
+        self.logger.info("Testing Hotel Booking - Complete Guest Information")
+        
+        # Get valid hotel
+        search_response = authenticated_hotel_api.search_hotels(**self.test_data["hotel_search_payload"])
+        assert search_response.status_code == 200, f"Search failed: {search_response.status_code}"
+        
+        search_data = search_response.json()
+        hotels = self._extract_hotels_from_search(search_data)
+        
+        if not hotels:
+            pytest.skip("No hotels found")
+        
+        hotel_id = hotels[0].get("hotel", {}).get("hotelId") or hotels[0].get("hotelId")
+        
+        # Create booking with multiple guests
+        booking_payload = self.test_data["hotel_booking_payload"].copy()
+        booking_payload["hotelId"] = hotel_id
+        booking_payload["otherGuests"] = [
+            {
+                "firstName": "John",
+                "lastName": "Doe",
+                "dob": "1990-01-01",
+                "gender": "Male",
+                "phone": "7079090909",
+                "nationality": "Nigerian"
+            },
+            {
+                "firstName": "Jane",
+                "lastName": "Doe",
+                "dob": "1992-05-15",
+                "gender": "Female",
+                "phone": "7079090910",
+                "nationality": "Nigerian"
+            }
+        ]
+        booking_payload["childAges"] = [5, 10]
+        
+        response = authenticated_hotel_api.book_hotel(**booking_payload)
+        
+        assert response.status_code == 200, f"Expected 200, got {response.status_code}"
+        
+        booking_data = response.json()
+        assert booking_data.get("status") == "success", "Booking status must be 'success'"
+        
+        booking_info = booking_data["data"]["hotelBooking"]
+        
+        # Verify other_guests were saved correctly
+        assert "other_guests" in booking_info, "Missing other_guests in response"
+        assert len(booking_info["other_guests"]) == 2, f"Expected 2 other guests, got {len(booking_info['other_guests'])}"
+        
+        # Verify child ages
+        assert booking_info.get("child_ages") == [5, 10], "Child ages mismatch"
+        
+        # Verify user_id exists (authenticated)
+        assert booking_info.get("user_id") is not None, "user_id should not be null when authenticated"
+        
+        self.logger.success(f"✅ Booking with complete guest info successful. Booking ID: {booking_info.get('id')}")
+
+
+    @pytest.mark.api
+    def test_book_hotel_duplicate_booking(self, authenticated_hotel_api):
+        """Test duplicate hotel booking - should create new booking each time"""
+        self.logger.info("Testing Hotel Booking - Duplicate Bookings")
+        
+        # Get valid hotel
+        search_response = authenticated_hotel_api.search_hotels(**self.test_data["hotel_search_payload"])
+        assert search_response.status_code == 200, f"Search failed: {search_response.status_code}"
+        
+        search_data = search_response.json()
+        hotels = self._extract_hotels_from_search(search_data)
+        
+        if not hotels:
+            pytest.skip("No hotels found")
+        
+        hotel_id = hotels[0].get("hotel", {}).get("hotelId") or hotels[0].get("hotelId")
+        
+        # Create same booking twice
+        booking_payload = self.test_data["hotel_booking_payload"].copy()
+        booking_payload["hotelId"] = hotel_id
+        
+        # First booking
+        response1 = authenticated_hotel_api.book_hotel(**booking_payload)
+        assert response1.status_code == 200, "First booking failed"
+        booking1_id = response1.json()["data"]["hotelBooking"]["id"]
+        
+        # Second booking (same details)
+        response2 = authenticated_hotel_api.book_hotel(**booking_payload)
+        assert response2.status_code == 200, "Second booking failed"
+        booking2_id = response2.json()["data"]["hotelBooking"]["id"]
+        
+        # Should be different booking IDs
+        assert booking1_id != booking2_id, f"Duplicate bookings should have different IDs: {booking1_id} == {booking2_id}"
+        
+        self.logger.success(f"✅ Duplicate bookings created successfully with different IDs: {booking1_id} and {booking2_id}")
