@@ -113,12 +113,38 @@ class TestHotelAPI:
     def test_search_hotels_without_price(self, hotel_api):
         """Test hotel search WITHOUT price range filter"""
         self.logger.info("Testing Hotel Search - Without Price Range")
-        
+
+        # Authenticate the hotel_api instance
+        auth_api = AuthAPI()
+        response = auth_api.login()
+        if response.status_code != 200:
+            self.logger.error(f"❌ Login failed with status {response.status_code}")
+            pytest.fail(f"Login failed with status {response.status_code}")
+        self.logger.info(f"✅ Authenticated successfully (token length: {len(auth_api.auth_token)})")
+
+        hotel_api.set_auth_token(auth_api.auth_token)
+        hotel_api.set_auth_token(auth_api.auth_token, token_source=auth_api.token_source)
+
+        # Debug: Check if the token is set
+        if not hotel_api.auth_token:
+            self.logger.error("❌ Auth token is not set. Test cannot proceed.")
+            pytest.fail("Auth token is not set.")
+        else:
+            self.logger.info(f"✅ Auth token is set: {hotel_api.auth_token[:10]}... (truncated)")
+
         payload = self.test_data["hotel_search_payload"].copy()
+        self.logger.info(f"Payload for search: {payload}")
+
+        # Log headers for debugging
+        headers = hotel_api.get_headers()
+        self.logger.info(f"Request headers: {headers}")
+
         response = hotel_api.search_hotels(**payload)
-        
+        self.logger.info(f"Response status code: {response.status_code}")
+        self.logger.info(f"Response body: {response.text}")
+
         assert response.status_code == 200, f"Expected 200, got {response.status_code}"
-        
+
         response_data = response.json()
         self.logger.success("Hotel search without price range succeeded")
     

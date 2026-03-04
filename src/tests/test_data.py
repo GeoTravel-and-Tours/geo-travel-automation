@@ -63,8 +63,16 @@ def generate_hotel_name():
 
 def generate_hotel_test_data(hotel_id=None):
     """Generate dynamic test data for hotel tests"""
-    current_date = datetime.now().strftime("%Y-%m-%d")
-    future_date = (datetime.now() + timedelta(days=3)).strftime("%Y-%m-%d")
+    # Always use future dates
+    check_in = datetime.now() + timedelta(days=10)  # 10 days from now
+    check_out = check_in + timedelta(days=3)        # 3 days later
+    
+    current_date = check_in.strftime("%Y-%m-%d")
+    future_date = check_out.strftime("%Y-%m-%d")
+    
+    # For invalid date tests
+    past_date = (datetime.now() - timedelta(days=30)).strftime("%Y-%m-%d")
+    
     next_month = (datetime.now() + timedelta(days=30)).strftime("%Y-%m-%d")
     next_month_plus_10 = (datetime.now() + timedelta(days=40)).strftime("%Y-%m-%d")
     
@@ -76,7 +84,7 @@ def generate_hotel_test_data(hotel_id=None):
         "hotel_search_payload": {
             "hotelName": "Any",
             "cityCode": test_city["code"],
-            "countryOfResidence": "US",
+            "countryOfResidence": "NG",
             "destination": {
                 "country": test_city["country"],
                 "city": test_city["name"]
