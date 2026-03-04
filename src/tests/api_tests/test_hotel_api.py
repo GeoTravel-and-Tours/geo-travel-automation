@@ -1,9 +1,7 @@
 # src/tests/api_tests/test_hotel_api.py
 
-import os
 import pytest
 import time
-from datetime import datetime, timedelta
 from src.pages.api.hotels_api import HotelAPI
 from src.pages.api.auth_api import AuthAPI
 from src.utils.logger import GeoLogger
