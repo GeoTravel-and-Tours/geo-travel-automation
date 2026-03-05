@@ -1,0 +1,15 @@
+2026-03-05 07:43:25 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 DEBUG: Test phase - setup for src/tests/api_tests/test_package_api.py::TestPackageAPI::test_book_package_without_auth_not_in_user_bookings - Skipped: False
+2026-03-05 07:43:25 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - === Testing Book Package Without Auth ===
+2026-03-05 07:43:25 - GeoTravelGlobalLogger - WARNING  - [logger.py:360] - ⚠️ Invalid token provided to set_auth_token()
+2026-03-05 07:43:25 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Request: GET https://api.stg.gowithgeo.com/api/package/user/booked-packages
+2026-03-05 07:43:25 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Response: 401
+2026-03-05 07:43:25 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - ✅ Unauthenticated access to user bookings returns 401 (as expected)
+2026-03-05 07:43:25 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Request: GET https://api.stg.gowithgeo.com/api/package/all
+2026-03-05 07:43:25 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Response: 200
+2026-03-05 07:43:25 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Request: POST https://api.stg.gowithgeo.com/api/package/book
+2026-03-05 07:43:25 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Response: 400
+2026-03-05 07:43:25 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - ✅ Unauthenticated booking correctly rejected with 400
+2026-03-05 07:43:25 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Request: GET https://api.stg.gowithgeo.com/api/package/user/booked-packages-analytics
+2026-03-05 07:43:25 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Response: 401
+2026-03-05 07:43:25 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - ✅ All unauthenticated access tests passed
+2026-03-05 07:43:25 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 DEBUG: Test phase - call for src/tests/api_tests/test_package_api.py::TestPackageAPI::test_book_package_without_auth_not_in_user_bookings - Skipped: False
