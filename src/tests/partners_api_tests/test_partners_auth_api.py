@@ -84,6 +84,7 @@ class TestPartnersAuth:
     def test_verified_user_login_returns_token(self):
         """TEST: Verified users get access token on login"""
         token = self.verified_helper.get_verified_access_token()
+        self.logger.info(f"✅ VERIFIED ACCESS TOKEN: {token}")
         assert token is not None, "Verified user should get access token"
         assert len(token) > 10, "Token should be valid JWT"
         self.logger.success("✅ Verified user login returns valid access token")

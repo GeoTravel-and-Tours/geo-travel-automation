@@ -67,17 +67,30 @@ class BaseAPI:
     def _request(self, method, endpoint, **kwargs):
         """Base request method with logging, retry logic, and error handling"""
         url = f"{self.base_url}{endpoint}"
+        
+        # DEBUG: Log what's coming in
+        self.logger.info(f"🔍 _request START - Current self.headers: {self.headers}")
+        self.logger.info(f"🔍 _request - kwargs headers: {kwargs.get('headers', {})}")
+        
         headers = self.headers.copy()
         if 'headers' in kwargs:
             headers.update(kwargs.pop('headers'))
-
+        
+        # DEBUG: Log final headers
+        self.logger.info(f"🔍 _request FINAL headers being sent: {headers}")
+        
+        # Check if Authorization header snuck in
+        if 'Authorization' in headers and hasattr(self, '_debug_token_source') and self._debug_token_source == "cookies":
+            self.logger.error(f"❌ CRITICAL: Authorization header present when token_source is cookies!")
+            self.logger.error(f"❌ Headers: {headers}")
+            self.logger.error(f"❌ Stack trace:", exc_info=True)
+        
         self.logger.info(f"API Request: {method} {url}")
         kwargs['timeout'] = 30
 
         for attempt in range(3):
             try:
                 response = self.session.request(method, url, headers=headers, **kwargs)
-                # Store last response for conftest.py to access
                 self.last_response = response
                 
                 if response is None:

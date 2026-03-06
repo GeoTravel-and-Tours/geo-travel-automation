@@ -11,6 +11,8 @@ import logging
 import pytest
 from datetime import datetime
 from pytest_html import extras
+from typing import Dict, List, Tuple, Optional, Any
+import json
 
 from src.core.driver_factory import driver_factory
 from src.utils.reporting import smoke_reporting
@@ -18,118 +20,324 @@ from src.utils.reporting import get_suite_reporter
 from src.utils.screenshot import ScreenshotUtils
 from configs.environment import EnvironmentConfig
 from src.utils.notifications import slack_notifier
-from configs.environment import EnvironmentConfig
 from src.utils.logger import GeoLogger
 import uuid
 
 logger = GeoLogger("conftest")
 
-# NEW: Global flag to track environment status
+# Global flags for environment status
 environment_available = True
-environment_skip_info = None
+environment_skip_info: Optional[Dict[str, Any]] = None
 SKIP_UI_ENV_CHECK = False
 
+# Test type classification
+TEST_TYPE_PATTERNS = {
+    'ui': ['smoke_tests', 'regression_tests', 'sanity_tests'],
+    'api': ['api_tests'],
+    'partners_api': ['partners_api_tests']
+}
+
+
 def pytest_addoption(parser):
-    """Add command line option to skip environment check"""
+    """Add command line options for environment control"""
     parser.addoption(
         "--skip-env-check",
         action="store_true",
         default=False,
-        help="Skip environment availability check"
+        help="Skip all environment availability checks"
     )
+    parser.addoption(
+        "--env-timeout",
+        action="store",
+        default=30,
+        type=int,
+        help="Timeout in seconds for environment checks"
+    )
+
+
+def detect_test_types(items: List[pytest.Item]) -> Dict[str, bool]:
+    """
+    Detect which types of tests are being run based on file paths.
     
-def should_skip_ui_environment_check():
-    """Check if UI environment check should be skipped for API/Partners API tests."""
-    return (os.getenv("SKIP_UI_ENV_CHECK") == "true" or 
-            os.getenv("TEST_TYPE") == "API" or
-            any("partners_api" in arg for arg in sys.argv) or
-            any(arg == "api" for arg in sys.argv))
+    Args:
+        items: List of collected test items
     
-def pytest_configure(config):
-    """Check environment availability before test session starts"""
-    global environment_available, environment_skip_info, SKIP_UI_ENV_CHECK
+    Returns:
+        Dictionary with boolean flags for each test type
+    """
+    detected = {
+        'ui': False,
+        'api': False,
+        'partners_api': False
+    }
     
-    # Check if we should skip environment check
-    skip_env_check = config.getoption("--skip-env-check") or False
+    for item in items:
+        test_path = str(item.fspath).lower()
+        
+        # Check for Partners API tests first (more specific)
+        if any(pattern in test_path for pattern in TEST_TYPE_PATTERNS['partners_api']):
+            detected['partners_api'] = True
+        # Check for regular API tests
+        elif any(pattern in test_path for pattern in TEST_TYPE_PATTERNS['api']):
+            detected['api'] = True
+        # Check for UI tests
+        elif any(pattern in test_path for pattern in TEST_TYPE_PATTERNS['ui']):
+            detected['ui'] = True
     
-    if not skip_env_check:
-        # NEW: Use the should_skip_ui_environment_check function here
-        if not should_skip_ui_environment_check():
-            logger.info("Checking environment availability...")
-            environment = EnvironmentConfig.TEST_ENV
-            base_url = EnvironmentConfig.get_base_url()
+    return detected
+
+
+def check_environment_with_retry(
+    check_func,
+    env_type: str,
+    url: str,
+    max_attempts: int = 3,
+    timeout: int = 10
+) -> Tuple[bool, Optional[str]]:
+    """
+    Generic environment check with retry logic.
+    
+    Args:
+        check_func: Function to check environment
+        env_type: Type of environment (UI, API, Partners API)
+        url: URL being checked
+        max_attempts: Maximum number of check attempts
+        timeout: Timeout per attempt
+    
+    Returns:
+        Tuple of (success, error_message)
+    """
+    for attempt in range(1, max_attempts + 1):
+        try:
+            logger.info(f"{env_type} check attempt {attempt}/{max_attempts} for {url}")
             
-            if not EnvironmentConfig.is_environment_accessible():
-                # Environment is down - set up skipping mechanism
-                config.environment_down = True
-                environment_available = False
-                
-                # Store skip info for reporting
-                environment_skip_info = {
-                    'environment': environment,
-                    'url': base_url,
-                    'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-                    'check_type': 'UI'
-                }
-                
-                logger.error(f"Environment {environment} ({base_url}) is not accessible after multiple attempts")
-                logger.info("Tests will be skipped due to environment unavailability")
-                
-            else:
-                config.environment_down = False
-                environment_available = True
-                logger.success("Environment is accessible - proceeding with tests")
-        else:
-            # NEW: If we should skip UI check, mark environment as available
-            config.environment_down = False
-            environment_available = True
-            logger.info("Skipping UI environment check for API/Partners API tests")
+            if check_func():
+                logger.success(f"{env_type} environment is accessible")
+                return True, None
+            
+            logger.warning(f"{env_type} check attempt {attempt} failed")
+            
+        except Exception as e:
+            logger.error(f"{env_type} check attempt {attempt} failed: {str(e)}")
+        
+        if attempt < max_attempts:
+            wait_time = 5 * attempt
+            logger.info(f"Waiting {wait_time}s before next {env_type} check...")
+            time.sleep(wait_time)
+    
+    error_msg = f"{env_type} environment ({url}) is not accessible after {max_attempts} attempts"
+    logger.error(error_msg)
+    return False, error_msg
+
+
+def check_required_environments(
+    detected_tests: Dict[str, bool],
+    config_timeout: int = 30
+) -> Tuple[bool, Optional[Dict[str, Any]]]:
+    """
+    Check only the environments required for the detected test types.
+    
+    Args:
+        detected_tests: Dictionary with detected test types
+        config_timeout: Timeout from pytest config
+    
+    Returns:
+        Tuple of (all_available, skip_info)
+    """
+    global environment_skip_info
+    
+    all_available = True
+    unavailable_environments = []
+    max_attempts = 3
+    timeout = min(10, config_timeout // max_attempts)  # Distribute timeout
+    
+    logger.info(f"🔍 Detected test types: {detected_tests}")
+    
+    # Check UI environment if UI tests are detected
+    if detected_tests['ui']:
+        url = EnvironmentConfig.get_base_url()
+        success, error = check_environment_with_retry(
+            lambda: EnvironmentConfig._is_ui_accessible(
+                EnvironmentConfig.TEST_ENV,
+                max_attempts=1,  # We handle retry in wrapper
+                timeout=timeout
+            ),
+            "UI",
+            url,
+            max_attempts,
+            timeout
+        )
+        
+        if not success:
+            all_available = False
+            unavailable_environments.append({
+                'type': 'UI',
+                'url': url,
+                'error': error
+            })
+    
+    # Check API environment if API tests are detected
+    if detected_tests['api']:
+        url = EnvironmentConfig.get_api_base_url()
+        success, error = check_environment_with_retry(
+            lambda: EnvironmentConfig.is_api_accessible(
+                environment=EnvironmentConfig.TEST_ENV,
+                max_attempts=1,  # We handle retry in wrapper
+                timeout=timeout
+            ),
+            "API",
+            url,
+            max_attempts,
+            timeout
+        )
+        
+        if not success:
+            all_available = False
+            unavailable_environments.append({
+                'type': 'API',
+                'url': url,
+                'error': error
+            })
+    
+    # Check Partners API environment if Partners API tests are detected
+    if detected_tests['partners_api']:
+        url = EnvironmentConfig.get_partners_api_base_url()
+        # Partners API might have a different health endpoint
+        success, error = check_environment_with_retry(
+            lambda: EnvironmentConfig.is_api_accessible(
+                endpoint="/auth/health",  # Adjust based on actual endpoint
+                environment=EnvironmentConfig.TEST_ENV,
+                max_attempts=1,  # We handle retry in wrapper
+                timeout=timeout
+            ),
+            "Partners API",
+            url,
+            max_attempts,
+            timeout
+        )
+        
+        if not success:
+            all_available = False
+            unavailable_environments.append({
+                'type': 'Partners API',
+                'url': url,
+                'error': error
+            })
+    
+    # Prepare skip info if any environment is unavailable
+    skip_info = None
+    if not all_available:
+        skip_info = {
+            'environment': EnvironmentConfig.TEST_ENV,
+            'unavailable_environments': unavailable_environments,
+            'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+            'detected_test_types': detected_tests
+        }
+        
+        # Log all unavailable environments
+        for env in unavailable_environments:
+            logger.error(f"❌ {env['type']} environment is not accessible: {env['url']}")
+    
+    return all_available, skip_info
+
+
+def pytest_configure(config):
+    """Initialize pytest configuration"""
+    global environment_available, environment_skip_info
+    
+    # Store config for later use
+    config.environment_down = False
+    config._should_check_env = not config.getoption("--skip-env-check")
+    config._env_timeout = config.getoption("--env-timeout")
+    
+    if config._should_check_env:
+        logger.info("Environment checks will be performed after test collection")
     else:
-        config.environment_down = False
         environment_available = True
-        logger.info("Environment check skipped")
+        logger.info("⚠️ Environment checks skipped by user request")
 
 
 def pytest_collection_modifyitems(config, items):
-    """Skip all tests if environment is down with proper reporting"""
+    """
+    After collecting tests, detect test types and check required environments.
+    This runs after test discovery but before test execution.
+    """
     global environment_available, environment_skip_info
     
-    # NEW: Check if these are Partners API tests and skip UI environment check
-    are_partners_api_tests = any("partners_api" in item.nodeid for item in items)
+    # Detect which test types are being run
+    detected_tests = detect_test_types(items)
     
-    if are_partners_api_tests:
-        logger.info("Partners API tests detected - UI environment check will be skipped")
-        # Set flag to skip UI environment checks for these tests
+    # Store detected types in config for later use
+    config.detected_test_types = detected_tests
+    
+    # Check if we need to validate environments
+    if getattr(config, '_should_check_env', False):
+        logger.info("🔍 Checking required environments based on detected test types...")
+        
+        # Check only the environments we need
+        all_available, skip_info = check_required_environments(
+            detected_tests,
+            config._env_timeout
+        )
+        
+        if not all_available:
+            # Environment(s) are down - set up skipping mechanism
+            config.environment_down = True
+            environment_available = False
+            environment_skip_info = skip_info
+            
+            # Create comprehensive skip message
+            unavailable_list = [
+                f"{env['type']} ({env['url']})" 
+                for env in skip_info['unavailable_environments']
+            ]
+            skip_message = (
+                f"❌ Required environment(s) not accessible: {', '.join(unavailable_list)}. "
+                f"Tests cannot proceed."
+            )
+            
+            # Mark all tests as skipped
+            skip_env = pytest.mark.skip(reason=skip_message)
+            for item in items:
+                item.add_marker(skip_env)
+            
+            # Store test count for reporting
+            config.skipped_tests_count = len(items)
+            config.environment_skip_info = skip_info
+            config.environment_skip_info['skipped_tests'] = len(items)
+            config.environment_skip_info['test_names'] = [item.nodeid for item in items]
+            
+            logger.error(skip_message)
+            logger.info(f"📝 Marked {len(items)} tests as skipped due to environment unavailability")
+        else:
+            config.environment_down = False
+            environment_available = True
+            
+            # Log which environments are being used
+            active_envs = [k for k, v in detected_tests.items() if v]
+            logger.success(f"✅ All required environments are accessible: {', '.join(active_envs)}")
+    
+    # Set backward compatibility flags
+    if detected_tests['api'] or detected_tests['partners_api']:
         os.environ["SKIP_UI_ENV_CHECK"] = "true"
-    
-    if getattr(config, 'environment_down', False) and not environment_available:
-        skip_env = pytest.mark.skip(reason=f"Environment {environment_skip_info['environment']} is not accessible")
-        
-        for item in items:
-            item.add_marker(skip_env)
-        
-        # Store test count for reporting
-        config.skipped_tests_count = len(items)
-        config.environment_skip_info = environment_skip_info.copy()
-        config.environment_skip_info['skipped_tests'] = len(items)
-        config.environment_skip_info['test_names'] = [item.nodeid for item in items]
-        
-        logger.info(f"Marked {len(items)} tests as skipped due to environment unavailability")
 
 
 def pytest_sessionfinish(session, exitstatus):
-    """Handle session finish - only send success report if tests actually ran"""
+    """Handle session finish - only send reports if tests actually ran"""
     global environment_available
     
-    # Don't send any success/failure report if all tests were skipped due to environment
+    # Don't send reports if all tests were skipped due to environment
     if getattr(session.config, 'environment_down', False) and not environment_available:
-        logger.info("All tests skipped due to environment unavailability - no test report sent")
+        logger.info("📊 All tests skipped due to environment unavailability - no test report sent")
         return
     
-    # NEW: Handle cases where some tests might have run despite environment issues
-    environment_skip_info = getattr(session.config, 'environment_skip_info', None)
-    if environment_skip_info and environment_skip_info.get('skipped_tests', 0) > 0:
-        logger.info(f"Session finished with {environment_skip_info['skipped_tests']} tests skipped due to environment")
+    # Handle cases where some tests might have run despite partial environment issues
+    env_skip_info = getattr(session.config, 'environment_skip_info', None)
+    if env_skip_info and env_skip_info.get('skipped_tests', 0) > 0:
+        logger.info(
+            f"📊 Session finished with {env_skip_info['skipped_tests']} tests "
+            f"skipped due to environment issues"
+        )
 
 
 def pytest_runtest_setup(item):
@@ -140,52 +348,96 @@ def pytest_runtest_setup(item):
     logger.set_current_test(item.nodeid)
     
     if not environment_available:
-        # NEW: Provide detailed skip reason
-        pytest.skip(f"Environment {environment_skip_info['environment']} is not accessible - {environment_skip_info['url']}")
-
-
-# NEW: API-specific environment check
-def check_api_environment():
-    """Check API environment availability separately"""
-    global environment_available, environment_skip_info
-    
-    logger.info("Checking API environment availability...")
-    api_base_url = EnvironmentConfig.get_api_base_url()
-    
-    if not EnvironmentConfig.is_api_accessible():
-        environment_available = False
-        environment_skip_info = {
-            'environment': EnvironmentConfig.TEST_ENV,
-            'url': api_base_url,
-            'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-            'check_type': 'API'
-        }
+        # Create comprehensive skip reason
+        skip_info = environment_skip_info
+        if skip_info and 'unavailable_environments' in skip_info:
+            unavailable_list = [
+                f"{env['type']} ({env['url']})" 
+                for env in skip_info['unavailable_environments']
+            ]
+            skip_message = (
+                f"❌ Required environment(s) not accessible: {', '.join(unavailable_list)}. "
+                f"Test cannot run."
+            )
+        else:
+            skip_message = "❌ Environment is not accessible"
         
-        logger.error(f"API Environment ({api_base_url}) is not accessible")
-        return False
-    
-    environment_available = True
-    logger.success("API Environment is accessible")
-    return True
+        pytest.skip(skip_message)
+
+
+# ========== HELPER FIXTURES ==========
+
+@pytest.fixture
+def is_api_test(request) -> bool:
+    """Check if current test is an API test"""
+    test_path = str(request.node.fspath).lower()
+    return any(pattern in test_path for pattern in TEST_TYPE_PATTERNS['api'])
 
 
 @pytest.fixture
-def driver():
-    """Provides WebDriver instance to tests"""
-    # NEW: Check environment before creating driver
+def is_partners_api_test(request) -> bool:
+    """Check if current test is a Partners API test"""
+    test_path = str(request.node.fspath).lower()
+    return any(pattern in test_path for pattern in TEST_TYPE_PATTERNS['partners_api'])
+
+
+@pytest.fixture
+def is_ui_test(request) -> bool:
+    """Check if current test is a UI test"""
+    test_path = str(request.node.fspath).lower()
+    return any(pattern in test_path for pattern in TEST_TYPE_PATTERNS['ui'])
+
+
+@pytest.fixture
+def test_type(request) -> str:
+    """Get the type of the current test"""
+    if is_partners_api_test(request):
+        return "partners_api"
+    elif is_api_test(request):
+        return "api"
+    elif is_ui_test(request):
+        return "ui"
+    return "unknown"
+
+
+@pytest.fixture
+def environment_urls(request) -> Dict[str, str]:
+    """Get URLs for all environments based on current test type"""
+    urls = {
+        'ui': EnvironmentConfig.get_base_url(),
+        'api': EnvironmentConfig.get_api_base_url(),
+        'partners_api': EnvironmentConfig.get_partners_api_base_url()
+    }
+    return urls
+
+
+# ========== DRIVER FIXTURES ==========
+
+@pytest.fixture
+def driver(request):
+    """Provides WebDriver instance to UI tests"""
     global environment_available
+    
+    # Check environment before creating driver
     if not environment_available:
-        pytest.skip(f"Environment unavailable - skipping test")
+        pytest.skip("Environment unavailable - skipping UI test")
+    
+    # Skip if this is not a UI test
+    test_path = str(request.node.fspath).lower()
+    if not any(pattern in test_path for pattern in TEST_TYPE_PATTERNS['ui']):
+        pytest.skip("Driver fixture only available for UI tests")
     
     driver_instance = driver_factory.create_driver()
-    # Set window size to desktop view from environment config
+    
+    # Set window size
     if EnvironmentConfig.WINDOW_SIZE:
         width, height = EnvironmentConfig.WINDOW_SIZE.split('x')
         driver_instance.set_window_size(int(width), int(height))
     else:
-        # Fallback to maximize if no specific size configured
         driver_instance.maximize_window()
+    
     yield driver_instance
+    
     try:
         driver_instance.quit()
     except Exception:
@@ -198,41 +450,28 @@ def browser(driver):
     return EnvironmentConfig.BROWSER
 
 
+# ========== REPORTING HOOKS ==========
+
 def _handle_skipped_test(item, report):
     """Handle skipped tests from setup phase"""
-    # ENHANCED: Better handling of environment-related skips
     nodeid = getattr(item, "nodeid", item.name if hasattr(item, "name") else str(item))
     
     # Extract skip reason
-    skip_reason = None
     if hasattr(report, 'wasxfail'):
         skip_reason = f"Expected failure: {report.wasxfail}"
     else:
         skip_reason = str(report.longrepr) if getattr(report, "longrepr", None) else "Skipped"
 
-    # NEW: Check if this is an environment-related skip
+    # Check if this is an environment-related skip
     is_environment_skip = "environment" in skip_reason.lower() or "unavailable" in skip_reason.lower()
     
-    logger.info(f"🔍 DEBUG: Processing SKIPPED test in setup: {nodeid}")
-    logger.info(f"🔍 DEBUG: Skip reason: {skip_reason}")
-    logger.info(f"🔍 DEBUG: Environment-related skip: {is_environment_skip}")
+    logger.info(f"🔍 Processing SKIPPED test: {nodeid}")
+    logger.info(f"🔍 Skip reason: {skip_reason}")
+    logger.info(f"🔍 Environment-related skip: {is_environment_skip}")
 
     # Get the appropriate suite reporter
-    suite_reporter = None
-    test_path = str(item.fspath)
+    suite_reporter = _get_suite_reporter(str(item.fspath))
     
-    if "smoke_tests" in test_path:
-        suite_reporter = get_suite_reporter("smoke")
-    elif "regression_tests" in test_path:
-        suite_reporter = get_suite_reporter("regression")
-    elif "sanity_tests" in test_path:
-        suite_reporter = get_suite_reporter("sanity")
-    elif "api_tests" in test_path:
-        suite_reporter = get_suite_reporter("api")
-    else:
-        suite_reporter = get_suite_reporter("smoke")
-    
-    # Add the skipped test to reporting
     if suite_reporter:
         suite_reporter.add_test_result(
             test_name=nodeid,
@@ -242,22 +481,39 @@ def _handle_skipped_test(item, report):
             duration=0.0,
             skip_reason=skip_reason,
         )
-        logger.info(f"Added SKIPPED test result to {suite_reporter.test_suite_name}: {nodeid}")
+        logger.info(f"Added SKIPPED test to {suite_reporter.test_suite_name}: {nodeid}")
+
+
+def _get_suite_reporter(test_path: str):
+    """Get the appropriate suite reporter based on test path"""
+    test_path_lower = test_path.lower()
+    
+    if "partners_api_tests" in test_path_lower:
+        return get_suite_reporter("partners_api")
+    elif "api_tests" in test_path_lower:
+        return get_suite_reporter("api")
+    elif "smoke_tests" in test_path_lower:
+        return get_suite_reporter("smoke")
+    elif "regression_tests" in test_path_lower:
+        return get_suite_reporter("regression")
+    elif "sanity_tests" in test_path_lower:
+        return get_suite_reporter("sanity")
+    else:
+        return get_suite_reporter("smoke")
 
 
 @pytest.hookimpl(hookwrapper=True)
 def pytest_runtest_makereport(item, call):
-    """Capture test results for reporting, attach screenshots/html and latest log to pytest-html"""
+    """Capture test results for reporting"""
     outcome = yield
     report = outcome.get_result()
 
-    # Debug all phases to see what's happening
-    logger.info(f"🔍 DEBUG: Test phase - {report.when} for {item.nodeid} - Skipped: {report.skipped}")
+    # Debug logging
+    logger.debug(f"Test phase - {report.when} for {item.nodeid} - Skipped: {report.skipped}")
     
     # Set start time for duration calculation
     if report.when == "setup":
         item.start_time = time.time()
-        
         if report.skipped:
             _handle_skipped_test(item, report)
         return
@@ -279,17 +535,13 @@ def pytest_runtest_makereport(item, call):
             status = "PASS"
         elif report.skipped:
             status = "SKIP"
-            # Extract skip reason properly
             if hasattr(report, 'wasxfail'):
                 skip_reason = f"Expected failure: {report.wasxfail}"
             else:
                 skip_reason = str(report.longrepr) if getattr(report, "longrepr", None) else "Skipped"
             error_message = skip_reason
-            logger.info(f"🔍 DEBUG: Processing SKIPPED test in call: {nodeid}")
-            logger.info(f"🔍 DEBUG: Skip reason: {skip_reason}")
         else:
             status = "FAIL"
-            # prefer concise exception from call.excinfo
             if call.excinfo is not None:
                 try:
                     error_message = f"{call.excinfo.type.__name__}: {call.excinfo.value}"
@@ -301,17 +553,15 @@ def pytest_runtest_makereport(item, call):
         screenshot_path = None
         html_path = None
         evidence = {}
-        recent_dumps = []
 
-        # ========== HANDLE FAILED TESTS ==========
+        # Handle failed tests
         if status == "FAIL":
             test_path = str(item.fspath)
             is_api_test = "api_tests" in test_path.lower()
             
-            # ===== 1. CAPTURE SCREENSHOTS FOR UI TESTS =====
-            if not is_api_test:  # UI tests - capture screenshots
+            # Capture screenshots for UI tests
+            if not is_api_test:
                 driver_instance = item.funcargs.get("driver", None)
-                # also look for common alternate driver fixture names
                 if not driver_instance:
                     for alt in ("webdriver", "browser_driver", "browser"):
                         driver_instance = item.funcargs.get(alt)
@@ -330,7 +580,7 @@ def pytest_runtest_makereport(item, call):
                         screenshot_path = result.get("screenshot")
                         html_path = result.get("html")
 
-                        # attach screenshot and html to pytest-html via report.extra
+                        # Attach to report
                         extras_list = getattr(report, "extras", [])
                         if screenshot_path and os.path.exists(screenshot_path):
                             extras_list.append(extras.image(screenshot_path))
@@ -338,26 +588,18 @@ def pytest_runtest_makereport(item, call):
                             try:
                                 with open(html_path, "r", encoding="utf-8") as f:
                                     html_content = f.read()
-                                extras_list.append(extras.html(f"<details><summary>Error HTML</summary>{html_content}</details>"))
+                                extras_list.append(extras.html(
+                                    f"<details><summary>Error HTML</summary>{html_content}</details>"
+                                ))
                             except Exception:
                                 logger.exception("Failed reading html_path for attachment")
                         report.extras = extras_list
-
-                        # also store on item so other hooks or reporters can reuse
-                        setattr(item, "_screenshot_path", screenshot_path)
-                        setattr(item, "_error_html_path", html_path)
-                        logger.info(f"Captured failure evidence for {nodeid} -> {screenshot_path}, {html_path}")
-                        logger.info(f"🔍 SCREENSHOT DEBUG: Path = {screenshot_path}, Exists = {os.path.exists(screenshot_path) if screenshot_path else 'No path'}")
+                        
                     except Exception:
-                        logger.exception("Failed capturing screenshot/html via ScreenshotUtils")
-                else:
-                    logger.warning("No webdriver fixture available on test item; skipping screenshot capture")
-            else:
-                logger.info(f"Skipping screenshot capture for API test: {nodeid}")
+                        logger.exception("Failed capturing screenshot/html")
             
-            # ===== 2. CAPTURE API RESPONSE DUMPS =====
-            is_api_endpoint_test = any(term in nodeid.lower() for term in ['api', 'auth', 'flight', 'hotel', 'package', 'visa'])
-            if is_api_endpoint_test:
+            # Capture API response dumps
+            if "api" in test_path.lower():
                 try:
                     dumps_dir = Path("reports/failed_responses")
                     dumps_dir.mkdir(parents=True, exist_ok=True)
@@ -366,7 +608,6 @@ def pytest_runtest_makereport(item, call):
                     timestamp = datetime.now().strftime("%H%M%S")
                     dump_file = dumps_dir / f"{safe_name}_{timestamp}.json"
                     
-                    # Try multiple methods to get response
                     response_data = {
                         "test_name": nodeid,
                         "timestamp": datetime.now().isoformat(),
@@ -374,127 +615,30 @@ def pytest_runtest_makereport(item, call):
                         "response_captured": False
                     }
                     
-                    # Method 1: Check if auth_api has last_response
+                    # Try to capture response data
                     if hasattr(item, 'funcargs'):
                         for arg_name, arg_value in item.funcargs.items():
                             if hasattr(arg_value, 'last_response'):
                                 response = arg_value.last_response
                                 response_data.update({
                                     "status_code": response.status_code,
-                                    "body": response.text[:2000],  # Limit size
+                                    "body": response.text[:2000],
                                     "response_captured": True
                                 })
                                 break
                     
                     with open(dump_file, "w", encoding="utf-8") as f:
-                        import json
                         json.dump(response_data, f, indent=2, default=str)
                     
                     evidence["response_file"] = str(dump_file)
-                    logger.info(f"API failure record created: {dump_file}")
                     
                 except Exception as e:
                     logger.error(f"Failed to create API failure record: {e}")
+
+        # Send to reporter
+        suite_reporter = _get_suite_reporter(str(item.fspath))
         
-        # ========== SAVE TEST-SPECIFIC LOGS (FOR ALL TEST STATUSES) ==========
-        test_specific_log = None
-        try:
-            # Get test_log_handler from GeoLogger
-            test_log_handler = getattr(logger, 'test_handler', None)
-            
-            if test_log_handler:
-                test_specific_log = test_log_handler.save_test_logs(nodeid, "reports/logs")
-                if test_specific_log:
-                    setattr(item, "_test_specific_log", test_specific_log)
-                    evidence["log_path"] = test_specific_log
-                    logger.info(f"Saved test-specific logs: {test_specific_log}")
-        except Exception as e:
-            logger.error(f"Failed to save test-specific logs: {e}")
-
-        # Clear logs for this test to free memory
-        if test_log_handler and hasattr(test_log_handler, 'clear_test_logs'):
-            try:
-                test_log_handler.clear_test_logs(nodeid)
-            except Exception as e:
-                logger.error(f"Failed to clear test logs: {e}")
-
-        # ========== ATTACH LATEST LOG TO PYTEST-HTML ==========
-        try:
-            logs_dir = Path("logs")
-            reports_dir = Path("reports")
-            target_logs_dir = reports_dir / "logs"
-            latest_log_path = None
-
-            if logs_dir.exists() and logs_dir.is_dir():
-                candidates = sorted(
-                    [p for p in logs_dir.iterdir() if p.is_file() and p.suffix.lower() in (".log", ".txt")],
-                    key=lambda p: p.stat().st_mtime,
-                    reverse=True,
-                )
-                if candidates:
-                    latest_log = candidates[0]
-                    target_logs_dir.mkdir(parents=True, exist_ok=True)
-                    dest_name = latest_log.name
-                    copied = target_logs_dir / dest_name
-                    try:
-                        shutil.copy2(latest_log, copied)
-                        latest_log_path = copied
-                    except Exception:
-                        logger.exception("Failed copying latest log to reports/logs; will reference original")
-                        latest_log_path = latest_log
-
-            if latest_log_path and latest_log_path.exists():
-                extras_list = getattr(report, "extras", [])
-                rel_path = os.path.relpath(latest_log_path, start=reports_dir) if reports_dir.exists() else str(latest_log_path)
-                # Add a download link
-                link_html = f'<p><a href="{rel_path}" download>Download latest test log ({Path(rel_path).name})</a></p>'
-                extras_list.append(extras.html(link_html))
-
-                # Add a tail preview (last ~2000 chars) inside a collapsible <details>
-                try:
-                    with open(latest_log_path, "r", encoding="utf-8", errors="replace") as f:
-                        f.seek(0, os.SEEK_END)
-                        size = f.tell()
-                        tail_size = 2000
-                        if size > tail_size:
-                            f.seek(max(0, size - tail_size))
-                            preview = f.read()
-                        else:
-                            f.seek(0)
-                            preview = f.read()
-                    safe_preview = html_escape.escape(preview)
-                    preview_html = (
-                        f"<details><summary>Latest log preview ({Path(rel_path).name})</summary>"
-                        f"<pre style='white-space:pre-wrap;max-height:400px;overflow:auto'>{safe_preview}</pre></details>"
-                    )
-                    extras_list.append(extras.html(preview_html))
-                except Exception:
-                    logger.exception("Failed to read/attach log preview")
-                report.extras = extras_list
-                setattr(item, "_latest_log_path", str(latest_log_path))
-        except Exception:
-            logger.exception("Failed to attach latest log to pytest-html")
-
-        # ========== SEND TO REPORTER ==========
-        suite_reporter = None
-        test_path = str(item.fspath)
-        
-        if "smoke_tests" in test_path:
-            suite_reporter = get_suite_reporter("smoke")
-        elif "partners_api_tests" in test_path:
-            suite_reporter = get_suite_reporter("partners_api")
-        elif "regression_tests" in test_path:
-            suite_reporter = get_suite_reporter("regression")
-        elif "sanity_tests" in test_path:
-            suite_reporter = get_suite_reporter("sanity")
-        elif "api_tests" in test_path:
-            suite_reporter = get_suite_reporter("api")
-        else:
-            # Fallback to smoke reporter
-            suite_reporter = get_suite_reporter("smoke")
-            
         if suite_reporter:
-            logger.info(f"🔍 DEBUG: About to add to {suite_reporter.test_suite_name}: {nodeid} - {status}")
             suite_reporter.add_test_result(
                 test_name=nodeid,
                 status=status,
@@ -504,18 +648,6 @@ def pytest_runtest_makereport(item, call):
                 skip_reason=skip_reason,
                 evidence=evidence,
             )
-            logger.info(f"Added test result to {suite_reporter.test_suite_name}: {nodeid} - {status}")
-        else:
-            logger.warning(f"No reporter found for test: {nodeid}")
 
     except Exception:
         logger.exception("Unhandled exception in pytest_runtest_makereport")
-
-    # Check if the test failed
-    if report.when == "call" and report.failed:
-        if hasattr(item, 'funcargs') and 'response' in item.funcargs:
-            response = item.funcargs['response']
-            if response is None:
-                report.longrepr = "API response is None. Possible server or request issue."
-            elif hasattr(response, 'status_code') and response.status_code >= 400:
-                report.longrepr = f"API Error: {response.status_code} - {response.text}"

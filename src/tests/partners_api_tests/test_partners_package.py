@@ -242,67 +242,298 @@ class TestPartnersPackageFunctionality:
         self.logger.success(f"✅ Verified user can get package countries - {len(countries)} countries, {len(cities)} cities")
     
     @pytest.mark.partners_api
-    def test_verified_user_can_book_package(self):
-        """TEST: Verified users can book packages and booking is properly stored"""
+    def test_verified_user_can_book_packages(self):
+        """TEST: Verified users can book both GROUP and PRIVATE packages with correct payload structure"""
         # First get available packages
         package_api = self.verified_helper.get_verified_package_api()
         
-        self.logger.info("🔵 VERIFIED USER - Getting packages for booking")
+        self.logger.info("🔵 VERIFIED USER - Getting packages for booking test")
         packages_response = package_api.get_all_packages()
         assert packages_response.status_code == 200
         
         packages_data = packages_response.json()
-        packages = packages_data['data']['packages']
+        all_packages = packages_data['data']['packages']
         
-        if not packages:
+        if not all_packages:
             pytest.skip("No packages available for booking test")
         
-        # Use first available package for booking test
-        first_package = packages[0]
-        package_id = first_package['id']
-        package_title = first_package['title']
+        from datetime import datetime
+        import dateutil.parser
         
-        # Get available pricing text
-        pricing_text = "Family Trip"  # Default from your response
-        if first_package.get('prices'):
-            pricing_text = first_package['prices'][0]['pricing_text']
+        today = datetime.now().date()
         
-        self.logger.info(f"🔵 VERIFIED USER - Attempting package booking: {package_title} (ID: {package_id})")
+        # Filter packages by type AND check if they're still active (end_date not in past)
+        group_packages = []
+        private_packages = []
         
-        # Use the package's end date as the departure date
-        departure_date_str = first_package['end_date']
+        for p in all_packages:
+            package_type = p.get('package_type')
+            end_date_str = p.get('end_date')
+            
+            # Skip if no end date
+            if not end_date_str:
+                continue
+                
+            end_date = dateutil.parser.parse(end_date_str).date()
+            
+            # Only include if package is still active (end date is today or in future)
+            if end_date >= today:
+                if package_type == 'GROUP':
+                    group_packages.append(p)
+                elif package_type == 'PRIVATE':
+                    private_packages.append(p)
         
-        # Create unique booking data to avoid conflicts
+        self.logger.info(f"📊 Found {len(group_packages)} ACTIVE GROUP packages and {len(private_packages)} ACTIVE PRIVATE packages")
+        
+        # Test GROUP package if available
+        if group_packages:
+            selected_group = random.choice(group_packages)
+            self._test_book_group_package(package_api, selected_group)
+        else:
+            self.logger.warning("⚠️ No ACTIVE GROUP packages available to test")
+        
+        # Test PRIVATE package if available
+        if private_packages:
+            selected_private = random.choice(private_packages)
+            self._test_book_private_package(package_api, selected_private)
+        else:
+            self.logger.warning("⚠️ No ACTIVE PRIVATE packages available to test")
+        
+        # If neither type has active packages, skip the test
+        if not group_packages and not private_packages:
+            pytest.skip("No active GROUP or PRIVATE packages available for testing")
+
+    def _generate_payment_flags(self):
+        """
+        Generate valid payment flag combinations based on business logic:
+        - If is_lockdown_payment = True → is_full_payment = False, book_at_deal_price = False
+        - If book_at_deal_price = True → is_full_payment = False (regardless of lockdown status)
+        - Otherwise, is_full_payment can be random
+        """
+        # First decide if this will be a lockdown payment (30% chance)
+        is_lockdown_payment = random.choice([True, False])
+        
+        if is_lockdown_payment:
+            # Lockdown payment: both other flags MUST be False
+            is_full_payment = False
+            book_at_deal_price = False
+            self.logger.debug("🔒 Using LOCKDOWN payment (full payment and deal price disabled)")
+        else:
+            # Not lockdown: decide if using deal price
+            book_at_deal_price = random.choice([True, False])
+            
+            if book_at_deal_price:
+                # Deal price: full payment MUST be False
+                is_full_payment = False
+                self.logger.debug(f"💰 Using DEAL PRICE (full payment disabled)")
+            else:
+                # Regular booking: full payment can be random
+                is_full_payment = random.choice([True, False])
+                self.logger.debug(f"💳 Regular booking - Full payment: {is_full_payment}")
+        
+        return {
+            "is_lockdown_payment": is_lockdown_payment,
+            "is_full_payment": is_full_payment,
+            "book_at_deal_price": book_at_deal_price
+        }
+
+    def _test_book_group_package(self, package_api, package):
+        """Helper to test booking a GROUP package"""
+        package_id = package['id']
+        package_title = package['title']
+        package_end_date = package.get('end_date')
+        
+        self.logger.info(f"🔵 TESTING GROUP PACKAGE: {package_title} (ID: {package_id}) - End date: {package_end_date}")
+        
+        # Get pricing text from the package response
+        pricing_text = None
+        if package.get('prices') and len(package['prices']) > 0:
+            # Randomly select a pricing option if multiple exist
+            pricing_option = random.choice(package['prices'])
+            pricing_text = pricing_option.get('pricing_text')
+            price_value = pricing_option.get('price')
+            self.logger.info(f"💰 Selected pricing: {pricing_text} - ${price_value}")
+        else:
+            self.logger.error("❌ No prices found in package response")
+            pytest.fail(f"Package {package_id} has no prices")
+        
+        # Generate valid payment flags
+        payment_flags = self._generate_payment_flags()
+        
+        # Create unique booking data
         random_suffix = random.randint(1000, 9999)
+        
+        # GROUP PACKAGE payload - NO dates required
         booking_data = {
             "package": str(package_id),
-            "full_name": f"Test Package User {random_suffix}",
-            "email": f"testpackage{random_suffix}@yopmail.com",
-            "phone": f"+23481{random.randint(1000000,9999999)}",
-            "departure_date": departure_date_str,  # <-- always the package end date
-            "adults": 2,
-            "children": 1,
-            "infants": 0,
+            "full_name": f"GroupTest User{random_suffix}",
+            "email": f"grouptest{random_suffix}@yopmail.com",
+            "phone": f"+234{random.randint(700000000, 809999999)}",
             "pricing_text": pricing_text,
-            "book_at_deal_price": False,
-            "is_full_payment": True,
-            "is_lockdown_payment": False
+            "is_full_payment": payment_flags["is_full_payment"],
+            "adults": random.randint(1, 4),
+            "children": random.randint(0, 2),
+            "infants": random.randint(0, 1),
+            "book_at_deal_price": payment_flags["book_at_deal_price"],
+            "is_lockdown_payment": payment_flags["is_lockdown_payment"],
+            # Note: For GROUP packages, we DON'T include departure_date or return_date
+            # The package uses its own start_date/end_date
         }
+        
+        # Ensure children and infants don't exceed reasonable limits
+        total_guests = booking_data["adults"] + booking_data["children"] + booking_data["infants"]
+        if total_guests > 6 or total_guests == 0:
+            booking_data["adults"] = 2
+            booking_data["children"] = 1
+            booking_data["infants"] = 0
+        
+        # Log the payload for debugging
+        self.logger.info(f"📦 GROUP package payload: {booking_data}")
+        
+        # Make the booking request
         booking_response = package_api.book_package(booking_data)
         
-        # Booking should be successful (201 created)
-        assert booking_response.status_code == 201, "Verified user should be able to book packages"
+        # Log response for debugging
+        self.logger.info(f"📊 GROUP booking response status: {booking_response.status_code}")
+        
+        # Assertions for GROUP package
+        assert booking_response.status_code == 201, f"GROUP package booking failed: {booking_response.text}"
         
         booking_result = booking_response.json()
+        assert booking_result.get('message') == "Package booked successfully"
         
-        # Verify booking response structure
-        assert booking_result['message'] == "Package booked successfully"
+        self.logger.success(f"✅ Successfully booked GROUP package: {package_title}")
+        return booking_result
+
+    def _test_book_private_package(self, package_api, package):
+        """Helper to test booking a PRIVATE package"""
+        package_id = package['id']
+        package_title = package['title']
         
-        self.logger.success("✅ Verified user can book packages")
+        self.logger.info(f"🔵 TESTING PRIVATE PACKAGE: {package_title} (ID: {package_id})")
         
-        # Store booking data for verification
-        self.booking_data = booking_data
-        self.package_booked = first_package
+        # Get pricing text from the package response
+        pricing_text = None
+        if package.get('prices') and len(package['prices']) > 0:
+            # Randomly select a pricing option if multiple exist
+            pricing_option = random.choice(package['prices'])
+            pricing_text = pricing_option.get('pricing_text')
+            price_value = pricing_option.get('price')
+            self.logger.info(f"💰 Selected pricing: {pricing_text} - ${price_value}")
+        else:
+            self.logger.error("❌ No prices found in package response")
+            pytest.fail(f"Package {package_id} has no prices")
+        
+        # Generate valid payment flags
+        payment_flags = self._generate_payment_flags()
+        
+        # Create unique booking data
+        random_suffix = random.randint(1000, 9999)
+        
+        from datetime import datetime, timedelta
+        import dateutil.parser
+        
+        # Get package date range
+        package_start_date_str = package.get('start_date')
+        package_end_date_str = package.get('end_date')
+        
+        if not package_start_date_str or not package_end_date_str:
+            self.logger.error(f"❌ Package {package_id} missing start_date or end_date")
+            pytest.fail(f"Package {package_id} missing required dates")
+        
+        # Parse package dates
+        package_start_date = dateutil.parser.parse(package_start_date_str).date()
+        package_end_date = dateutil.parser.parse(package_end_date_str).date()
+        today = datetime.now().date()
+        
+        self.logger.info(f"📅 Package date range: {package_start_date} to {package_end_date}")
+        
+        # Determine departure date within package range
+        if package_start_date > today:
+            # Package starts in the future - use a date within the package range
+            max_days_offset = (package_end_date - package_start_date).days
+            
+            # Choose a departure date within the package range (not too close to end)
+            days_after_start = random.randint(0, max(0, max_days_offset - 3))
+            departure_date = package_start_date + timedelta(days=days_after_start)
+        else:
+            # Package already started - use today or a future date within remaining window
+            days_remaining = (package_end_date - today).days
+            if days_remaining < 3:
+                self.logger.warning(f"⚠️ Package {package_id} has only {days_remaining} days remaining")
+            
+            # Departure can be today or any day within remaining window
+            days_offset = random.randint(0, max(0, days_remaining - 2))
+            departure_date = today + timedelta(days=days_offset)
+        
+        # Ensure departure date is not before package start
+        if departure_date < package_start_date:
+            departure_date = package_start_date
+        
+        # Calculate return date (trip duration)
+        # Trip should be at least 1 day, at most remaining days in package
+        max_trip_duration = (package_end_date - departure_date).days
+        if max_trip_duration < 1:
+            self.logger.warning(f"⚠️ Package {package_id} has insufficient days for a trip")
+            pytest.skip(f"Package {package_id} has insufficient days")
+        
+        trip_duration = random.randint(1, min(14, max_trip_duration))
+        return_date = departure_date + timedelta(days=trip_duration)
+        
+        # Format dates as strings
+        departure_date_str = departure_date.strftime("%Y-%m-%d")
+        return_date_str = return_date.strftime("%Y-%m-%d")
+        
+        self.logger.info(f"📅 Selected departure: {departure_date_str}, return: {return_date_str} (duration: {trip_duration} days)")
+        
+        # PRIVATE PACKAGE payload - REQUIRES both departure_date AND return_date
+        booking_data = {
+            "package": str(package_id),
+            "full_name": f"PrivateTest User{random_suffix}",
+            "email": f"privatetest{random_suffix}@yopmail.com",
+            "phone": f"+234{random.randint(700000000, 809999999)}",
+            "pricing_text": pricing_text,
+            "is_full_payment": payment_flags["is_full_payment"],
+            "departure_date": departure_date_str,
+            "return_date": return_date_str,
+            "adults": random.randint(1, 4),
+            "children": random.randint(0, 2),
+            "infants": random.randint(0, 1),
+            "book_at_deal_price": payment_flags["book_at_deal_price"],
+            "is_lockdown_payment": payment_flags["is_lockdown_payment"],
+        }
+        
+        # Ensure children and infants don't exceed reasonable limits
+        total_guests = booking_data["adults"] + booking_data["children"] + booking_data["infants"]
+        if total_guests > 6 or total_guests == 0:
+            booking_data["adults"] = 2
+            booking_data["children"] = 1
+            booking_data["infants"] = 0
+        
+        # Log the payload for debugging
+        self.logger.info(f"📦 PRIVATE package payload: {booking_data}")
+        
+        # Make the booking request
+        booking_response = package_api.book_package(booking_data)
+        
+        # Log response for debugging
+        self.logger.info(f"📊 PRIVATE booking response status: {booking_response.status_code}")
+        if booking_response.status_code != 201:
+            self.logger.error(f"❌ PRIVATE booking failed: {booking_response.text}")
+        
+        # Assertions for PRIVATE package
+        assert booking_response.status_code == 201, f"PRIVATE package booking failed: {booking_response.text}"
+        
+        booking_result = booking_response.json()
+        assert booking_result.get('message') == "Package booked successfully"
+        
+        # Verify dates were saved correctly
+        booking_data_response = booking_result.get('data', {})
+        if booking_data_response:
+            self.logger.info(f"📅 Departure: {booking_data_response.get('departure_date')}, Return: {booking_data_response.get('return_date')}")
+        
+        self.logger.success(f"✅ Successfully booked PRIVATE package: {package_title}")
+        return booking_result
     
     @pytest.mark.partners_api
     def test_package_booking_appears_in_bookings_list(self):
