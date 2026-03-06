@@ -225,6 +225,10 @@ class TestPackageAPI:
                     self.logger.info("✅ Paystack payment - paymentLink present (as expected)")
                     
                 elif payment_method == "manual payment":
+                    assert 'amount_to_pay' in response_data['data'], \
+                        f"Bank Transfer should return amountToPay. Response keys: {list(response_data['data'].keys())}"
+                    assert 'reference' in response_data['data'], \
+                        f"Bank Transfer should return paymentReference. Response keys: {list(response_data['data'].keys())}"
                     assert 'paymentLink' not in response_data['data'], \
                         f"Bank Transfer should NOT return paymentLink. Response keys: {list(response_data['data'].keys())}"
                     self.logger.info("✅ Bank Transfer - no payment link (as expected)")
