@@ -1,0 +1,850 @@
+{
+    "test_suite_name": "Unified UI Smoke + API + Partners API TEST REPORT",
+    "total_tests": 106,
+    "passed_tests": 79,
+    "failed_tests": 25,
+    "skipped_tests": 2,
+    "success_rate": 74.5,
+    "duration": 143.03815,
+    "start_time": "2026-03-09 07:42:29",
+    "end_time": "2026-03-09 07:44:52",
+    "suites_run": [
+        "api",
+        "partners_api"
+    ],
+    "suite_details": {
+        "api": {
+            "report": {
+                "test_suite_name": "API SMOKE TEST",
+                "total_tests": 71,
+                "passed_tests": 69,
+                "failed_tests": 2,
+                "skipped_tests": 0,
+                "success_rate": 97.1830985915493,
+                "duration": 88.710956,
+                "start_time": "2026-03-09 07:42:54",
+                "end_time": "2026-03-09 07:44:23",
+                "failed_tests_details": [
+                    {
+                        "test_name": "src/tests/api_tests/test_package_api.py::TestPackageAPI::test_book_package_and_verify_user_bookings",
+                        "status": "FAIL",
+                        "error_message": "Failed: Booking failed with status 404",
+                        "screenshot_path": null,
+                        "duration": 6.646516799926758,
+                        "timestamp": "07:43:57",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "response_file": "reports/failed_responses/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_book_package_and_verify_user_bookings_074357.json"
+                        },
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_book_package_and_verify_user_bookings_074357.json",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_package_api.py::TestPackageAPI::test_book_package_without_auth_not_in_user_bookings",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'FixtureFunctionDefinition' object has no attribute 'get_user_booked_packages'",
+                        "screenshot_path": null,
+                        "duration": 0.17295026779174805,
+                        "timestamp": "07:43:58",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "response_file": "reports/failed_responses/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_book_package_without_auth_not_in_user_bookings_074358.json"
+                        },
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_book_package_without_auth_not_in_user_bookings_074358.json",
+                        "suite": "api"
+                    }
+                ],
+                "skipped_tests_details": []
+            },
+            "timestamp": "2026-03-09 07:44:23"
+        },
+        "partners_api": {
+            "report": {
+                "test_suite_name": "PARTNERS API SMOKE TEST",
+                "total_tests": 35,
+                "passed_tests": 10,
+                "failed_tests": 23,
+                "skipped_tests": 2,
+                "success_rate": 28.57142857142857,
+                "duration": 29.52122,
+                "start_time": "2026-03-09 07:44:23",
+                "end_time": "2026-03-09 07:44:52",
+                "failed_tests_details": [
+                    {
+                        "test_name": "src/tests/partners_api_tests/test_partners_auth_api.py::TestPartnersAuth::test_verified_user_login_returns_token",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Verified user should get access token\nassert None is not None",
+                        "screenshot_path": null,
+                        "duration": 0.22541522979736328,
+                        "timestamp": "07:44:25",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "response_file": "reports/failed_responses/src_tests_partners_api_tests_test_partners_auth_api.py_TestPartnersAuth_test_verified_user_login_returns_token_074425.json"
+                        },
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_partners_api_tests_test_partners_auth_api.py_TestPartnersAuth_test_verified_user_login_returns_token_074425.json",
+                        "suite": "partners_api"
+                    },
+                    {
+                        "test_name": "src/tests/partners_api_tests/test_partners_auth_api.py::TestPartnersAuth::test_verified_user_login_response_structure",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: assert 401 == 200\n +  where 401 = <Response [401]>.status_code",
+                        "screenshot_path": null,
+                        "duration": 0.21784734725952148,
+                        "timestamp": "07:44:25",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "response_file": "reports/failed_responses/src_tests_partners_api_tests_test_partners_auth_api.py_TestPartnersAuth_test_verified_user_login_response_structure_074425.json"
+                        },
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_partners_api_tests_test_partners_auth_api.py_TestPartnersAuth_test_verified_user_login_response_structure_074425.json",
+                        "suite": "partners_api"
+                    },
+                    {
+                        "test_name": "src/tests/partners_api_tests/test_partners_auth_api.py::TestPartnersAuth::test_partners_dynamic_token_extraction",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: assert 401 == 200\n +  where 401 = <Response [401]>.status_code",
+                        "screenshot_path": null,
+                        "duration": 17.377451419830322,
+                        "timestamp": "07:44:43",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "response_file": "reports/failed_responses/src_tests_partners_api_tests_test_partners_auth_api.py_TestPartnersAuth_test_partners_dynamic_token_extraction_074443.json"
+                        },
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_partners_api_tests_test_partners_auth_api.py_TestPartnersAuth_test_partners_dynamic_token_extraction_074443.json",
+                        "suite": "partners_api"
+                    },
+                    {
+                        "test_name": "src/tests/partners_api_tests/test_partners_flight.py::TestPartnersFlightFunctionality::test_verified_user_can_search_flights",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Should get verified flight API\nassert None is not None",
+                        "screenshot_path": null,
+                        "duration": 0.17084527015686035,
+                        "timestamp": "07:44:44",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "response_file": "reports/failed_responses/src_tests_partners_api_tests_test_partners_flight.py_TestPartnersFlightFunctionality_test_verified_user_can_search_flights_074444.json"
+                        },
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_partners_api_tests_test_partners_flight.py_TestPartnersFlightFunctionality_test_verified_user_can_search_flights_074444.json",
+                        "suite": "partners_api"
+                    },
+                    {
+                        "test_name": "src/tests/partners_api_tests/test_partners_flight.py::TestPartnersFlightFunctionality::test_verified_user_can_book_flight",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Should get verified flight API\nassert None is not None",
+                        "screenshot_path": null,
+                        "duration": 0.17302322387695312,
+                        "timestamp": "07:44:44",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "response_file": "reports/failed_responses/src_tests_partners_api_tests_test_partners_flight.py_TestPartnersFlightFunctionality_test_verified_user_can_book_flight_074444.json"
+                        },
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_partners_api_tests_test_partners_flight.py_TestPartnersFlightFunctionality_test_verified_user_can_book_flight_074444.json",
+                        "suite": "partners_api"
+                    },
+                    {
+                        "test_name": "src/tests/partners_api_tests/test_partners_flight.py::TestPartnersFlightFunctionality::test_flight_search_counted_in_usage",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'get_usage'",
+                        "screenshot_path": null,
+                        "duration": 0.008435964584350586,
+                        "timestamp": "07:44:45",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "response_file": "reports/failed_responses/src_tests_partners_api_tests_test_partners_flight.py_TestPartnersFlightFunctionality_test_flight_search_counted_in_usage_074445.json"
+                        },
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_partners_api_tests_test_partners_flight.py_TestPartnersFlightFunctionality_test_flight_search_counted_in_usage_074445.json",
+                        "suite": "partners_api"
+                    },
+                    {
+                        "test_name": "src/tests/partners_api_tests/test_partners_flight.py::TestPartnersFlightFunctionality::test_flight_booking_counted_in_usage",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'get_usage'",
+                        "screenshot_path": null,
+                        "duration": 0.008668184280395508,
+                        "timestamp": "07:44:45",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "response_file": "reports/failed_responses/src_tests_partners_api_tests_test_partners_flight.py_TestPartnersFlightFunctionality_test_flight_booking_counted_in_usage_074445.json"
+                        },
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_partners_api_tests_test_partners_flight.py_TestPartnersFlightFunctionality_test_flight_booking_counted_in_usage_074445.json",
+                        "suite": "partners_api"
+                    },
+                    {
+                        "test_name": "src/tests/partners_api_tests/test_partners_flight.py::TestPartnersFlightFunctionality::test_flight_usage_reflected_in_range_endpoint",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'get_usage_range'",
+                        "screenshot_path": null,
+                        "duration": 0.008293628692626953,
+                        "timestamp": "07:44:45",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "response_file": "reports/failed_responses/src_tests_partners_api_tests_test_partners_flight.py_TestPartnersFlightFunctionality_test_flight_usage_reflected_in_range_endpoint_074445.json"
+                        },
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_partners_api_tests_test_partners_flight.py_TestPartnersFlightFunctionality_test_flight_usage_reflected_in_range_endpoint_074445.json",
+                        "suite": "partners_api"
+                    },
+                    {
+                        "test_name": "src/tests/partners_api_tests/test_partners_organization.py::TestPartnersOrganizationFunctionality::test_verified_user_can_access_profile",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Should get verified organization API\nassert None is not None",
+                        "screenshot_path": null,
+                        "duration": 0.2178025245666504,
+                        "timestamp": "07:44:47",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "response_file": "reports/failed_responses/src_tests_partners_api_tests_test_partners_organization.py_TestPartnersOrganizationFunctionality_test_verified_user_can_access_profile_074447.json"
+                        },
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_partners_api_tests_test_partners_organization.py_TestPartnersOrganizationFunctionality_test_verified_user_can_access_profile_074447.json",
+                        "suite": "partners_api"
+                    },
+                    {
+                        "test_name": "src/tests/partners_api_tests/test_partners_organization.py::TestPartnersOrganizationFunctionality::test_verified_user_can_reset_api_keys",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Should get verified organization API\nassert None is not None",
+                        "screenshot_path": null,
+                        "duration": 0.236649751663208,
+                        "timestamp": "07:44:47",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "response_file": "reports/failed_responses/src_tests_partners_api_tests_test_partners_organization.py_TestPartnersOrganizationFunctionality_test_verified_user_can_reset_api_keys_074447.json"
+                        },
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_partners_api_tests_test_partners_organization.py_TestPartnersOrganizationFunctionality_test_verified_user_can_reset_api_keys_074447.json",
+                        "suite": "partners_api"
+                    },
+                    {
+                        "test_name": "src/tests/partners_api_tests/test_partners_organization.py::TestPartnersOrganizationFunctionality::test_verified_user_can_access_usage_data",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Should get verified organization API\nassert None is not None",
+                        "screenshot_path": null,
+                        "duration": 0.211456298828125,
+                        "timestamp": "07:44:47",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "response_file": "reports/failed_responses/src_tests_partners_api_tests_test_partners_organization.py_TestPartnersOrganizationFunctionality_test_verified_user_can_access_usage_data_074447.json"
+                        },
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_partners_api_tests_test_partners_organization.py_TestPartnersOrganizationFunctionality_test_verified_user_can_access_usage_data_074447.json",
+                        "suite": "partners_api"
+                    },
+                    {
+                        "test_name": "src/tests/partners_api_tests/test_partners_organization.py::TestPartnersOrganizationFunctionality::test_verified_account_status",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Verified account should pass verification check\nassert False",
+                        "screenshot_path": null,
+                        "duration": 0.2098865509033203,
+                        "timestamp": "07:44:47",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "response_file": "reports/failed_responses/src_tests_partners_api_tests_test_partners_organization.py_TestPartnersOrganizationFunctionality_test_verified_account_status_074447.json"
+                        },
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_partners_api_tests_test_partners_organization.py_TestPartnersOrganizationFunctionality_test_verified_account_status_074447.json",
+                        "suite": "partners_api"
+                    },
+                    {
+                        "test_name": "src/tests/partners_api_tests/test_partners_organization.py::TestPartnersOrganizationFunctionality::test_usage_records_contain_flight_data",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'get_usage'",
+                        "screenshot_path": null,
+                        "duration": 0.2193148136138916,
+                        "timestamp": "07:44:48",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "response_file": "reports/failed_responses/src_tests_partners_api_tests_test_partners_organization.py_TestPartnersOrganizationFunctionality_test_usage_records_contain_flight_data_074448.json"
+                        },
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_partners_api_tests_test_partners_organization.py_TestPartnersOrganizationFunctionality_test_usage_records_contain_flight_data_074448.json",
+                        "suite": "partners_api"
+                    },
+                    {
+                        "test_name": "src/tests/partners_api_tests/test_partners_organization.py::TestPartnersOrganizationFunctionality::test_usage_records_contain_package_data",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'get_usage'",
+                        "screenshot_path": null,
+                        "duration": 0.21928715705871582,
+                        "timestamp": "07:44:48",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "response_file": "reports/failed_responses/src_tests_partners_api_tests_test_partners_organization.py_TestPartnersOrganizationFunctionality_test_usage_records_contain_package_data_074448.json"
+                        },
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_partners_api_tests_test_partners_organization.py_TestPartnersOrganizationFunctionality_test_usage_records_contain_package_data_074448.json",
+                        "suite": "partners_api"
+                    },
+                    {
+                        "test_name": "src/tests/partners_api_tests/test_partners_organization.py::TestPartnersOrganizationFunctionality::test_usage_range_shows_cumulative_data",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'get_usage_range'",
+                        "screenshot_path": null,
+                        "duration": 0.2089371681213379,
+                        "timestamp": "07:44:48",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "response_file": "reports/failed_responses/src_tests_partners_api_tests_test_partners_organization.py_TestPartnersOrganizationFunctionality_test_usage_range_shows_cumulative_data_074448.json"
+                        },
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_partners_api_tests_test_partners_organization.py_TestPartnersOrganizationFunctionality_test_usage_range_shows_cumulative_data_074448.json",
+                        "suite": "partners_api"
+                    },
+                    {
+                        "test_name": "src/tests/partners_api_tests/test_partners_organization.py::TestPartnersOrganizationFunctionality::test_credential_initialization_flow",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Credential initialization should succeed\nassert False",
+                        "screenshot_path": null,
+                        "duration": 0.21158766746520996,
+                        "timestamp": "07:44:48",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "response_file": "reports/failed_responses/src_tests_partners_api_tests_test_partners_organization.py_TestPartnersOrganizationFunctionality_test_credential_initialization_flow_074448.json"
+                        },
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_partners_api_tests_test_partners_organization.py_TestPartnersOrganizationFunctionality_test_credential_initialization_flow_074448.json",
+                        "suite": "partners_api"
+                    },
+                    {
+                        "test_name": "src/tests/partners_api_tests/test_partners_package.py::TestPartnersPackageFunctionality::test_verified_user_can_get_packages",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Should get verified package API\nassert None is not None",
+                        "screenshot_path": null,
+                        "duration": 0.17670297622680664,
+                        "timestamp": "07:44:50",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "response_file": "reports/failed_responses/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_can_get_packages_074450.json"
+                        },
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_can_get_packages_074450.json",
+                        "suite": "partners_api"
+                    },
+                    {
+                        "test_name": "src/tests/partners_api_tests/test_partners_package.py::TestPartnersPackageFunctionality::test_verified_user_can_get_package_countries",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'get_package_countries'",
+                        "screenshot_path": null,
+                        "duration": 0.17612004280090332,
+                        "timestamp": "07:44:51",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "response_file": "reports/failed_responses/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_can_get_package_countries_074451.json"
+                        },
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_can_get_package_countries_074451.json",
+                        "suite": "partners_api"
+                    },
+                    {
+                        "test_name": "src/tests/partners_api_tests/test_partners_package.py::TestPartnersPackageFunctionality::test_verified_user_can_book_packages",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'get_all_packages'",
+                        "screenshot_path": null,
+                        "duration": 0.17510342597961426,
+                        "timestamp": "07:44:51",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "response_file": "reports/failed_responses/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_can_book_packages_074451.json"
+                        },
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_can_book_packages_074451.json",
+                        "suite": "partners_api"
+                    },
+                    {
+                        "test_name": "src/tests/partners_api_tests/test_partners_package.py::TestPartnersPackageFunctionality::test_package_booking_appears_in_bookings_list",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'get_package_bookings'",
+                        "screenshot_path": null,
+                        "duration": 0.17593836784362793,
+                        "timestamp": "07:44:51",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "response_file": "reports/failed_responses/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_package_booking_appears_in_bookings_list_074451.json"
+                        },
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_package_booking_appears_in_bookings_list_074451.json",
+                        "suite": "partners_api"
+                    },
+                    {
+                        "test_name": "src/tests/partners_api_tests/test_partners_package.py::TestPartnersPackageFunctionality::test_package_booking_counted_in_usage",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'get_usage'",
+                        "screenshot_path": null,
+                        "duration": 0.012688875198364258,
+                        "timestamp": "07:44:52",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "response_file": "reports/failed_responses/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_package_booking_counted_in_usage_074452.json"
+                        },
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_package_booking_counted_in_usage_074452.json",
+                        "suite": "partners_api"
+                    },
+                    {
+                        "test_name": "src/tests/partners_api_tests/test_partners_package.py::TestPartnersPackageFunctionality::test_package_usage_reflected_in_range_endpoint",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'get_usage_range'",
+                        "screenshot_path": null,
+                        "duration": 0.012607097625732422,
+                        "timestamp": "07:44:52",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "response_file": "reports/failed_responses/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_package_usage_reflected_in_range_endpoint_074452.json"
+                        },
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_package_usage_reflected_in_range_endpoint_074452.json",
+                        "suite": "partners_api"
+                    },
+                    {
+                        "test_name": "src/tests/partners_api_tests/test_partners_package.py::TestPartnersPackageFunctionality::test_package_booking_creates_complete_record",
+                        "status": "FAIL",
+                        "error_message": "AttributeError: 'NoneType' object has no attribute 'get_package_bookings'",
+                        "screenshot_path": null,
+                        "duration": 0.17720365524291992,
+                        "timestamp": "07:44:52",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "response_file": "reports/failed_responses/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_package_booking_creates_complete_record_074452.json"
+                        },
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_package_booking_creates_complete_record_074452.json",
+                        "suite": "partners_api"
+                    }
+                ],
+                "skipped_tests_details": [
+                    {
+                        "test_name": "src/tests/partners_api_tests/test_partners_flight.py::TestPartnersFlightSecurity::test_unverified_user_blocked_from_flight_search",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/partners_api_tests/test_partners_flight.py', 44, 'Skipped: Failed to initialize API credentials')",
+                        "screenshot_path": null,
+                        "duration": 0.0,
+                        "timestamp": "07:44:43",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/partners_api_tests/test_partners_flight.py', 44, 'Skipped: Failed to initialize API credentials')",
+                        "category": null,
+                        "suite": "partners_api"
+                    },
+                    {
+                        "test_name": "src/tests/partners_api_tests/test_partners_flight.py::TestPartnersFlightSecurity::test_unverified_user_blocked_from_flight_booking",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/partners_api_tests/test_partners_flight.py', 77, 'Skipped: Failed to initialize API credentials')",
+                        "screenshot_path": null,
+                        "duration": 0.0,
+                        "timestamp": "07:44:44",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/partners_api_tests/test_partners_flight.py', 77, 'Skipped: Failed to initialize API credentials')",
+                        "category": null,
+                        "suite": "partners_api"
+                    }
+                ]
+            },
+            "timestamp": "2026-03-09 07:44:52"
+        }
+    },
+    "all_failed_tests": [
+        {
+            "test_name": "src/tests/api_tests/test_package_api.py::TestPackageAPI::test_book_package_and_verify_user_bookings",
+            "status": "FAIL",
+            "error_message": "Failed: Booking failed with status 404",
+            "screenshot_path": null,
+            "duration": 6.646516799926758,
+            "timestamp": "07:43:57",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "response_file": "reports/failed_responses/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_book_package_and_verify_user_bookings_074357.json"
+            },
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_book_package_and_verify_user_bookings_074357.json",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_package_api.py::TestPackageAPI::test_book_package_without_auth_not_in_user_bookings",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'FixtureFunctionDefinition' object has no attribute 'get_user_booked_packages'",
+            "screenshot_path": null,
+            "duration": 0.17295026779174805,
+            "timestamp": "07:43:58",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "response_file": "reports/failed_responses/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_book_package_without_auth_not_in_user_bookings_074358.json"
+            },
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_book_package_without_auth_not_in_user_bookings_074358.json",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/partners_api_tests/test_partners_auth_api.py::TestPartnersAuth::test_verified_user_login_returns_token",
+            "status": "FAIL",
+            "error_message": "AssertionError: Verified user should get access token\nassert None is not None",
+            "screenshot_path": null,
+            "duration": 0.22541522979736328,
+            "timestamp": "07:44:25",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "response_file": "reports/failed_responses/src_tests_partners_api_tests_test_partners_auth_api.py_TestPartnersAuth_test_verified_user_login_returns_token_074425.json"
+            },
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_partners_api_tests_test_partners_auth_api.py_TestPartnersAuth_test_verified_user_login_returns_token_074425.json",
+            "suite": "partners_api"
+        },
+        {
+            "test_name": "src/tests/partners_api_tests/test_partners_auth_api.py::TestPartnersAuth::test_verified_user_login_response_structure",
+            "status": "FAIL",
+            "error_message": "AssertionError: assert 401 == 200\n +  where 401 = <Response [401]>.status_code",
+            "screenshot_path": null,
+            "duration": 0.21784734725952148,
+            "timestamp": "07:44:25",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "response_file": "reports/failed_responses/src_tests_partners_api_tests_test_partners_auth_api.py_TestPartnersAuth_test_verified_user_login_response_structure_074425.json"
+            },
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_partners_api_tests_test_partners_auth_api.py_TestPartnersAuth_test_verified_user_login_response_structure_074425.json",
+            "suite": "partners_api"
+        },
+        {
+            "test_name": "src/tests/partners_api_tests/test_partners_auth_api.py::TestPartnersAuth::test_partners_dynamic_token_extraction",
+            "status": "FAIL",
+            "error_message": "AssertionError: assert 401 == 200\n +  where 401 = <Response [401]>.status_code",
+            "screenshot_path": null,
+            "duration": 17.377451419830322,
+            "timestamp": "07:44:43",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "response_file": "reports/failed_responses/src_tests_partners_api_tests_test_partners_auth_api.py_TestPartnersAuth_test_partners_dynamic_token_extraction_074443.json"
+            },
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_partners_api_tests_test_partners_auth_api.py_TestPartnersAuth_test_partners_dynamic_token_extraction_074443.json",
+            "suite": "partners_api"
+        },
+        {
+            "test_name": "src/tests/partners_api_tests/test_partners_flight.py::TestPartnersFlightFunctionality::test_verified_user_can_search_flights",
+            "status": "FAIL",
+            "error_message": "AssertionError: Should get verified flight API\nassert None is not None",
+            "screenshot_path": null,
+            "duration": 0.17084527015686035,
+            "timestamp": "07:44:44",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "response_file": "reports/failed_responses/src_tests_partners_api_tests_test_partners_flight.py_TestPartnersFlightFunctionality_test_verified_user_can_search_flights_074444.json"
+            },
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_partners_api_tests_test_partners_flight.py_TestPartnersFlightFunctionality_test_verified_user_can_search_flights_074444.json",
+            "suite": "partners_api"
+        },
+        {
+            "test_name": "src/tests/partners_api_tests/test_partners_flight.py::TestPartnersFlightFunctionality::test_verified_user_can_book_flight",
+            "status": "FAIL",
+            "error_message": "AssertionError: Should get verified flight API\nassert None is not None",
+            "screenshot_path": null,
+            "duration": 0.17302322387695312,
+            "timestamp": "07:44:44",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "response_file": "reports/failed_responses/src_tests_partners_api_tests_test_partners_flight.py_TestPartnersFlightFunctionality_test_verified_user_can_book_flight_074444.json"
+            },
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_partners_api_tests_test_partners_flight.py_TestPartnersFlightFunctionality_test_verified_user_can_book_flight_074444.json",
+            "suite": "partners_api"
+        },
+        {
+            "test_name": "src/tests/partners_api_tests/test_partners_flight.py::TestPartnersFlightFunctionality::test_flight_search_counted_in_usage",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'get_usage'",
+            "screenshot_path": null,
+            "duration": 0.008435964584350586,
+            "timestamp": "07:44:45",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "response_file": "reports/failed_responses/src_tests_partners_api_tests_test_partners_flight.py_TestPartnersFlightFunctionality_test_flight_search_counted_in_usage_074445.json"
+            },
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_partners_api_tests_test_partners_flight.py_TestPartnersFlightFunctionality_test_flight_search_counted_in_usage_074445.json",
+            "suite": "partners_api"
+        },
+        {
+            "test_name": "src/tests/partners_api_tests/test_partners_flight.py::TestPartnersFlightFunctionality::test_flight_booking_counted_in_usage",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'get_usage'",
+            "screenshot_path": null,
+            "duration": 0.008668184280395508,
+            "timestamp": "07:44:45",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "response_file": "reports/failed_responses/src_tests_partners_api_tests_test_partners_flight.py_TestPartnersFlightFunctionality_test_flight_booking_counted_in_usage_074445.json"
+            },
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_partners_api_tests_test_partners_flight.py_TestPartnersFlightFunctionality_test_flight_booking_counted_in_usage_074445.json",
+            "suite": "partners_api"
+        },
+        {
+            "test_name": "src/tests/partners_api_tests/test_partners_flight.py::TestPartnersFlightFunctionality::test_flight_usage_reflected_in_range_endpoint",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'get_usage_range'",
+            "screenshot_path": null,
+            "duration": 0.008293628692626953,
+            "timestamp": "07:44:45",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "response_file": "reports/failed_responses/src_tests_partners_api_tests_test_partners_flight.py_TestPartnersFlightFunctionality_test_flight_usage_reflected_in_range_endpoint_074445.json"
+            },
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_partners_api_tests_test_partners_flight.py_TestPartnersFlightFunctionality_test_flight_usage_reflected_in_range_endpoint_074445.json",
+            "suite": "partners_api"
+        },
+        {
+            "test_name": "src/tests/partners_api_tests/test_partners_organization.py::TestPartnersOrganizationFunctionality::test_verified_user_can_access_profile",
+            "status": "FAIL",
+            "error_message": "AssertionError: Should get verified organization API\nassert None is not None",
+            "screenshot_path": null,
+            "duration": 0.2178025245666504,
+            "timestamp": "07:44:47",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "response_file": "reports/failed_responses/src_tests_partners_api_tests_test_partners_organization.py_TestPartnersOrganizationFunctionality_test_verified_user_can_access_profile_074447.json"
+            },
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_partners_api_tests_test_partners_organization.py_TestPartnersOrganizationFunctionality_test_verified_user_can_access_profile_074447.json",
+            "suite": "partners_api"
+        },
+        {
+            "test_name": "src/tests/partners_api_tests/test_partners_organization.py::TestPartnersOrganizationFunctionality::test_verified_user_can_reset_api_keys",
+            "status": "FAIL",
+            "error_message": "AssertionError: Should get verified organization API\nassert None is not None",
+            "screenshot_path": null,
+            "duration": 0.236649751663208,
+            "timestamp": "07:44:47",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "response_file": "reports/failed_responses/src_tests_partners_api_tests_test_partners_organization.py_TestPartnersOrganizationFunctionality_test_verified_user_can_reset_api_keys_074447.json"
+            },
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_partners_api_tests_test_partners_organization.py_TestPartnersOrganizationFunctionality_test_verified_user_can_reset_api_keys_074447.json",
+            "suite": "partners_api"
+        },
+        {
+            "test_name": "src/tests/partners_api_tests/test_partners_organization.py::TestPartnersOrganizationFunctionality::test_verified_user_can_access_usage_data",
+            "status": "FAIL",
+            "error_message": "AssertionError: Should get verified organization API\nassert None is not None",
+            "screenshot_path": null,
+            "duration": 0.211456298828125,
+            "timestamp": "07:44:47",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "response_file": "reports/failed_responses/src_tests_partners_api_tests_test_partners_organization.py_TestPartnersOrganizationFunctionality_test_verified_user_can_access_usage_data_074447.json"
+            },
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_partners_api_tests_test_partners_organization.py_TestPartnersOrganizationFunctionality_test_verified_user_can_access_usage_data_074447.json",
+            "suite": "partners_api"
+        },
+        {
+            "test_name": "src/tests/partners_api_tests/test_partners_organization.py::TestPartnersOrganizationFunctionality::test_verified_account_status",
+            "status": "FAIL",
+            "error_message": "AssertionError: Verified account should pass verification check\nassert False",
+            "screenshot_path": null,
+            "duration": 0.2098865509033203,
+            "timestamp": "07:44:47",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "response_file": "reports/failed_responses/src_tests_partners_api_tests_test_partners_organization.py_TestPartnersOrganizationFunctionality_test_verified_account_status_074447.json"
+            },
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_partners_api_tests_test_partners_organization.py_TestPartnersOrganizationFunctionality_test_verified_account_status_074447.json",
+            "suite": "partners_api"
+        },
+        {
+            "test_name": "src/tests/partners_api_tests/test_partners_organization.py::TestPartnersOrganizationFunctionality::test_usage_records_contain_flight_data",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'get_usage'",
+            "screenshot_path": null,
+            "duration": 0.2193148136138916,
+            "timestamp": "07:44:48",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "response_file": "reports/failed_responses/src_tests_partners_api_tests_test_partners_organization.py_TestPartnersOrganizationFunctionality_test_usage_records_contain_flight_data_074448.json"
+            },
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_partners_api_tests_test_partners_organization.py_TestPartnersOrganizationFunctionality_test_usage_records_contain_flight_data_074448.json",
+            "suite": "partners_api"
+        },
+        {
+            "test_name": "src/tests/partners_api_tests/test_partners_organization.py::TestPartnersOrganizationFunctionality::test_usage_records_contain_package_data",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'get_usage'",
+            "screenshot_path": null,
+            "duration": 0.21928715705871582,
+            "timestamp": "07:44:48",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "response_file": "reports/failed_responses/src_tests_partners_api_tests_test_partners_organization.py_TestPartnersOrganizationFunctionality_test_usage_records_contain_package_data_074448.json"
+            },
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_partners_api_tests_test_partners_organization.py_TestPartnersOrganizationFunctionality_test_usage_records_contain_package_data_074448.json",
+            "suite": "partners_api"
+        },
+        {
+            "test_name": "src/tests/partners_api_tests/test_partners_organization.py::TestPartnersOrganizationFunctionality::test_usage_range_shows_cumulative_data",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'get_usage_range'",
+            "screenshot_path": null,
+            "duration": 0.2089371681213379,
+            "timestamp": "07:44:48",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "response_file": "reports/failed_responses/src_tests_partners_api_tests_test_partners_organization.py_TestPartnersOrganizationFunctionality_test_usage_range_shows_cumulative_data_074448.json"
+            },
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_partners_api_tests_test_partners_organization.py_TestPartnersOrganizationFunctionality_test_usage_range_shows_cumulative_data_074448.json",
+            "suite": "partners_api"
+        },
+        {
+            "test_name": "src/tests/partners_api_tests/test_partners_organization.py::TestPartnersOrganizationFunctionality::test_credential_initialization_flow",
+            "status": "FAIL",
+            "error_message": "AssertionError: Credential initialization should succeed\nassert False",
+            "screenshot_path": null,
+            "duration": 0.21158766746520996,
+            "timestamp": "07:44:48",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "response_file": "reports/failed_responses/src_tests_partners_api_tests_test_partners_organization.py_TestPartnersOrganizationFunctionality_test_credential_initialization_flow_074448.json"
+            },
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_partners_api_tests_test_partners_organization.py_TestPartnersOrganizationFunctionality_test_credential_initialization_flow_074448.json",
+            "suite": "partners_api"
+        },
+        {
+            "test_name": "src/tests/partners_api_tests/test_partners_package.py::TestPartnersPackageFunctionality::test_verified_user_can_get_packages",
+            "status": "FAIL",
+            "error_message": "AssertionError: Should get verified package API\nassert None is not None",
+            "screenshot_path": null,
+            "duration": 0.17670297622680664,
+            "timestamp": "07:44:50",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "response_file": "reports/failed_responses/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_can_get_packages_074450.json"
+            },
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_can_get_packages_074450.json",
+            "suite": "partners_api"
+        },
+        {
+            "test_name": "src/tests/partners_api_tests/test_partners_package.py::TestPartnersPackageFunctionality::test_verified_user_can_get_package_countries",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'get_package_countries'",
+            "screenshot_path": null,
+            "duration": 0.17612004280090332,
+            "timestamp": "07:44:51",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "response_file": "reports/failed_responses/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_can_get_package_countries_074451.json"
+            },
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_can_get_package_countries_074451.json",
+            "suite": "partners_api"
+        },
+        {
+            "test_name": "src/tests/partners_api_tests/test_partners_package.py::TestPartnersPackageFunctionality::test_verified_user_can_book_packages",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'get_all_packages'",
+            "screenshot_path": null,
+            "duration": 0.17510342597961426,
+            "timestamp": "07:44:51",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "response_file": "reports/failed_responses/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_can_book_packages_074451.json"
+            },
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_can_book_packages_074451.json",
+            "suite": "partners_api"
+        },
+        {
+            "test_name": "src/tests/partners_api_tests/test_partners_package.py::TestPartnersPackageFunctionality::test_package_booking_appears_in_bookings_list",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'get_package_bookings'",
+            "screenshot_path": null,
+            "duration": 0.17593836784362793,
+            "timestamp": "07:44:51",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "response_file": "reports/failed_responses/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_package_booking_appears_in_bookings_list_074451.json"
+            },
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_package_booking_appears_in_bookings_list_074451.json",
+            "suite": "partners_api"
+        },
+        {
+            "test_name": "src/tests/partners_api_tests/test_partners_package.py::TestPartnersPackageFunctionality::test_package_booking_counted_in_usage",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'get_usage'",
+            "screenshot_path": null,
+            "duration": 0.012688875198364258,
+            "timestamp": "07:44:52",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "response_file": "reports/failed_responses/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_package_booking_counted_in_usage_074452.json"
+            },
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_package_booking_counted_in_usage_074452.json",
+            "suite": "partners_api"
+        },
+        {
+            "test_name": "src/tests/partners_api_tests/test_partners_package.py::TestPartnersPackageFunctionality::test_package_usage_reflected_in_range_endpoint",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'get_usage_range'",
+            "screenshot_path": null,
+            "duration": 0.012607097625732422,
+            "timestamp": "07:44:52",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "response_file": "reports/failed_responses/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_package_usage_reflected_in_range_endpoint_074452.json"
+            },
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_package_usage_reflected_in_range_endpoint_074452.json",
+            "suite": "partners_api"
+        },
+        {
+            "test_name": "src/tests/partners_api_tests/test_partners_package.py::TestPartnersPackageFunctionality::test_package_booking_creates_complete_record",
+            "status": "FAIL",
+            "error_message": "AttributeError: 'NoneType' object has no attribute 'get_package_bookings'",
+            "screenshot_path": null,
+            "duration": 0.17720365524291992,
+            "timestamp": "07:44:52",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "response_file": "reports/failed_responses/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_package_booking_creates_complete_record_074452.json"
+            },
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_package_booking_creates_complete_record_074452.json",
+            "suite": "partners_api"
+        }
+    ],
+    "all_skipped_tests": [
+        {
+            "test_name": "src/tests/partners_api_tests/test_partners_flight.py::TestPartnersFlightSecurity::test_unverified_user_blocked_from_flight_search",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/partners_api_tests/test_partners_flight.py', 44, 'Skipped: Failed to initialize API credentials')",
+            "screenshot_path": null,
+            "duration": 0.0,
+            "timestamp": "07:44:43",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/partners_api_tests/test_partners_flight.py', 44, 'Skipped: Failed to initialize API credentials')",
+            "category": null,
+            "suite": "partners_api"
+        },
+        {
+            "test_name": "src/tests/partners_api_tests/test_partners_flight.py::TestPartnersFlightSecurity::test_unverified_user_blocked_from_flight_booking",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/partners_api_tests/test_partners_flight.py', 77, 'Skipped: Failed to initialize API credentials')",
+            "screenshot_path": null,
+            "duration": 0.0,
+            "timestamp": "07:44:44",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/partners_api_tests/test_partners_flight.py', 77, 'Skipped: Failed to initialize API credentials')",
+            "category": null,
+            "suite": "partners_api"
+        }
+    ]
+}
