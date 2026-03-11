@@ -554,7 +554,86 @@ def pytest_runtest_makereport(item, call):
         html_path = None
         evidence = {}
 
-        # Handle failed tests
+        # ========== RESTORED: SAVE TEST-SPECIFIC LOGS (FOR ALL TEST STATUSES) ==========
+        test_specific_log = None
+        try:
+            # Get test_log_handler from GeoLogger
+            test_log_handler = getattr(logger, 'test_handler', None)
+            
+            if test_log_handler:
+                test_specific_log = test_log_handler.save_test_logs(nodeid, "reports/logs")
+                if test_specific_log:
+                    setattr(item, "_test_specific_log", test_specific_log)
+                    evidence["log_path"] = test_specific_log
+                    logger.info(f"✅ Saved test-specific logs: {test_specific_log}")
+        except Exception as e:
+            logger.error(f"Failed to save test-specific logs: {e}")
+
+        # Clear logs for this test to free memory
+        if test_log_handler and hasattr(test_log_handler, 'clear_test_logs'):
+            try:
+                test_log_handler.clear_test_logs(nodeid)
+            except Exception as e:
+                logger.error(f"Failed to clear test logs: {e}")
+
+        # ========== ATTACH LATEST LOG TO PYTEST-HTML ==========
+        try:
+            logs_dir = Path("logs")
+            reports_dir = Path("reports")
+            target_logs_dir = reports_dir / "logs"
+            latest_log_path = None
+
+            if logs_dir.exists() and logs_dir.is_dir():
+                candidates = sorted(
+                    [p for p in logs_dir.iterdir() if p.is_file() and p.suffix.lower() in (".log", ".txt")],
+                    key=lambda p: p.stat().st_mtime,
+                    reverse=True,
+                )
+                if candidates:
+                    latest_log = candidates[0]
+                    target_logs_dir.mkdir(parents=True, exist_ok=True)
+                    dest_name = latest_log.name
+                    copied = target_logs_dir / dest_name
+                    try:
+                        shutil.copy2(latest_log, copied)
+                        latest_log_path = copied
+                    except Exception:
+                        logger.exception("Failed copying latest log to reports/logs; will reference original")
+                        latest_log_path = latest_log
+
+            if latest_log_path and latest_log_path.exists():
+                extras_list = getattr(report, "extras", [])
+                rel_path = os.path.relpath(latest_log_path, start=reports_dir) if reports_dir.exists() else str(latest_log_path)
+                # Add a download link
+                link_html = f'<p><a href="{rel_path}" download>Download latest test log ({Path(rel_path).name})</a></p>'
+                extras_list.append(extras.html(link_html))
+
+                # Add a tail preview (last ~2000 chars) inside a collapsible <details>
+                try:
+                    with open(latest_log_path, "r", encoding="utf-8", errors="replace") as f:
+                        f.seek(0, os.SEEK_END)
+                        size = f.tell()
+                        tail_size = 2000
+                        if size > tail_size:
+                            f.seek(max(0, size - tail_size))
+                            preview = f.read()
+                        else:
+                            f.seek(0)
+                            preview = f.read()
+                    safe_preview = html_escape.escape(preview)
+                    preview_html = (
+                        f"<details><summary>Latest log preview ({Path(rel_path).name})</summary>"
+                        f"<pre style='white-space:pre-wrap;max-height:400px;overflow:auto'>{safe_preview}</pre></details>"
+                    )
+                    extras_list.append(extras.html(preview_html))
+                except Exception:
+                    logger.exception("Failed to read/attach log preview")
+                report.extras = extras_list
+                setattr(item, "_latest_log_path", str(latest_log_path))
+        except Exception:
+            logger.exception("Failed to attach latest log to pytest-html")
+
+        # Handle failed tests (screenshots, API dumps)
         if status == "FAIL":
             test_path = str(item.fspath)
             is_api_test = "api_tests" in test_path.lower()
@@ -648,6 +727,7 @@ def pytest_runtest_makereport(item, call):
                 skip_reason=skip_reason,
                 evidence=evidence,
             )
+            logger.info(f"Added test result to {suite_reporter.test_suite_name}: {nodeid} - {status}")
 
     except Exception:
         logger.exception("Unhandled exception in pytest_runtest_makereport")

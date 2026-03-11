@@ -24,17 +24,17 @@ class EnvironmentConfig:
     # Environment URLs
     ENVIRONMENTS = {
         "dev": {
-            "base_url": "https://retail.dev.gowithgeo.com",
+            "base_url": "https://retail-dev-app.vercel.app/",
             "api_base_url": "https://api.dev.gowithgeo.com",
             "partners_api_base_url": "https://sandbox.api.developers.gowithgeo.com"
         },
         "qa": {
-            "base_url": "https://retail.qa.gowithgeo.com", 
+            "base_url": "https://retail-qa-app.vercel.app/", 
             "api_base_url": "https://api.qa.gowithgeo.com",
             "partners_api_base_url": "https://sandbox.api.developers.gowithgeo.com"
         },
         "staging": {
-            "base_url": "https://retail.stg.gowithgeo.com",
+            "base_url": "https://retail-staging-app.vercel.app/",
             "api_base_url": "https://api.stg.gowithgeo.com",
             "partners_api_base_url": "https://sandbox.api.developers.gowithgeo.com"
         },
