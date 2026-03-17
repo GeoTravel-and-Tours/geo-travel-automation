@@ -1,0 +1,348 @@
+{
+    "test_suite_name": "Unified UI Smoke + API + Partners API TEST REPORT",
+    "total_tests": 164,
+    "passed_tests": 156,
+    "failed_tests": 5,
+    "skipped_tests": 3,
+    "success_rate": 95.1,
+    "duration": 756.010079,
+    "start_time": "2026-03-17 07:45:39",
+    "end_time": "2026-03-17 07:58:15",
+    "suites_run": [
+        "smoke",
+        "api",
+        "partners_api"
+    ],
+    "suite_details": {
+        "smoke": {
+            "report": {
+                "test_suite_name": "Unified UI Smoke + API + Partners API TEST REPORT",
+                "total_tests": 44,
+                "passed_tests": 43,
+                "failed_tests": 1,
+                "skipped_tests": 0,
+                "success_rate": 97.72727272727273,
+                "duration": 439.78816,
+                "start_time": "2026-03-17 07:45:40",
+                "end_time": "2026-03-17 07:52:59",
+                "failed_tests_details": [
+                    {
+                        "test_name": "src/tests/smoke_tests/test_package_booking_smoke.py::TestPackageBookingSmoke::test_complete_package_booking_flow",
+                        "status": "FAIL",
+                        "error_message": "TimeoutException: Message: \nStacktrace:\n#0 0x55f3d6f2cb6a <unknown>\n#1 0x55f3d693fa32 <unknown>\n#2 0x55f3d6994d66 <unknown>\n#3 0x55f3d6994fa1 <unknown>\n#4 0x55f3d69e0144 <unknown>\n#5 0x55f3d69dd369 <unknown>\n#6 0x55f3d6986c0f <unknown>\n#7 0x55f3d69879d1 <unknown>\n#8 0x55f3d6ef16b9 <unknown>\n#9 0x55f3d6ef45c1 <unknown>\n#10 0x55f3d6edde29 <unknown>\n#11 0x55f3d6ef517e <unknown>\n#12 0x55f3d6ec44b0 <unknown>\n#13 0x55f3d6f19578 <unknown>\n#14 0x55f3d6f1974b <unknown>\n#15 0x55f3d6f2b1a3 <unknown>\n#16 0x7f6598c9caa4 <unknown>\n#17 0x7f6598d29c6c <unknown>\n",
+                        "screenshot_path": "reports/screenshots/failures/PackageBookingSmoke_test_complete_package_booking__20260317_075031.png",
+                        "duration": 62.55673789978027,
+                        "timestamp": "07:50:31",
+                        "skip_reason": null,
+                        "category": "API Timeout",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_complete_package_booking_flow_075031.log"
+                        },
+                        "log_path": "reports/logs/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_complete_package_booking_flow_075031.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_complete_package_booking_flow_075031.log",
+                        "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-03-17_07-45-38/screenshots/PackageBookingSmoke_test_complete_package_booking__20260317_075031.png",
+                        "suite": "smoke"
+                    }
+                ],
+                "skipped_tests_details": []
+            },
+            "timestamp": "2026-03-17 07:52:59"
+        },
+        "api": {
+            "report": {
+                "test_suite_name": "API SMOKE TEST",
+                "total_tests": 80,
+                "passed_tests": 78,
+                "failed_tests": 0,
+                "skipped_tests": 2,
+                "success_rate": 97.5,
+                "duration": 146.347897,
+                "start_time": "2026-03-17 07:53:00",
+                "end_time": "2026-03-17 07:55:26",
+                "failed_tests_details": [],
+                "skipped_tests_details": [
+                    {
+                        "test_name": "src/tests/api_tests/test_package_api.py::TestPackageAPI::test_authenticated_booking_group_deal_price",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 532, 'Skipped: No active GROUP packages with deals available')",
+                        "screenshot_path": null,
+                        "duration": 0.41077446937561035,
+                        "timestamp": "07:54:21",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 532, 'Skipped: No active GROUP packages with deals available')",
+                        "category": null,
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_group_deal_price_075421.log"
+                        },
+                        "log_path": "reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_group_deal_price_075421.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_group_deal_price_075421.log",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_package_api.py::TestPackageAPI::test_unauthenticated_booking_group_deal_price",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 878, 'Skipped: No active GROUP packages with deals available')",
+                        "screenshot_path": null,
+                        "duration": 0.40145063400268555,
+                        "timestamp": "07:54:42",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 878, 'Skipped: No active GROUP packages with deals available')",
+                        "category": null,
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_unauthenticated_booking_group_deal_price_075442.log"
+                        },
+                        "log_path": "reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_unauthenticated_booking_group_deal_price_075442.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_unauthenticated_booking_group_deal_price_075442.log",
+                        "suite": "api"
+                    }
+                ]
+            },
+            "timestamp": "2026-03-17 07:55:26"
+        },
+        "partners_api": {
+            "report": {
+                "test_suite_name": "PARTNERS API SMOKE TEST",
+                "total_tests": 40,
+                "passed_tests": 35,
+                "failed_tests": 4,
+                "skipped_tests": 1,
+                "success_rate": 87.5,
+                "duration": 150.513929,
+                "start_time": "2026-03-17 07:55:44",
+                "end_time": "2026-03-17 07:58:15",
+                "failed_tests_details": [
+                    {
+                        "test_name": "src/tests/partners_api_tests/test_partners_package.py::TestPartnersPackageFunctionality::test_verified_user_can_get_packages",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: assert 503 == 200\n +  where 503 = <Response [503]>.status_code",
+                        "screenshot_path": null,
+                        "duration": 31.340479373931885,
+                        "timestamp": "07:57:39",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_can_get_packages_075739.log",
+                            "response_file": "reports/failed_responses/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_can_get_packages_075739.json"
+                        },
+                        "log_path": "reports/logs/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_can_get_packages_075739.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_can_get_packages_075739.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_can_get_packages_075739.json",
+                        "suite": "partners_api"
+                    },
+                    {
+                        "test_name": "src/tests/partners_api_tests/test_partners_package.py::TestPartnersPackageFunctionality::test_verified_user_book_private_future_departure",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Expected 201, got 400\nassert 400 == 201\n +  where 400 = <Response [400]>.status_code",
+                        "screenshot_path": null,
+                        "duration": 2.2633979320526123,
+                        "timestamp": "07:57:55",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_book_private_future_departure_075755.log",
+                            "response_file": "reports/failed_responses/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_book_private_future_departure_075755.json"
+                        },
+                        "log_path": "reports/logs/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_book_private_future_departure_075755.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_book_private_future_departure_075755.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_book_private_future_departure_075755.json",
+                        "suite": "partners_api"
+                    },
+                    {
+                        "test_name": "src/tests/partners_api_tests/test_partners_package.py::TestPartnersPackageFunctionality::test_verified_user_book_private_within_30_days_full_payment",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Expected 201, got 400\nassert 400 == 201\n +  where 400 = <Response [400]>.status_code",
+                        "screenshot_path": null,
+                        "duration": 2.229219436645508,
+                        "timestamp": "07:57:58",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_book_private_within_30_days_full_payment_075758.log",
+                            "response_file": "reports/failed_responses/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_book_private_within_30_days_full_payment_075758.json"
+                        },
+                        "log_path": "reports/logs/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_book_private_within_30_days_full_payment_075758.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_book_private_within_30_days_full_payment_075758.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_book_private_within_30_days_full_payment_075758.json",
+                        "suite": "partners_api"
+                    },
+                    {
+                        "test_name": "src/tests/partners_api_tests/test_partners_package.py::TestPartnersPackageFunctionality::test_verified_user_book_private_within_30_days_lockdown_fails",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Expected 'Full payment is required for departure dates within 30 days', got '['property return_date should not exist']'\nassert 'Full payment is required for departure dates within 30 days' in ['property return_date should not exist']",
+                        "screenshot_path": null,
+                        "duration": 1.8124310970306396,
+                        "timestamp": "07:58:00",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_book_private_within_30_days_lockdown_fails_075800.log",
+                            "response_file": "reports/failed_responses/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_book_private_within_30_days_lockdown_fails_075800.json"
+                        },
+                        "log_path": "reports/logs/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_book_private_within_30_days_lockdown_fails_075800.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_book_private_within_30_days_lockdown_fails_075800.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_book_private_within_30_days_lockdown_fails_075800.json",
+                        "suite": "partners_api"
+                    }
+                ],
+                "skipped_tests_details": [
+                    {
+                        "test_name": "src/tests/partners_api_tests/test_partners_package.py::TestPartnersPackageFunctionality::test_verified_user_book_group_deal_price",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/partners_api_tests/test_partners_package.py', 489, 'Skipped: No active GROUP packages with deals available')",
+                        "screenshot_path": null,
+                        "duration": 1.5805320739746094,
+                        "timestamp": "07:57:53",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/partners_api_tests/test_partners_package.py', 489, 'Skipped: No active GROUP packages with deals available')",
+                        "category": null,
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_book_group_deal_price_075753.log"
+                        },
+                        "log_path": "reports/logs/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_book_group_deal_price_075753.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_book_group_deal_price_075753.log",
+                        "suite": "partners_api"
+                    }
+                ]
+            },
+            "timestamp": "2026-03-17 07:58:15"
+        }
+    },
+    "all_failed_tests": [
+        {
+            "test_name": "src/tests/smoke_tests/test_package_booking_smoke.py::TestPackageBookingSmoke::test_complete_package_booking_flow",
+            "status": "FAIL",
+            "error_message": "TimeoutException: Message: \nStacktrace:\n#0 0x55f3d6f2cb6a <unknown>\n#1 0x55f3d693fa32 <unknown>\n#2 0x55f3d6994d66 <unknown>\n#3 0x55f3d6994fa1 <unknown>\n#4 0x55f3d69e0144 <unknown>\n#5 0x55f3d69dd369 <unknown>\n#6 0x55f3d6986c0f <unknown>\n#7 0x55f3d69879d1 <unknown>\n#8 0x55f3d6ef16b9 <unknown>\n#9 0x55f3d6ef45c1 <unknown>\n#10 0x55f3d6edde29 <unknown>\n#11 0x55f3d6ef517e <unknown>\n#12 0x55f3d6ec44b0 <unknown>\n#13 0x55f3d6f19578 <unknown>\n#14 0x55f3d6f1974b <unknown>\n#15 0x55f3d6f2b1a3 <unknown>\n#16 0x7f6598c9caa4 <unknown>\n#17 0x7f6598d29c6c <unknown>\n",
+            "screenshot_path": "reports/screenshots/failures/PackageBookingSmoke_test_complete_package_booking__20260317_075031.png",
+            "duration": 62.55673789978027,
+            "timestamp": "07:50:31",
+            "skip_reason": null,
+            "category": "API Timeout",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_complete_package_booking_flow_075031.log"
+            },
+            "log_path": "reports/logs/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_complete_package_booking_flow_075031.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_complete_package_booking_flow_075031.log",
+            "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-03-17_07-45-38/screenshots/PackageBookingSmoke_test_complete_package_booking__20260317_075031.png",
+            "suite": "smoke"
+        },
+        {
+            "test_name": "src/tests/partners_api_tests/test_partners_package.py::TestPartnersPackageFunctionality::test_verified_user_can_get_packages",
+            "status": "FAIL",
+            "error_message": "AssertionError: assert 503 == 200\n +  where 503 = <Response [503]>.status_code",
+            "screenshot_path": null,
+            "duration": 31.340479373931885,
+            "timestamp": "07:57:39",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_can_get_packages_075739.log",
+                "response_file": "reports/failed_responses/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_can_get_packages_075739.json"
+            },
+            "log_path": "reports/logs/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_can_get_packages_075739.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_can_get_packages_075739.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_can_get_packages_075739.json",
+            "suite": "partners_api"
+        },
+        {
+            "test_name": "src/tests/partners_api_tests/test_partners_package.py::TestPartnersPackageFunctionality::test_verified_user_book_private_future_departure",
+            "status": "FAIL",
+            "error_message": "AssertionError: Expected 201, got 400\nassert 400 == 201\n +  where 400 = <Response [400]>.status_code",
+            "screenshot_path": null,
+            "duration": 2.2633979320526123,
+            "timestamp": "07:57:55",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_book_private_future_departure_075755.log",
+                "response_file": "reports/failed_responses/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_book_private_future_departure_075755.json"
+            },
+            "log_path": "reports/logs/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_book_private_future_departure_075755.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_book_private_future_departure_075755.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_book_private_future_departure_075755.json",
+            "suite": "partners_api"
+        },
+        {
+            "test_name": "src/tests/partners_api_tests/test_partners_package.py::TestPartnersPackageFunctionality::test_verified_user_book_private_within_30_days_full_payment",
+            "status": "FAIL",
+            "error_message": "AssertionError: Expected 201, got 400\nassert 400 == 201\n +  where 400 = <Response [400]>.status_code",
+            "screenshot_path": null,
+            "duration": 2.229219436645508,
+            "timestamp": "07:57:58",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_book_private_within_30_days_full_payment_075758.log",
+                "response_file": "reports/failed_responses/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_book_private_within_30_days_full_payment_075758.json"
+            },
+            "log_path": "reports/logs/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_book_private_within_30_days_full_payment_075758.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_book_private_within_30_days_full_payment_075758.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_book_private_within_30_days_full_payment_075758.json",
+            "suite": "partners_api"
+        },
+        {
+            "test_name": "src/tests/partners_api_tests/test_partners_package.py::TestPartnersPackageFunctionality::test_verified_user_book_private_within_30_days_lockdown_fails",
+            "status": "FAIL",
+            "error_message": "AssertionError: Expected 'Full payment is required for departure dates within 30 days', got '['property return_date should not exist']'\nassert 'Full payment is required for departure dates within 30 days' in ['property return_date should not exist']",
+            "screenshot_path": null,
+            "duration": 1.8124310970306396,
+            "timestamp": "07:58:00",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_book_private_within_30_days_lockdown_fails_075800.log",
+                "response_file": "reports/failed_responses/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_book_private_within_30_days_lockdown_fails_075800.json"
+            },
+            "log_path": "reports/logs/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_book_private_within_30_days_lockdown_fails_075800.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_book_private_within_30_days_lockdown_fails_075800.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_book_private_within_30_days_lockdown_fails_075800.json",
+            "suite": "partners_api"
+        }
+    ],
+    "all_skipped_tests": [
+        {
+            "test_name": "src/tests/api_tests/test_package_api.py::TestPackageAPI::test_authenticated_booking_group_deal_price",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 532, 'Skipped: No active GROUP packages with deals available')",
+            "screenshot_path": null,
+            "duration": 0.41077446937561035,
+            "timestamp": "07:54:21",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 532, 'Skipped: No active GROUP packages with deals available')",
+            "category": null,
+            "evidence": {
+                "log_path": "reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_group_deal_price_075421.log"
+            },
+            "log_path": "reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_group_deal_price_075421.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_group_deal_price_075421.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_package_api.py::TestPackageAPI::test_unauthenticated_booking_group_deal_price",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 878, 'Skipped: No active GROUP packages with deals available')",
+            "screenshot_path": null,
+            "duration": 0.40145063400268555,
+            "timestamp": "07:54:42",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 878, 'Skipped: No active GROUP packages with deals available')",
+            "category": null,
+            "evidence": {
+                "log_path": "reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_unauthenticated_booking_group_deal_price_075442.log"
+            },
+            "log_path": "reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_unauthenticated_booking_group_deal_price_075442.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_unauthenticated_booking_group_deal_price_075442.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/partners_api_tests/test_partners_package.py::TestPartnersPackageFunctionality::test_verified_user_book_group_deal_price",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/partners_api_tests/test_partners_package.py', 489, 'Skipped: No active GROUP packages with deals available')",
+            "screenshot_path": null,
+            "duration": 1.5805320739746094,
+            "timestamp": "07:57:53",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/partners_api_tests/test_partners_package.py', 489, 'Skipped: No active GROUP packages with deals available')",
+            "category": null,
+            "evidence": {
+                "log_path": "reports/logs/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_book_group_deal_price_075753.log"
+            },
+            "log_path": "reports/logs/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_book_group_deal_price_075753.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_partners_api_tests_test_partners_package.py_TestPartnersPackageFunctionality_test_verified_user_book_group_deal_price_075753.log",
+            "suite": "partners_api"
+        }
+    ]
+}
