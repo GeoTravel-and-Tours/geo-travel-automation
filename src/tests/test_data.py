@@ -177,3 +177,25 @@ def generate_hotel_test_data(hotel_id=None):
         "test_cities": TEST_CITIES,
         "test_currencies": CURRENCIES
     }
+
+def generate_blog_comment_data():
+    """Generate dynamic test data for blog comments"""
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    
+    return {
+        "name": f"QA Bot {timestamp}",
+        "email": f"geo.qa.bot.{timestamp}@geotravel.com",
+        "message": f"Test comment from automation - {timestamp}"
+    }
+
+def get_blog_test_data():
+    """Centralized blog test data"""
+    return {
+        "comment": generate_blog_comment_data(),
+        "success_message": "Your comment were successfully added",
+        "max_comment_length": 500,
+        "invalid_email": "invalid-email",
+        "empty_name_message": "Name is required",
+        "empty_email_message": "Email is required",
+        "empty_comment_message": "Message is required"
+    }
