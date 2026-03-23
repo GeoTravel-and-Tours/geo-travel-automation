@@ -199,3 +199,28 @@ def get_blog_test_data():
         "empty_email_message": "Email is required",
         "empty_comment_message": "Message is required"
     }
+    
+def get_contact_test_data():
+    """Centralized contact test data"""
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    
+    support_types = [
+        "general inquiry",
+        "account & login issues",
+        "booking & reservations",
+        "technical support",
+        "payments & billing",
+        "refunds & cancellations",
+        "others"
+    ]
+    
+    return {
+        "name": f"Geo QA Bot {timestamp}",
+        "email": f"geo.qa.bot.{timestamp}@geotravel.com",
+        "phone": f"080{timestamp[-6:]}",
+        "message": f"Test message from automation - {timestamp}",
+        "support_type": random.choice(support_types),
+        "support_types": support_types,
+        "success_title": "Thank you for reaching out",
+        "success_message": "Your request has been submitted. Our team will get back to you shortly."
+    }

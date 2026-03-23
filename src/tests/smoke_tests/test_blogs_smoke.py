@@ -1,3 +1,5 @@
+# src/tests/smoke_tests/test_blogs_smoke.py
+
 import pytest
 import time
 from selenium.webdriver.common.by import By
