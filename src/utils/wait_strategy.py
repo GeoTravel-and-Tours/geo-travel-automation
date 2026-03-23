@@ -57,6 +57,11 @@ class WaitStrategy:
         wait = WebDriverWait(self.driver, timeout)
         return wait.until(EC.presence_of_element_located(locator))
     
+    def wait_for_present_all(self, locator, timeout=10):
+        """Wait for all elements matching locator to be present"""
+        wait = WebDriverWait(self.driver, timeout)
+        return wait.until(EC.presence_of_all_elements_located(locator))
+    
     def wait_for_page_load(self, timeout=10):
         """Wait for page to finish loading"""
         try:

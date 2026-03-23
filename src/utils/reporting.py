@@ -701,6 +701,25 @@ class GeoReporter:
             "test_complete_visa_application_flow": "Comprehensive end-to-end visa application submission",
             "test_visa_application_cancel_flow": "Visa application cancellation functionality",
             
+            # Travel Gallery Tests
+            "test_travel_gallery_navigation": "Testing navigation within the travel gallery",
+            "test_tour_card_click_and_close": "Testing tour card interactions",
+            "test_scroll_functionality": "Testing scroll functionality across pages",
+            "test_complete_travel_gallery_flow": "End-to-end travel gallery flow validation",
+            
+            # Blogs Tests
+            "test_blogs_page_navigation": "Testing navigation to blogs page",
+            "test_read_blog": "Testing reading functionality of blogs",
+            "test_comment_flow": "Testing comment submission on blogs",
+            "test_more_like_this": "Testing 'More Like This' feature on blogs",
+            "test_complete_blog_flow": "End-to-end blog interaction flow",
+            
+            # Contact Us Tests
+            "test_contact_page_navigation": "Testing navigation to contact page",
+            "test_submit_contact_form": "Testing contact form submission",
+            "test_read_faqs": "Testing FAQ reading functionality",
+            "test_privacy_statement_link": "Testing privacy statement link functionality",
+            "test_complete_contact_flow": "End-to-end contact page flow validation",
             
             
             #============================ API Tests ============================#
