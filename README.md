@@ -65,16 +65,17 @@ This file is **regenerated on every successful workflow run**.
 ## 📊 Test Results Status
 
 ### 🕒 Latest Run
-- **Timestamp:** `2026-03-23_07-53-45`
-- **Link:** [2026-03-23_07-53-45](2026-03-23_07-53-45/)
-- **Reports:** 4
-- **API Response Dumps:** 17
-- **Test Logs:** 143
-- **Screenshots:** 3
+- **Timestamp:** `2026-03-24_07-44-57`
+- **Link:** [2026-03-24_07-44-57](2026-03-24_07-44-57/)
+- **Reports:** 2
+- **API Response Dumps:** 1
+- **Test Logs:** 38
+- **Screenshots:** 30
 - **Status:** ⚠️ Had failures
 
 ### 📂 Recent Runs (Last 10)
-- **[2026-03-23_07-53-45](2026-03-23_07-53-45/)** – 4 reports, 143 logs, 17 API dumps, 3 screenshots ⚠️
+- **[2026-03-24_07-44-57](2026-03-24_07-44-57/)** – 2 reports, 38 logs, 1 API dumps, 30 screenshots ⚠️
+- [2026-03-23_07-53-45](2026-03-23_07-53-45/) – 4 reports, 143 logs, 17 API dumps, 3 screenshots ⚠️
 - [2026-03-22_07-30-56](2026-03-22_07-30-56/) – 4 reports, 143 logs, 20 API dumps, 3 screenshots ⚠️
 - [2026-03-21_07-25-12](2026-03-21_07-25-12/) – 4 reports, 143 logs, 17 API dumps, 3 screenshots ⚠️
 - [2026-03-20_07-37-56](2026-03-20_07-37-56/) – 4 reports, 143 logs, 18 API dumps, 3 screenshots ⚠️
@@ -83,9 +84,8 @@ This file is **regenerated on every successful workflow run**.
 - [2026-03-17_07-45-38](2026-03-17_07-45-38/) – 4 reports, 143 logs, 19 API dumps, 3 screenshots ⚠️
 - [2026-03-16_08-00-15](2026-03-16_08-00-15/) – 4 reports, 143 logs, 17 API dumps, 3 screenshots ⚠️
 - [2026-03-15_07-37-00](2026-03-15_07-37-00/) – 4 reports, 143 logs, 20 API dumps, 3 screenshots ⚠️
-- [2026-03-14_07-28-08](2026-03-14_07-28-08/) – 4 reports, 143 logs, 19 API dumps, 3 screenshots ⚠️
 
-_Last updated: Mon Mar 23 08:05:31 UTC 2026_
+_Last updated: Tue Mar 24 08:26:59 UTC 2026_
 
 <!-- AUTO-GENERATED:END -->
 
