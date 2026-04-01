@@ -1,0 +1,60 @@
+2026-04-01 07:29:32 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🚀 Starting TestVisaEnquiryAPI test
+2026-04-01 07:29:32 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Retrieved credentials from environment for: geo.qa.bot@gmail.com
+2026-04-01 07:29:32 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Attempting login with email: geo.qa.bot@gmail.com
+2026-04-01 07:29:32 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 _request START - Current self.headers: {'Content-Type': 'application/json', 'Accept': 'application/json', 'X-Client-Type': 'retail'}
+2026-04-01 07:29:32 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 _request - kwargs headers: {}
+2026-04-01 07:29:32 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 _request FINAL headers being sent: {'Content-Type': 'application/json', 'Accept': 'application/json', 'X-Client-Type': 'retail'}
+2026-04-01 07:29:32 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Request: POST https://api.stg.gowithgeo.com/api/auth/login
+2026-04-01 07:29:32 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Response: 200
+2026-04-01 07:29:32 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Token extracted via cookies (length: 167, valid)
+2026-04-01 07:29:32 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - ✅ Auth token set from cookies (Cookie header)
+2026-04-01 07:29:32 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - SUCCESS: ✅ Login successful - token set via cookies
+2026-04-01 07:29:32 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - SUCCESS: ✅ Authenticated successfully (token length: 167)
+2026-04-01 07:29:32 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - ✅ Auth token set from cookies (Cookie header)
+2026-04-01 07:29:32 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - ✅ Auth token set from cookies (Cookie header)
+2026-04-01 07:29:32 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - === Testing Complete Visa Flow - With Auth ===
+2026-04-01 07:29:32 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - === Flow for FLUTTERWAVE ===
+2026-04-01 07:29:32 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Step 1: Creating visa enquiry...
+2026-04-01 07:29:32 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 _request START - Current self.headers: {'Content-Type': 'application/json', 'Accept': 'application/json', 'X-Client-Type': 'retail', 'Cookie': 'retail_access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTUxLCJ1c2VyVHlwZSI6IlJFVEFJTCIsImlhdCI6MTc3NTAyODU3MiwiZXhwIjoxNzc1MDcxNzcyfQ.hUERr3Y48YYkKSnODZ3u20HgMrTyI7Dgs-V2uL912pg'}
+2026-04-01 07:29:32 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 _request - kwargs headers: {}
+2026-04-01 07:29:32 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 _request FINAL headers being sent: {'Content-Type': 'application/json', 'Accept': 'application/json', 'X-Client-Type': 'retail', 'Cookie': 'retail_access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTUxLCJ1c2VyVHlwZSI6IlJFVEFJTCIsImlhdCI6MTc3NTAyODU3MiwiZXhwIjoxNzc1MDcxNzcyfQ.hUERr3Y48YYkKSnODZ3u20HgMrTyI7Dgs-V2uL912pg'}
+2026-04-01 07:29:32 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Request: POST https://api.stg.gowithgeo.com/api/visa/create
+2026-04-01 07:29:33 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Response: 200
+2026-04-01 07:29:33 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - SUCCESS: ✅ Visa enquiry created: ID=1400
+2026-04-01 07:29:33 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Step 2: Verifying visa appears in user's applications...
+2026-04-01 07:29:33 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 _request START - Current self.headers: {'Content-Type': 'application/json', 'Accept': 'application/json', 'X-Client-Type': 'retail', 'Cookie': 'retail_access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTUxLCJ1c2VyVHlwZSI6IlJFVEFJTCIsImlhdCI6MTc3NTAyODU3MiwiZXhwIjoxNzc1MDcxNzcyfQ.hUERr3Y48YYkKSnODZ3u20HgMrTyI7Dgs-V2uL912pg'}
+2026-04-01 07:29:33 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 _request - kwargs headers: {}
+2026-04-01 07:29:33 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 _request FINAL headers being sent: {'Content-Type': 'application/json', 'Accept': 'application/json', 'X-Client-Type': 'retail', 'Cookie': 'retail_access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTUxLCJ1c2VyVHlwZSI6IlJFVEFJTCIsImlhdCI6MTc3NTAyODU3MiwiZXhwIjoxNzc1MDcxNzcyfQ.hUERr3Y48YYkKSnODZ3u20HgMrTyI7Dgs-V2uL912pg'}
+2026-04-01 07:29:33 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Request: GET https://api.stg.gowithgeo.com/api/visa/all/user
+2026-04-01 07:29:33 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Response: 200
+2026-04-01 07:29:33 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - SUCCESS: ✅ Visa found in user's applications
+2026-04-01 07:29:33 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Step 3: Initiating payment via FLUTTERWAVE
+2026-04-01 07:29:33 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 _request START - Current self.headers: {'Content-Type': 'application/json', 'Accept': 'application/json', 'X-Client-Type': 'retail', 'Cookie': 'retail_access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTUxLCJ1c2VyVHlwZSI6IlJFVEFJTCIsImlhdCI6MTc3NTAyODU3MiwiZXhwIjoxNzc1MDcxNzcyfQ.hUERr3Y48YYkKSnODZ3u20HgMrTyI7Dgs-V2uL912pg'}
+2026-04-01 07:29:33 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 _request - kwargs headers: {}
+2026-04-01 07:29:33 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 _request FINAL headers being sent: {'Content-Type': 'application/json', 'Accept': 'application/json', 'X-Client-Type': 'retail', 'Cookie': 'retail_access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTUxLCJ1c2VyVHlwZSI6IlJFVEFJTCIsImlhdCI6MTc3NTAyODU3MiwiZXhwIjoxNzc1MDcxNzcyfQ.hUERr3Y48YYkKSnODZ3u20HgMrTyI7Dgs-V2uL912pg'}
+2026-04-01 07:29:33 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Request: POST https://api.stg.gowithgeo.com/api/visa/payment
+2026-04-01 07:29:34 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Response: 200
+2026-04-01 07:29:35 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - SUCCESS: ✅ Flutterwave payment link generated and verified
+2026-04-01 07:29:35 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - === Flow for MANUAL PAYMENT ===
+2026-04-01 07:29:35 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Step 1: Creating visa enquiry...
+2026-04-01 07:29:35 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 _request START - Current self.headers: {'Content-Type': 'application/json', 'Accept': 'application/json', 'X-Client-Type': 'retail', 'Cookie': 'retail_access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTUxLCJ1c2VyVHlwZSI6IlJFVEFJTCIsImlhdCI6MTc3NTAyODU3MiwiZXhwIjoxNzc1MDcxNzcyfQ.hUERr3Y48YYkKSnODZ3u20HgMrTyI7Dgs-V2uL912pg'}
+2026-04-01 07:29:35 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 _request - kwargs headers: {}
+2026-04-01 07:29:35 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 _request FINAL headers being sent: {'Content-Type': 'application/json', 'Accept': 'application/json', 'X-Client-Type': 'retail', 'Cookie': 'retail_access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTUxLCJ1c2VyVHlwZSI6IlJFVEFJTCIsImlhdCI6MTc3NTAyODU3MiwiZXhwIjoxNzc1MDcxNzcyfQ.hUERr3Y48YYkKSnODZ3u20HgMrTyI7Dgs-V2uL912pg'}
+2026-04-01 07:29:35 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Request: POST https://api.stg.gowithgeo.com/api/visa/create
+2026-04-01 07:29:35 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Response: 200
+2026-04-01 07:29:35 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - SUCCESS: ✅ Visa enquiry created: ID=1401
+2026-04-01 07:29:35 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Step 2: Verifying visa appears in user's applications...
+2026-04-01 07:29:35 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 _request START - Current self.headers: {'Content-Type': 'application/json', 'Accept': 'application/json', 'X-Client-Type': 'retail', 'Cookie': 'retail_access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTUxLCJ1c2VyVHlwZSI6IlJFVEFJTCIsImlhdCI6MTc3NTAyODU3MiwiZXhwIjoxNzc1MDcxNzcyfQ.hUERr3Y48YYkKSnODZ3u20HgMrTyI7Dgs-V2uL912pg'}
+2026-04-01 07:29:35 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 _request - kwargs headers: {}
+2026-04-01 07:29:35 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 _request FINAL headers being sent: {'Content-Type': 'application/json', 'Accept': 'application/json', 'X-Client-Type': 'retail', 'Cookie': 'retail_access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTUxLCJ1c2VyVHlwZSI6IlJFVEFJTCIsImlhdCI6MTc3NTAyODU3MiwiZXhwIjoxNzc1MDcxNzcyfQ.hUERr3Y48YYkKSnODZ3u20HgMrTyI7Dgs-V2uL912pg'}
+2026-04-01 07:29:35 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Request: GET https://api.stg.gowithgeo.com/api/visa/all/user
+2026-04-01 07:29:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Response: 200
+2026-04-01 07:29:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - SUCCESS: ✅ Visa found in user's applications
+2026-04-01 07:29:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Step 3: Initiating payment via MANUAL PAYMENT
+2026-04-01 07:29:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 _request START - Current self.headers: {'Content-Type': 'application/json', 'Accept': 'application/json', 'X-Client-Type': 'retail', 'Cookie': 'retail_access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTUxLCJ1c2VyVHlwZSI6IlJFVEFJTCIsImlhdCI6MTc3NTAyODU3MiwiZXhwIjoxNzc1MDcxNzcyfQ.hUERr3Y48YYkKSnODZ3u20HgMrTyI7Dgs-V2uL912pg'}
+2026-04-01 07:29:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 _request - kwargs headers: {}
+2026-04-01 07:29:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 _request FINAL headers being sent: {'Content-Type': 'application/json', 'Accept': 'application/json', 'X-Client-Type': 'retail', 'Cookie': 'retail_access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTUxLCJ1c2VyVHlwZSI6IlJFVEFJTCIsImlhdCI6MTc3NTAyODU3MiwiZXhwIjoxNzc1MDcxNzcyfQ.hUERr3Y48YYkKSnODZ3u20HgMrTyI7Dgs-V2uL912pg'}
+2026-04-01 07:29:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Request: POST https://api.stg.gowithgeo.com/api/visa/payment
+2026-04-01 07:29:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Response: 200
+2026-04-01 07:29:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - SUCCESS: ✅ Manual payment correctly returned no payment link
+2026-04-01 07:29:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - SUCCESS: 🎉 Complete visa flow test passed for BOTH payment methods
