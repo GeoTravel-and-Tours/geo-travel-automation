@@ -25,7 +25,7 @@ class EnvironmentConfig:
     ENVIRONMENTS = {
         "dev": {
             "base_url": "https://retail-dev-app.vercel.app/",
-            "api_base_url": "https://api.dev.gowithgeo.com",
+            "api_base_url": "https://backend-9mbk.onrender.com",
             "partners_api_base_url": "https://sandbox.api.developers.gowithgeo.com"
         },
         "qa": {
@@ -35,7 +35,7 @@ class EnvironmentConfig:
         },
         "staging": {
             "base_url": "https://retail-staging-app.vercel.app/",
-            "api_base_url": "https://api.stg.gowithgeo.com",
+            "api_base_url": "https://backend-staging-gvuw.onrender.com",
             "partners_api_base_url": "https://sandbox.api.developers.gowithgeo.com"
         },
         'production': {
