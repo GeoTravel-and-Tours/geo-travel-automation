@@ -1,0 +1,572 @@
+{
+    "test_suite_name": "Unified UI Smoke + API + Partners API TEST REPORT",
+    "total_tests": 104,
+    "passed_tests": 89,
+    "failed_tests": 14,
+    "skipped_tests": 1,
+    "success_rate": 85.6,
+    "duration": 2616.259682,
+    "start_time": "2026-04-08 07:11:15",
+    "end_time": "2026-04-08 07:54:51",
+    "suites_run": [
+        "smoke",
+        "api"
+    ],
+    "suite_details": {
+        "smoke": {
+            "report": {
+                "test_suite_name": "Unified UI Smoke + API + Partners API TEST REPORT",
+                "total_tests": 76,
+                "passed_tests": 65,
+                "failed_tests": 10,
+                "skipped_tests": 1,
+                "success_rate": 85.52631578947368,
+                "duration": 2524.679758,
+                "start_time": "2026-04-08 07:11:15",
+                "end_time": "2026-04-08 07:53:20",
+                "failed_tests_details": [
+                    {
+                        "test_name": "src/tests/smoke_tests/test_auth_flow_smoke.py::TestAuthFlowSmoke::test_successful_login_and_redirect",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Login should be successful with valid credentials\nassert False",
+                        "screenshot_path": "reports/screenshots/failures/AuthFlowSmoke_test_successful_login_and_redirect_20260408_071202.png",
+                        "duration": 31.303842782974243,
+                        "timestamp": "07:12:02",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_smoke_tests_test_auth_flow_smoke.py_TestAuthFlowSmoke_test_successful_login_and_redirect_071202.log"
+                        },
+                        "log_path": "reports/logs/src_tests_smoke_tests_test_auth_flow_smoke.py_TestAuthFlowSmoke_test_successful_login_and_redirect_071202.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_auth_flow_smoke.py_TestAuthFlowSmoke_test_successful_login_and_redirect_071202.log",
+                        "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-04-08_07-11-14/screenshots/AuthFlowSmoke_test_successful_login_and_redirect_20260408_071202.png",
+                        "suite": "smoke"
+                    },
+                    {
+                        "test_name": "src/tests/smoke_tests/test_blogs_smoke.py::TestBlogs::test_blogs_page_navigation",
+                        "status": "FAIL",
+                        "error_message": "TimeoutException: Message: \nStacktrace:\n#0 0x562bced28a6a <unknown>\n#1 0x562bce737ab5 <unknown>\n#2 0x562bce78a676 <unknown>\n#3 0x562bce78a8b1 <unknown>\n#4 0x562bce7d5614 <unknown>\n#5 0x562bce7d27b6 <unknown>\n#6 0x562bce77dcbf <unknown>\n#7 0x562bce77ea81 <unknown>\n#8 0x562bceceea64 <unknown>\n#9 0x562bcecf1951 <unknown>\n#10 0x562bcecdb21e <unknown>\n#11 0x562bcecf251e <unknown>\n#12 0x562bcecc1be0 <unknown>\n#13 0x562bced159b8 <unknown>\n#14 0x562bced15b88 <unknown>\n#15 0x562bced274de <unknown>\n#16 0x7fb3f749caa4 <unknown>\n#17 0x7fb3f7529c6c <unknown>\n",
+                        "screenshot_path": "reports/screenshots/failures/Blogs_test_blogs_page_navigation_20260408_071829.png",
+                        "duration": 311.77417373657227,
+                        "timestamp": "07:18:29",
+                        "skip_reason": null,
+                        "category": "API Timeout",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_blogs_page_navigation_071829.log"
+                        },
+                        "log_path": "reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_blogs_page_navigation_071829.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_blogs_page_navigation_071829.log",
+                        "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-04-08_07-11-14/screenshots/Blogs_test_blogs_page_navigation_20260408_071829.png",
+                        "suite": "smoke"
+                    },
+                    {
+                        "test_name": "src/tests/smoke_tests/test_blogs_smoke.py::TestBlogs::test_read_blog",
+                        "status": "FAIL",
+                        "error_message": "TimeoutException: Message: \nStacktrace:\n#0 0x559ba091da6a <unknown>\n#1 0x559ba032cab5 <unknown>\n#2 0x559ba037f676 <unknown>\n#3 0x559ba037f8b1 <unknown>\n#4 0x559ba03ca614 <unknown>\n#5 0x559ba03c77b6 <unknown>\n#6 0x559ba0372cbf <unknown>\n#7 0x559ba0373a81 <unknown>\n#8 0x559ba08e3a64 <unknown>\n#9 0x559ba08e6951 <unknown>\n#10 0x559ba08d021e <unknown>\n#11 0x559ba08e751e <unknown>\n#12 0x559ba08b6be0 <unknown>\n#13 0x559ba090a9b8 <unknown>\n#14 0x559ba090ab88 <unknown>\n#15 0x559ba091c4de <unknown>\n#16 0x7fb91fc9caa4 <unknown>\n#17 0x7fb91fd29c6c <unknown>\n",
+                        "screenshot_path": "reports/screenshots/failures/Blogs_test_read_blog_20260408_072341.png",
+                        "duration": 311.74172496795654,
+                        "timestamp": "07:23:41",
+                        "skip_reason": null,
+                        "category": "API Timeout",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_read_blog_072341.log"
+                        },
+                        "log_path": "reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_read_blog_072341.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_read_blog_072341.log",
+                        "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-04-08_07-11-14/screenshots/Blogs_test_read_blog_20260408_072341.png",
+                        "suite": "smoke"
+                    },
+                    {
+                        "test_name": "src/tests/smoke_tests/test_blogs_smoke.py::TestBlogs::test_comment_flow",
+                        "status": "FAIL",
+                        "error_message": "TimeoutException: Message: \nStacktrace:\n#0 0x558e179dba6a <unknown>\n#1 0x558e173eaab5 <unknown>\n#2 0x558e1743d676 <unknown>\n#3 0x558e1743d8b1 <unknown>\n#4 0x558e17488614 <unknown>\n#5 0x558e174857b6 <unknown>\n#6 0x558e17430cbf <unknown>\n#7 0x558e17431a81 <unknown>\n#8 0x558e179a1a64 <unknown>\n#9 0x558e179a4951 <unknown>\n#10 0x558e1798e21e <unknown>\n#11 0x558e179a551e <unknown>\n#12 0x558e17974be0 <unknown>\n#13 0x558e179c89b8 <unknown>\n#14 0x558e179c8b88 <unknown>\n#15 0x558e179da4de <unknown>\n#16 0x7f6ce809caa4 <unknown>\n#17 0x7f6ce8129c6c <unknown>\n",
+                        "screenshot_path": "reports/screenshots/failures/Blogs_test_comment_flow_20260408_072854.png",
+                        "duration": 311.7826888561249,
+                        "timestamp": "07:28:54",
+                        "skip_reason": null,
+                        "category": "API Timeout",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_comment_flow_072854.log"
+                        },
+                        "log_path": "reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_comment_flow_072854.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_comment_flow_072854.log",
+                        "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-04-08_07-11-14/screenshots/Blogs_test_comment_flow_20260408_072854.png",
+                        "suite": "smoke"
+                    },
+                    {
+                        "test_name": "src/tests/smoke_tests/test_blogs_smoke.py::TestBlogs::test_scroll_functionality",
+                        "status": "FAIL",
+                        "error_message": "TimeoutException: Message: \nStacktrace:\n#0 0x564eeb97ca6a <unknown>\n#1 0x564eeb38bab5 <unknown>\n#2 0x564eeb3de676 <unknown>\n#3 0x564eeb3de8b1 <unknown>\n#4 0x564eeb429614 <unknown>\n#5 0x564eeb4267b6 <unknown>\n#6 0x564eeb3d1cbf <unknown>\n#7 0x564eeb3d2a81 <unknown>\n#8 0x564eeb942a64 <unknown>\n#9 0x564eeb945951 <unknown>\n#10 0x564eeb92f21e <unknown>\n#11 0x564eeb94651e <unknown>\n#12 0x564eeb915be0 <unknown>\n#13 0x564eeb9699b8 <unknown>\n#14 0x564eeb969b88 <unknown>\n#15 0x564eeb97b4de <unknown>\n#16 0x7f9e5d29caa4 <unknown>\n#17 0x7f9e5d329c6c <unknown>\n",
+                        "screenshot_path": "reports/screenshots/failures/Blogs_test_scroll_functionality_20260408_073406.png",
+                        "duration": 311.8215174674988,
+                        "timestamp": "07:34:06",
+                        "skip_reason": null,
+                        "category": "API Timeout",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_scroll_functionality_073406.log"
+                        },
+                        "log_path": "reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_scroll_functionality_073406.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_scroll_functionality_073406.log",
+                        "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-04-08_07-11-14/screenshots/Blogs_test_scroll_functionality_20260408_073406.png",
+                        "suite": "smoke"
+                    },
+                    {
+                        "test_name": "src/tests/smoke_tests/test_blogs_smoke.py::TestBlogs::test_more_like_this",
+                        "status": "FAIL",
+                        "error_message": "TimeoutException: Message: \nStacktrace:\n#0 0x56087b3eca6a <unknown>\n#1 0x56087adfbab5 <unknown>\n#2 0x56087ae4e676 <unknown>\n#3 0x56087ae4e8b1 <unknown>\n#4 0x56087ae99614 <unknown>\n#5 0x56087ae967b6 <unknown>\n#6 0x56087ae41cbf <unknown>\n#7 0x56087ae42a81 <unknown>\n#8 0x56087b3b2a64 <unknown>\n#9 0x56087b3b5951 <unknown>\n#10 0x56087b39f21e <unknown>\n#11 0x56087b3b651e <unknown>\n#12 0x56087b385be0 <unknown>\n#13 0x56087b3d99b8 <unknown>\n#14 0x56087b3d9b88 <unknown>\n#15 0x56087b3eb4de <unknown>\n#16 0x7f9236e9caa4 <unknown>\n#17 0x7f9236f29c6c <unknown>\n",
+                        "screenshot_path": "reports/screenshots/failures/Blogs_test_more_like_this_20260408_073918.png",
+                        "duration": 311.6041784286499,
+                        "timestamp": "07:39:18",
+                        "skip_reason": null,
+                        "category": "API Timeout",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_more_like_this_073918.log"
+                        },
+                        "log_path": "reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_more_like_this_073918.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_more_like_this_073918.log",
+                        "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-04-08_07-11-14/screenshots/Blogs_test_more_like_this_20260408_073918.png",
+                        "suite": "smoke"
+                    },
+                    {
+                        "test_name": "src/tests/smoke_tests/test_blogs_smoke.py::TestBlogs::test_complete_blog_flow",
+                        "status": "FAIL",
+                        "error_message": "TimeoutException: Message: \nStacktrace:\n#0 0x55f595f2ea6a <unknown>\n#1 0x55f59593dab5 <unknown>\n#2 0x55f595990676 <unknown>\n#3 0x55f5959908b1 <unknown>\n#4 0x55f5959db614 <unknown>\n#5 0x55f5959d87b6 <unknown>\n#6 0x55f595983cbf <unknown>\n#7 0x55f595984a81 <unknown>\n#8 0x55f595ef4a64 <unknown>\n#9 0x55f595ef7951 <unknown>\n#10 0x55f595ee121e <unknown>\n#11 0x55f595ef851e <unknown>\n#12 0x55f595ec7be0 <unknown>\n#13 0x55f595f1b9b8 <unknown>\n#14 0x55f595f1bb88 <unknown>\n#15 0x55f595f2d4de <unknown>\n#16 0x7f7fb969caa4 <unknown>\n#17 0x7f7fb9729c6c <unknown>\n",
+                        "screenshot_path": "reports/screenshots/failures/Blogs_test_complete_blog_flow_20260408_074430.png",
+                        "duration": 311.68710589408875,
+                        "timestamp": "07:44:30",
+                        "skip_reason": null,
+                        "category": "API Timeout",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_complete_blog_flow_074430.log"
+                        },
+                        "log_path": "reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_complete_blog_flow_074430.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_complete_blog_flow_074430.log",
+                        "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-04-08_07-11-14/screenshots/Blogs_test_complete_blog_flow_20260408_074430.png",
+                        "suite": "smoke"
+                    },
+                    {
+                        "test_name": "src/tests/smoke_tests/test_contact_us_smoke.py::TestContact::test_submit_contact_form",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Success message should appear\nassert False\n +  where False = is_success_displayed()\n +    where is_success_displayed = <src.pages.ui.contact_flow.ContactPage object at 0x7fb5f8d44c10>.is_success_displayed\n +      where <src.pages.ui.contact_flow.ContactPage object at 0x7fb5f8d44c10> = <test_contact_us_smoke.TestContact object at 0x7fb5f8e71660>.contact_page",
+                        "screenshot_path": "reports/screenshots/failures/Contact_test_submit_contact_form_20260408_074505.png",
+                        "duration": 26.91131281852722,
+                        "timestamp": "07:45:05",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_smoke_tests_test_contact_us_smoke.py_TestContact_test_submit_contact_form_074505.log"
+                        },
+                        "log_path": "reports/logs/src_tests_smoke_tests_test_contact_us_smoke.py_TestContact_test_submit_contact_form_074505.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_contact_us_smoke.py_TestContact_test_submit_contact_form_074505.log",
+                        "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-04-08_07-11-14/screenshots/Contact_test_submit_contact_form_20260408_074505.png",
+                        "suite": "smoke"
+                    },
+                    {
+                        "test_name": "src/tests/smoke_tests/test_contact_us_smoke.py::TestContact::test_complete_contact_flow",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Success message should appear\nassert False\n +  where False = is_success_displayed()\n +    where is_success_displayed = <src.pages.ui.contact_flow.ContactPage object at 0x7fb5f75028f0>.is_success_displayed\n +      where <src.pages.ui.contact_flow.ContactPage object at 0x7fb5f75028f0> = <test_contact_us_smoke.TestContact object at 0x7fb5f8e72e60>.contact_page",
+                        "screenshot_path": "reports/screenshots/failures/Contact_test_complete_contact_flow_20260408_074555.png",
+                        "duration": 27.093357801437378,
+                        "timestamp": "07:45:55",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_smoke_tests_test_contact_us_smoke.py_TestContact_test_complete_contact_flow_074555.log"
+                        },
+                        "log_path": "reports/logs/src_tests_smoke_tests_test_contact_us_smoke.py_TestContact_test_complete_contact_flow_074555.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_contact_us_smoke.py_TestContact_test_complete_contact_flow_074555.log",
+                        "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-04-08_07-11-14/screenshots/Contact_test_complete_contact_flow_20260408_074555.png",
+                        "suite": "smoke"
+                    },
+                    {
+                        "test_name": "src/tests/smoke_tests/test_package_booking_smoke.py::TestPackageBookingSmoke::test_complete_package_booking_flow",
+                        "status": "FAIL",
+                        "error_message": "TimeoutException: Message: \nStacktrace:\n#0 0x556b48241a6a <unknown>\n#1 0x556b47c50ab5 <unknown>\n#2 0x556b47ca3676 <unknown>\n#3 0x556b47ca38b1 <unknown>\n#4 0x556b47cee614 <unknown>\n#5 0x556b47ceb7b6 <unknown>\n#6 0x556b47c96cbf <unknown>\n#7 0x556b47c97a81 <unknown>\n#8 0x556b48207a64 <unknown>\n#9 0x556b4820a951 <unknown>\n#10 0x556b481f421e <unknown>\n#11 0x556b4820b51e <unknown>\n#12 0x556b481dabe0 <unknown>\n#13 0x556b4822e9b8 <unknown>\n#14 0x556b4822eb88 <unknown>\n#15 0x556b482404de <unknown>\n#16 0x7fc939e9caa4 <unknown>\n#17 0x7fc939f29c6c <unknown>\n",
+                        "screenshot_path": "reports/screenshots/failures/PackageBookingSmoke_test_complete_package_booking__20260408_074928.png",
+                        "duration": 63.201371908187866,
+                        "timestamp": "07:49:28",
+                        "skip_reason": null,
+                        "category": "API Timeout",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_complete_package_booking_flow_074928.log"
+                        },
+                        "log_path": "reports/logs/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_complete_package_booking_flow_074928.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_complete_package_booking_flow_074928.log",
+                        "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-04-08_07-11-14/screenshots/PackageBookingSmoke_test_complete_package_booking__20260408_074928.png",
+                        "suite": "smoke"
+                    }
+                ],
+                "skipped_tests_details": [
+                    {
+                        "test_name": "src/tests/smoke_tests/test_auth_flow_smoke.py::TestAuthFlowSmoke::test_logout_functionality",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/smoke_tests/test_auth_flow_smoke.py', 159, 'Skipped: Login failed - cannot proceed with logout test')",
+                        "screenshot_path": null,
+                        "duration": 31.291223526000977,
+                        "timestamp": "07:13:17",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/smoke_tests/test_auth_flow_smoke.py', 159, 'Skipped: Login failed - cannot proceed with logout test')",
+                        "category": null,
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_smoke_tests_test_auth_flow_smoke.py_TestAuthFlowSmoke_test_logout_functionality_071317.log"
+                        },
+                        "log_path": "reports/logs/src_tests_smoke_tests_test_auth_flow_smoke.py_TestAuthFlowSmoke_test_logout_functionality_071317.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_auth_flow_smoke.py_TestAuthFlowSmoke_test_logout_functionality_071317.log",
+                        "suite": "smoke"
+                    }
+                ]
+            },
+            "timestamp": "2026-04-08 07:53:20"
+        },
+        "api": {
+            "report": {
+                "test_suite_name": "API SMOKE TEST",
+                "total_tests": 28,
+                "passed_tests": 24,
+                "failed_tests": 4,
+                "skipped_tests": 0,
+                "success_rate": 85.71428571428571,
+                "duration": 60.498363,
+                "start_time": "2026-04-08 07:53:20",
+                "end_time": "2026-04-08 07:54:21",
+                "failed_tests_details": [
+                    {
+                        "test_name": "src/tests/api_tests/test_auth_api.py::TestAuthAPI::test_login_success",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Auth token should be extracted from cookie\nassert None is not None\n +  where None = <src.pages.api.auth_api.AuthAPI object at 0x7fb5f8875060>.auth_token",
+                        "screenshot_path": null,
+                        "duration": 2.0875017642974854,
+                        "timestamp": "07:53:23",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_login_success_075323.log",
+                            "response_file": "reports/failed_responses/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_login_success_075323.json"
+                        },
+                        "log_path": "reports/logs/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_login_success_075323.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_login_success_075323.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_login_success_075323.json",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_auth_api.py::TestAuthAPI::test_auth_token_set_after_successful_login",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Auth token must be set after successful login\nassert None is not None\n +  where None = <src.pages.api.auth_api.AuthAPI object at 0x7fb5f8bc0790>.auth_token",
+                        "screenshot_path": null,
+                        "duration": 0.7055888175964355,
+                        "timestamp": "07:53:24",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_auth_token_set_after_successful_login_075324.log",
+                            "response_file": "reports/failed_responses/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_auth_token_set_after_successful_login_075324.json"
+                        },
+                        "log_path": "reports/logs/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_auth_token_set_after_successful_login_075324.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_auth_token_set_after_successful_login_075324.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_auth_token_set_after_successful_login_075324.json",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_auth_api.py::TestAuthAPI::test_dynamic_token_extraction",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Token extraction failed\nassert None is not None",
+                        "screenshot_path": null,
+                        "duration": 0.6953513622283936,
+                        "timestamp": "07:53:25",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_dynamic_token_extraction_075325.log",
+                            "response_file": "reports/failed_responses/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_dynamic_token_extraction_075325.json"
+                        },
+                        "log_path": "reports/logs/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_dynamic_token_extraction_075325.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_dynamic_token_extraction_075325.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_dynamic_token_extraction_075325.json",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_auth_api.py::TestAuthAPI::test_token_validation",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: No token extracted\nassert None is not None",
+                        "screenshot_path": null,
+                        "duration": 0.8971428871154785,
+                        "timestamp": "07:53:26",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_token_validation_075326.log",
+                            "response_file": "reports/failed_responses/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_token_validation_075326.json"
+                        },
+                        "log_path": "reports/logs/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_token_validation_075326.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_token_validation_075326.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_token_validation_075326.json",
+                        "suite": "api"
+                    }
+                ],
+                "skipped_tests_details": []
+            },
+            "timestamp": "2026-04-08 07:54:21"
+        }
+    },
+    "all_failed_tests": [
+        {
+            "test_name": "src/tests/smoke_tests/test_auth_flow_smoke.py::TestAuthFlowSmoke::test_successful_login_and_redirect",
+            "status": "FAIL",
+            "error_message": "AssertionError: Login should be successful with valid credentials\nassert False",
+            "screenshot_path": "reports/screenshots/failures/AuthFlowSmoke_test_successful_login_and_redirect_20260408_071202.png",
+            "duration": 31.303842782974243,
+            "timestamp": "07:12:02",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_smoke_tests_test_auth_flow_smoke.py_TestAuthFlowSmoke_test_successful_login_and_redirect_071202.log"
+            },
+            "log_path": "reports/logs/src_tests_smoke_tests_test_auth_flow_smoke.py_TestAuthFlowSmoke_test_successful_login_and_redirect_071202.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_auth_flow_smoke.py_TestAuthFlowSmoke_test_successful_login_and_redirect_071202.log",
+            "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-04-08_07-11-14/screenshots/AuthFlowSmoke_test_successful_login_and_redirect_20260408_071202.png",
+            "suite": "smoke"
+        },
+        {
+            "test_name": "src/tests/smoke_tests/test_blogs_smoke.py::TestBlogs::test_blogs_page_navigation",
+            "status": "FAIL",
+            "error_message": "TimeoutException: Message: \nStacktrace:\n#0 0x562bced28a6a <unknown>\n#1 0x562bce737ab5 <unknown>\n#2 0x562bce78a676 <unknown>\n#3 0x562bce78a8b1 <unknown>\n#4 0x562bce7d5614 <unknown>\n#5 0x562bce7d27b6 <unknown>\n#6 0x562bce77dcbf <unknown>\n#7 0x562bce77ea81 <unknown>\n#8 0x562bceceea64 <unknown>\n#9 0x562bcecf1951 <unknown>\n#10 0x562bcecdb21e <unknown>\n#11 0x562bcecf251e <unknown>\n#12 0x562bcecc1be0 <unknown>\n#13 0x562bced159b8 <unknown>\n#14 0x562bced15b88 <unknown>\n#15 0x562bced274de <unknown>\n#16 0x7fb3f749caa4 <unknown>\n#17 0x7fb3f7529c6c <unknown>\n",
+            "screenshot_path": "reports/screenshots/failures/Blogs_test_blogs_page_navigation_20260408_071829.png",
+            "duration": 311.77417373657227,
+            "timestamp": "07:18:29",
+            "skip_reason": null,
+            "category": "API Timeout",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_blogs_page_navigation_071829.log"
+            },
+            "log_path": "reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_blogs_page_navigation_071829.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_blogs_page_navigation_071829.log",
+            "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-04-08_07-11-14/screenshots/Blogs_test_blogs_page_navigation_20260408_071829.png",
+            "suite": "smoke"
+        },
+        {
+            "test_name": "src/tests/smoke_tests/test_blogs_smoke.py::TestBlogs::test_read_blog",
+            "status": "FAIL",
+            "error_message": "TimeoutException: Message: \nStacktrace:\n#0 0x559ba091da6a <unknown>\n#1 0x559ba032cab5 <unknown>\n#2 0x559ba037f676 <unknown>\n#3 0x559ba037f8b1 <unknown>\n#4 0x559ba03ca614 <unknown>\n#5 0x559ba03c77b6 <unknown>\n#6 0x559ba0372cbf <unknown>\n#7 0x559ba0373a81 <unknown>\n#8 0x559ba08e3a64 <unknown>\n#9 0x559ba08e6951 <unknown>\n#10 0x559ba08d021e <unknown>\n#11 0x559ba08e751e <unknown>\n#12 0x559ba08b6be0 <unknown>\n#13 0x559ba090a9b8 <unknown>\n#14 0x559ba090ab88 <unknown>\n#15 0x559ba091c4de <unknown>\n#16 0x7fb91fc9caa4 <unknown>\n#17 0x7fb91fd29c6c <unknown>\n",
+            "screenshot_path": "reports/screenshots/failures/Blogs_test_read_blog_20260408_072341.png",
+            "duration": 311.74172496795654,
+            "timestamp": "07:23:41",
+            "skip_reason": null,
+            "category": "API Timeout",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_read_blog_072341.log"
+            },
+            "log_path": "reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_read_blog_072341.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_read_blog_072341.log",
+            "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-04-08_07-11-14/screenshots/Blogs_test_read_blog_20260408_072341.png",
+            "suite": "smoke"
+        },
+        {
+            "test_name": "src/tests/smoke_tests/test_blogs_smoke.py::TestBlogs::test_comment_flow",
+            "status": "FAIL",
+            "error_message": "TimeoutException: Message: \nStacktrace:\n#0 0x558e179dba6a <unknown>\n#1 0x558e173eaab5 <unknown>\n#2 0x558e1743d676 <unknown>\n#3 0x558e1743d8b1 <unknown>\n#4 0x558e17488614 <unknown>\n#5 0x558e174857b6 <unknown>\n#6 0x558e17430cbf <unknown>\n#7 0x558e17431a81 <unknown>\n#8 0x558e179a1a64 <unknown>\n#9 0x558e179a4951 <unknown>\n#10 0x558e1798e21e <unknown>\n#11 0x558e179a551e <unknown>\n#12 0x558e17974be0 <unknown>\n#13 0x558e179c89b8 <unknown>\n#14 0x558e179c8b88 <unknown>\n#15 0x558e179da4de <unknown>\n#16 0x7f6ce809caa4 <unknown>\n#17 0x7f6ce8129c6c <unknown>\n",
+            "screenshot_path": "reports/screenshots/failures/Blogs_test_comment_flow_20260408_072854.png",
+            "duration": 311.7826888561249,
+            "timestamp": "07:28:54",
+            "skip_reason": null,
+            "category": "API Timeout",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_comment_flow_072854.log"
+            },
+            "log_path": "reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_comment_flow_072854.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_comment_flow_072854.log",
+            "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-04-08_07-11-14/screenshots/Blogs_test_comment_flow_20260408_072854.png",
+            "suite": "smoke"
+        },
+        {
+            "test_name": "src/tests/smoke_tests/test_blogs_smoke.py::TestBlogs::test_scroll_functionality",
+            "status": "FAIL",
+            "error_message": "TimeoutException: Message: \nStacktrace:\n#0 0x564eeb97ca6a <unknown>\n#1 0x564eeb38bab5 <unknown>\n#2 0x564eeb3de676 <unknown>\n#3 0x564eeb3de8b1 <unknown>\n#4 0x564eeb429614 <unknown>\n#5 0x564eeb4267b6 <unknown>\n#6 0x564eeb3d1cbf <unknown>\n#7 0x564eeb3d2a81 <unknown>\n#8 0x564eeb942a64 <unknown>\n#9 0x564eeb945951 <unknown>\n#10 0x564eeb92f21e <unknown>\n#11 0x564eeb94651e <unknown>\n#12 0x564eeb915be0 <unknown>\n#13 0x564eeb9699b8 <unknown>\n#14 0x564eeb969b88 <unknown>\n#15 0x564eeb97b4de <unknown>\n#16 0x7f9e5d29caa4 <unknown>\n#17 0x7f9e5d329c6c <unknown>\n",
+            "screenshot_path": "reports/screenshots/failures/Blogs_test_scroll_functionality_20260408_073406.png",
+            "duration": 311.8215174674988,
+            "timestamp": "07:34:06",
+            "skip_reason": null,
+            "category": "API Timeout",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_scroll_functionality_073406.log"
+            },
+            "log_path": "reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_scroll_functionality_073406.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_scroll_functionality_073406.log",
+            "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-04-08_07-11-14/screenshots/Blogs_test_scroll_functionality_20260408_073406.png",
+            "suite": "smoke"
+        },
+        {
+            "test_name": "src/tests/smoke_tests/test_blogs_smoke.py::TestBlogs::test_more_like_this",
+            "status": "FAIL",
+            "error_message": "TimeoutException: Message: \nStacktrace:\n#0 0x56087b3eca6a <unknown>\n#1 0x56087adfbab5 <unknown>\n#2 0x56087ae4e676 <unknown>\n#3 0x56087ae4e8b1 <unknown>\n#4 0x56087ae99614 <unknown>\n#5 0x56087ae967b6 <unknown>\n#6 0x56087ae41cbf <unknown>\n#7 0x56087ae42a81 <unknown>\n#8 0x56087b3b2a64 <unknown>\n#9 0x56087b3b5951 <unknown>\n#10 0x56087b39f21e <unknown>\n#11 0x56087b3b651e <unknown>\n#12 0x56087b385be0 <unknown>\n#13 0x56087b3d99b8 <unknown>\n#14 0x56087b3d9b88 <unknown>\n#15 0x56087b3eb4de <unknown>\n#16 0x7f9236e9caa4 <unknown>\n#17 0x7f9236f29c6c <unknown>\n",
+            "screenshot_path": "reports/screenshots/failures/Blogs_test_more_like_this_20260408_073918.png",
+            "duration": 311.6041784286499,
+            "timestamp": "07:39:18",
+            "skip_reason": null,
+            "category": "API Timeout",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_more_like_this_073918.log"
+            },
+            "log_path": "reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_more_like_this_073918.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_more_like_this_073918.log",
+            "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-04-08_07-11-14/screenshots/Blogs_test_more_like_this_20260408_073918.png",
+            "suite": "smoke"
+        },
+        {
+            "test_name": "src/tests/smoke_tests/test_blogs_smoke.py::TestBlogs::test_complete_blog_flow",
+            "status": "FAIL",
+            "error_message": "TimeoutException: Message: \nStacktrace:\n#0 0x55f595f2ea6a <unknown>\n#1 0x55f59593dab5 <unknown>\n#2 0x55f595990676 <unknown>\n#3 0x55f5959908b1 <unknown>\n#4 0x55f5959db614 <unknown>\n#5 0x55f5959d87b6 <unknown>\n#6 0x55f595983cbf <unknown>\n#7 0x55f595984a81 <unknown>\n#8 0x55f595ef4a64 <unknown>\n#9 0x55f595ef7951 <unknown>\n#10 0x55f595ee121e <unknown>\n#11 0x55f595ef851e <unknown>\n#12 0x55f595ec7be0 <unknown>\n#13 0x55f595f1b9b8 <unknown>\n#14 0x55f595f1bb88 <unknown>\n#15 0x55f595f2d4de <unknown>\n#16 0x7f7fb969caa4 <unknown>\n#17 0x7f7fb9729c6c <unknown>\n",
+            "screenshot_path": "reports/screenshots/failures/Blogs_test_complete_blog_flow_20260408_074430.png",
+            "duration": 311.68710589408875,
+            "timestamp": "07:44:30",
+            "skip_reason": null,
+            "category": "API Timeout",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_complete_blog_flow_074430.log"
+            },
+            "log_path": "reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_complete_blog_flow_074430.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_complete_blog_flow_074430.log",
+            "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-04-08_07-11-14/screenshots/Blogs_test_complete_blog_flow_20260408_074430.png",
+            "suite": "smoke"
+        },
+        {
+            "test_name": "src/tests/smoke_tests/test_contact_us_smoke.py::TestContact::test_submit_contact_form",
+            "status": "FAIL",
+            "error_message": "AssertionError: Success message should appear\nassert False\n +  where False = is_success_displayed()\n +    where is_success_displayed = <src.pages.ui.contact_flow.ContactPage object at 0x7fb5f8d44c10>.is_success_displayed\n +      where <src.pages.ui.contact_flow.ContactPage object at 0x7fb5f8d44c10> = <test_contact_us_smoke.TestContact object at 0x7fb5f8e71660>.contact_page",
+            "screenshot_path": "reports/screenshots/failures/Contact_test_submit_contact_form_20260408_074505.png",
+            "duration": 26.91131281852722,
+            "timestamp": "07:45:05",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_smoke_tests_test_contact_us_smoke.py_TestContact_test_submit_contact_form_074505.log"
+            },
+            "log_path": "reports/logs/src_tests_smoke_tests_test_contact_us_smoke.py_TestContact_test_submit_contact_form_074505.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_contact_us_smoke.py_TestContact_test_submit_contact_form_074505.log",
+            "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-04-08_07-11-14/screenshots/Contact_test_submit_contact_form_20260408_074505.png",
+            "suite": "smoke"
+        },
+        {
+            "test_name": "src/tests/smoke_tests/test_contact_us_smoke.py::TestContact::test_complete_contact_flow",
+            "status": "FAIL",
+            "error_message": "AssertionError: Success message should appear\nassert False\n +  where False = is_success_displayed()\n +    where is_success_displayed = <src.pages.ui.contact_flow.ContactPage object at 0x7fb5f75028f0>.is_success_displayed\n +      where <src.pages.ui.contact_flow.ContactPage object at 0x7fb5f75028f0> = <test_contact_us_smoke.TestContact object at 0x7fb5f8e72e60>.contact_page",
+            "screenshot_path": "reports/screenshots/failures/Contact_test_complete_contact_flow_20260408_074555.png",
+            "duration": 27.093357801437378,
+            "timestamp": "07:45:55",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_smoke_tests_test_contact_us_smoke.py_TestContact_test_complete_contact_flow_074555.log"
+            },
+            "log_path": "reports/logs/src_tests_smoke_tests_test_contact_us_smoke.py_TestContact_test_complete_contact_flow_074555.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_contact_us_smoke.py_TestContact_test_complete_contact_flow_074555.log",
+            "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-04-08_07-11-14/screenshots/Contact_test_complete_contact_flow_20260408_074555.png",
+            "suite": "smoke"
+        },
+        {
+            "test_name": "src/tests/smoke_tests/test_package_booking_smoke.py::TestPackageBookingSmoke::test_complete_package_booking_flow",
+            "status": "FAIL",
+            "error_message": "TimeoutException: Message: \nStacktrace:\n#0 0x556b48241a6a <unknown>\n#1 0x556b47c50ab5 <unknown>\n#2 0x556b47ca3676 <unknown>\n#3 0x556b47ca38b1 <unknown>\n#4 0x556b47cee614 <unknown>\n#5 0x556b47ceb7b6 <unknown>\n#6 0x556b47c96cbf <unknown>\n#7 0x556b47c97a81 <unknown>\n#8 0x556b48207a64 <unknown>\n#9 0x556b4820a951 <unknown>\n#10 0x556b481f421e <unknown>\n#11 0x556b4820b51e <unknown>\n#12 0x556b481dabe0 <unknown>\n#13 0x556b4822e9b8 <unknown>\n#14 0x556b4822eb88 <unknown>\n#15 0x556b482404de <unknown>\n#16 0x7fc939e9caa4 <unknown>\n#17 0x7fc939f29c6c <unknown>\n",
+            "screenshot_path": "reports/screenshots/failures/PackageBookingSmoke_test_complete_package_booking__20260408_074928.png",
+            "duration": 63.201371908187866,
+            "timestamp": "07:49:28",
+            "skip_reason": null,
+            "category": "API Timeout",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_complete_package_booking_flow_074928.log"
+            },
+            "log_path": "reports/logs/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_complete_package_booking_flow_074928.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_complete_package_booking_flow_074928.log",
+            "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-04-08_07-11-14/screenshots/PackageBookingSmoke_test_complete_package_booking__20260408_074928.png",
+            "suite": "smoke"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_auth_api.py::TestAuthAPI::test_login_success",
+            "status": "FAIL",
+            "error_message": "AssertionError: Auth token should be extracted from cookie\nassert None is not None\n +  where None = <src.pages.api.auth_api.AuthAPI object at 0x7fb5f8875060>.auth_token",
+            "screenshot_path": null,
+            "duration": 2.0875017642974854,
+            "timestamp": "07:53:23",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_login_success_075323.log",
+                "response_file": "reports/failed_responses/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_login_success_075323.json"
+            },
+            "log_path": "reports/logs/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_login_success_075323.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_login_success_075323.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_login_success_075323.json",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_auth_api.py::TestAuthAPI::test_auth_token_set_after_successful_login",
+            "status": "FAIL",
+            "error_message": "AssertionError: Auth token must be set after successful login\nassert None is not None\n +  where None = <src.pages.api.auth_api.AuthAPI object at 0x7fb5f8bc0790>.auth_token",
+            "screenshot_path": null,
+            "duration": 0.7055888175964355,
+            "timestamp": "07:53:24",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_auth_token_set_after_successful_login_075324.log",
+                "response_file": "reports/failed_responses/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_auth_token_set_after_successful_login_075324.json"
+            },
+            "log_path": "reports/logs/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_auth_token_set_after_successful_login_075324.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_auth_token_set_after_successful_login_075324.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_auth_token_set_after_successful_login_075324.json",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_auth_api.py::TestAuthAPI::test_dynamic_token_extraction",
+            "status": "FAIL",
+            "error_message": "AssertionError: Token extraction failed\nassert None is not None",
+            "screenshot_path": null,
+            "duration": 0.6953513622283936,
+            "timestamp": "07:53:25",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_dynamic_token_extraction_075325.log",
+                "response_file": "reports/failed_responses/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_dynamic_token_extraction_075325.json"
+            },
+            "log_path": "reports/logs/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_dynamic_token_extraction_075325.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_dynamic_token_extraction_075325.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_dynamic_token_extraction_075325.json",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_auth_api.py::TestAuthAPI::test_token_validation",
+            "status": "FAIL",
+            "error_message": "AssertionError: No token extracted\nassert None is not None",
+            "screenshot_path": null,
+            "duration": 0.8971428871154785,
+            "timestamp": "07:53:26",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_token_validation_075326.log",
+                "response_file": "reports/failed_responses/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_token_validation_075326.json"
+            },
+            "log_path": "reports/logs/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_token_validation_075326.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_token_validation_075326.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_api_tests_test_auth_api.py_TestAuthAPI_test_token_validation_075326.json",
+            "suite": "api"
+        }
+    ],
+    "all_skipped_tests": [
+        {
+            "test_name": "src/tests/smoke_tests/test_auth_flow_smoke.py::TestAuthFlowSmoke::test_logout_functionality",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/smoke_tests/test_auth_flow_smoke.py', 159, 'Skipped: Login failed - cannot proceed with logout test')",
+            "screenshot_path": null,
+            "duration": 31.291223526000977,
+            "timestamp": "07:13:17",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/smoke_tests/test_auth_flow_smoke.py', 159, 'Skipped: Login failed - cannot proceed with logout test')",
+            "category": null,
+            "evidence": {
+                "log_path": "reports/logs/src_tests_smoke_tests_test_auth_flow_smoke.py_TestAuthFlowSmoke_test_logout_functionality_071317.log"
+            },
+            "log_path": "reports/logs/src_tests_smoke_tests_test_auth_flow_smoke.py_TestAuthFlowSmoke_test_logout_functionality_071317.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_auth_flow_smoke.py_TestAuthFlowSmoke_test_logout_functionality_071317.log",
+            "suite": "smoke"
+        }
+    ]
+}
