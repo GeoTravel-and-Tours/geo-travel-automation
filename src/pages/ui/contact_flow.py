@@ -5,6 +5,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 from src.core.base_page import BasePage
+from selenium.common.exceptions import TimeoutException
 import time
 
 
@@ -99,16 +100,19 @@ class ContactPage(BasePage):
             name_field = self.waiter.wait_for_clickable(self.NAME_INPUT, timeout=10)
             name_field.clear()
             name_field.send_keys(name)
+            self.logger.info("Filled name input")
             
             # Fill email
             email_field = self.waiter.wait_for_clickable(self.EMAIL_INPUT, timeout=10)
             email_field.clear()
             email_field.send_keys(email)
+            self.logger.info("Filled email input")
             
             # Fill phone
             phone_field = self.waiter.wait_for_clickable(self.PHONE_INPUT, timeout=10)
             phone_field.clear()
             phone_field.send_keys(phone)
+            self.logger.info("Filled phone input")
             
             # Select support type (random if not specified)
             if support_type is None:
@@ -120,14 +124,14 @@ class ContactPage(BasePage):
             # Click dropdown button
             dropdown = self.waiter.wait_for_clickable(self.SUPPORT_TYPE_DROPDOWN, timeout=10)
             dropdown.click()
-            time.sleep(1)
+            time.sleep(2)
             
             # Select option by text
             option_locator = (self.SUPPORT_TYPE_OPTION_BY_TEXT[0], 
                             self.SUPPORT_TYPE_OPTION_BY_TEXT[1].format(support_type))
             option = self.waiter.wait_for_clickable(option_locator, timeout=10)
             option.click()
-            time.sleep(1)
+            time.sleep(2)
             
             self.logger.info(f"Selected support type: {support_type}")
             
@@ -135,12 +139,13 @@ class ContactPage(BasePage):
             message_field = self.waiter.wait_for_clickable(self.MESSAGE_TEXTAREA, timeout=10)
             message_field.clear()
             message_field.send_keys(message)
+            self.logger.info("Filled message textarea")
             
             # Scroll to privacy checkbox
             self.logger.info("Scrolling to privacy checkbox")
             privacy = self.waiter.wait_for_present(self.PRIVACY_CHECKBOX, timeout=10)
             self.javascript.scroll_to_element(privacy)
-            time.sleep(1)
+            time.sleep(2)
             
             # Check privacy checkbox
             if not privacy.is_selected():
@@ -154,22 +159,53 @@ class ContactPage(BasePage):
             self.logger.error(f"Failed to fill contact form: {e}")
             raise
     
-    def submit_form(self):
+    def submit_form(self, max_retries=3):
         """Submit contact form"""
         self.logger.info("Submitting contact form")
         
-        try:
-            submit_btn = self.waiter.wait_for_clickable(self.SUBMIT_BUTTON, timeout=10)
-            self.javascript.scroll_to_element(submit_btn)
-            submit_btn.click()
-            time.sleep(2)
+        # Success locators in priority order (By tuples)
+        success_locators = [
+            (By.CSS_SELECTOR, "p[class='text-sm text-gray-600 mt-1.5 max-w-xl mx-auto']"),
+            (By.LINK_TEXT, "Go back home")
+        ]
+        
+        for attempt in range(1, max_retries + 1):
+            self.logger.info(f"Attempt {attempt}/{max_retries}")
             
-            self.logger.info("Contact form submitted")
-            return self
+            try:
+                # 1. Click submit button
+                submit_btn = self.waiter.wait_for_clickable(self.SUBMIT_BUTTON, timeout=10)
+                self.javascript.scroll_to_element(submit_btn)
+                submit_btn.click()
+                self.logger.debug("Submit button clicked")
+                
+                # 2. Try each success locator until one is found (or timeout)
+                success_detected = False
+                for locator in success_locators:
+                    try:
+                        self.waiter.wait_for_element(locator, timeout=5)
+                        self.logger.info(f"Success detected using: {locator}")
+                        success_detected = True
+                        break
+                    except TimeoutException:
+                        self.logger.debug(f"Locator not found: {locator}")
+                        continue
+                
+                if success_detected:
+                    self.logger.info("Contact form submitted successfully")
+                    return self
+                else:
+                    self.logger.warning(f"Attempt {attempt}: No success indicator found after click")
+                    
+            except Exception as e:
+                self.logger.warning(f"Attempt {attempt} failed: {e}")
             
-        except Exception as e:
-            self.logger.error(f"Failed to submit form: {e}")
-            raise
+            # Wait before next attempt (except after last attempt)
+            if attempt < max_retries:
+                time.sleep(2)
+        
+        # All retries exhausted
+        raise Exception(f"Failed to submit form after {max_retries} attempts: success message never appeared")
     
     def is_success_displayed(self, timeout=10):
         """Check if success message is displayed"""

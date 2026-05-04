@@ -98,23 +98,71 @@ class VerifiedUserHelper:
             "password": self.verified_account["password"]
         })
         
-        if login_response.status_code == 200:
+        if login_response.status_code != 200:
+            self.logger.error(f"Verified account login failed: {login_response.status_code}")
+            self.logger.error(f"Response body: {login_response.text}")
+            return None
+        
+        # Log response for debugging
+        self.logger.debug(f"Login response status: {login_response.status_code}")
+        self.logger.debug(f"Response headers: {login_response.headers}")
+        self.logger.debug(f"Response body: {login_response.text}")
+        
+        # Try to extract token manually first (more robust)
+        token = None
+        try:
+            resp_json = login_response.json()
+            self.logger.debug(f"Response JSON structure: {resp_json.keys() if isinstance(resp_json, dict) else type(resp_json)}")
+            
+            # Common token keys in partner APIs
+            possible_keys = ['token', 'access_token', 'accessToken', 'data.token', 'data.access_token', 'jwt']
+            for key in possible_keys:
+                if '.' in key:
+                    # Nested access
+                    parts = key.split('.')
+                    value = resp_json
+                    for part in parts:
+                        if isinstance(value, dict) and part in value:
+                            value = value[part]
+                        else:
+                            value = None
+                            break
+                    if value:
+                        token = value
+                        self.logger.info(f"Token extracted from nested key: {key}")
+                        break
+                else:
+                    if isinstance(resp_json, dict) and key in resp_json:
+                        token = resp_json[key]
+                        self.logger.info(f"Token extracted from key: {key}")
+                        break
+                    elif isinstance(resp_json, dict) and 'data' in resp_json and isinstance(resp_json['data'], dict) and key in resp_json['data']:
+                        token = resp_json['data'][key]
+                        self.logger.info(f"Token extracted from data.{key}")
+                        break
+        except Exception as e:
+            self.logger.warning(f"Manual token extraction failed: {e}")
+        
+        # Fallback to TokenExtractor if manual didn't work
+        if not token:
             token_extractor = TokenExtractor()
             token, extraction_method = token_extractor.extract_token(login_response)
-            
             if token:
-                is_valid = token_extractor.validate_token(token)
-                if is_valid:
-                    self.logger.info(f"Access token obtained successfully via {extraction_method}")
-                    return token
-                else:
-                    self.logger.warning("Token extracted but validation failed")
-                    return None
+                self.logger.info(f"Token extracted via TokenExtractor using {extraction_method}")
+        
+        # Validate token if we got one
+        if token:
+            token_extractor = TokenExtractor()
+            is_valid = token_extractor.validate_token(token)
+            if is_valid:
+                self.logger.info("Access token obtained and validated successfully")
+                return token
             else:
-                self.logger.warning("Verified account login returned no token")
+                self.logger.warning("Token extracted but validation failed")
                 return None
         else:
-            self.logger.error(f"Verified account login failed: {login_response.status_code}")
+            self.logger.error("No token found in login response")
+            self.logger.error(f"Full response: {login_response.text}")
             return None
     
     def get_verified_organization_api(self):
