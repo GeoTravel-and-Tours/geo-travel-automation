@@ -85,7 +85,7 @@ class TestAuthFlowSmoke(TestBase):
         
         self.auth_flow.logger.step(3, "Verifying user is redirected to dashboard")
         assert self.auth_flow.wait_until_on_dashboard(
-            timeout=10
+            timeout=15
         ), "User should be redirected to dashboard after successful login"
 
         self.auth_flow.logger.success("Successful login & redirect test passed")

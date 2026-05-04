@@ -138,54 +138,96 @@ class TestMiscAPIs:
         self.logger.info("=== Testing Get Single Blog ===")
         api = BlogAPI()
         self._set_auth_on_api(api, authenticated_api)
-        all_blogs = api.get_all_blogs(limit=1)
-        if all_blogs.status_code == 200:
-            data = all_blogs.json()
-            # Handle blog response structure: data -> data
-            if isinstance(data, dict) and 'data' in data:
-                items = data['data']
-            else:
-                items = data if isinstance(data, list) else []
 
-            if items and len(items) > 0:
-                blog_id = items[0].get('id')
-                if blog_id:
-                    response = api.get_single_blog(blog_id)
-                    if response is None:
-                        self.logger.error("Response is None. Skipping test.")
-                        pytest.skip("Response is None. Skipping test.")
-                    elif hasattr(response, 'status_code') and response.status_code >= 400:
-                        self.logger.error(f"API Error: {response.status_code} - {response.text}")
-                        pytest.fail(f"API Error: {response.status_code}")
-                    self.logger.info(f"Single Blog: {response.status_code}")
-                    assert response.status_code in [200, 404]
+        # Fetch first blog
+        all_blogs = api.get_all_blogs(limit=1)
+        if all_blogs.status_code != 200:
+            self.logger.warning(f"Get all blogs failed: {all_blogs.status_code}")
+            pytest.skip("Cannot retrieve blogs list")
+
+        data = all_blogs.json()
+        blogs_list = None
+
+        # Extract blog list from various possible response structures
+        if isinstance(data, dict):
+            if 'data' in data:
+                inner = data['data']
+                if isinstance(inner, dict) and 'blogs' in inner:
+                    blogs_list = inner['blogs']           # Standard response
+                elif isinstance(inner, list):
+                    blogs_list = inner                    # Direct array
+            elif isinstance(data, list):
+                blogs_list = data                         # No wrapper
+
+        if not blogs_list or len(blogs_list) == 0:
+            self.logger.error("No blogs found in response")
+            pytest.skip("No blogs available for testing")
+
+        blog_id = blogs_list[0].get('id')
+        if not blog_id:
+            self.logger.error("First blog has no id")
+            pytest.skip("Blog id missing")
+
+        # Get single blog
+        response = api.get_single_blog(blog_id)
+        if response is None:
+            self.logger.error("Response is None")
+            pytest.skip("Response is None")
+
+        if response.status_code >= 400:
+            self.logger.error(f"API Error: {response.status_code} - {response.text}")
+            pytest.fail(f"API Error: {response.status_code}")
+
+        self.logger.info(f"Single Blog status: {response.status_code}")
+        assert response.status_code in [200, 404]
     
     @pytest.mark.api
     def test_get_blog_comments(self, authenticated_api):
         self.logger.info("=== Testing Get Blog Comments ===")
         api = BlogAPI()
         self._set_auth_on_api(api, authenticated_api)
-        all_blogs = api.get_all_blogs(limit=1)
-        if all_blogs.status_code == 200:
-            data = all_blogs.json()
-            # Handle blog response structure: data -> data
-            if isinstance(data, dict) and 'data' in data:
-                items = data['data']
-            else:
-                items = data if isinstance(data, list) else []
 
-            if items and len(items) > 0:
-                blog_id = items[0].get('id')
-                if blog_id:
-                    response = api.get_blog_comments(blog_id)
-                    if response is None:
-                        self.logger.error("Response is None. Skipping test.")
-                        pytest.skip("Response is None. Skipping test.")
-                    elif hasattr(response, 'status_code') and response.status_code >= 400:
-                        self.logger.error(f"API Error: {response.status_code} - {response.text}")
-                        pytest.fail(f"API Error: {response.status_code}")
-                    self.logger.info(f"Blog Comments: {response.status_code}")
-                    assert response.status_code in [200, 404]
+        # Fetch first blog
+        all_blogs = api.get_all_blogs(limit=1)
+        if all_blogs.status_code != 200:
+            self.logger.warning(f"Get all blogs failed: {all_blogs.status_code}")
+            pytest.skip("Cannot retrieve blogs list")
+
+        data = all_blogs.json()
+        blogs_list = None
+
+        # Extract blog list from response
+        if isinstance(data, dict):
+            if 'data' in data:
+                inner = data['data']
+                if isinstance(inner, dict) and 'blogs' in inner:
+                    blogs_list = inner['blogs']          # Standard response
+                elif isinstance(inner, list):
+                    blogs_list = inner                    # Direct array fallback
+            elif isinstance(data, list):
+                blogs_list = data                         # No wrapper
+
+        if not blogs_list or len(blogs_list) == 0:
+            self.logger.error("No blogs found in response")
+            pytest.skip("No blogs available for testing")
+
+        blog_id = blogs_list[0].get('id')
+        if not blog_id:
+            self.logger.error("First blog has no id")
+            pytest.skip("Blog id missing")
+
+        # Get comments for that blog
+        response = api.get_blog_comments(blog_id)
+        if response is None:
+            self.logger.error("Response is None")
+            pytest.skip("Response is None")
+
+        if response.status_code >= 400:
+            self.logger.error(f"API Error: {response.status_code} - {response.text}")
+            pytest.fail(f"API Error: {response.status_code}")
+
+        self.logger.info(f"Blog Comments status: {response.status_code}")
+        assert response.status_code in [200, 404]
     
     # User Authentication Tests                    
     @pytest.mark.api
