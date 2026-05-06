@@ -215,9 +215,9 @@ def get_contact_test_data():
     ]
     
     return {
-        "name": f"Geo QA Bot {timestamp}",
-        "email": f"geo.qa.bot.{timestamp}@geotravel.com",
-        "phone": f"080{timestamp[-6:]}",
+        "name": f"Geo QA Bot",
+        "email": f"geo.qa.bot.{timestamp}@yopmail.com",
+        "phone": f"080{timestamp[-9:]}",
         "message": f"Test message from automation - {timestamp}",
         "support_type": random.choice(support_types),
         "support_types": support_types,

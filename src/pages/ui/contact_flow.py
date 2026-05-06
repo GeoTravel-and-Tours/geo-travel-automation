@@ -163,49 +163,11 @@ class ContactPage(BasePage):
         """Submit contact form"""
         self.logger.info("Submitting contact form")
         
-        # Success locators in priority order (By tuples)
-        success_locators = [
-            (By.CSS_SELECTOR, "p[class='text-sm text-gray-600 mt-1.5 max-w-xl mx-auto']"),
-            (By.LINK_TEXT, "Go back home")
-        ]
+        submit_btn = self.waiter.wait_for_clickable(self.SUBMIT_BUTTON, timeout=10)
+        self.javascript.scroll_to_element(submit_btn)
+        submit_btn.click()
+        self.logger.debug("Submit button clicked")
         
-        for attempt in range(1, max_retries + 1):
-            self.logger.info(f"Attempt {attempt}/{max_retries}")
-            
-            try:
-                # 1. Click submit button
-                submit_btn = self.waiter.wait_for_clickable(self.SUBMIT_BUTTON, timeout=10)
-                self.javascript.scroll_to_element(submit_btn)
-                submit_btn.click()
-                self.logger.debug("Submit button clicked")
-                
-                # 2. Try each success locator until one is found (or timeout)
-                success_detected = False
-                for locator in success_locators:
-                    try:
-                        self.waiter.wait_for_element(locator, timeout=5)
-                        self.logger.info(f"Success detected using: {locator}")
-                        success_detected = True
-                        break
-                    except TimeoutException:
-                        self.logger.debug(f"Locator not found: {locator}")
-                        continue
-                
-                if success_detected:
-                    self.logger.info("Contact form submitted successfully")
-                    return self
-                else:
-                    self.logger.warning(f"Attempt {attempt}: No success indicator found after click")
-                    
-            except Exception as e:
-                self.logger.warning(f"Attempt {attempt} failed: {e}")
-            
-            # Wait before next attempt (except after last attempt)
-            if attempt < max_retries:
-                time.sleep(2)
-        
-        # All retries exhausted
-        raise Exception(f"Failed to submit form after {max_retries} attempts: success message never appeared")
     
     def is_success_displayed(self, timeout=10):
         """Check if success message is displayed"""
