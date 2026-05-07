@@ -90,78 +90,39 @@ class VerifiedUserHelper:
             return None
     
     def get_verified_access_token(self):
-        """Get access token from verified account using dynamic token extraction."""
+        """Get access token from verified account using dynamic extraction (body/cookies/header)."""
         self.logger.info("Obtaining access token from verified account")
-        
+
+        # Perform login
         login_response = self.auth_api.login({
             "orgEmail": self.verified_account["email"],
             "password": self.verified_account["password"]
         })
-        
+
         if login_response.status_code != 200:
             self.logger.error(f"Verified account login failed: {login_response.status_code}")
             self.logger.error(f"Response body: {login_response.text}")
             return None
-        
-        # Log response for debugging
-        self.logger.debug(f"Login response status: {login_response.status_code}")
-        self.logger.debug(f"Response headers: {login_response.headers}")
-        self.logger.debug(f"Response body: {login_response.text}")
-        
-        # Try to extract token manually first (more robust)
-        token = None
-        try:
-            resp_json = login_response.json()
-            self.logger.debug(f"Response JSON structure: {resp_json.keys() if isinstance(resp_json, dict) else type(resp_json)}")
-            
-            # Common token keys in partner APIs
-            possible_keys = ['token', 'access_token', 'accessToken', 'data.token', 'data.access_token', 'jwt']
-            for key in possible_keys:
-                if '.' in key:
-                    # Nested access
-                    parts = key.split('.')
-                    value = resp_json
-                    for part in parts:
-                        if isinstance(value, dict) and part in value:
-                            value = value[part]
-                        else:
-                            value = None
-                            break
-                    if value:
-                        token = value
-                        self.logger.info(f"Token extracted from nested key: {key}")
-                        break
-                else:
-                    if isinstance(resp_json, dict) and key in resp_json:
-                        token = resp_json[key]
-                        self.logger.info(f"Token extracted from key: {key}")
-                        break
-                    elif isinstance(resp_json, dict) and 'data' in resp_json and isinstance(resp_json['data'], dict) and key in resp_json['data']:
-                        token = resp_json['data'][key]
-                        self.logger.info(f"Token extracted from data.{key}")
-                        break
-        except Exception as e:
-            self.logger.warning(f"Manual token extraction failed: {e}")
-        
-        # Fallback to TokenExtractor if manual didn't work
-        if not token:
-            token_extractor = TokenExtractor()
-            token, extraction_method = token_extractor.extract_token(login_response)
-            if token:
-                self.logger.info(f"Token extracted via TokenExtractor using {extraction_method}")
-        
-        # Validate token if we got one
+
+        # Use TokenExtractor with fallback chain
+        token_extractor = TokenExtractor()
+        token, extraction_method = token_extractor.extract_token(
+            login_response,
+            nested_path="data.accessToken",          # common nest path
+            response_fields=["accessToken", "token", "access_token", "jwt"],
+            cookie_names=["access_token", "token", "jwt", "Authorization"]
+        )
+
         if token:
-            token_extractor = TokenExtractor()
-            is_valid = token_extractor.validate_token(token)
-            if is_valid:
-                self.logger.info("Access token obtained and validated successfully")
+            # Validate token (basic JWT / alphanumeric check)
+            if token_extractor.validate_token(token):
+                self.logger.info(f"Access token obtained from {extraction_method} and validated")
                 return token
             else:
-                self.logger.warning("Token extracted but validation failed")
+                self.logger.warning(f"Token from {extraction_method} failed validation")
                 return None
         else:
-            self.logger.error("No token found in login response")
+            self.logger.error("No token found in response body, cookies, or headers")
             self.logger.error(f"Full response: {login_response.text}")
             return None
     
