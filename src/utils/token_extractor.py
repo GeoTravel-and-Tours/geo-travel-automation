@@ -152,31 +152,47 @@ class TokenExtractor:
         nested_path: Optional[str],
         response_fields: list
     ) -> Optional[str]:
-        """Extract token from response JSON body."""
+        """Extract token from response JSON body, supporting dot notation paths and skipping nulls."""
         try:
             response_data = response.json()
         except Exception as e:
             self.logger.debug(f"Cannot parse response JSON: {e}")
             return None
-        
-        # Check if token is in nested path first
+
+        def is_valid_token(value):
+            return value and isinstance(value, str) and len(value) > 0
+
+        # 1. If nested_path is provided (e.g., "data.accessToken"), traverse it
         if nested_path:
-            nested_data = response_data.get(nested_path, {})
-            for field in response_fields:
-                if field in nested_data:
-                    token = nested_data[field]
-                    if token and isinstance(token, str) and len(token) > 0:
-                        self.logger.debug(f"Found token in response['{nested_path}']['{field}']")
-                        return token
-        
-        # Check top-level fields
+            parts = nested_path.split('.')
+            value = response_data
+            for part in parts:
+                if isinstance(value, dict) and part in value:
+                    value = value[part]
+                else:
+                    value = None
+                    break
+            if is_valid_token(value):
+                self.logger.debug(f"Found token at path '{nested_path}'")
+                return value
+            elif value is None:
+                self.logger.debug(f"Path '{nested_path}' resolved to null – token not in response body")
+
+        # 2. Check top‑level fields
         for field in response_fields:
-            if field in response_data:
-                token = response_data[field]
-                if token and isinstance(token, str) and len(token) > 0:
-                    self.logger.debug(f"Found token in response['{field}']")
-                    return token
-        
+            if field in response_data and is_valid_token(response_data[field]):
+                self.logger.debug(f"Found token in response['{field}']")
+                return response_data[field]
+
+        # 3. Special case: token might be inside a 'data' wrapper
+        if 'data' in response_data and isinstance(response_data['data'], dict):
+            data_obj = response_data['data']
+            for field in response_fields:
+                if field in data_obj and is_valid_token(data_obj[field]):
+                    self.logger.debug(f"Found token in response['data']['{field}']")
+                    return data_obj[field]
+
+        self.logger.debug("No valid token found in response body")
         return None
     
     def _extract_from_cookies(
@@ -184,22 +200,35 @@ class TokenExtractor:
         response: Any,
         cookie_names: list
     ) -> Optional[str]:
-        """Extract token from response cookies."""
+        """Extract token from response cookies with intelligent fallback."""
         try:
             cookies = response.cookies
             if not cookies:
                 self.logger.debug("No cookies in response")
                 return None
             
+            cookie_dict = cookies.get_dict()
+            self.logger.debug(f"Available cookies: {list(cookie_dict.keys())}")
+            
+            # Strategy 1: Exact matches from configured names
             for cookie_name in cookie_names:
-                if cookie_name in cookies:
-                    token = cookies.get(cookie_name)
+                if cookie_name in cookie_dict:
+                    token = cookie_dict[cookie_name]
                     if token and len(token) > 0:
                         self.logger.debug(f"Found token in cookie: {cookie_name}")
                         return token
             
-            self.logger.debug(f"No matching cookies found. Available: {list(cookies.keys())}")
+            # Strategy 2: JWT pattern detection (most dynamic)
+            for cookie_name, cookie_value in cookie_dict.items():
+                if cookie_value and isinstance(cookie_value, str):
+                    # JWT has exactly 2 dots and reasonable length
+                    if cookie_value.count('.') == 2 and len(cookie_value) > 20:
+                        self.logger.info(f"Found JWT token in cookie: {cookie_name}")
+                        return cookie_value
+            
+            self.logger.debug("No token found in cookies (checked exact names and JWT patterns)")
             return None
+            
         except Exception as e:
             self.logger.debug(f"Error extracting from cookies: {e}")
             return None

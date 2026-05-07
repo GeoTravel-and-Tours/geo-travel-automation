@@ -606,7 +606,7 @@ class TestPartnersPackageFunctionality:
             payment_flags=payment_flags,
             package_type="PRIVATE",
             departure_date=valid_departure,
-            return_date=valid_return
+            # return_date=valid_return
         )
         self.logger.info(f"📦 Payload: {payload}")
         

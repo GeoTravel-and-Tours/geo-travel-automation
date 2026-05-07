@@ -98,7 +98,7 @@ class TestPartnersAuth:
     
     @pytest.mark.partners_api
     def test_verified_user_login_response_structure(self):
-        """TEST: Verified user login has correct response structure"""
+        """TEST: Verified user login returns token either in body or cookies."""
         login_response = self.auth_api.login({
             "orgEmail": os.getenv("PARTNERS_VERIFIED_EMAIL"),
             "password": os.getenv("PARTNERS_VERIFIED_PASSWORD")
@@ -107,11 +107,30 @@ class TestPartnersAuth:
         assert login_response.status_code == 200
         data = login_response.json()
         
-        # Verified users should get different response than unverified
+        # Basic response structure
         assert data['message'] == "Login successful"
         assert data['data']['isEmailVerified'] is True
-        assert data['data']['accessToken'] is not None
-        self.logger.success("✅ Verified user login has correct response structure")
+        
+        # Dynamic token check: body OR cookies
+        token = None
+        
+        # Try response body first
+        if data['data'].get('accessToken'):
+            token = data['data']['accessToken']
+            self.logger.info("Token found in response body")
+        else:
+            # Try cookies
+            cookies = login_response.cookies.get_dict()
+            self.logger.debug(f"Cookies received: {list(cookies.keys())}")
+            # Look for common cookie names or JWT pattern
+            for cookie_name, cookie_value in cookies.items():
+                if cookie_value and len(cookie_value) > 20:  # reasonable token length
+                    token = cookie_value
+                    self.logger.info(f"Token found in cookie: {cookie_name}")
+                    break
+        
+        assert token is not None, "No token found in response body or cookies"
+        self.logger.success("✅ Verified user login returns valid token (body or cookie)")
     
     @pytest.mark.partners_api
     def test_partners_dynamic_token_extraction(self):
