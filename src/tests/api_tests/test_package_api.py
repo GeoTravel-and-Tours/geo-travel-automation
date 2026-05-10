@@ -181,21 +181,30 @@ class TestPackageAPI:
         return departure_date, return_date
     
     def _build_booking_payload(self, package, pricing_text, payment_flags, payment_method, 
-                               package_type, departure_date=None, return_date=None):
-        """Build booking payload with optional dates for PRIVATE packages"""
+                           package_type, departure_date=None, return_date=None):
+        """Build booking payload with new payment_mode field"""
+        
+        # Determine payment_mode from flags (mutually exclusive)
+        if payment_flags.get('is_full_payment'):
+            payment_mode = "FULL_PRICE"
+        elif payment_flags.get('is_lockdown_payment'):
+            payment_mode = "LOCKDOWN"
+        elif payment_flags.get('book_at_deal_price'):
+            payment_mode = "DEAL_PRICE"
+        else:
+            payment_mode = "FULL_PRICE"  # fallback
+        
         base_payload = {
             "package": package.get('id'),
             "full_name": "GEO Bot" if payment_flags.get('authenticated') else f"Unauth Test User {random.randint(1000,9999)}",
             "email": "geo.qa.bot@gmail.com" if payment_flags.get('authenticated') else f"unauth{random.randint(1000,9999)}@test.com",
             "phone": "1234567890" if payment_flags.get('authenticated') else f"+234{random.randint(700000000, 809999999)}",
             "pricing_text": pricing_text,
-            "is_full_payment": payment_flags["is_full_payment"],
+            "payment_mode": payment_mode,          # New required field
             "adults": random.randint(1, 3),
             "children": random.randint(0, 1),
             "infants": 0,
-            "is_lockdown_payment": payment_flags["is_lockdown_payment"],
-            "book_at_deal_price": payment_flags["book_at_deal_price"],
-            "paymentMethod": payment_method
+            "paymentMethod": payment_method,      # Renamed (was paymentMethod)
         }
         
         # Add dates for PRIVATE packages
@@ -209,7 +218,7 @@ class TestPackageAPI:
         """Verify booking response structure"""
         assert response.status_code == 200
         response_data = response.json()
-        assert response_data.get('status') == 'success'
+        assert response_data.get('status') == 'success', f"Unexpected response: {response_data}"
         
         booking_data = response_data.get('data', {})
         
@@ -460,6 +469,7 @@ class TestPackageAPI:
         
         self.logger.info(f"📦 Payload: {payload}")
         response = authenticated_package_api.book_package(payload)
+        print(response.json())
         
         # Verify response
         response_data, booking_id = self._verify_booking_response(response, expected_user_id_not_null=True)
