@@ -262,13 +262,25 @@ class TestPartnersPackageFunctionality:
         """Build booking payload with optional dates for PRIVATE packages"""
         random_suffix = random.randint(1000, 9999)
         
+        # Determine payment_mode from flags
+        if payment_flags.get("is_full_payment"):
+            payment_mode = "FULL_PRICE"
+        elif payment_flags.get("is_lockdown_payment"):
+            payment_mode = "LOCKDOWN"
+        elif payment_flags.get("book_at_deal_price"):
+            payment_mode = "DEAL_PRICE"
+        else:
+            # Default to FULL_PRICE if no flag is True (should not happen in tests)
+            payment_mode = "FULL_PRICE"
+        
         base_payload = {
             "package": str(package['id']),
             "full_name": f"Test User {random_suffix}",
             "email": f"testuser{random_suffix}@yopmail.com",
             "phone": f"+234{random.randint(700000000, 809999999)}",
             "pricing_text": pricing_text,
-            "is_full_payment": payment_flags["is_full_payment"],
+            "payment_mode": payment_mode,          # <-- NEW required field
+            "is_full_payment": payment_flags["is_full_payment"],        # keep for backward compatibility
             "adults": random.randint(1, 3),
             "children": random.randint(0, 1),
             "infants": 0,
@@ -436,6 +448,7 @@ class TestPartnersPackageFunctionality:
         self.logger.info(f"📦 Payload: {payload}")
         
         response = package_api.book_package(payload)
+        self.logger.info(f"📦 Booking Response: {response.json()}")
         self._verify_booking_response(response)
         
         self._verify_bookings_increased(package_api, initial_count)
@@ -472,6 +485,7 @@ class TestPartnersPackageFunctionality:
             package_type="GROUP"
         )
         response = package_api.book_package(payload)
+        self.logger.info(f"📦 Booking Response: {response.json()}")
         
         self._verify_booking_response(response)
         self._verify_bookings_increased(package_api, initial_count)
@@ -508,6 +522,7 @@ class TestPartnersPackageFunctionality:
             package_type="GROUP"
         )
         response = package_api.book_package(payload)
+        self.logger.info(f"📦 Booking Response: {response.json()}")
         
         self._verify_booking_response(response)
         self._verify_bookings_increased(package_api, initial_count)
@@ -550,7 +565,7 @@ class TestPartnersPackageFunctionality:
         self.logger.info(f"📦 Payload: {payload}")
         
         response = package_api.book_package(payload)
-        self.logger.info(f"📦 Response: {response}")
+        self.logger.info(f"📦 Booking Response: {response.json()}")
         self._verify_booking_response(response)
         
         self._verify_bookings_increased(package_api, initial_count)
@@ -611,7 +626,7 @@ class TestPartnersPackageFunctionality:
         self.logger.info(f"📦 Payload: {payload}")
         
         response = package_api.book_package(payload)
-        self.logger.info(f"📦 Response: {response}")
+        self.logger.info(f"📦 Booking Response: {response.json()}")
         self._verify_booking_response(response)
         
         self._verify_bookings_increased(package_api, initial_count)
@@ -670,7 +685,7 @@ class TestPartnersPackageFunctionality:
         self.logger.info(f"📦 Attempting lockdown payment (should fail): {payload}")
         
         response = package_api.book_package(payload)
-        self.logger.info(f"📦 Response: {response}")
+        self.logger.info(f"📦 Booking Response: {response.json()}")
         
         assert response.status_code == 400, f"Expected 400, got {response.status_code}"
         
@@ -834,9 +849,18 @@ class TestPartnersPackageFunctionality:
         
         self.logger.info("🔵 CREATING NEW PACKAGE BOOKING")
         booking_response = package_api.book_package(payload)
+        self.logger.info(f"📦 Booking Response: {booking_response.json()}")
         
         if booking_response.status_code != 201:
-            pytest.skip(f"Booking failed with status {booking_response.status_code}")
+            error_json = booking_response.json()
+            msg = error_json.get('message', '')
+            errors = error_json.get('errors')
+            if errors and isinstance(errors, list):
+                error_details = "; ".join(e.get('message', str(e)) for e in errors)
+                skip_msg = f"Booking failed with status {booking_response.status_code}. Message: {msg}. Details: {error_details}"
+            else:
+                skip_msg = f"Booking failed with status {booking_response.status_code} and message: {msg}"
+            pytest.skip(skip_msg)
         
         final_count = self._verify_bookings_increased(package_api, initial_count)
         

@@ -119,6 +119,7 @@ class TestPackageBookingSmoke(TestBase):
             self.package_booking_flow.logger.step(1,"Opening homepage")
             self.home_page.open()
             self.home_page.wait_for_homepage_load(timeout=15, max_retries=3)
+            # self.driver.get("https://retail.stg.gowithgeo.com/packages/13")
             
             # Step 2: Navigate to packages
             self.package_booking_flow.logger.step(2,"Clicking on Package")
@@ -135,6 +136,7 @@ class TestPackageBookingSmoke(TestBase):
             # Step 5: Select travel date
             self.package_booking_flow.logger.step(5,"Opening travel date selector")
             self.package_booking_flow.select_travel_date()
+            time.sleep(5)
 
             # Step 6: Search packages
             self.package_booking_flow.logger.step(6,"Searching packages")
@@ -149,6 +151,7 @@ class TestPackageBookingSmoke(TestBase):
 
             # Step 8: Select price option
             self.package_booking_flow.logger.step(8,"Selecting price option")
+            time.sleep(5)
             self.package_booking_flow.select_price_option()
             time.sleep(5)
             

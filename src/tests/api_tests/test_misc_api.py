@@ -48,14 +48,25 @@ class TestMiscAPIs:
         api = GoogleAPI()
         self._set_auth_on_api(api, authenticated_api)
         response = api.get_reviews()
+
         if response is None:
             self.logger.error("Response is None. Skipping test.")
             pytest.skip("Response is None. Skipping test.")
-        elif hasattr(response, 'status_code') and response.status_code >= 400:
+
+        # Handle known transient Google API issues (rate limit)
+        if response.status_code == 500 and "429" in response.text:
+            self.logger.warning("Google API rate limit hit (429). Skipping test.")
+            pytest.skip("Google API rate limit - transient error")
+
+        if response.status_code >= 400:
             self.logger.error(f"API Error: {response.status_code} - {response.text}")
             pytest.fail(f"API Error: {response.status_code}")
-        self.logger.info(f"Google Reviews: {response.status_code}")
-        assert response.status_code == 200
+
+        # Normal success validation
+        data = response.json()
+        assert data.get('status') == 'success'
+        assert 'reviews' in data.get('data', {})
+        self.logger.success("✅ Google reviews fetched successfully")
     
     # Commercial Deals Tests
     @pytest.mark.api
