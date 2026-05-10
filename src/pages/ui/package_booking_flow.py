@@ -30,7 +30,7 @@ class PackageBookingFlow(BasePage):
     # Package Selection
     VIEW_PACKAGE_BUTTON = (By.XPATH, "(//button[normalize-space()='View package'])[1]")
     # PRICE_OPTION = (By.CSS_SELECTOR, "body > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2)")
-    PRICE_OPTION = (By.XPATH, "//body/div[contains(@data-sentry-component,\"layout\")]/div[contains(@class,\"m-0.5\")]/div[1]")
+    PRICE_OPTION = (By.XPATH, "//body/div[contains(@data-sentry-component,'layout')]/div[contains(@class,'m-0.5')]/div[1]")
     BOOK_RESERVATION_BUTTON = (By.CSS_SELECTOR, "body > div:nth-child(15) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2)")
     
     # Add these to your locators section:
@@ -259,11 +259,12 @@ class PackageBookingFlow(BasePage):
     def select_price_option(self):
         """Select price option with better click handling"""
         self.logger.info("Selecting price option")
+        price_option = None  # initialize
 
         try:
-            # Wait for the element to be present and visible
+            # Wait for the element to be present and clickable
             price_option = WebDriverWait(self.driver, 15).until(
-                EC.presence_of_element_located(self.PRICE_OPTION)
+                EC.element_to_be_clickable(self.PRICE_OPTION)
             )
 
             # Scroll to the element with more offset to ensure it's in view
@@ -275,16 +276,23 @@ class PackageBookingFlow(BasePage):
                 });
             """, price_option)
 
-            # Wait a bit for scroll to complete
-            time.sleep(2)
+            # Wait for any animations to settle
+            time.sleep(5)
+
+            # # Check if element is displayed and enabled
+            # if not price_option.is_displayed():
+            #     self.logger.info("Price option not displayed after scroll")
+            # if not price_option.is_enabled():
+            #     self.logger.info("Price option is disabled")
 
             # Try JavaScript click first (bypasses overlay issues)
             self.logger.info("Attempting JavaScript click")
             self.driver.execute_script("arguments[0].click();", price_option)
+            time.sleep(1)
 
             # Wait for selection to take effect
             time.sleep(3)
-
+            
             self.logger.info("Price option selected successfully")
             return True
 
@@ -295,15 +303,31 @@ class PackageBookingFlow(BasePage):
             try:
                 self.logger.info("Trying ActionChains click")
                 actions = ActionChains(self.driver)
-                actions.move_to_element(price_option).click().perform()
-                time.sleep(3)
+                actions.move_to_element(price_option).pause(0.5).click().perform()
+                time.sleep(5)
                 self.logger.info("Price option selected via ActionChains")
                 return True
             except Exception as e2:
                 self.logger.error(f"ActionChains also failed: {e2}")
-                self._last_interacted_element = price_option
-                return False
-    
+
+                # Fallback 2: Click at element's location offset
+                try:
+                    self.logger.info("Trying click at element location")
+                    location = price_option.location
+                    size = price_option.size
+                    x = location['x'] + size['width'] // 2
+                    y = location['y'] + size['height'] // 2
+                    actions = ActionChains(self.driver)
+                    actions.move_by_offset(x, y).click().perform()
+                    actions.reset_actions()
+                    time.sleep(2)
+                    self.logger.info("Click at coordinates successful")
+                    return True
+                except Exception as e3:
+                    self.logger.error(f"Coordinate click also failed: {e3}")
+                    self._last_interacted_element = price_option
+                    return False
+
     def click_packages_nav_link(self):
         """Click on Packages link in navigation bar to see all packages"""
         self.logger.info("Clicking 'Packages' link in navigation")
