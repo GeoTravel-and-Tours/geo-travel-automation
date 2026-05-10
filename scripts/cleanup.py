@@ -283,3 +283,22 @@ def main():
 
 if __name__ == "__main__":
     main()
+    
+    
+"""
+# First, see what would be deleted
+python scripts/cleanup.py --dry-run
+
+# Preview what would be deleted with a 1‑day retention
+python scripts/cleanup.py --days 1 --dry-run
+
+# Then run the actual cleanup with a 7‑day retention
+python scripts/cleanup.py --days 7
+
+# Or just check how much old data exists
+python scripts/cleanup.py --stats
+
+# Clean only logs and screenshots (older than 30 days)
+python scripts/cleanup.py --targets logs screenshots
+
+"""
