@@ -270,8 +270,7 @@ class TestPartnersPackageFunctionality:
         elif payment_flags.get("book_at_deal_price"):
             payment_mode = "DEAL_PRICE"
         else:
-            # Default to FULL_PRICE if no flag is True (should not happen in tests)
-            payment_mode = "FULL_PRICE"
+            payment_mode = "FULL_PRICE"  # default
         
         base_payload = {
             "package": str(package['id']),
@@ -279,13 +278,11 @@ class TestPartnersPackageFunctionality:
             "email": f"testuser{random_suffix}@yopmail.com",
             "phone": f"+234{random.randint(700000000, 809999999)}",
             "pricing_text": pricing_text,
-            "payment_mode": payment_mode,          # <-- NEW required field
-            "is_full_payment": payment_flags["is_full_payment"],        # keep for backward compatibility
+            "payment_mode": payment_mode,          # required
             "adults": random.randint(1, 3),
             "children": random.randint(0, 1),
             "infants": 0,
-            "book_at_deal_price": payment_flags["book_at_deal_price"],
-            "is_lockdown_payment": payment_flags["is_lockdown_payment"],
+            # DO NOT include is_full_payment, book_at_deal_price, is_lockdown_payment
         }
         
         # Add dates for PRIVATE packages
@@ -621,7 +618,7 @@ class TestPartnersPackageFunctionality:
             payment_flags=payment_flags,
             package_type="PRIVATE",
             departure_date=valid_departure,
-            # return_date=valid_return
+            return_date=valid_return
         )
         self.logger.info(f"📦 Payload: {payload}")
         
