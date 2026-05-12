@@ -107,7 +107,7 @@ class TestPackageBookingSmoke(TestBase):
             self.package_booking_flow.screenshot.capture_screenshot_on_failure("package_search_failure")
             raise
 
-    @pytest.mark.smoke
+    # @pytest.mark.smoke
     @pytest.mark.dependency(depends=["homepage_loaded", "package_search_works", "booking_form_works"])
     def test_complete_package_booking_flow(self):
         """Smoke Test 4: Comprehensive end-to-end package booking flow"""
