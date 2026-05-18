@@ -830,18 +830,27 @@ class TestPartnersPackageFunctionality:
             "book_at_deal_price": False
         }
         
+        # Determine payment_mode from flags (same logic as helper)
+        if payment_flags.get("is_full_payment"):
+            payment_mode = "FULL_PRICE"
+        elif payment_flags.get("is_lockdown_payment"):
+            payment_mode = "LOCKDOWN"
+        elif payment_flags.get("book_at_deal_price"):
+            payment_mode = "DEAL_PRICE"
+        else:
+            payment_mode = "FULL_PRICE"  # default
+        
         payload = {
             "package": str(package['id']),
             "full_name": test_full_name,
             "email": test_email,
             "phone": f"+23481{random.randint(1000000,9999999)}",
             "pricing_text": pricing['pricing_text'],
-            "is_full_payment": payment_flags["is_full_payment"],
+            "payment_mode": payment_mode,   # required field
             "adults": 2,
             "children": 0,
             "infants": 0,
-            "book_at_deal_price": payment_flags["book_at_deal_price"],
-            "is_lockdown_payment": payment_flags["is_lockdown_payment"],
+            # Removed: is_full_payment, book_at_deal_price, is_lockdown_payment
         }
         
         self.logger.info("🔵 CREATING NEW PACKAGE BOOKING")
