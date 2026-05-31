@@ -1,0 +1,125 @@
+{
+    "test_suite_name": "Unified UI Smoke + API + Partners API TEST REPORT",
+    "total_tests": 154,
+    "passed_tests": 152,
+    "failed_tests": 2,
+    "skipped_tests": 0,
+    "success_rate": 98.7,
+    "duration": 836.779664,
+    "start_time": "2026-05-31 08:15:22",
+    "end_time": "2026-05-31 08:29:18",
+    "suites_run": [
+        "smoke",
+        "api"
+    ],
+    "suite_details": {
+        "smoke": {
+            "report": {
+                "test_suite_name": "Unified UI Smoke + API + Partners API TEST REPORT",
+                "total_tests": 74,
+                "passed_tests": 74,
+                "failed_tests": 0,
+                "skipped_tests": 0,
+                "success_rate": 100.0,
+                "duration": 677.712169,
+                "start_time": "2026-05-31 08:15:22",
+                "end_time": "2026-05-31 08:26:40",
+                "failed_tests_details": [],
+                "skipped_tests_details": []
+            },
+            "timestamp": "2026-05-31 08:26:40"
+        },
+        "api": {
+            "report": {
+                "test_suite_name": "API SMOKE TEST",
+                "total_tests": 80,
+                "passed_tests": 78,
+                "failed_tests": 2,
+                "skipped_tests": 0,
+                "success_rate": 97.5,
+                "duration": 127.877065,
+                "start_time": "2026-05-31 08:26:40",
+                "end_time": "2026-05-31 08:28:48",
+                "failed_tests_details": [
+                    {
+                        "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_complete_visa_flow_with_auth",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Invalid Flutterwave payment link: Error accessing payment link: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))\nassert False",
+                        "screenshot_path": null,
+                        "duration": 7.328784704208374,
+                        "timestamp": "08:28:41",
+                        "skip_reason": null,
+                        "category": "API Connection",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_complete_visa_flow_with_auth_082841.log",
+                            "response_file": "reports/failed_responses/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_complete_visa_flow_with_auth_082841.json"
+                        },
+                        "log_path": "reports/logs/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_complete_visa_flow_with_auth_082841.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_complete_visa_flow_with_auth_082841.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_complete_visa_flow_with_auth_082841.json",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_complete_visa_flow_without_auth",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Invalid Flutterwave payment link: Error accessing payment link: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))\nassert False",
+                        "screenshot_path": null,
+                        "duration": 6.473053455352783,
+                        "timestamp": "08:28:48",
+                        "skip_reason": null,
+                        "category": "API Connection",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_complete_visa_flow_without_auth_082848.log",
+                            "response_file": "reports/failed_responses/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_complete_visa_flow_without_auth_082848.json"
+                        },
+                        "log_path": "reports/logs/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_complete_visa_flow_without_auth_082848.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_complete_visa_flow_without_auth_082848.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_complete_visa_flow_without_auth_082848.json",
+                        "suite": "api"
+                    }
+                ],
+                "skipped_tests_details": []
+            },
+            "timestamp": "2026-05-31 08:28:48"
+        }
+    },
+    "all_failed_tests": [
+        {
+            "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_complete_visa_flow_with_auth",
+            "status": "FAIL",
+            "error_message": "AssertionError: Invalid Flutterwave payment link: Error accessing payment link: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))\nassert False",
+            "screenshot_path": null,
+            "duration": 7.328784704208374,
+            "timestamp": "08:28:41",
+            "skip_reason": null,
+            "category": "API Connection",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_complete_visa_flow_with_auth_082841.log",
+                "response_file": "reports/failed_responses/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_complete_visa_flow_with_auth_082841.json"
+            },
+            "log_path": "reports/logs/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_complete_visa_flow_with_auth_082841.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_complete_visa_flow_with_auth_082841.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_complete_visa_flow_with_auth_082841.json",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_visa_api.py::TestVisaEnquiryAPI::test_complete_visa_flow_without_auth",
+            "status": "FAIL",
+            "error_message": "AssertionError: Invalid Flutterwave payment link: Error accessing payment link: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))\nassert False",
+            "screenshot_path": null,
+            "duration": 6.473053455352783,
+            "timestamp": "08:28:48",
+            "skip_reason": null,
+            "category": "API Connection",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_complete_visa_flow_without_auth_082848.log",
+                "response_file": "reports/failed_responses/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_complete_visa_flow_without_auth_082848.json"
+            },
+            "log_path": "reports/logs/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_complete_visa_flow_without_auth_082848.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_complete_visa_flow_without_auth_082848.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_api_tests_test_visa_api.py_TestVisaEnquiryAPI_test_complete_visa_flow_without_auth_082848.json",
+            "suite": "api"
+        }
+    ],
+    "all_skipped_tests": []
+}
