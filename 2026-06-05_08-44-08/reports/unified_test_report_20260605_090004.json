@@ -1,0 +1,170 @@
+{
+    "test_suite_name": "Unified UI Smoke + API + Partners API TEST REPORT",
+    "total_tests": 194,
+    "passed_tests": 191,
+    "failed_tests": 1,
+    "skipped_tests": 2,
+    "success_rate": 98.5,
+    "duration": 954.626057,
+    "start_time": "2026-06-05 08:44:09",
+    "end_time": "2026-06-05 09:00:04",
+    "suites_run": [
+        "smoke",
+        "api",
+        "partners_api"
+    ],
+    "suite_details": {
+        "smoke": {
+            "report": {
+                "test_suite_name": "Unified UI Smoke + API + Partners API TEST REPORT",
+                "total_tests": 74,
+                "passed_tests": 73,
+                "failed_tests": 1,
+                "skipped_tests": 0,
+                "success_rate": 98.64864864864865,
+                "duration": 674.625572,
+                "start_time": "2026-06-05 08:44:10",
+                "end_time": "2026-06-05 08:55:25",
+                "failed_tests_details": [
+                    {
+                        "test_name": "src/tests/smoke_tests/test_contact_us_smoke.py::TestContact::test_complete_contact_flow",
+                        "status": "FAIL",
+                        "error_message": "TimeoutException: Message: \nStacktrace:\n#0 0x55e1659f416a <unknown>\n#1 0x55e1653f16b9 <unknown>\n#2 0x55e165445c0d <unknown>\n#3 0x55e165445e51 <unknown>\n#4 0x55e165490b24 <unknown>\n#5 0x55e16548dcbf <unknown>\n#6 0x55e165439222 <unknown>\n#7 0x55e16543a011 <unknown>\n#8 0x55e1659b9a0b <unknown>\n#9 0x55e1659bc92d <unknown>\n#10 0x55e1659a6948 <unknown>\n#11 0x55e1659bd4c0 <unknown>\n#12 0x55e16598d560 <unknown>\n#13 0x55e1659e0dd8 <unknown>\n#14 0x55e1659e0f75 <unknown>\n#15 0x55e1659f2bce <unknown>\n#16 0x7f6fd0c9caa4 <unknown>\n#17 0x7f6fd0d29c6c <unknown>\n",
+                        "screenshot_path": "reports/screenshots/failures/Contact_test_complete_contact_flow_20260605_084902.png",
+                        "duration": 19.509317636489868,
+                        "timestamp": "08:49:02",
+                        "skip_reason": null,
+                        "category": "API Timeout",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_smoke_tests_test_contact_us_smoke.py_TestContact_test_complete_contact_flow_084902.log"
+                        },
+                        "log_path": "reports/logs/src_tests_smoke_tests_test_contact_us_smoke.py_TestContact_test_complete_contact_flow_084902.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_contact_us_smoke.py_TestContact_test_complete_contact_flow_084902.log",
+                        "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-06-05_08-44-08/screenshots/Contact_test_complete_contact_flow_20260605_084902.png",
+                        "suite": "smoke"
+                    }
+                ],
+                "skipped_tests_details": []
+            },
+            "timestamp": "2026-06-05 08:55:25"
+        },
+        "api": {
+            "report": {
+                "test_suite_name": "API SMOKE TEST",
+                "total_tests": 80,
+                "passed_tests": 80,
+                "failed_tests": 0,
+                "skipped_tests": 0,
+                "success_rate": 100.0,
+                "duration": 156.230438,
+                "start_time": "2026-06-05 08:55:25",
+                "end_time": "2026-06-05 08:58:01",
+                "failed_tests_details": [],
+                "skipped_tests_details": []
+            },
+            "timestamp": "2026-06-05 08:58:01"
+        },
+        "partners_api": {
+            "report": {
+                "test_suite_name": "PARTNERS API SMOKE TEST",
+                "total_tests": 40,
+                "passed_tests": 38,
+                "failed_tests": 0,
+                "skipped_tests": 2,
+                "success_rate": 95.0,
+                "duration": 122.164265,
+                "start_time": "2026-06-05 08:58:02",
+                "end_time": "2026-06-05 09:00:04",
+                "failed_tests_details": [],
+                "skipped_tests_details": [
+                    {
+                        "test_name": "src/tests/partners_api_tests/test_partners_flight.py::TestPartnersFlightFunctionality::test_verified_user_can_book_flight",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/partners_api_tests/test_partners_flight.py', 274, 'Skipped: Flight booking endpoint not fully functional in sandbox')",
+                        "screenshot_path": null,
+                        "duration": 2.621211290359497,
+                        "timestamp": "08:58:30",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/partners_api_tests/test_partners_flight.py', 274, 'Skipped: Flight booking endpoint not fully functional in sandbox')",
+                        "category": null,
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_partners_api_tests_test_partners_flight.py_TestPartnersFlightFunctionality_test_verified_user_can_book_flight_085830.log"
+                        },
+                        "log_path": "reports/logs/src_tests_partners_api_tests_test_partners_flight.py_TestPartnersFlightFunctionality_test_verified_user_can_book_flight_085830.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_partners_api_tests_test_partners_flight.py_TestPartnersFlightFunctionality_test_verified_user_can_book_flight_085830.log",
+                        "suite": "partners_api"
+                    },
+                    {
+                        "test_name": "src/tests/partners_api_tests/test_partners_flight.py::TestPartnersFlightFunctionality::test_flight_booking_counted_in_usage",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/partners_api_tests/test_partners_flight.py', 485, 'Skipped: Flight booking endpoint not fully functional in sandbox')",
+                        "screenshot_path": null,
+                        "duration": 3.1074540615081787,
+                        "timestamp": "08:58:39",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/partners_api_tests/test_partners_flight.py', 485, 'Skipped: Flight booking endpoint not fully functional in sandbox')",
+                        "category": null,
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_partners_api_tests_test_partners_flight.py_TestPartnersFlightFunctionality_test_flight_booking_counted_in_usage_085839.log"
+                        },
+                        "log_path": "reports/logs/src_tests_partners_api_tests_test_partners_flight.py_TestPartnersFlightFunctionality_test_flight_booking_counted_in_usage_085839.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_partners_api_tests_test_partners_flight.py_TestPartnersFlightFunctionality_test_flight_booking_counted_in_usage_085839.log",
+                        "suite": "partners_api"
+                    }
+                ]
+            },
+            "timestamp": "2026-06-05 09:00:04"
+        }
+    },
+    "all_failed_tests": [
+        {
+            "test_name": "src/tests/smoke_tests/test_contact_us_smoke.py::TestContact::test_complete_contact_flow",
+            "status": "FAIL",
+            "error_message": "TimeoutException: Message: \nStacktrace:\n#0 0x55e1659f416a <unknown>\n#1 0x55e1653f16b9 <unknown>\n#2 0x55e165445c0d <unknown>\n#3 0x55e165445e51 <unknown>\n#4 0x55e165490b24 <unknown>\n#5 0x55e16548dcbf <unknown>\n#6 0x55e165439222 <unknown>\n#7 0x55e16543a011 <unknown>\n#8 0x55e1659b9a0b <unknown>\n#9 0x55e1659bc92d <unknown>\n#10 0x55e1659a6948 <unknown>\n#11 0x55e1659bd4c0 <unknown>\n#12 0x55e16598d560 <unknown>\n#13 0x55e1659e0dd8 <unknown>\n#14 0x55e1659e0f75 <unknown>\n#15 0x55e1659f2bce <unknown>\n#16 0x7f6fd0c9caa4 <unknown>\n#17 0x7f6fd0d29c6c <unknown>\n",
+            "screenshot_path": "reports/screenshots/failures/Contact_test_complete_contact_flow_20260605_084902.png",
+            "duration": 19.509317636489868,
+            "timestamp": "08:49:02",
+            "skip_reason": null,
+            "category": "API Timeout",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_smoke_tests_test_contact_us_smoke.py_TestContact_test_complete_contact_flow_084902.log"
+            },
+            "log_path": "reports/logs/src_tests_smoke_tests_test_contact_us_smoke.py_TestContact_test_complete_contact_flow_084902.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_contact_us_smoke.py_TestContact_test_complete_contact_flow_084902.log",
+            "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-06-05_08-44-08/screenshots/Contact_test_complete_contact_flow_20260605_084902.png",
+            "suite": "smoke"
+        }
+    ],
+    "all_skipped_tests": [
+        {
+            "test_name": "src/tests/partners_api_tests/test_partners_flight.py::TestPartnersFlightFunctionality::test_verified_user_can_book_flight",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/partners_api_tests/test_partners_flight.py', 274, 'Skipped: Flight booking endpoint not fully functional in sandbox')",
+            "screenshot_path": null,
+            "duration": 2.621211290359497,
+            "timestamp": "08:58:30",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/partners_api_tests/test_partners_flight.py', 274, 'Skipped: Flight booking endpoint not fully functional in sandbox')",
+            "category": null,
+            "evidence": {
+                "log_path": "reports/logs/src_tests_partners_api_tests_test_partners_flight.py_TestPartnersFlightFunctionality_test_verified_user_can_book_flight_085830.log"
+            },
+            "log_path": "reports/logs/src_tests_partners_api_tests_test_partners_flight.py_TestPartnersFlightFunctionality_test_verified_user_can_book_flight_085830.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_partners_api_tests_test_partners_flight.py_TestPartnersFlightFunctionality_test_verified_user_can_book_flight_085830.log",
+            "suite": "partners_api"
+        },
+        {
+            "test_name": "src/tests/partners_api_tests/test_partners_flight.py::TestPartnersFlightFunctionality::test_flight_booking_counted_in_usage",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/partners_api_tests/test_partners_flight.py', 485, 'Skipped: Flight booking endpoint not fully functional in sandbox')",
+            "screenshot_path": null,
+            "duration": 3.1074540615081787,
+            "timestamp": "08:58:39",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/partners_api_tests/test_partners_flight.py', 485, 'Skipped: Flight booking endpoint not fully functional in sandbox')",
+            "category": null,
+            "evidence": {
+                "log_path": "reports/logs/src_tests_partners_api_tests_test_partners_flight.py_TestPartnersFlightFunctionality_test_flight_booking_counted_in_usage_085839.log"
+            },
+            "log_path": "reports/logs/src_tests_partners_api_tests_test_partners_flight.py_TestPartnersFlightFunctionality_test_flight_booking_counted_in_usage_085839.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_partners_api_tests_test_partners_flight.py_TestPartnersFlightFunctionality_test_flight_booking_counted_in_usage_085839.log",
+            "suite": "partners_api"
+        }
+    ]
+}
