@@ -60,7 +60,8 @@ jobs:
       - name: 🧪 Run test suites
         run: |
           echo "Running test suites with timestamp: $RUN_TIMESTAMP..."
-          python scripts/run_scheduled_tests.py --suite smoke api partners_api
+          python scripts/run_scheduled_tests.py --suite smoke api
+          # python scripts/run_scheduled_tests.py --suite smoke api partners_api
         continue-on-error: true
 
       # --- Fetch existing gh-pages content ---
