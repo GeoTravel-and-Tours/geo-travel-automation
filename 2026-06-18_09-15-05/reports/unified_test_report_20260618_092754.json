@@ -1,0 +1,249 @@
+{
+    "test_suite_name": "Unified UI Smoke + API TEST REPORT",
+    "total_tests": 154,
+    "passed_tests": 148,
+    "failed_tests": 1,
+    "skipped_tests": 5,
+    "success_rate": 96.1,
+    "duration": 767.61195,
+    "start_time": "2026-06-18 09:15:06",
+    "end_time": "2026-06-18 09:27:54",
+    "suites_run": [
+        "smoke",
+        "api"
+    ],
+    "suite_details": {
+        "smoke": {
+            "report": {
+                "test_suite_name": "Unified UI Smoke + API TEST REPORT",
+                "total_tests": 74,
+                "passed_tests": 73,
+                "failed_tests": 1,
+                "skipped_tests": 0,
+                "success_rate": 98.64864864864865,
+                "duration": 665.811517,
+                "start_time": "2026-06-18 09:15:06",
+                "end_time": "2026-06-18 09:26:12",
+                "failed_tests_details": [
+                    {
+                        "test_name": "src/tests/smoke_tests/test_contact_us_smoke.py::TestContact::test_complete_contact_flow",
+                        "status": "FAIL",
+                        "error_message": "TimeoutException: Message: \nStacktrace:\n#0 0x55e7ed9a93da <unknown>\n#1 0x55e7ed38b139 <unknown>\n#2 0x55e7ed3df884 <unknown>\n#3 0x55e7ed3dfad1 <unknown>\n#4 0x55e7ed42a974 <unknown>\n#5 0x55e7ed427b5c <unknown>\n#6 0x55e7ed3d2e4f <unknown>\n#7 0x55e7ed3d3c31 <unknown>\n#8 0x55e7ed96f9f7 <unknown>\n#9 0x55e7ed96e203 <unknown>\n#10 0x55e7ed958f16 <unknown>\n#11 0x55e7ed96ed9a <unknown>\n#12 0x55e7ed940eb0 <unknown>\n#13 0x55e7ed995d58 <unknown>\n#14 0x55e7ed995ef5 <unknown>\n#15 0x55e7ed9a7f5e <unknown>\n#16 0x7fc2ad29caa4 <unknown>\n#17 0x7fc2ad329c6c <unknown>\n",
+                        "screenshot_path": "reports/screenshots/failures/Contact_test_complete_contact_flow_20260618_091952.png",
+                        "duration": 19.29736828804016,
+                        "timestamp": "09:19:52",
+                        "skip_reason": null,
+                        "category": "API Timeout",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_smoke_tests_test_contact_us_smoke.py_TestContact_test_complete_contact_flow_091952.log"
+                        },
+                        "log_path": "reports/logs/src_tests_smoke_tests_test_contact_us_smoke.py_TestContact_test_complete_contact_flow_091952.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_contact_us_smoke.py_TestContact_test_complete_contact_flow_091952.log",
+                        "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-06-18_09-15-05/screenshots/Contact_test_complete_contact_flow_20260618_091952.png",
+                        "suite": "smoke"
+                    }
+                ],
+                "skipped_tests_details": []
+            },
+            "timestamp": "2026-06-18 09:26:12"
+        },
+        "api": {
+            "report": {
+                "test_suite_name": "API SMOKE TEST",
+                "total_tests": 80,
+                "passed_tests": 75,
+                "failed_tests": 0,
+                "skipped_tests": 5,
+                "success_rate": 93.75,
+                "duration": 101.437098,
+                "start_time": "2026-06-18 09:26:12",
+                "end_time": "2026-06-18 09:27:54",
+                "failed_tests_details": [],
+                "skipped_tests_details": [
+                    {
+                        "test_name": "src/tests/api_tests/test_package_api.py::TestPackageAPI::test_authenticated_booking_private_future_departure",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 595, 'Skipped: No active PRIVATE packages available')",
+                        "screenshot_path": null,
+                        "duration": 0.23576617240905762,
+                        "timestamp": "09:27:12",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 595, 'Skipped: No active PRIVATE packages available')",
+                        "category": null,
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_private_future_departure_092712.log"
+                        },
+                        "log_path": "reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_private_future_departure_092712.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_private_future_departure_092712.log",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_package_api.py::TestPackageAPI::test_authenticated_booking_private_within_30_days_full_payment",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 649, 'Skipped: No active PRIVATE packages available')",
+                        "screenshot_path": null,
+                        "duration": 0.13722729682922363,
+                        "timestamp": "09:27:12",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 649, 'Skipped: No active PRIVATE packages available')",
+                        "category": null,
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_private_within_30_days_full_payment_092712.log"
+                        },
+                        "log_path": "reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_private_within_30_days_full_payment_092712.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_private_within_30_days_full_payment_092712.log",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_package_api.py::TestPackageAPI::test_authenticated_booking_private_within_30_days_lockdown_fails",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 726, 'Skipped: No active PRIVATE packages available')",
+                        "screenshot_path": null,
+                        "duration": 0.14292097091674805,
+                        "timestamp": "09:27:13",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 726, 'Skipped: No active PRIVATE packages available')",
+                        "category": null,
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_private_within_30_days_lockdown_fails_092713.log"
+                        },
+                        "log_path": "reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_private_within_30_days_lockdown_fails_092713.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_private_within_30_days_lockdown_fails_092713.log",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_package_api.py::TestPackageAPI::test_unauthenticated_booking_private_future_departure",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 930, 'Skipped: No active PRIVATE packages available')",
+                        "screenshot_path": null,
+                        "duration": 0.22852039337158203,
+                        "timestamp": "09:27:25",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 930, 'Skipped: No active PRIVATE packages available')",
+                        "category": null,
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_unauthenticated_booking_private_future_departure_092725.log"
+                        },
+                        "log_path": "reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_unauthenticated_booking_private_future_departure_092725.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_unauthenticated_booking_private_future_departure_092725.log",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_package_api.py::TestPackageAPI::test_unauthenticated_booking_private_within_30_days_full_payment",
+                        "status": "SKIP",
+                        "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 974, 'Skipped: No active PRIVATE packages available')",
+                        "screenshot_path": null,
+                        "duration": 0.14288091659545898,
+                        "timestamp": "09:27:26",
+                        "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 974, 'Skipped: No active PRIVATE packages available')",
+                        "category": null,
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_unauthenticated_booking_private_within_30_days_full_payment_092726.log"
+                        },
+                        "log_path": "reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_unauthenticated_booking_private_within_30_days_full_payment_092726.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_unauthenticated_booking_private_within_30_days_full_payment_092726.log",
+                        "suite": "api"
+                    }
+                ]
+            },
+            "timestamp": "2026-06-18 09:27:54"
+        }
+    },
+    "all_failed_tests": [
+        {
+            "test_name": "src/tests/smoke_tests/test_contact_us_smoke.py::TestContact::test_complete_contact_flow",
+            "status": "FAIL",
+            "error_message": "TimeoutException: Message: \nStacktrace:\n#0 0x55e7ed9a93da <unknown>\n#1 0x55e7ed38b139 <unknown>\n#2 0x55e7ed3df884 <unknown>\n#3 0x55e7ed3dfad1 <unknown>\n#4 0x55e7ed42a974 <unknown>\n#5 0x55e7ed427b5c <unknown>\n#6 0x55e7ed3d2e4f <unknown>\n#7 0x55e7ed3d3c31 <unknown>\n#8 0x55e7ed96f9f7 <unknown>\n#9 0x55e7ed96e203 <unknown>\n#10 0x55e7ed958f16 <unknown>\n#11 0x55e7ed96ed9a <unknown>\n#12 0x55e7ed940eb0 <unknown>\n#13 0x55e7ed995d58 <unknown>\n#14 0x55e7ed995ef5 <unknown>\n#15 0x55e7ed9a7f5e <unknown>\n#16 0x7fc2ad29caa4 <unknown>\n#17 0x7fc2ad329c6c <unknown>\n",
+            "screenshot_path": "reports/screenshots/failures/Contact_test_complete_contact_flow_20260618_091952.png",
+            "duration": 19.29736828804016,
+            "timestamp": "09:19:52",
+            "skip_reason": null,
+            "category": "API Timeout",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_smoke_tests_test_contact_us_smoke.py_TestContact_test_complete_contact_flow_091952.log"
+            },
+            "log_path": "reports/logs/src_tests_smoke_tests_test_contact_us_smoke.py_TestContact_test_complete_contact_flow_091952.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_contact_us_smoke.py_TestContact_test_complete_contact_flow_091952.log",
+            "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-06-18_09-15-05/screenshots/Contact_test_complete_contact_flow_20260618_091952.png",
+            "suite": "smoke"
+        }
+    ],
+    "all_skipped_tests": [
+        {
+            "test_name": "src/tests/api_tests/test_package_api.py::TestPackageAPI::test_authenticated_booking_private_future_departure",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 595, 'Skipped: No active PRIVATE packages available')",
+            "screenshot_path": null,
+            "duration": 0.23576617240905762,
+            "timestamp": "09:27:12",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 595, 'Skipped: No active PRIVATE packages available')",
+            "category": null,
+            "evidence": {
+                "log_path": "reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_private_future_departure_092712.log"
+            },
+            "log_path": "reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_private_future_departure_092712.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_private_future_departure_092712.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_package_api.py::TestPackageAPI::test_authenticated_booking_private_within_30_days_full_payment",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 649, 'Skipped: No active PRIVATE packages available')",
+            "screenshot_path": null,
+            "duration": 0.13722729682922363,
+            "timestamp": "09:27:12",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 649, 'Skipped: No active PRIVATE packages available')",
+            "category": null,
+            "evidence": {
+                "log_path": "reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_private_within_30_days_full_payment_092712.log"
+            },
+            "log_path": "reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_private_within_30_days_full_payment_092712.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_private_within_30_days_full_payment_092712.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_package_api.py::TestPackageAPI::test_authenticated_booking_private_within_30_days_lockdown_fails",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 726, 'Skipped: No active PRIVATE packages available')",
+            "screenshot_path": null,
+            "duration": 0.14292097091674805,
+            "timestamp": "09:27:13",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 726, 'Skipped: No active PRIVATE packages available')",
+            "category": null,
+            "evidence": {
+                "log_path": "reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_private_within_30_days_lockdown_fails_092713.log"
+            },
+            "log_path": "reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_private_within_30_days_lockdown_fails_092713.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_private_within_30_days_lockdown_fails_092713.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_package_api.py::TestPackageAPI::test_unauthenticated_booking_private_future_departure",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 930, 'Skipped: No active PRIVATE packages available')",
+            "screenshot_path": null,
+            "duration": 0.22852039337158203,
+            "timestamp": "09:27:25",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 930, 'Skipped: No active PRIVATE packages available')",
+            "category": null,
+            "evidence": {
+                "log_path": "reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_unauthenticated_booking_private_future_departure_092725.log"
+            },
+            "log_path": "reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_unauthenticated_booking_private_future_departure_092725.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_unauthenticated_booking_private_future_departure_092725.log",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_package_api.py::TestPackageAPI::test_unauthenticated_booking_private_within_30_days_full_payment",
+            "status": "SKIP",
+            "error_message": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 974, 'Skipped: No active PRIVATE packages available')",
+            "screenshot_path": null,
+            "duration": 0.14288091659545898,
+            "timestamp": "09:27:26",
+            "skip_reason": "('/home/runner/work/geo-travel-automation/geo-travel-automation/src/tests/api_tests/test_package_api.py', 974, 'Skipped: No active PRIVATE packages available')",
+            "category": null,
+            "evidence": {
+                "log_path": "reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_unauthenticated_booking_private_within_30_days_full_payment_092726.log"
+            },
+            "log_path": "reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_unauthenticated_booking_private_within_30_days_full_payment_092726.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_unauthenticated_booking_private_within_30_days_full_payment_092726.log",
+            "suite": "api"
+        }
+    ]
+}
