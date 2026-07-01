@@ -1,0 +1,158 @@
+{
+    "test_suite_name": "Unified UI Smoke + API TEST REPORT",
+    "total_tests": 154,
+    "passed_tests": 151,
+    "failed_tests": 3,
+    "skipped_tests": 0,
+    "success_rate": 98.1,
+    "duration": 811.062222,
+    "start_time": "2026-07-01 16:02:54",
+    "end_time": "2026-07-01 16:16:25",
+    "suites_run": [
+        "smoke",
+        "api"
+    ],
+    "suite_details": {
+        "smoke": {
+            "report": {
+                "test_suite_name": "Unified UI Smoke + API TEST REPORT",
+                "total_tests": 74,
+                "passed_tests": 72,
+                "failed_tests": 2,
+                "skipped_tests": 0,
+                "success_rate": 97.2972972972973,
+                "duration": 664.891769,
+                "start_time": "2026-07-01 16:02:55",
+                "end_time": "2026-07-01 16:14:00",
+                "failed_tests_details": [
+                    {
+                        "test_name": "src/tests/smoke_tests/test_auth_flow_smoke.py::TestAuthFlowSmoke::test_logout_functionality",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Logout action should be successful\nassert False",
+                        "screenshot_path": "reports/screenshots/failures/AuthFlowSmoke_test_logout_functionality_20260701_160455.png",
+                        "duration": 34.855536222457886,
+                        "timestamp": "16:04:55",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_smoke_tests_test_auth_flow_smoke.py_TestAuthFlowSmoke_test_logout_functionality_160455.log"
+                        },
+                        "log_path": "reports/logs/src_tests_smoke_tests_test_auth_flow_smoke.py_TestAuthFlowSmoke_test_logout_functionality_160455.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_auth_flow_smoke.py_TestAuthFlowSmoke_test_logout_functionality_160455.log",
+                        "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-07-01_16-02-54/screenshots/AuthFlowSmoke_test_logout_functionality_20260701_160455.png",
+                        "suite": "smoke"
+                    },
+                    {
+                        "test_name": "src/tests/smoke_tests/test_package_booking_smoke.py::TestPackageBookingSmoke::test_package_search_functionality",
+                        "status": "FAIL",
+                        "error_message": "StaleElementReferenceException: Message: stale element reference: stale element not found in the current frame\n  (Session info: chrome=149.0.7827.155); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#staleelementreferenceexception\nStacktrace:\n#0 0x5648e31c93da <unknown>\n#1 0x5648e2bab139 <unknown>\n#2 0x5648e2bb2332 <unknown>\n#3 0x5648e2bb4bbb <unknown>\n#4 0x5648e2bb4c63 <unknown>\n#5 0x5648e2c01700 <unknown>\n#6 0x5648e2bf4cd7 <unknown>\n#7 0x5648e2bf46a7 <unknown>\n#8 0x5648e2c47b5c <unknown>\n#9 0x5648e2bf2e4f <unknown>\n#10 0x5648e2bf3c31 <unknown>\n#11 0x5648e318f9f7 <unknown>\n#12 0x5648e318e203 <unknown>\n#13 0x5648e3178f16 <unknown>\n#14 0x5648e318ed9a <unknown>\n#15 0x5648e3160eb0 <unknown>\n#16 0x5648e31b5d58 <unknown>\n#17 0x5648e31b5ef5 <unknown>\n#18 0x5648e31c7f5e <unknown>\n#19 0x7fa515a9caa4 <unknown>\n#20 0x7fa515b29c6c <unknown>\n",
+                        "screenshot_path": "reports/screenshots/failures/PackageBookingSmoke_test_package_search_functional_20260701_161009.png",
+                        "duration": 1.185610294342041,
+                        "timestamp": "16:10:09",
+                        "skip_reason": null,
+                        "category": "Resource Not Found",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_package_search_functionality_161009.log"
+                        },
+                        "log_path": "reports/logs/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_package_search_functionality_161009.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_package_search_functionality_161009.log",
+                        "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-07-01_16-02-54/screenshots/PackageBookingSmoke_test_package_search_functional_20260701_161009.png",
+                        "suite": "smoke"
+                    }
+                ],
+                "skipped_tests_details": []
+            },
+            "timestamp": "2026-07-01 16:14:00"
+        },
+        "api": {
+            "report": {
+                "test_suite_name": "API SMOKE TEST",
+                "total_tests": 80,
+                "passed_tests": 79,
+                "failed_tests": 1,
+                "skipped_tests": 0,
+                "success_rate": 98.75,
+                "duration": 145.261096,
+                "start_time": "2026-07-01 16:14:00",
+                "end_time": "2026-07-01 16:16:25",
+                "failed_tests_details": [
+                    {
+                        "test_name": "src/tests/api_tests/test_package_api.py::TestPackageAPI::test_authenticated_booking_private_future_departure",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: assert 404 == 200\n +  where 404 = <Response [404]>.status_code",
+                        "screenshot_path": null,
+                        "duration": 1.4628839492797852,
+                        "timestamp": "16:15:16",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_private_future_departure_161516.log",
+                            "response_file": "reports/failed_responses/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_private_future_departure_161516.json"
+                        },
+                        "log_path": "reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_private_future_departure_161516.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_private_future_departure_161516.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_private_future_departure_161516.json",
+                        "suite": "api"
+                    }
+                ],
+                "skipped_tests_details": []
+            },
+            "timestamp": "2026-07-01 16:16:25"
+        }
+    },
+    "all_failed_tests": [
+        {
+            "test_name": "src/tests/smoke_tests/test_auth_flow_smoke.py::TestAuthFlowSmoke::test_logout_functionality",
+            "status": "FAIL",
+            "error_message": "AssertionError: Logout action should be successful\nassert False",
+            "screenshot_path": "reports/screenshots/failures/AuthFlowSmoke_test_logout_functionality_20260701_160455.png",
+            "duration": 34.855536222457886,
+            "timestamp": "16:04:55",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_smoke_tests_test_auth_flow_smoke.py_TestAuthFlowSmoke_test_logout_functionality_160455.log"
+            },
+            "log_path": "reports/logs/src_tests_smoke_tests_test_auth_flow_smoke.py_TestAuthFlowSmoke_test_logout_functionality_160455.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_auth_flow_smoke.py_TestAuthFlowSmoke_test_logout_functionality_160455.log",
+            "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-07-01_16-02-54/screenshots/AuthFlowSmoke_test_logout_functionality_20260701_160455.png",
+            "suite": "smoke"
+        },
+        {
+            "test_name": "src/tests/smoke_tests/test_package_booking_smoke.py::TestPackageBookingSmoke::test_package_search_functionality",
+            "status": "FAIL",
+            "error_message": "StaleElementReferenceException: Message: stale element reference: stale element not found in the current frame\n  (Session info: chrome=149.0.7827.155); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#staleelementreferenceexception\nStacktrace:\n#0 0x5648e31c93da <unknown>\n#1 0x5648e2bab139 <unknown>\n#2 0x5648e2bb2332 <unknown>\n#3 0x5648e2bb4bbb <unknown>\n#4 0x5648e2bb4c63 <unknown>\n#5 0x5648e2c01700 <unknown>\n#6 0x5648e2bf4cd7 <unknown>\n#7 0x5648e2bf46a7 <unknown>\n#8 0x5648e2c47b5c <unknown>\n#9 0x5648e2bf2e4f <unknown>\n#10 0x5648e2bf3c31 <unknown>\n#11 0x5648e318f9f7 <unknown>\n#12 0x5648e318e203 <unknown>\n#13 0x5648e3178f16 <unknown>\n#14 0x5648e318ed9a <unknown>\n#15 0x5648e3160eb0 <unknown>\n#16 0x5648e31b5d58 <unknown>\n#17 0x5648e31b5ef5 <unknown>\n#18 0x5648e31c7f5e <unknown>\n#19 0x7fa515a9caa4 <unknown>\n#20 0x7fa515b29c6c <unknown>\n",
+            "screenshot_path": "reports/screenshots/failures/PackageBookingSmoke_test_package_search_functional_20260701_161009.png",
+            "duration": 1.185610294342041,
+            "timestamp": "16:10:09",
+            "skip_reason": null,
+            "category": "Resource Not Found",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_package_search_functionality_161009.log"
+            },
+            "log_path": "reports/logs/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_package_search_functionality_161009.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_package_search_functionality_161009.log",
+            "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-07-01_16-02-54/screenshots/PackageBookingSmoke_test_package_search_functional_20260701_161009.png",
+            "suite": "smoke"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_package_api.py::TestPackageAPI::test_authenticated_booking_private_future_departure",
+            "status": "FAIL",
+            "error_message": "AssertionError: assert 404 == 200\n +  where 404 = <Response [404]>.status_code",
+            "screenshot_path": null,
+            "duration": 1.4628839492797852,
+            "timestamp": "16:15:16",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_private_future_departure_161516.log",
+                "response_file": "reports/failed_responses/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_private_future_departure_161516.json"
+            },
+            "log_path": "reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_private_future_departure_161516.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_private_future_departure_161516.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_private_future_departure_161516.json",
+            "suite": "api"
+        }
+    ],
+    "all_skipped_tests": []
+}
