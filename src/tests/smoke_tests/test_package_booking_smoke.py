@@ -93,7 +93,7 @@ class TestPackageBookingSmoke(TestBase):
             # Step 5: Execute search
             self.package_booking_flow.logger.info("Step 5: Executing package search")
             self.package_booking_flow.search_packages()
-            time.sleep(5)
+            time.sleep(10)
     
             # Step 6: Verify search results
             self.package_booking_flow.logger.info("Step 6: Verifying search results")
