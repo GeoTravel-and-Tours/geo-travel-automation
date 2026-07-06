@@ -206,7 +206,7 @@ class TestContact(TestBase):
             self.contact_page.logger.step(4, "Testing FAQs section")
             self.driver.back()
             self.contact_page.navigate_to_contact()
-            time.sleep(2)
+            time.sleep(5)
             
             self.contact_page.click_read_faqs()
             assert self.contact_page.verify_faq_page_loaded(), "FAQ page should load"
