@@ -59,6 +59,7 @@ class TestPackageBookingSmoke(TestBase):
         self.package_booking_flow.logger.info("Step 1: Quick navigation to trigger booking form")
         self.home_page.open()
         self.package_booking_flow.click_package()
+        time.sleep(3)
         
         self.package_booking_flow.logger.success("✅ Booking form basic navigation verified")
 
