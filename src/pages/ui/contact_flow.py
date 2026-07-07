@@ -38,7 +38,7 @@ class ContactPage(BasePage):
         "technical support",
         "payments & billing",
         "refunds & cancellations",
-        "others"
+        "other"
     ]
     
     MESSAGE_TEXTAREA = (By.XPATH, "//textarea[@placeholder='How can we help?']")
