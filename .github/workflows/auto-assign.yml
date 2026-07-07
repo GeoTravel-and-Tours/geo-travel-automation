@@ -4,6 +4,7 @@ on:
     types: [opened]
   pull_request:
     types: [opened]
+
 jobs:
   run:
     runs-on: ubuntu-latest
@@ -11,36 +12,53 @@ jobs:
       issues: write
       pull-requests: write
       contents: read
+
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Auto-assign
-      uses: pozil/auto-assign-issue@v1
-      with:
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
-        assignees: Only1JohnN
-        numOfAssignee: 1
-    
-    - name: Add welcome comment to issue
-      if: github.event_name == 'issues'
-      uses: actions/github-script@v7
-      with:
-        script: |
-          github.rest.issues.createComment({
-            issue_number: context.issue.number,
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            body: '🚀 **Auto-assigned**: This issue has been assigned to @Only1JohnN for triage. Thank you for reporting!'
-          })
-    
-    - name: Add welcome comment to PR
-      if: github.event_name == 'pull_request'
-      uses: actions/github-script@v7
-      with:
-        script: |
-          github.rest.issues.createComment({
-            issue_number: context.payload.pull_request.number,
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            body: '👋 **Auto-assigned**: This PR has been assigned to @Only1JohnN for review. Thank you for your contribution!'
-          })
+      - uses: actions/checkout@v4
+
+      # Auto-assign issues only (this action does not support PRs)
+      - name: Auto-assign issue
+        if: github.event_name == 'issues'
+        uses: pozil/auto-assign-issue@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          assignees: Only1JohnN
+
+      # Assign PRs using github-script (optional)
+      - name: Auto-assign PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.addAssignees({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.pull_request.number,
+              assignees: ['Only1JohnN']
+            })
+
+      # Welcome comment for issues
+      - name: Add welcome comment to issue
+        if: github.event_name == 'issues'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '🚀 **Auto-assigned**: This issue has been assigned to @Only1JohnN for triage. Thank you for reporting!'
+            })
+
+      # Welcome comment for PRs
+      - name: Add welcome comment to PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.payload.pull_request.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '👋 **Auto-assigned**: This PR has been assigned to @Only1JohnN for review. Thank you for your contribution!'
+            })
