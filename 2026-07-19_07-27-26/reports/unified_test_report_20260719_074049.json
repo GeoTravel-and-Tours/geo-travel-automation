@@ -1,0 +1,125 @@
+{
+    "test_suite_name": "Unified UI Smoke + API TEST REPORT",
+    "total_tests": 154,
+    "passed_tests": 152,
+    "failed_tests": 2,
+    "skipped_tests": 0,
+    "success_rate": 98.7,
+    "duration": 802.089447,
+    "start_time": "2026-07-19 07:27:27",
+    "end_time": "2026-07-19 07:40:49",
+    "suites_run": [
+        "smoke",
+        "api"
+    ],
+    "suite_details": {
+        "smoke": {
+            "report": {
+                "test_suite_name": "Unified UI Smoke + API TEST REPORT",
+                "total_tests": 74,
+                "passed_tests": 74,
+                "failed_tests": 0,
+                "skipped_tests": 0,
+                "success_rate": 100.0,
+                "duration": 692.33772,
+                "start_time": "2026-07-19 07:27:28",
+                "end_time": "2026-07-19 07:39:00",
+                "failed_tests_details": [],
+                "skipped_tests_details": []
+            },
+            "timestamp": "2026-07-19 07:39:00"
+        },
+        "api": {
+            "report": {
+                "test_suite_name": "API SMOKE TEST",
+                "total_tests": 80,
+                "passed_tests": 78,
+                "failed_tests": 2,
+                "skipped_tests": 0,
+                "success_rate": 97.5,
+                "duration": 108.822172,
+                "start_time": "2026-07-19 07:39:00",
+                "end_time": "2026-07-19 07:40:49",
+                "failed_tests_details": [
+                    {
+                        "test_name": "src/tests/api_tests/test_package_api.py::TestPackageAPI::test_authenticated_booking_private_future_departure",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: assert 404 == 200\n +  where 404 = <Response [404]>.status_code",
+                        "screenshot_path": null,
+                        "duration": 1.1589114665985107,
+                        "timestamp": "07:39:58",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_private_future_departure_073958.log",
+                            "response_file": "reports/failed_responses/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_private_future_departure_073958.json"
+                        },
+                        "log_path": "reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_private_future_departure_073958.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_private_future_departure_073958.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_private_future_departure_073958.json",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_package_api.py::TestPackageAPI::test_unauthenticated_booking_private_future_departure",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: assert 404 == 200\n +  where 404 = <Response [404]>.status_code",
+                        "screenshot_path": null,
+                        "duration": 0.834627628326416,
+                        "timestamp": "07:40:18",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_unauthenticated_booking_private_future_departure_074018.log",
+                            "response_file": "reports/failed_responses/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_unauthenticated_booking_private_future_departure_074018.json"
+                        },
+                        "log_path": "reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_unauthenticated_booking_private_future_departure_074018.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_unauthenticated_booking_private_future_departure_074018.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_unauthenticated_booking_private_future_departure_074018.json",
+                        "suite": "api"
+                    }
+                ],
+                "skipped_tests_details": []
+            },
+            "timestamp": "2026-07-19 07:40:49"
+        }
+    },
+    "all_failed_tests": [
+        {
+            "test_name": "src/tests/api_tests/test_package_api.py::TestPackageAPI::test_authenticated_booking_private_future_departure",
+            "status": "FAIL",
+            "error_message": "AssertionError: assert 404 == 200\n +  where 404 = <Response [404]>.status_code",
+            "screenshot_path": null,
+            "duration": 1.1589114665985107,
+            "timestamp": "07:39:58",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_private_future_departure_073958.log",
+                "response_file": "reports/failed_responses/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_private_future_departure_073958.json"
+            },
+            "log_path": "reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_private_future_departure_073958.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_private_future_departure_073958.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_private_future_departure_073958.json",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_package_api.py::TestPackageAPI::test_unauthenticated_booking_private_future_departure",
+            "status": "FAIL",
+            "error_message": "AssertionError: assert 404 == 200\n +  where 404 = <Response [404]>.status_code",
+            "screenshot_path": null,
+            "duration": 0.834627628326416,
+            "timestamp": "07:40:18",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_unauthenticated_booking_private_future_departure_074018.log",
+                "response_file": "reports/failed_responses/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_unauthenticated_booking_private_future_departure_074018.json"
+            },
+            "log_path": "reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_unauthenticated_booking_private_future_departure_074018.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_unauthenticated_booking_private_future_departure_074018.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_unauthenticated_booking_private_future_departure_074018.json",
+            "suite": "api"
+        }
+    ],
+    "all_skipped_tests": []
+}
