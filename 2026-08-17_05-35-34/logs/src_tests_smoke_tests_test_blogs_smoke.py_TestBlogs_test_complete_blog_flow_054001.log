@@ -1,0 +1,51 @@
+2026-08-17 05:39:25 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Creating chrome driver...
+2026-08-17 05:39:25 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - chrome driver created successfully
+2026-08-17 05:39:26 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - === Comprehensive Test: Complete Blog Flow ===
+2026-08-17 05:39:26 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔄 STEP 1: Navigating to Blogs
+2026-08-17 05:39:26 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Navigated to: https://retail.stg.gowithgeo.com/
+2026-08-17 05:39:26 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🏁 Warming up site before homepage load...
+2026-08-17 05:39:27 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Navigated to: https://retail.stg.gowithgeo.com/
+2026-08-17 05:39:27 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Warm-up page opened successfully.
+2026-08-17 05:39:32 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🏠 Waiting for homepage to load (max retries: 3)
+2026-08-17 05:39:32 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Attempt 1/3
+2026-08-17 05:39:32 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Page body loaded
+2026-08-17 05:39:32 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Validating Geo Travel page...
+2026-08-17 05:39:32 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Validating page HTML structure...
+2026-08-17 05:39:32 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Validating page content keywords...
+2026-08-17 05:39:32 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Page validation confidence: 100.0%
+2026-08-17 05:39:32 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Found keywords: ['geo', 'travel', 'destination', 'book', 'tour', 'package', 'hotel', 'flight', 'vacation', 'adventure']
+2026-08-17 05:39:32 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Homepage validation passed! Confidence: 100.0%
+2026-08-17 05:39:32 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Navigating to Blogs page
+2026-08-17 05:39:32 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Successfully navigated to Blogs page
+2026-08-17 05:39:32 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Blogs page source verified
+2026-08-17 05:39:32 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Successfully navigated to Blogs page
+2026-08-17 05:39:32 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔄 STEP 3: Clicking first blog
+2026-08-17 05:39:32 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Clicking on first blog's Read article button
+2026-08-17 05:39:40 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Successfully clicked on first blog's Read article button
+2026-08-17 05:39:40 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Waiting for blog detail to load
+2026-08-17 05:40:00 - GeoTravelGlobalLogger - ERROR    - [logger.py:363] - Failed to load blog detail: Message: 
+Stacktrace:
+#0 0x55fc3d27836a <unknown>
+#1 0x55fc3cbebf49 <unknown>
+#2 0x55fc3cc417e2 <unknown>
+#3 0x55fc3cc41a31 <unknown>
+#4 0x55fc3cc8ced4 <unknown>
+#5 0x55fc3cc8a0c3 <unknown>
+#6 0x55fc3cc34c92 <unknown>
+#7 0x55fc3cc35b11 <unknown>
+#8 0x55fc3d23d8d0 <unknown>
+#9 0x55fc3d23bf3a <unknown>
+#10 0x55fc3d2269b5 <unknown>
+#11 0x55fc3d23cc0a <unknown>
+#12 0x55fc3d20e740 <unknown>
+#13 0x55fc3d2639a8 <unknown>
+#14 0x55fc3d263b45 <unknown>
+#15 0x55fc3d276f1e <unknown>
+#16 0x7fe80d29cb84 <unknown>
+#17 0x7fe80d329d6c <unknown>
+
+2026-08-17 05:40:00 - GeoTravelGlobalLogger - ERROR    - [logger.py:363] - ❌ Test failed: Blog detail should load
+assert False
+ +  where False = wait_for_blog_detail_load()
+ +    where wait_for_blog_detail_load = <src.pages.ui.blogs_flow.BlogsPage object at 0x7f8153980f70>.wait_for_blog_detail_load
+ +      where <src.pages.ui.blogs_flow.BlogsPage object at 0x7f8153980f70> = <test_blogs_smoke.TestBlogs object at 0x7f81539f94b0>.blogs_page
