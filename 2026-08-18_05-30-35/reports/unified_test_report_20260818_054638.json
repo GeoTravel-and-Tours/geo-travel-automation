@@ -1,0 +1,600 @@
+{
+    "test_suite_name": "Unified UI Smoke + API TEST REPORT",
+    "total_tests": 154,
+    "passed_tests": 138,
+    "failed_tests": 16,
+    "skipped_tests": 0,
+    "success_rate": 89.6,
+    "duration": 962.001673,
+    "start_time": "2026-08-18 05:30:36",
+    "end_time": "2026-08-18 05:46:38",
+    "suites_run": [
+        "smoke",
+        "api"
+    ],
+    "suite_details": {
+        "smoke": {
+            "report": {
+                "test_suite_name": "Unified UI Smoke + API TEST REPORT",
+                "total_tests": 74,
+                "passed_tests": 59,
+                "failed_tests": 15,
+                "skipped_tests": 0,
+                "success_rate": 79.72972972972973,
+                "duration": 829.711505,
+                "start_time": "2026-08-18 05:30:36",
+                "end_time": "2026-08-18 05:44:26",
+                "failed_tests_details": [
+                    {
+                        "test_name": "src/tests/smoke_tests/test_auth_flow_smoke.py::TestAuthFlowSmoke::test_successful_login_and_redirect",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Login should be successful with valid credentials\nassert False",
+                        "screenshot_path": "reports/screenshots/failures/AuthFlowSmoke_test_successful_login_and_redirect_20260818_053124.png",
+                        "duration": 31.592074871063232,
+                        "timestamp": "05:31:24",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_smoke_tests_test_auth_flow_smoke.py_TestAuthFlowSmoke_test_successful_login_and_redirect_053124.log"
+                        },
+                        "log_path": "reports/logs/src_tests_smoke_tests_test_auth_flow_smoke.py_TestAuthFlowSmoke_test_successful_login_and_redirect_053124.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_auth_flow_smoke.py_TestAuthFlowSmoke_test_successful_login_and_redirect_053124.log",
+                        "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-08-18_05-30-35/screenshots/AuthFlowSmoke_test_successful_login_and_redirect_20260818_053124.png",
+                        "suite": "smoke"
+                    },
+                    {
+                        "test_name": "src/tests/smoke_tests/test_blogs_smoke.py::TestBlogs::test_read_blog",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Blog detail should load\nassert False\n +  where False = wait_for_blog_detail_load()\n +    where wait_for_blog_detail_load = <src.pages.ui.blogs_flow.BlogsPage object at 0x7f674f4bd660>.wait_for_blog_detail_load\n +      where <src.pages.ui.blogs_flow.BlogsPage object at 0x7f674f4bd660> = <test_blogs_smoke.TestBlogs object at 0x7f674f761600>.blogs_page",
+                        "screenshot_path": "reports/screenshots/failures/Blogs_test_read_blog_20260818_053304.png",
+                        "duration": 35.42721724510193,
+                        "timestamp": "05:33:04",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_read_blog_053304.log"
+                        },
+                        "log_path": "reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_read_blog_053304.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_read_blog_053304.log",
+                        "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-08-18_05-30-35/screenshots/Blogs_test_read_blog_20260818_053304.png",
+                        "suite": "smoke"
+                    },
+                    {
+                        "test_name": "src/tests/smoke_tests/test_blogs_smoke.py::TestBlogs::test_comment_flow",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Blog detail should load\nassert False\n +  where False = wait_for_blog_detail_load()\n +    where wait_for_blog_detail_load = <src.pages.ui.blogs_flow.BlogsPage object at 0x7f674f62c700>.wait_for_blog_detail_load\n +      where <src.pages.ui.blogs_flow.BlogsPage object at 0x7f674f62c700> = <test_blogs_smoke.TestBlogs object at 0x7f674f7615d0>.blogs_page",
+                        "screenshot_path": "reports/screenshots/failures/Blogs_test_comment_flow_20260818_053340.png",
+                        "duration": 35.36608171463013,
+                        "timestamp": "05:33:41",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_comment_flow_053340.log"
+                        },
+                        "log_path": "reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_comment_flow_053340.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_comment_flow_053340.log",
+                        "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-08-18_05-30-35/screenshots/Blogs_test_comment_flow_20260818_053340.png",
+                        "suite": "smoke"
+                    },
+                    {
+                        "test_name": "src/tests/smoke_tests/test_blogs_smoke.py::TestBlogs::test_scroll_functionality",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Blog detail should load\nassert False\n +  where False = wait_for_blog_detail_load()\n +    where wait_for_blog_detail_load = <src.pages.ui.blogs_flow.BlogsPage object at 0x7f674f77fc70>.wait_for_blog_detail_load\n +      where <src.pages.ui.blogs_flow.BlogsPage object at 0x7f674f77fc70> = <test_blogs_smoke.TestBlogs object at 0x7f674f761a20>.blogs_page",
+                        "screenshot_path": "reports/screenshots/failures/Blogs_test_scroll_functionality_20260818_053416.png",
+                        "duration": 35.24932074546814,
+                        "timestamp": "05:34:17",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_scroll_functionality_053416.log"
+                        },
+                        "log_path": "reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_scroll_functionality_053416.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_scroll_functionality_053416.log",
+                        "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-08-18_05-30-35/screenshots/Blogs_test_scroll_functionality_20260818_053416.png",
+                        "suite": "smoke"
+                    },
+                    {
+                        "test_name": "src/tests/smoke_tests/test_blogs_smoke.py::TestBlogs::test_more_like_this",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Blog detail should load\nassert False\n +  where False = wait_for_blog_detail_load()\n +    where wait_for_blog_detail_load = <src.pages.ui.blogs_flow.BlogsPage object at 0x7f674f4b8d60>.wait_for_blog_detail_load\n +      where <src.pages.ui.blogs_flow.BlogsPage object at 0x7f674f4b8d60> = <test_blogs_smoke.TestBlogs object at 0x7f674f7602b0>.blogs_page",
+                        "screenshot_path": "reports/screenshots/failures/Blogs_test_more_like_this_20260818_053453.png",
+                        "duration": 35.28995871543884,
+                        "timestamp": "05:34:53",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_more_like_this_053453.log"
+                        },
+                        "log_path": "reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_more_like_this_053453.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_more_like_this_053453.log",
+                        "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-08-18_05-30-35/screenshots/Blogs_test_more_like_this_20260818_053453.png",
+                        "suite": "smoke"
+                    },
+                    {
+                        "test_name": "src/tests/smoke_tests/test_blogs_smoke.py::TestBlogs::test_complete_blog_flow",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Blog detail should load\nassert False\n +  where False = wait_for_blog_detail_load()\n +    where wait_for_blog_detail_load = <src.pages.ui.blogs_flow.BlogsPage object at 0x7f674f709060>.wait_for_blog_detail_load\n +      where <src.pages.ui.blogs_flow.BlogsPage object at 0x7f674f709060> = <test_blogs_smoke.TestBlogs object at 0x7f674f762020>.blogs_page",
+                        "screenshot_path": "reports/screenshots/failures/Blogs_test_complete_blog_flow_20260818_053529.png",
+                        "duration": 35.284162759780884,
+                        "timestamp": "05:35:29",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_complete_blog_flow_053529.log"
+                        },
+                        "log_path": "reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_complete_blog_flow_053529.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_complete_blog_flow_053529.log",
+                        "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-08-18_05-30-35/screenshots/Blogs_test_complete_blog_flow_20260818_053529.png",
+                        "suite": "smoke"
+                    },
+                    {
+                        "test_name": "src/tests/smoke_tests/test_contact_us_smoke.py::TestContact::test_submit_contact_form",
+                        "status": "FAIL",
+                        "error_message": "TimeoutException: Message: \nStacktrace:\n#0 0x55c53c09f36a <unknown>\n#1 0x55c53ba12f49 <unknown>\n#2 0x55c53ba687e2 <unknown>\n#3 0x55c53ba68a31 <unknown>\n#4 0x55c53bab3ed4 <unknown>\n#5 0x55c53bab10c3 <unknown>\n#6 0x55c53ba5bc92 <unknown>\n#7 0x55c53ba5cb11 <unknown>\n#8 0x55c53c0648d0 <unknown>\n#9 0x55c53c062f3a <unknown>\n#10 0x55c53c04d9b5 <unknown>\n#11 0x55c53c063c0a <unknown>\n#12 0x55c53c035740 <unknown>\n#13 0x55c53c08a9a8 <unknown>\n#14 0x55c53c08ab45 <unknown>\n#15 0x55c53c09df1e <unknown>\n#16 0x7fa47969cb84 <unknown>\n#17 0x7fa479729d6c <unknown>\n",
+                        "screenshot_path": "reports/screenshots/failures/Contact_test_submit_contact_form_20260818_053556.png",
+                        "duration": 19.233834505081177,
+                        "timestamp": "05:35:56",
+                        "skip_reason": null,
+                        "category": "API Timeout",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_smoke_tests_test_contact_us_smoke.py_TestContact_test_submit_contact_form_053556.log"
+                        },
+                        "log_path": "reports/logs/src_tests_smoke_tests_test_contact_us_smoke.py_TestContact_test_submit_contact_form_053556.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_contact_us_smoke.py_TestContact_test_submit_contact_form_053556.log",
+                        "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-08-18_05-30-35/screenshots/Contact_test_submit_contact_form_20260818_053556.png",
+                        "suite": "smoke"
+                    },
+                    {
+                        "test_name": "src/tests/smoke_tests/test_contact_us_smoke.py::TestContact::test_complete_contact_flow",
+                        "status": "FAIL",
+                        "error_message": "TimeoutException: Message: \nStacktrace:\n#0 0x555d3992436a <unknown>\n#1 0x555d39297f49 <unknown>\n#2 0x555d392ed7e2 <unknown>\n#3 0x555d392eda31 <unknown>\n#4 0x555d39338ed4 <unknown>\n#5 0x555d393360c3 <unknown>\n#6 0x555d392e0c92 <unknown>\n#7 0x555d392e1b11 <unknown>\n#8 0x555d398e98d0 <unknown>\n#9 0x555d398e7f3a <unknown>\n#10 0x555d398d29b5 <unknown>\n#11 0x555d398e8c0a <unknown>\n#12 0x555d398ba740 <unknown>\n#13 0x555d3990f9a8 <unknown>\n#14 0x555d3990fb45 <unknown>\n#15 0x555d39922f1e <unknown>\n#16 0x7f10f3c9cb84 <unknown>\n#17 0x7f10f3d29d6c <unknown>\n",
+                        "screenshot_path": "reports/screenshots/failures/Contact_test_complete_contact_flow_20260818_053639.png",
+                        "duration": 19.14238476753235,
+                        "timestamp": "05:36:39",
+                        "skip_reason": null,
+                        "category": "API Timeout",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_smoke_tests_test_contact_us_smoke.py_TestContact_test_complete_contact_flow_053639.log"
+                        },
+                        "log_path": "reports/logs/src_tests_smoke_tests_test_contact_us_smoke.py_TestContact_test_complete_contact_flow_053639.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_contact_us_smoke.py_TestContact_test_complete_contact_flow_053639.log",
+                        "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-08-18_05-30-35/screenshots/Contact_test_complete_contact_flow_20260818_053639.png",
+                        "suite": "smoke"
+                    },
+                    {
+                        "test_name": "src/tests/smoke_tests/test_flight_booking_smoke.py::TestFlightBookingSmoke::test_flight_search_form_visible",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Flight search form not visible\nassert False\n +  where False = is_flight_search_form_visible()\n +    where is_flight_search_form_visible = <src.pages.ui.flight_booking_flow.FlightBookingFlow object at 0x7f674d972bf0>.is_flight_search_form_visible\n +      where <src.pages.ui.flight_booking_flow.FlightBookingFlow object at 0x7f674d972bf0> = <test_flight_booking_smoke.TestFlightBookingSmoke object at 0x7f674f4be9b0>.flight_booking",
+                        "screenshot_path": "reports/screenshots/failures/FlightBookingSmoke_test_flight_search_form_visible_20260818_053703.png",
+                        "duration": 16.58961033821106,
+                        "timestamp": "05:37:04",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_smoke_tests_test_flight_booking_smoke.py_TestFlightBookingSmoke_test_flight_search_form_visible_053703.log"
+                        },
+                        "log_path": "reports/logs/src_tests_smoke_tests_test_flight_booking_smoke.py_TestFlightBookingSmoke_test_flight_search_form_visible_053703.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_flight_booking_smoke.py_TestFlightBookingSmoke_test_flight_search_form_visible_053703.log",
+                        "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-08-18_05-30-35/screenshots/FlightBookingSmoke_test_flight_search_form_visible_20260818_053703.png",
+                        "suite": "smoke"
+                    },
+                    {
+                        "test_name": "src/tests/smoke_tests/test_package_booking_smoke.py::TestPackageBookingSmoke::test_package_search_functionality",
+                        "status": "FAIL",
+                        "error_message": "TimeoutException: Message: \nStacktrace:\n#0 0x563594b0936a <unknown>\n#1 0x56359447cf49 <unknown>\n#2 0x5635944d27e2 <unknown>\n#3 0x5635944d2a31 <unknown>\n#4 0x56359451ded4 <unknown>\n#5 0x56359451b0c3 <unknown>\n#6 0x5635944c5c92 <unknown>\n#7 0x5635944c6b11 <unknown>\n#8 0x563594ace8d0 <unknown>\n#9 0x563594accf3a <unknown>\n#10 0x563594ab79b5 <unknown>\n#11 0x563594acdc0a <unknown>\n#12 0x563594a9f740 <unknown>\n#13 0x563594af49a8 <unknown>\n#14 0x563594af4b45 <unknown>\n#15 0x563594b07f1e <unknown>\n#16 0x7ff4ea29cb84 <unknown>\n#17 0x7ff4ea329d6c <unknown>\n",
+                        "screenshot_path": "reports/screenshots/failures/PackageBookingSmoke_test_package_search_functional_20260818_053938.png",
+                        "duration": 12.499798059463501,
+                        "timestamp": "05:39:38",
+                        "skip_reason": null,
+                        "category": "API Timeout",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_package_search_functionality_053938.log"
+                        },
+                        "log_path": "reports/logs/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_package_search_functionality_053938.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_package_search_functionality_053938.log",
+                        "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-08-18_05-30-35/screenshots/PackageBookingSmoke_test_package_search_functional_20260818_053938.png",
+                        "suite": "smoke"
+                    },
+                    {
+                        "test_name": "src/tests/smoke_tests/test_travel_gallery_smoke.py::TestTravelGallery::test_travel_gallery_navigation",
+                        "status": "FAIL",
+                        "error_message": "TimeoutException: Message: \nStacktrace:\n#0 0x563ae788e36a <unknown>\n#1 0x563ae7201f49 <unknown>\n#2 0x563ae72577e2 <unknown>\n#3 0x563ae7257a31 <unknown>\n#4 0x563ae72a2ed4 <unknown>\n#5 0x563ae72a00c3 <unknown>\n#6 0x563ae724ac92 <unknown>\n#7 0x563ae724bb11 <unknown>\n#8 0x563ae78538d0 <unknown>\n#9 0x563ae7851f3a <unknown>\n#10 0x563ae783c9b5 <unknown>\n#11 0x563ae7852c0a <unknown>\n#12 0x563ae7824740 <unknown>\n#13 0x563ae78799a8 <unknown>\n#14 0x563ae7879b45 <unknown>\n#15 0x563ae788cf1e <unknown>\n#16 0x7efe3809cb84 <unknown>\n#17 0x7efe38129d6c <unknown>\n",
+                        "screenshot_path": "reports/screenshots/failures/TravelGallery_test_travel_gallery_navigation_20260818_054030.png",
+                        "duration": 27.65073251724243,
+                        "timestamp": "05:40:30",
+                        "skip_reason": null,
+                        "category": "API Timeout",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_smoke_tests_test_travel_gallery_smoke.py_TestTravelGallery_test_travel_gallery_navigation_054030.log"
+                        },
+                        "log_path": "reports/logs/src_tests_smoke_tests_test_travel_gallery_smoke.py_TestTravelGallery_test_travel_gallery_navigation_054030.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_travel_gallery_smoke.py_TestTravelGallery_test_travel_gallery_navigation_054030.log",
+                        "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-08-18_05-30-35/screenshots/TravelGallery_test_travel_gallery_navigation_20260818_054030.png",
+                        "suite": "smoke"
+                    },
+                    {
+                        "test_name": "src/tests/smoke_tests/test_travel_gallery_smoke.py::TestTravelGallery::test_tour_card_click_and_close",
+                        "status": "FAIL",
+                        "error_message": "TimeoutException: Message: \nStacktrace:\n#0 0x565040df336a <unknown>\n#1 0x565040766f49 <unknown>\n#2 0x5650407bc7e2 <unknown>\n#3 0x5650407bca31 <unknown>\n#4 0x565040807ed4 <unknown>\n#5 0x5650408050c3 <unknown>\n#6 0x5650407afc92 <unknown>\n#7 0x5650407b0b11 <unknown>\n#8 0x565040db88d0 <unknown>\n#9 0x565040db6f3a <unknown>\n#10 0x565040da19b5 <unknown>\n#11 0x565040db7c0a <unknown>\n#12 0x565040d89740 <unknown>\n#13 0x565040dde9a8 <unknown>\n#14 0x565040ddeb45 <unknown>\n#15 0x565040df1f1e <unknown>\n#16 0x7fecdb49cb84 <unknown>\n#17 0x7fecdb529d6c <unknown>\n",
+                        "screenshot_path": "reports/screenshots/failures/TravelGallery_test_tour_card_click_and_close_20260818_054058.png",
+                        "duration": 27.498206853866577,
+                        "timestamp": "05:40:59",
+                        "skip_reason": null,
+                        "category": "API Timeout",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_smoke_tests_test_travel_gallery_smoke.py_TestTravelGallery_test_tour_card_click_and_close_054058.log"
+                        },
+                        "log_path": "reports/logs/src_tests_smoke_tests_test_travel_gallery_smoke.py_TestTravelGallery_test_tour_card_click_and_close_054058.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_travel_gallery_smoke.py_TestTravelGallery_test_tour_card_click_and_close_054058.log",
+                        "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-08-18_05-30-35/screenshots/TravelGallery_test_tour_card_click_and_close_20260818_054058.png",
+                        "suite": "smoke"
+                    },
+                    {
+                        "test_name": "src/tests/smoke_tests/test_travel_gallery_smoke.py::TestTravelGallery::test_scroll_functionality",
+                        "status": "FAIL",
+                        "error_message": "TimeoutException: Message: \nStacktrace:\n#0 0x55693204936a <unknown>\n#1 0x5569319bcf49 <unknown>\n#2 0x556931a127e2 <unknown>\n#3 0x556931a12a31 <unknown>\n#4 0x556931a5ded4 <unknown>\n#5 0x556931a5b0c3 <unknown>\n#6 0x556931a05c92 <unknown>\n#7 0x556931a06b11 <unknown>\n#8 0x55693200e8d0 <unknown>\n#9 0x55693200cf3a <unknown>\n#10 0x556931ff79b5 <unknown>\n#11 0x55693200dc0a <unknown>\n#12 0x556931fdf740 <unknown>\n#13 0x5569320349a8 <unknown>\n#14 0x556932034b45 <unknown>\n#15 0x556932047f1e <unknown>\n#16 0x7f5d95c9cb84 <unknown>\n#17 0x7f5d95d29d6c <unknown>\n",
+                        "screenshot_path": "reports/screenshots/failures/TravelGallery_test_scroll_functionality_20260818_054127.png",
+                        "duration": 27.560907125473022,
+                        "timestamp": "05:41:27",
+                        "skip_reason": null,
+                        "category": "API Timeout",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_smoke_tests_test_travel_gallery_smoke.py_TestTravelGallery_test_scroll_functionality_054127.log"
+                        },
+                        "log_path": "reports/logs/src_tests_smoke_tests_test_travel_gallery_smoke.py_TestTravelGallery_test_scroll_functionality_054127.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_travel_gallery_smoke.py_TestTravelGallery_test_scroll_functionality_054127.log",
+                        "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-08-18_05-30-35/screenshots/TravelGallery_test_scroll_functionality_20260818_054127.png",
+                        "suite": "smoke"
+                    },
+                    {
+                        "test_name": "src/tests/smoke_tests/test_travel_gallery_smoke.py::TestTravelGallery::test_complete_travel_gallery_flow",
+                        "status": "FAIL",
+                        "error_message": "TimeoutException: Message: \nStacktrace:\n#0 0x561aa9bc336a <unknown>\n#1 0x561aa9536f49 <unknown>\n#2 0x561aa958c7e2 <unknown>\n#3 0x561aa958ca31 <unknown>\n#4 0x561aa95d7ed4 <unknown>\n#5 0x561aa95d50c3 <unknown>\n#6 0x561aa957fc92 <unknown>\n#7 0x561aa9580b11 <unknown>\n#8 0x561aa9b888d0 <unknown>\n#9 0x561aa9b86f3a <unknown>\n#10 0x561aa9b719b5 <unknown>\n#11 0x561aa9b87c0a <unknown>\n#12 0x561aa9b59740 <unknown>\n#13 0x561aa9bae9a8 <unknown>\n#14 0x561aa9baeb45 <unknown>\n#15 0x561aa9bc1f1e <unknown>\n#16 0x7f933269cb84 <unknown>\n#17 0x7f9332729d6c <unknown>\n",
+                        "screenshot_path": "reports/screenshots/failures/TravelGallery_test_complete_travel_gallery_flow_20260818_054155.png",
+                        "duration": 27.527087688446045,
+                        "timestamp": "05:41:55",
+                        "skip_reason": null,
+                        "category": "API Timeout",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_smoke_tests_test_travel_gallery_smoke.py_TestTravelGallery_test_complete_travel_gallery_flow_054155.log"
+                        },
+                        "log_path": "reports/logs/src_tests_smoke_tests_test_travel_gallery_smoke.py_TestTravelGallery_test_complete_travel_gallery_flow_054155.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_travel_gallery_smoke.py_TestTravelGallery_test_complete_travel_gallery_flow_054155.log",
+                        "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-08-18_05-30-35/screenshots/TravelGallery_test_complete_travel_gallery_flow_20260818_054155.png",
+                        "suite": "smoke"
+                    },
+                    {
+                        "test_name": "src/tests/smoke_tests/test_travel_gallery_smoke.py::TestTravelGallery::test_multiple_tour_clicks",
+                        "status": "FAIL",
+                        "error_message": "TimeoutException: Message: \nStacktrace:\n#0 0x55d8f3b0736a <unknown>\n#1 0x55d8f347af49 <unknown>\n#2 0x55d8f34d07e2 <unknown>\n#3 0x55d8f34d0a31 <unknown>\n#4 0x55d8f351bed4 <unknown>\n#5 0x55d8f35190c3 <unknown>\n#6 0x55d8f34c3c92 <unknown>\n#7 0x55d8f34c4b11 <unknown>\n#8 0x55d8f3acc8d0 <unknown>\n#9 0x55d8f3acaf3a <unknown>\n#10 0x55d8f3ab59b5 <unknown>\n#11 0x55d8f3acbc0a <unknown>\n#12 0x55d8f3a9d740 <unknown>\n#13 0x55d8f3af29a8 <unknown>\n#14 0x55d8f3af2b45 <unknown>\n#15 0x55d8f3b05f1e <unknown>\n#16 0x7f0e8049cb84 <unknown>\n#17 0x7f0e80529d6c <unknown>\n",
+                        "screenshot_path": "reports/screenshots/failures/TravelGallery_test_multiple_tour_clicks_20260818_054223.png",
+                        "duration": 27.696338891983032,
+                        "timestamp": "05:42:24",
+                        "skip_reason": null,
+                        "category": "API Timeout",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_smoke_tests_test_travel_gallery_smoke.py_TestTravelGallery_test_multiple_tour_clicks_054223.log"
+                        },
+                        "log_path": "reports/logs/src_tests_smoke_tests_test_travel_gallery_smoke.py_TestTravelGallery_test_multiple_tour_clicks_054223.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_travel_gallery_smoke.py_TestTravelGallery_test_multiple_tour_clicks_054223.log",
+                        "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-08-18_05-30-35/screenshots/TravelGallery_test_multiple_tour_clicks_20260818_054223.png",
+                        "suite": "smoke"
+                    }
+                ],
+                "skipped_tests_details": []
+            },
+            "timestamp": "2026-08-18 05:44:26"
+        },
+        "api": {
+            "report": {
+                "test_suite_name": "API SMOKE TEST",
+                "total_tests": 80,
+                "passed_tests": 79,
+                "failed_tests": 1,
+                "skipped_tests": 0,
+                "success_rate": 98.75,
+                "duration": 131.534619,
+                "start_time": "2026-08-18 05:44:26",
+                "end_time": "2026-08-18 05:46:38",
+                "failed_tests_details": [
+                    {
+                        "test_name": "src/tests/api_tests/test_package_api.py::TestPackageAPI::test_authenticated_booking_private_future_departure",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: assert 404 == 200\n +  where 404 = <Response [404]>.status_code",
+                        "screenshot_path": null,
+                        "duration": 1.642747402191162,
+                        "timestamp": "05:45:32",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_private_future_departure_054532.log",
+                            "response_file": "reports/failed_responses/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_private_future_departure_054532.json"
+                        },
+                        "log_path": "reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_private_future_departure_054532.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_private_future_departure_054532.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_private_future_departure_054532.json",
+                        "suite": "api"
+                    }
+                ],
+                "skipped_tests_details": []
+            },
+            "timestamp": "2026-08-18 05:46:38"
+        }
+    },
+    "all_failed_tests": [
+        {
+            "test_name": "src/tests/smoke_tests/test_auth_flow_smoke.py::TestAuthFlowSmoke::test_successful_login_and_redirect",
+            "status": "FAIL",
+            "error_message": "AssertionError: Login should be successful with valid credentials\nassert False",
+            "screenshot_path": "reports/screenshots/failures/AuthFlowSmoke_test_successful_login_and_redirect_20260818_053124.png",
+            "duration": 31.592074871063232,
+            "timestamp": "05:31:24",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_smoke_tests_test_auth_flow_smoke.py_TestAuthFlowSmoke_test_successful_login_and_redirect_053124.log"
+            },
+            "log_path": "reports/logs/src_tests_smoke_tests_test_auth_flow_smoke.py_TestAuthFlowSmoke_test_successful_login_and_redirect_053124.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_auth_flow_smoke.py_TestAuthFlowSmoke_test_successful_login_and_redirect_053124.log",
+            "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-08-18_05-30-35/screenshots/AuthFlowSmoke_test_successful_login_and_redirect_20260818_053124.png",
+            "suite": "smoke"
+        },
+        {
+            "test_name": "src/tests/smoke_tests/test_blogs_smoke.py::TestBlogs::test_read_blog",
+            "status": "FAIL",
+            "error_message": "AssertionError: Blog detail should load\nassert False\n +  where False = wait_for_blog_detail_load()\n +    where wait_for_blog_detail_load = <src.pages.ui.blogs_flow.BlogsPage object at 0x7f674f4bd660>.wait_for_blog_detail_load\n +      where <src.pages.ui.blogs_flow.BlogsPage object at 0x7f674f4bd660> = <test_blogs_smoke.TestBlogs object at 0x7f674f761600>.blogs_page",
+            "screenshot_path": "reports/screenshots/failures/Blogs_test_read_blog_20260818_053304.png",
+            "duration": 35.42721724510193,
+            "timestamp": "05:33:04",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_read_blog_053304.log"
+            },
+            "log_path": "reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_read_blog_053304.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_read_blog_053304.log",
+            "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-08-18_05-30-35/screenshots/Blogs_test_read_blog_20260818_053304.png",
+            "suite": "smoke"
+        },
+        {
+            "test_name": "src/tests/smoke_tests/test_blogs_smoke.py::TestBlogs::test_comment_flow",
+            "status": "FAIL",
+            "error_message": "AssertionError: Blog detail should load\nassert False\n +  where False = wait_for_blog_detail_load()\n +    where wait_for_blog_detail_load = <src.pages.ui.blogs_flow.BlogsPage object at 0x7f674f62c700>.wait_for_blog_detail_load\n +      where <src.pages.ui.blogs_flow.BlogsPage object at 0x7f674f62c700> = <test_blogs_smoke.TestBlogs object at 0x7f674f7615d0>.blogs_page",
+            "screenshot_path": "reports/screenshots/failures/Blogs_test_comment_flow_20260818_053340.png",
+            "duration": 35.36608171463013,
+            "timestamp": "05:33:41",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_comment_flow_053340.log"
+            },
+            "log_path": "reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_comment_flow_053340.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_comment_flow_053340.log",
+            "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-08-18_05-30-35/screenshots/Blogs_test_comment_flow_20260818_053340.png",
+            "suite": "smoke"
+        },
+        {
+            "test_name": "src/tests/smoke_tests/test_blogs_smoke.py::TestBlogs::test_scroll_functionality",
+            "status": "FAIL",
+            "error_message": "AssertionError: Blog detail should load\nassert False\n +  where False = wait_for_blog_detail_load()\n +    where wait_for_blog_detail_load = <src.pages.ui.blogs_flow.BlogsPage object at 0x7f674f77fc70>.wait_for_blog_detail_load\n +      where <src.pages.ui.blogs_flow.BlogsPage object at 0x7f674f77fc70> = <test_blogs_smoke.TestBlogs object at 0x7f674f761a20>.blogs_page",
+            "screenshot_path": "reports/screenshots/failures/Blogs_test_scroll_functionality_20260818_053416.png",
+            "duration": 35.24932074546814,
+            "timestamp": "05:34:17",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_scroll_functionality_053416.log"
+            },
+            "log_path": "reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_scroll_functionality_053416.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_scroll_functionality_053416.log",
+            "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-08-18_05-30-35/screenshots/Blogs_test_scroll_functionality_20260818_053416.png",
+            "suite": "smoke"
+        },
+        {
+            "test_name": "src/tests/smoke_tests/test_blogs_smoke.py::TestBlogs::test_more_like_this",
+            "status": "FAIL",
+            "error_message": "AssertionError: Blog detail should load\nassert False\n +  where False = wait_for_blog_detail_load()\n +    where wait_for_blog_detail_load = <src.pages.ui.blogs_flow.BlogsPage object at 0x7f674f4b8d60>.wait_for_blog_detail_load\n +      where <src.pages.ui.blogs_flow.BlogsPage object at 0x7f674f4b8d60> = <test_blogs_smoke.TestBlogs object at 0x7f674f7602b0>.blogs_page",
+            "screenshot_path": "reports/screenshots/failures/Blogs_test_more_like_this_20260818_053453.png",
+            "duration": 35.28995871543884,
+            "timestamp": "05:34:53",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_more_like_this_053453.log"
+            },
+            "log_path": "reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_more_like_this_053453.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_more_like_this_053453.log",
+            "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-08-18_05-30-35/screenshots/Blogs_test_more_like_this_20260818_053453.png",
+            "suite": "smoke"
+        },
+        {
+            "test_name": "src/tests/smoke_tests/test_blogs_smoke.py::TestBlogs::test_complete_blog_flow",
+            "status": "FAIL",
+            "error_message": "AssertionError: Blog detail should load\nassert False\n +  where False = wait_for_blog_detail_load()\n +    where wait_for_blog_detail_load = <src.pages.ui.blogs_flow.BlogsPage object at 0x7f674f709060>.wait_for_blog_detail_load\n +      where <src.pages.ui.blogs_flow.BlogsPage object at 0x7f674f709060> = <test_blogs_smoke.TestBlogs object at 0x7f674f762020>.blogs_page",
+            "screenshot_path": "reports/screenshots/failures/Blogs_test_complete_blog_flow_20260818_053529.png",
+            "duration": 35.284162759780884,
+            "timestamp": "05:35:29",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_complete_blog_flow_053529.log"
+            },
+            "log_path": "reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_complete_blog_flow_053529.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_blogs_smoke.py_TestBlogs_test_complete_blog_flow_053529.log",
+            "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-08-18_05-30-35/screenshots/Blogs_test_complete_blog_flow_20260818_053529.png",
+            "suite": "smoke"
+        },
+        {
+            "test_name": "src/tests/smoke_tests/test_contact_us_smoke.py::TestContact::test_submit_contact_form",
+            "status": "FAIL",
+            "error_message": "TimeoutException: Message: \nStacktrace:\n#0 0x55c53c09f36a <unknown>\n#1 0x55c53ba12f49 <unknown>\n#2 0x55c53ba687e2 <unknown>\n#3 0x55c53ba68a31 <unknown>\n#4 0x55c53bab3ed4 <unknown>\n#5 0x55c53bab10c3 <unknown>\n#6 0x55c53ba5bc92 <unknown>\n#7 0x55c53ba5cb11 <unknown>\n#8 0x55c53c0648d0 <unknown>\n#9 0x55c53c062f3a <unknown>\n#10 0x55c53c04d9b5 <unknown>\n#11 0x55c53c063c0a <unknown>\n#12 0x55c53c035740 <unknown>\n#13 0x55c53c08a9a8 <unknown>\n#14 0x55c53c08ab45 <unknown>\n#15 0x55c53c09df1e <unknown>\n#16 0x7fa47969cb84 <unknown>\n#17 0x7fa479729d6c <unknown>\n",
+            "screenshot_path": "reports/screenshots/failures/Contact_test_submit_contact_form_20260818_053556.png",
+            "duration": 19.233834505081177,
+            "timestamp": "05:35:56",
+            "skip_reason": null,
+            "category": "API Timeout",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_smoke_tests_test_contact_us_smoke.py_TestContact_test_submit_contact_form_053556.log"
+            },
+            "log_path": "reports/logs/src_tests_smoke_tests_test_contact_us_smoke.py_TestContact_test_submit_contact_form_053556.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_contact_us_smoke.py_TestContact_test_submit_contact_form_053556.log",
+            "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-08-18_05-30-35/screenshots/Contact_test_submit_contact_form_20260818_053556.png",
+            "suite": "smoke"
+        },
+        {
+            "test_name": "src/tests/smoke_tests/test_contact_us_smoke.py::TestContact::test_complete_contact_flow",
+            "status": "FAIL",
+            "error_message": "TimeoutException: Message: \nStacktrace:\n#0 0x555d3992436a <unknown>\n#1 0x555d39297f49 <unknown>\n#2 0x555d392ed7e2 <unknown>\n#3 0x555d392eda31 <unknown>\n#4 0x555d39338ed4 <unknown>\n#5 0x555d393360c3 <unknown>\n#6 0x555d392e0c92 <unknown>\n#7 0x555d392e1b11 <unknown>\n#8 0x555d398e98d0 <unknown>\n#9 0x555d398e7f3a <unknown>\n#10 0x555d398d29b5 <unknown>\n#11 0x555d398e8c0a <unknown>\n#12 0x555d398ba740 <unknown>\n#13 0x555d3990f9a8 <unknown>\n#14 0x555d3990fb45 <unknown>\n#15 0x555d39922f1e <unknown>\n#16 0x7f10f3c9cb84 <unknown>\n#17 0x7f10f3d29d6c <unknown>\n",
+            "screenshot_path": "reports/screenshots/failures/Contact_test_complete_contact_flow_20260818_053639.png",
+            "duration": 19.14238476753235,
+            "timestamp": "05:36:39",
+            "skip_reason": null,
+            "category": "API Timeout",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_smoke_tests_test_contact_us_smoke.py_TestContact_test_complete_contact_flow_053639.log"
+            },
+            "log_path": "reports/logs/src_tests_smoke_tests_test_contact_us_smoke.py_TestContact_test_complete_contact_flow_053639.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_contact_us_smoke.py_TestContact_test_complete_contact_flow_053639.log",
+            "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-08-18_05-30-35/screenshots/Contact_test_complete_contact_flow_20260818_053639.png",
+            "suite": "smoke"
+        },
+        {
+            "test_name": "src/tests/smoke_tests/test_flight_booking_smoke.py::TestFlightBookingSmoke::test_flight_search_form_visible",
+            "status": "FAIL",
+            "error_message": "AssertionError: Flight search form not visible\nassert False\n +  where False = is_flight_search_form_visible()\n +    where is_flight_search_form_visible = <src.pages.ui.flight_booking_flow.FlightBookingFlow object at 0x7f674d972bf0>.is_flight_search_form_visible\n +      where <src.pages.ui.flight_booking_flow.FlightBookingFlow object at 0x7f674d972bf0> = <test_flight_booking_smoke.TestFlightBookingSmoke object at 0x7f674f4be9b0>.flight_booking",
+            "screenshot_path": "reports/screenshots/failures/FlightBookingSmoke_test_flight_search_form_visible_20260818_053703.png",
+            "duration": 16.58961033821106,
+            "timestamp": "05:37:04",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_smoke_tests_test_flight_booking_smoke.py_TestFlightBookingSmoke_test_flight_search_form_visible_053703.log"
+            },
+            "log_path": "reports/logs/src_tests_smoke_tests_test_flight_booking_smoke.py_TestFlightBookingSmoke_test_flight_search_form_visible_053703.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_flight_booking_smoke.py_TestFlightBookingSmoke_test_flight_search_form_visible_053703.log",
+            "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-08-18_05-30-35/screenshots/FlightBookingSmoke_test_flight_search_form_visible_20260818_053703.png",
+            "suite": "smoke"
+        },
+        {
+            "test_name": "src/tests/smoke_tests/test_package_booking_smoke.py::TestPackageBookingSmoke::test_package_search_functionality",
+            "status": "FAIL",
+            "error_message": "TimeoutException: Message: \nStacktrace:\n#0 0x563594b0936a <unknown>\n#1 0x56359447cf49 <unknown>\n#2 0x5635944d27e2 <unknown>\n#3 0x5635944d2a31 <unknown>\n#4 0x56359451ded4 <unknown>\n#5 0x56359451b0c3 <unknown>\n#6 0x5635944c5c92 <unknown>\n#7 0x5635944c6b11 <unknown>\n#8 0x563594ace8d0 <unknown>\n#9 0x563594accf3a <unknown>\n#10 0x563594ab79b5 <unknown>\n#11 0x563594acdc0a <unknown>\n#12 0x563594a9f740 <unknown>\n#13 0x563594af49a8 <unknown>\n#14 0x563594af4b45 <unknown>\n#15 0x563594b07f1e <unknown>\n#16 0x7ff4ea29cb84 <unknown>\n#17 0x7ff4ea329d6c <unknown>\n",
+            "screenshot_path": "reports/screenshots/failures/PackageBookingSmoke_test_package_search_functional_20260818_053938.png",
+            "duration": 12.499798059463501,
+            "timestamp": "05:39:38",
+            "skip_reason": null,
+            "category": "API Timeout",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_package_search_functionality_053938.log"
+            },
+            "log_path": "reports/logs/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_package_search_functionality_053938.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_package_search_functionality_053938.log",
+            "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-08-18_05-30-35/screenshots/PackageBookingSmoke_test_package_search_functional_20260818_053938.png",
+            "suite": "smoke"
+        },
+        {
+            "test_name": "src/tests/smoke_tests/test_travel_gallery_smoke.py::TestTravelGallery::test_travel_gallery_navigation",
+            "status": "FAIL",
+            "error_message": "TimeoutException: Message: \nStacktrace:\n#0 0x563ae788e36a <unknown>\n#1 0x563ae7201f49 <unknown>\n#2 0x563ae72577e2 <unknown>\n#3 0x563ae7257a31 <unknown>\n#4 0x563ae72a2ed4 <unknown>\n#5 0x563ae72a00c3 <unknown>\n#6 0x563ae724ac92 <unknown>\n#7 0x563ae724bb11 <unknown>\n#8 0x563ae78538d0 <unknown>\n#9 0x563ae7851f3a <unknown>\n#10 0x563ae783c9b5 <unknown>\n#11 0x563ae7852c0a <unknown>\n#12 0x563ae7824740 <unknown>\n#13 0x563ae78799a8 <unknown>\n#14 0x563ae7879b45 <unknown>\n#15 0x563ae788cf1e <unknown>\n#16 0x7efe3809cb84 <unknown>\n#17 0x7efe38129d6c <unknown>\n",
+            "screenshot_path": "reports/screenshots/failures/TravelGallery_test_travel_gallery_navigation_20260818_054030.png",
+            "duration": 27.65073251724243,
+            "timestamp": "05:40:30",
+            "skip_reason": null,
+            "category": "API Timeout",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_smoke_tests_test_travel_gallery_smoke.py_TestTravelGallery_test_travel_gallery_navigation_054030.log"
+            },
+            "log_path": "reports/logs/src_tests_smoke_tests_test_travel_gallery_smoke.py_TestTravelGallery_test_travel_gallery_navigation_054030.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_travel_gallery_smoke.py_TestTravelGallery_test_travel_gallery_navigation_054030.log",
+            "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-08-18_05-30-35/screenshots/TravelGallery_test_travel_gallery_navigation_20260818_054030.png",
+            "suite": "smoke"
+        },
+        {
+            "test_name": "src/tests/smoke_tests/test_travel_gallery_smoke.py::TestTravelGallery::test_tour_card_click_and_close",
+            "status": "FAIL",
+            "error_message": "TimeoutException: Message: \nStacktrace:\n#0 0x565040df336a <unknown>\n#1 0x565040766f49 <unknown>\n#2 0x5650407bc7e2 <unknown>\n#3 0x5650407bca31 <unknown>\n#4 0x565040807ed4 <unknown>\n#5 0x5650408050c3 <unknown>\n#6 0x5650407afc92 <unknown>\n#7 0x5650407b0b11 <unknown>\n#8 0x565040db88d0 <unknown>\n#9 0x565040db6f3a <unknown>\n#10 0x565040da19b5 <unknown>\n#11 0x565040db7c0a <unknown>\n#12 0x565040d89740 <unknown>\n#13 0x565040dde9a8 <unknown>\n#14 0x565040ddeb45 <unknown>\n#15 0x565040df1f1e <unknown>\n#16 0x7fecdb49cb84 <unknown>\n#17 0x7fecdb529d6c <unknown>\n",
+            "screenshot_path": "reports/screenshots/failures/TravelGallery_test_tour_card_click_and_close_20260818_054058.png",
+            "duration": 27.498206853866577,
+            "timestamp": "05:40:59",
+            "skip_reason": null,
+            "category": "API Timeout",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_smoke_tests_test_travel_gallery_smoke.py_TestTravelGallery_test_tour_card_click_and_close_054058.log"
+            },
+            "log_path": "reports/logs/src_tests_smoke_tests_test_travel_gallery_smoke.py_TestTravelGallery_test_tour_card_click_and_close_054058.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_travel_gallery_smoke.py_TestTravelGallery_test_tour_card_click_and_close_054058.log",
+            "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-08-18_05-30-35/screenshots/TravelGallery_test_tour_card_click_and_close_20260818_054058.png",
+            "suite": "smoke"
+        },
+        {
+            "test_name": "src/tests/smoke_tests/test_travel_gallery_smoke.py::TestTravelGallery::test_scroll_functionality",
+            "status": "FAIL",
+            "error_message": "TimeoutException: Message: \nStacktrace:\n#0 0x55693204936a <unknown>\n#1 0x5569319bcf49 <unknown>\n#2 0x556931a127e2 <unknown>\n#3 0x556931a12a31 <unknown>\n#4 0x556931a5ded4 <unknown>\n#5 0x556931a5b0c3 <unknown>\n#6 0x556931a05c92 <unknown>\n#7 0x556931a06b11 <unknown>\n#8 0x55693200e8d0 <unknown>\n#9 0x55693200cf3a <unknown>\n#10 0x556931ff79b5 <unknown>\n#11 0x55693200dc0a <unknown>\n#12 0x556931fdf740 <unknown>\n#13 0x5569320349a8 <unknown>\n#14 0x556932034b45 <unknown>\n#15 0x556932047f1e <unknown>\n#16 0x7f5d95c9cb84 <unknown>\n#17 0x7f5d95d29d6c <unknown>\n",
+            "screenshot_path": "reports/screenshots/failures/TravelGallery_test_scroll_functionality_20260818_054127.png",
+            "duration": 27.560907125473022,
+            "timestamp": "05:41:27",
+            "skip_reason": null,
+            "category": "API Timeout",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_smoke_tests_test_travel_gallery_smoke.py_TestTravelGallery_test_scroll_functionality_054127.log"
+            },
+            "log_path": "reports/logs/src_tests_smoke_tests_test_travel_gallery_smoke.py_TestTravelGallery_test_scroll_functionality_054127.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_travel_gallery_smoke.py_TestTravelGallery_test_scroll_functionality_054127.log",
+            "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-08-18_05-30-35/screenshots/TravelGallery_test_scroll_functionality_20260818_054127.png",
+            "suite": "smoke"
+        },
+        {
+            "test_name": "src/tests/smoke_tests/test_travel_gallery_smoke.py::TestTravelGallery::test_complete_travel_gallery_flow",
+            "status": "FAIL",
+            "error_message": "TimeoutException: Message: \nStacktrace:\n#0 0x561aa9bc336a <unknown>\n#1 0x561aa9536f49 <unknown>\n#2 0x561aa958c7e2 <unknown>\n#3 0x561aa958ca31 <unknown>\n#4 0x561aa95d7ed4 <unknown>\n#5 0x561aa95d50c3 <unknown>\n#6 0x561aa957fc92 <unknown>\n#7 0x561aa9580b11 <unknown>\n#8 0x561aa9b888d0 <unknown>\n#9 0x561aa9b86f3a <unknown>\n#10 0x561aa9b719b5 <unknown>\n#11 0x561aa9b87c0a <unknown>\n#12 0x561aa9b59740 <unknown>\n#13 0x561aa9bae9a8 <unknown>\n#14 0x561aa9baeb45 <unknown>\n#15 0x561aa9bc1f1e <unknown>\n#16 0x7f933269cb84 <unknown>\n#17 0x7f9332729d6c <unknown>\n",
+            "screenshot_path": "reports/screenshots/failures/TravelGallery_test_complete_travel_gallery_flow_20260818_054155.png",
+            "duration": 27.527087688446045,
+            "timestamp": "05:41:55",
+            "skip_reason": null,
+            "category": "API Timeout",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_smoke_tests_test_travel_gallery_smoke.py_TestTravelGallery_test_complete_travel_gallery_flow_054155.log"
+            },
+            "log_path": "reports/logs/src_tests_smoke_tests_test_travel_gallery_smoke.py_TestTravelGallery_test_complete_travel_gallery_flow_054155.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_travel_gallery_smoke.py_TestTravelGallery_test_complete_travel_gallery_flow_054155.log",
+            "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-08-18_05-30-35/screenshots/TravelGallery_test_complete_travel_gallery_flow_20260818_054155.png",
+            "suite": "smoke"
+        },
+        {
+            "test_name": "src/tests/smoke_tests/test_travel_gallery_smoke.py::TestTravelGallery::test_multiple_tour_clicks",
+            "status": "FAIL",
+            "error_message": "TimeoutException: Message: \nStacktrace:\n#0 0x55d8f3b0736a <unknown>\n#1 0x55d8f347af49 <unknown>\n#2 0x55d8f34d07e2 <unknown>\n#3 0x55d8f34d0a31 <unknown>\n#4 0x55d8f351bed4 <unknown>\n#5 0x55d8f35190c3 <unknown>\n#6 0x55d8f34c3c92 <unknown>\n#7 0x55d8f34c4b11 <unknown>\n#8 0x55d8f3acc8d0 <unknown>\n#9 0x55d8f3acaf3a <unknown>\n#10 0x55d8f3ab59b5 <unknown>\n#11 0x55d8f3acbc0a <unknown>\n#12 0x55d8f3a9d740 <unknown>\n#13 0x55d8f3af29a8 <unknown>\n#14 0x55d8f3af2b45 <unknown>\n#15 0x55d8f3b05f1e <unknown>\n#16 0x7f0e8049cb84 <unknown>\n#17 0x7f0e80529d6c <unknown>\n",
+            "screenshot_path": "reports/screenshots/failures/TravelGallery_test_multiple_tour_clicks_20260818_054223.png",
+            "duration": 27.696338891983032,
+            "timestamp": "05:42:24",
+            "skip_reason": null,
+            "category": "API Timeout",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_smoke_tests_test_travel_gallery_smoke.py_TestTravelGallery_test_multiple_tour_clicks_054223.log"
+            },
+            "log_path": "reports/logs/src_tests_smoke_tests_test_travel_gallery_smoke.py_TestTravelGallery_test_multiple_tour_clicks_054223.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_travel_gallery_smoke.py_TestTravelGallery_test_multiple_tour_clicks_054223.log",
+            "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-08-18_05-30-35/screenshots/TravelGallery_test_multiple_tour_clicks_20260818_054223.png",
+            "suite": "smoke"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_package_api.py::TestPackageAPI::test_authenticated_booking_private_future_departure",
+            "status": "FAIL",
+            "error_message": "AssertionError: assert 404 == 200\n +  where 404 = <Response [404]>.status_code",
+            "screenshot_path": null,
+            "duration": 1.642747402191162,
+            "timestamp": "05:45:32",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_private_future_departure_054532.log",
+                "response_file": "reports/failed_responses/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_private_future_departure_054532.json"
+            },
+            "log_path": "reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_private_future_departure_054532.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_private_future_departure_054532.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_private_future_departure_054532.json",
+            "suite": "api"
+        }
+    ],
+    "all_skipped_tests": []
+}
