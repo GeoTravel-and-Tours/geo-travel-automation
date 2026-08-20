@@ -27,18 +27,29 @@ class ContactPage(BasePage):
     
     # Support Type Dropdown
     SUPPORT_TYPE_DROPDOWN = (By.XPATH, "//label[contains(text(), 'Type of support')]/following-sibling::div//button")
-    SUPPORT_TYPE_OPTIONS = (By.XPATH, "//div[@data-sentry-element='Listbox']//span")
-    SUPPORT_TYPE_OPTION_BY_TEXT = (By.XPATH, "//div[@data-sentry-element='Listbox']//span[normalize-space()='{}']")
+    SUPPORT_TYPE_OPTIONS = (
+        By.XPATH,
+        "//*[@role='option']"
+    )
+
+    SUPPORT_TYPE_OPTION_BY_TEXT = (
+        By.XPATH,
+        "//*[@role='option']["
+        "translate(normalize-space(.), "
+        "'ABCDEFGHIJKLMNOPQRSTUVWXYZ', "
+        "'abcdefghijklmnopqrstuvwxyz') = '{}'"
+        "]"
+    )
 
     # Available support types
     SUPPORT_TYPES = [
-        "general inquiry",
-        "account & login issues",
-        "booking & reservations",
-        "technical support",
-        "payments & billing",
-        "refunds & cancellations",
-        "other"
+        "General Inquiry",
+        "Account & Login Issues",
+        "Booking & Reservations",
+        "Technical Support",
+        "Payments & Billing",
+        "Refunds & Cancellations",
+        "Other"
     ]
     
     MESSAGE_TEXTAREA = (By.XPATH, "//textarea[@placeholder='How can we help?']")
@@ -122,18 +133,35 @@ class ContactPage(BasePage):
             self.logger.info(f"Selecting support type: {support_type}")
             
             # Click dropdown button
-            dropdown = self.waiter.wait_for_clickable(self.SUPPORT_TYPE_DROPDOWN, timeout=10)
+            dropdown = self.waiter.wait_for_clickable(
+                self.SUPPORT_TYPE_DROPDOWN,
+                timeout=10
+            )
             dropdown.click()
-            time.sleep(2)
-            
-            # Select option by text
-            option_locator = (self.SUPPORT_TYPE_OPTION_BY_TEXT[0], 
-                            self.SUPPORT_TYPE_OPTION_BY_TEXT[1].format(support_type))
-            option = self.waiter.wait_for_clickable(option_locator, timeout=10)
+
+            # Wait for dropdown options to become visible
+            WebDriverWait(self.driver, 10).until(
+                EC.visibility_of_any_elements_located(self.SUPPORT_TYPE_OPTIONS)
+            )
+
+            option_locator = (
+                self.SUPPORT_TYPE_OPTION_BY_TEXT[0],
+                self.SUPPORT_TYPE_OPTION_BY_TEXT[1].format(
+                    support_type.lower()
+                )
+            )
+
+            option = self.waiter.wait_for_clickable(
+                option_locator,
+                timeout=10
+            )
+
+            self.javascript.scroll_to_element(option)
             option.click()
-            time.sleep(2)
-            
-            self.logger.info(f"Selected support type: {support_type}")
+
+            self.logger.info(
+                f"Selected support type: {support_type}"
+            )
             
             # Fill message
             message_field = self.waiter.wait_for_clickable(self.MESSAGE_TEXTAREA, timeout=10)
@@ -145,7 +173,9 @@ class ContactPage(BasePage):
             self.logger.info("Scrolling to privacy checkbox")
             privacy = self.waiter.wait_for_present(self.PRIVACY_CHECKBOX, timeout=10)
             self.javascript.scroll_to_element(privacy)
-            time.sleep(2)
+            WebDriverWait(self.driver, 10).until(
+                EC.element_to_be_clickable(self.PRIVACY_CHECKBOX)
+            )
             
             # Check privacy checkbox
             if not privacy.is_selected():

@@ -5,6 +5,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
+from selenium.common.exceptions import TimeoutException
 from src.core.base_page import BasePage
 import time
 
@@ -28,8 +29,19 @@ class BlogsPage(BasePage):
     
     # Blog Detail Page
     BLOG_DETAIL_CONTAINER = (By.XPATH, "//main[@data-sentry-component='BlogPage']")
-    BLOG_TITLE = (By.CSS_SELECTOR, ".text-lg.font-medium.text-gray-700")
-    BLOG_CONTENT = (By.CSS_SELECTOR, "section[class='mt-5 text-gray-600'] div p")
+    FIRST_BLOG_LINK = (
+        By.XPATH,
+        "(//a[contains(@href, '/blogs/') and normalize-space()='Read article'])[1]"
+    )
+    BLOG_TITLE = (
+        By.XPATH,
+        "//main//h3 | //main//h2"
+    )
+
+    BLOG_CONTENT = (
+        By.XPATH,
+        "//main//section[contains(@class,'text-gray-600')]"
+    )
     
     # Comment Section
     COMMENT_SECTION = (By.XPATH, "//h4[normalize-space()='Leave a Comment']")
@@ -49,7 +61,11 @@ class BlogsPage(BasePage):
     
     # More Like This
     MORE_LIKE_THIS = (By.XPATH, "//h4[normalize-space()='More like this']")
-    RELATED_BLOGS = (By.XPATH, "//h4[normalize-space()='More like this']/following-sibling::div//a")
+    RELATED_BLOGS = (
+        By.XPATH,
+        "//h4[normalize-space()='More like this']"
+        "/following-sibling::section//a[contains(@href, '/blogs/')]"
+    )
     
     # ========== PAGE METHODS ==========
     
@@ -114,54 +130,54 @@ class BlogsPage(BasePage):
             return False
     
     def click_first_blog(self):
-        """Click on the first blog's Read article button"""
-        self.logger.info("Clicking on first blog's Read article button")
-        
-        try:
-            # Wait for Read article buttons to be present
-            read_articles = WebDriverWait(self.driver, 10).until(
-                EC.presence_of_all_elements_located(self.READ_ARTICLE_BTN)
-            )
-            
-            # Click the first Read article button
-            first_read_article = read_articles[0]
-            self.javascript.scroll_to_element(first_read_article)
-            first_read_article.click()
-            time.sleep(5)
-            
-            self.logger.info("Successfully clicked on first blog's Read article button")
-            return self
-            
-        except Exception as e:
-            self.logger.error(f"Failed to click on first blog: {e}")
-            raise
+        self.logger.info("Clicking first blog")
+
+        first_blog = WebDriverWait(self.driver, 15).until(
+            EC.element_to_be_clickable(self.FIRST_BLOG_LINK)
+        )
+
+        self.javascript.scroll_to_element(first_blog)
+        first_blog.click()
+
+        WebDriverWait(self.driver, 15).until(
+            lambda driver: "/blogs/" in driver.current_url
+        )
+
+        self.logger.info(
+            f"Opened blog: {self.driver.current_url}"
+        )
+
+        return self
     
     def wait_for_blog_detail_load(self, timeout=15):
-        """Wait for blog detail page to load"""
-        self.logger.info("Waiting for blog detail to load")
-        
+        """Wait for blog detail page to load."""
+        self.logger.info("Waiting for blog detail page")
+
         try:
-            # Wait for blog detail container
             WebDriverWait(self.driver, timeout).until(
-                EC.presence_of_element_located(self.BLOG_DETAIL_CONTAINER)
+                lambda driver: "/blogs/" in driver.current_url
             )
-            
-            # Wait for blog title to be present
+            self.logger.info(
+                f"Blog detail URL confirmed: {self.driver.current_url}"
+            )
+
             WebDriverWait(self.driver, timeout).until(
-                EC.presence_of_element_located(self.BLOG_TITLE)
+                EC.visibility_of_element_located(self.BLOG_TITLE)
             )
-            
-            # Wait for blog content to be present
+            self.logger.info("Blog title is visible")
+
             WebDriverWait(self.driver, timeout).until(
-                EC.presence_of_element_located(self.BLOG_CONTENT)
+                EC.visibility_of_element_located(self.BLOG_CONTENT)
             )
-            
-            self.logger.info("Blog detail loaded")
+            self.logger.info("Blog content is visible")
+
             return True
-            
-        except Exception as e:
-            self.logger.error(f"Failed to load blog detail: {e}")
-            return False
+
+        except TimeoutException as e:
+            raise AssertionError(
+                f"Blog detail failed to load. "
+                f"URL: {self.driver.current_url}"
+            ) from e
     
     def fill_comment(self, name, email, message):
         """Fill comment form"""
@@ -203,7 +219,9 @@ class BlogsPage(BasePage):
             submit_btn = self.waiter.wait_for_clickable(self.SUBMIT_BUTTON, timeout=10)
             self.javascript.scroll_to_element(submit_btn)
             submit_btn.click()
-            time.sleep(3)  # Wait for toast to appear
+            WebDriverWait(self.driver, 10).until(
+                EC.visibility_of_element_located(self.SUCCESS_TOAST)
+            )
             
             self.logger.info("Comment submitted")
             return self
@@ -293,33 +311,38 @@ class BlogsPage(BasePage):
             self.logger.error(f"Failed to scroll to More like this: {e}")
             raise
     
-    def click_more_like_this(self):
-        """Click on More like this section"""
-        self.logger.info("Clicking on More like this")
-        
-        try:
-            more_section = self.waiter.wait_for_clickable(self.MORE_LIKE_THIS, timeout=10)
-            self.javascript.scroll_to_element(more_section)
-            more_section.click()
-            time.sleep(1)
-            
-            self.logger.info("Clicked on More like this")
-            return self
-            
-        except Exception as e:
-            self.logger.error(f"Failed to click More like this: {e}")
-            raise
+    def verify_more_like_this(self):
+        self.logger.info("Verifying More like this section")
+
+        section = WebDriverWait(self.driver, 10).until(
+            EC.visibility_of_element_located(self.MORE_LIKE_THIS)
+        )
+
+        self.javascript.scroll_to_element(section)
+
+        related_blogs = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_all_elements_located(self.RELATED_BLOGS)
+        )
+
+        assert related_blogs, "More like this should contain related blogs"
+
+        self.logger.info(
+            f"More like this verified: {len(related_blogs)} related blogs"
+        )
+
+        return self
     
     def verify_related_blogs_exist(self):
-        """Verify related blogs exist in More like this section"""
         self.logger.info("Verifying related blogs exist")
-        
-        try:
-            related = self.driver.find_elements(*self.READ_ARTICLE_BTN)
-            count = len(related)
-            self.logger.info(f"Found {count} related blogs")
-            return count > 0
-            
-        except Exception as e:
-            self.logger.error(f"Failed to verify related blogs: {e}")
-            return False
+
+        related_blogs = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_all_elements_located(self.RELATED_BLOGS)
+        )
+
+        count = len(related_blogs)
+
+        self.logger.info(
+            f"Found {count} related blog links"
+        )
+
+        return count > 0
