@@ -1,5 +1,6 @@
 # src/pages/package_booking_flow.py
 
+import random
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support import expected_conditions as EC
@@ -17,9 +18,39 @@ class PackageBookingFlow(BasePage):
     
     # ===== LOCATORS =====
     # Navigation & Search
+    PACKAGES_MENU = (
+        By.XPATH,
+        "//a[normalize-space()='Packages']"
+    )
+
+    PACKAGES_PAGE_TITLE = (
+        By.XPATH,
+        "//h1[contains(normalize-space(), 'Packages')]"
+    )
+
+    PACKAGE_CARDS = (
+        By.XPATH,
+        "//a[contains(@href, '/packages/')]"
+    )
+
+    FIRST_PACKAGE = (
+        By.XPATH,
+        "(//a[contains(@href, '/packages/')])[1]"
+    )
+
+    PACKAGE_DETAIL = (
+        By.XPATH,
+        "//main"
+    )
     PACKAGE_BUTTON = (By.XPATH, "//button[normalize-space()='Package']")
-    TRIP_TYPE_DROPDOWN = (By.XPATH, "//div[@class='relative']//div[@data-sentry-element='Listbox']")
-    GROUP_OPTION = (By.XPATH, "//span[normalize-space()='group']")
+    TRIP_TYPE_DROPDOWN = (
+        By.XPATH,
+        "//button[@aria-haspopup='listbox' and .//span[normalize-space()='Select trip type']]"
+    )
+    GROUP_OPTION = (
+        By.XPATH,
+        "//div[@role='option']//span[normalize-space()='group']"
+    )
     COUNTRY_SELECTOR = (By.XPATH, "//div[contains(@class,'h-full relative')]")
     COUNTRY_INPUT = (By.XPATH, "//input[@placeholder='Enter country']")
     COUNTRY_SEARCH_RESULT = (By.XPATH, "//h6[contains(text(),'NIGERIA')]")
@@ -29,9 +60,24 @@ class PackageBookingFlow(BasePage):
 
     # Package Selection
     VIEW_PACKAGE_BUTTON = (By.XPATH, "(//button[normalize-space()='View package'])[1]")
-    # PRICE_OPTION = (By.CSS_SELECTOR, "body > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2)")
-    PRICE_OPTION = (By.XPATH, "//body/div[contains(@data-sentry-component,'layout')]/div[contains(@class,'m-0.5')]/div[1]")
-    BOOK_RESERVATION_BUTTON = (By.CSS_SELECTOR, "body > div:nth-child(15) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2)")
+    PRICE_OPTION_BY_TYPE = {
+        "couple": (
+            By.XPATH,
+            "//h5[normalize-space()='COUPLE']/ancestor::div[contains(@class,'cursor-pointer')][1]"
+        ),
+        "single": (
+            By.XPATH,
+            "//h5[normalize-space()='SINGLE']/ancestor::div[contains(@class,'cursor-pointer')][1]"
+        ),
+        "group": (
+            By.XPATH,
+            "//h5[normalize-space()='GROUP']/ancestor::div[contains(@class,'cursor-pointer')][1]"
+        ),
+    }
+    BOOK_RESERVATION_BUTTON = (
+        By.XPATH,
+        "//button[normalize-space()='Book a reservation']"
+    )
     
     # Add these to your locators section:
     PACKAGES_NAV_LINK = (By.XPATH, "//a[normalize-space()='Packages']")
@@ -42,7 +88,6 @@ class PackageBookingFlow(BasePage):
     FULL_NAME_INPUT = (By.NAME, "fullName")
     EMAIL_INPUT = (By.NAME, "email")
     PHONE_INPUT = (By.CSS_SELECTOR, "input[placeholder='Phone number']")
-    PROCEED_TO_PAYMENT_BUTTON = (By.CSS_SELECTOR, "body > div:nth-child(29) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > footer:nth-child(4) > div:nth-child(1) > button:nth-child(1)")
     
     # Modal Locators
     MODAL_BACKGROUND = (By.CSS_SELECTOR, ".overflow-y-auto.flex-grow")
@@ -54,8 +99,82 @@ class PackageBookingFlow(BasePage):
     
     # Booking Confirmation Modal
     CLOSE_MODAL_BUTTON = (By.XPATH, "//button[@aria-label='Close modal']")
-    TERMS_CHECKBOX = (By.XPATH, "//input[@aria-label='Terms and policy']")
     PROCEED_TO_PAYMENT_BUTTON = (By.XPATH, "//button[normalize-space()='Proceed to payment']")
+    
+    LOGIN_BUTTON = (
+        By.XPATH,
+        "//button[normalize-space()='Login']"
+    )
+
+    LOGIN_EMAIL_INPUT = (
+        By.XPATH,
+        "//input[@placeholder='Enter your email']"
+    )
+
+    LOGIN_PASSWORD_INPUT = (
+        By.XPATH,
+        "//input[@placeholder='Enter your password']"
+    )
+
+    SIGN_IN_BUTTON = (
+        By.XPATH,
+        "//button[normalize-space()='Sign in']"
+    )
+
+    TERMS_CHECKBOX = (
+        By.XPATH,
+        "//input[@aria-label='Terms and policy']"
+    )
+
+    PROCEED_TO_PAYMENT = (
+        By.XPATH,
+        "//span[normalize-space()='Proceed to payment']"
+    )
+    
+    PAYSTACK_OPTION = (
+        By.XPATH,
+        "//h6[normalize-space()='Pay with Paystack']"
+    )
+
+    FLUTTERWAVE_OPTION = (
+        By.XPATH,
+        "//h6[normalize-space()='Pay with Flutterwave']"
+    )
+
+    BANK_OPTION = (
+        By.XPATH,
+        "//h6[normalize-space()='Pay with Bank']"
+    )
+    
+    BANK_NAME = (
+        By.XPATH,
+        "//div[normalize-space()='Bank Name']"
+    )
+
+    ACCOUNT_NUMBER = (
+        By.XPATH,
+        "//div[normalize-space()='Account Number']"
+    )
+
+    AMOUNT = (
+        By.XPATH,
+        "//div[normalize-space()='Amount']"
+    )
+
+    PAY_WITH_TRANSFER = (
+        By.XPATH,
+        "//span[normalize-space()='Pay with transfer']"
+    )
+
+    IVE_SENT_MONEY = (
+        By.XPATH,
+        "//button[contains(text(), 'I’ve sent the money')]"
+    )
+
+    TRANSFER_SUCCESS_MESSAGE = (
+        By.XPATH,
+        "//h2[normalize-space()='Your transfer is being securely processed']"
+    )
 
     def __init__(self, driver):
         """Initialize PackageBookingFlow with driver"""
@@ -77,33 +196,28 @@ class PackageBookingFlow(BasePage):
     def select_trip_type(self):
         """Select trip type as group"""
         self.logger.info("Selecting trip type as 'group'")
-        trip_dropdown_btn = None
-        group_option_btn = None
-
         try:
             # Wait for dropdown to be clickable
             trip_dropdown = WebDriverWait(self.driver, 10).until(
                 EC.element_to_be_clickable(self.TRIP_TYPE_DROPDOWN)
             )
             trip_dropdown.click()
-            trip_dropdown_btn = trip_dropdown
+            
             self.logger.info("Clicked trip type dropdown")
-            time.sleep(2)
 
             # Wait for group option and click
             group_option = WebDriverWait(self.driver, 10).until(
                 EC.element_to_be_clickable(self.GROUP_OPTION)
             )
             group_option.click()
-            group_option_btn = group_option
+            
             self.logger.info("Trip type selected: group")
-            time.sleep(2)
+            
 
             return self
 
         except Exception as e:
             self.logger.error(f"Failed to select trip type: {e}")
-            self._last_interacted_element = trip_dropdown_btn or group_option_btn
             raise
 
     def select_country(self, country_name):
@@ -223,18 +337,26 @@ class PackageBookingFlow(BasePage):
     # ===== PACKAGE SELECTION METHODS =====
 
     def click_view_package(self):
-        """Click on View Package button"""
         self.logger.info("Clicking View Package button")
+
         try:
-            # Scroll further down (500 pixels past the element)
-            self.javascript.execute_script(
-                "arguments[0].scrollIntoView(true); window.scrollBy(0, 500);", 
-                self.driver.find_element(*self.VIEW_PACKAGE_BUTTON)
+            button = WebDriverWait(self.driver, 15).until(
+                EC.presence_of_element_located(self.VIEW_PACKAGE_BUTTON)
             )
-            time.sleep(1)
-            click_view_package_btn = self.element.click(self.VIEW_PACKAGE_BUTTON)
-            self._last_interacted_element = click_view_package_btn
-            return click_view_package_btn
+
+            self.driver.execute_script(
+                "arguments[0].scrollIntoView({block: 'center', inline: 'center'});",
+                button
+            )
+
+            WebDriverWait(self.driver, 10).until(
+                EC.element_to_be_clickable(self.VIEW_PACKAGE_BUTTON)
+            )
+
+            button.click()
+
+            self.logger.info("Successfully clicked View Package button")
+
         except Exception as e:
             self.logger.error(f"Failed to click View Package button: {e}")
             raise
@@ -256,77 +378,72 @@ class PackageBookingFlow(BasePage):
             self.logger.error(f"Failed to click View Package button: {e}")
             raise
     
-    def select_price_option(self):
-        """Select price option with better click handling"""
-        self.logger.info("Selecting price option")
-        price_option = None  # initialize
+    def select_price_option(self, option_type="couple"):
+        """Select a package price option by its type."""
+        self.logger.info(
+            f"Selecting price option: {option_type}"
+        )
 
         try:
-            # Wait for the element to be present and clickable
-            price_option = WebDriverWait(self.driver, 15).until(
-                EC.element_to_be_clickable(self.PRICE_OPTION)
+            locator = self.PRICE_OPTION_BY_TYPE.get(
+                option_type.lower()
             )
 
-            # Scroll to the element with more offset to ensure it's in view
-            self.driver.execute_script("""
-                arguments[0].scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'center',
-                    inline: 'center'
-                });
-            """, price_option)
+            if not locator:
+                raise ValueError(
+                    f"Unsupported price option: {option_type}"
+                )
 
-            # Wait for any animations to settle
-            time.sleep(5)
+            option = WebDriverWait(self.driver, 10).until(
+                EC.visibility_of_element_located(locator)
+            )
 
-            # # Check if element is displayed and enabled
-            # if not price_option.is_displayed():
-            #     self.logger.info("Price option not displayed after scroll")
-            # if not price_option.is_enabled():
-            #     self.logger.info("Price option is disabled")
+            self.driver.execute_script(
+                "arguments[0].scrollIntoView({block: 'center'});",
+                option
+            )
 
-            # Try JavaScript click first (bypasses overlay issues)
-            self.logger.info("Attempting JavaScript click")
-            self.driver.execute_script("arguments[0].click();", price_option)
-            time.sleep(1)
+            option.click()
 
-            # Wait for selection to take effect
-            time.sleep(3)
-            
-            self.logger.info("Price option selected successfully")
+            # Verify the UI actually changed to selected state
+            WebDriverWait(self.driver, 10).until(
+                lambda driver: (
+                    "border-mainblue/50"
+                    in option.get_attribute("class")
+                )
+            )
+
+            self.logger.info(
+                f"✅ {option_type.upper()} price option selected"
+            )
             return True
 
         except Exception as e:
-            self.logger.error(f"Failed to select price option: {e}")
+            self.logger.error(
+                f"Failed to select {option_type} price option: {e}"
+            )
+            return False
+        
+    def is_price_option_available(self, timeout=10):
+        """Check whether at least one package price option is available."""
 
-            # Alternative: Try clicking via ActionChains
+        for index, locator in enumerate(self.PRICE_OPTIONS, start=1):
             try:
-                self.logger.info("Trying ActionChains click")
-                actions = ActionChains(self.driver)
-                actions.move_to_element(price_option).pause(0.5).click().perform()
-                time.sleep(5)
-                self.logger.info("Price option selected via ActionChains")
-                return True
-            except Exception as e2:
-                self.logger.error(f"ActionChains also failed: {e2}")
+                price_option = WebDriverWait(self.driver, timeout).until(
+                    EC.presence_of_element_located(locator)
+                )
 
-                # Fallback 2: Click at element's location offset
-                try:
-                    self.logger.info("Trying click at element location")
-                    location = price_option.location
-                    size = price_option.size
-                    x = location['x'] + size['width'] // 2
-                    y = location['y'] + size['height'] // 2
-                    actions = ActionChains(self.driver)
-                    actions.move_by_offset(x, y).click().perform()
-                    actions.reset_actions()
-                    time.sleep(2)
-                    self.logger.info("Click at coordinates successful")
+                if price_option.is_displayed():
+                    self.logger.info(
+                        f"✅ Price option {index} is available"
+                    )
                     return True
-                except Exception as e3:
-                    self.logger.error(f"Coordinate click also failed: {e3}")
-                    self._last_interacted_element = price_option
-                    return False
+
+            except TimeoutException:
+                continue
+
+        self.logger.error("❌ No pricing option is available")
+        return False
 
     def click_packages_nav_link(self):
         """Click on Packages link in navigation bar to see all packages"""
@@ -354,84 +471,141 @@ class PackageBookingFlow(BasePage):
 
     # ===== BOOKING FLOW METHODS =====
 
-    def handle_booking_flow(self):
-        """Complete booking flow including modal handling"""
-        self.logger.info("Starting complete booking flow")
+    def handle_booking_flow(self, email, password, payment_method="flutterwave"):
+        """Complete booking flow including payment method selection."""
+
+        self.logger.info(
+            f"Starting complete booking flow with {payment_method} payment"
+        )
 
         # Step 1: Click Book Reservation
         self.click_book_reservation()
 
-        # Step 2: Fill modal form
+        # Step 2: Fill booking modal
         self.fill_booking_modal()
-        
-        # Step 3: Handle second modal (terms and conditions)
-        self.handle_second_modal()
 
-        # Step 4: Verify we're ready for payment (but don't proceed to payment gateway)
-        self.verify_payment_ready()
+        # Step 3: Handle login, terms and payment method
+        self.handle_second_modal(
+            email=email,
+            password=password,
+            payment_method=payment_method
+        )
+
+        # Step 4: Verify payment readiness
+        assert self.verify_payment_ready(), (
+            "Booking flow should be ready for payment"
+        )
         
-    def handle_second_modal(self):
-        """Handle the second modal with terms and conditions"""
-        self.logger.info("Handling second modal with terms and conditions")
-        close_btn = None
-        terms_checkbox_btn = None
-        
-        try:
-            # Wait for second modal to appear
-            WebDriverWait(self.driver, 15).until(
-                EC.visibility_of_element_located(self.CLOSE_MODAL_BUTTON)
+    def handle_second_modal(
+        self,
+        email,
+        password,
+        payment_method="flutterwave"
+    ):
+        """Handle login, terms and payment-method-specific flow."""
+
+        self.logger.info(
+            f"Handling booking flow with {payment_method.upper()}"
+        )
+
+        # 1. Login
+        login_button = WebDriverWait(self.driver, 15).until(
+            EC.element_to_be_clickable(self.LOGIN_BUTTON)
+        )
+        self.driver.execute_script(
+            "arguments[0].scrollIntoView({block: 'center'});",
+            login_button
+        )
+        login_button.click()
+
+        # 2. Login credentials
+        email_field = WebDriverWait(self.driver, 15).until(
+            EC.visibility_of_element_located(self.LOGIN_EMAIL_INPUT)
+        )
+        email_field.clear()
+        email_field.send_keys(email)
+
+        password_field = WebDriverWait(self.driver, 15).until(
+            EC.visibility_of_element_located(self.LOGIN_PASSWORD_INPUT)
+        )
+        password_field.clear()
+        password_field.send_keys(password)
+
+        # 3. Sign in
+        sign_in = WebDriverWait(self.driver, 15).until(
+            EC.element_to_be_clickable(self.SIGN_IN_BUTTON)
+        )
+        sign_in.click()
+
+        # 4. Wait for login modal to close
+        WebDriverWait(self.driver, 15).until(
+            EC.invisibility_of_element_located(self.LOGIN_EMAIL_INPUT)
+        )
+
+        self.logger.info("Login successful")
+
+        # 5. Agree to terms
+        terms = WebDriverWait(self.driver, 15).until(
+            EC.element_to_be_clickable(self.TERMS_CHECKBOX)
+        )
+
+        self.driver.execute_script(
+            "arguments[0].scrollIntoView({block: 'center'});",
+            terms
+        )
+
+        if not terms.is_selected():
+            terms.click()
+
+        self.logger.info("Accepted terms and policy")
+
+        # 6. Proceed to payment
+        proceed = WebDriverWait(self.driver, 15).until(
+            EC.element_to_be_clickable(self.PROCEED_TO_PAYMENT)
+        )
+
+        self.driver.execute_script(
+            "arguments[0].scrollIntoView({block: 'center'});",
+            proceed
+        )
+
+        proceed.click()
+
+        self.logger.info("Clicked Proceed to payment")
+
+        # 7. Select payment method
+        # ❌❌❌ This is a cheat because all 3 payment menthods are meant to be active for it to loop over ❌❌❌
+        payment_locators = {
+            # "paystack": self.PAYSTACK_OPTION,
+            "flutterwave": self.FLUTTERWAVE_OPTION,
+            # "bank": self.BANK_OPTION,
+        }
+
+        payment_locator = payment_locators.get(
+            payment_method.lower()
+        )
+
+        if not payment_locator:
+            raise ValueError(
+                f"Unsupported payment method: {payment_method}"
             )
-            self.logger.info("Second modal is visible")
-    
-            # Step 1: Click Close modal button (the 'X' button)
-            self.logger.info("Clicking Close modal button")
-            close_button = WebDriverWait(self.driver, 10).until(
-                EC.element_to_be_clickable(self.CLOSE_MODAL_BUTTON)
-            )
-            close_button.click()
-            close_btn = close_button
-            self.logger.info("Closed modal successfully")
-            time.sleep(2)
-    
-            # Step 2: Wait for the page to stabilize after modal close
-            self.logger.info("Waiting for page to stabilize after modal close")
-            time.sleep(3)  # Increased wait for stability
-    
-            # Step 3: Scroll the Terms checkbox into view and ensure it's clickable
-            self.logger.info("Scrolling Terms checkbox into view")
-            terms_checkbox = WebDriverWait(self.driver, 10).until(
-                EC.presence_of_element_located(self.TERMS_CHECKBOX)
-            )
-            
-            # Scroll to the checkbox using JavaScript
-            self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", terms_checkbox)
-            self.logger.info("Scrolled Terms checkbox to center of view")
-            time.sleep(2)
-    
-            # Step 4: Use JavaScript to click the checkbox (bypasses overlay issues)
-            self.logger.info("Clicking Terms and Conditions checkbox using JavaScript")
-            self.driver.execute_script("arguments[0].click();", terms_checkbox)
-            self.logger.info("Terms and Conditions checkbox selected via JavaScript")
-            time.sleep(2)
-    
-            # Step 5: Verify the checkbox is actually checked
-            is_checked = self.driver.execute_script("return arguments[0].checked;", terms_checkbox)
-            if is_checked:
-                self.logger.info("✅ Terms and Conditions checkbox is successfully checked")
-            else:
-                self.logger.warning("Terms checkbox might not be checked, trying alternative approach")
-                # Try clicking again with explicit wait
-                terms_checkbox = WebDriverWait(self.driver, 5).until(
-                    EC.element_to_be_clickable(self.TERMS_CHECKBOX)
-                )
-                terms_checkbox.click()
-                terms_checkbox_btn = terms_checkbox
-                self.logger.info("Terms checkbox clicked via regular method")
-    
-        except Exception as e:
-            self.logger.error(f"Error handling second modal: {str(e)}")
-            self._last_interacted_element = close_btn or terms_checkbox_btn
-            raise
+
+        payment_option = WebDriverWait(self.driver, 15).until(
+            EC.element_to_be_clickable(payment_locator)
+        )
+
+        self.driver.execute_script(
+            "arguments[0].scrollIntoView({block: 'center'});",
+            payment_option
+        )
+
+        payment_option.click()
+
+        self.logger.info(
+            f"Selected {payment_method.upper()} payment method"
+        )
+
+        return True
         
     def verify_payment_ready(self):
         """Verify that the booking flow is complete and ready for payment"""
@@ -455,33 +629,50 @@ class PackageBookingFlow(BasePage):
             return False
 
     def click_book_reservation(self):
-        """Clicks the Book Reservation button with better scrolling"""
+        """Scroll to and click the Book a reservation button."""
         self.logger.info("Clicking Book Reservation button")
 
         try:
-            book_reservation_button = WebDriverWait(self.driver, 15).until(
-                EC.element_to_be_clickable(self.BOOK_RESERVATION_BUTTON)
+            button = WebDriverWait(self.driver, 15).until(
+                EC.presence_of_element_located(
+                    self.BOOK_RESERVATION_BUTTON
+                )
             )
 
-            # Better scrolling to ensure element is clickable
-            self.driver.execute_script("""
+            self.logger.info("Book Reservation button found in DOM")
+
+            # Scroll the button into the visible viewport
+            self.driver.execute_script(
+                """
                 arguments[0].scrollIntoView({
-                    behavior: 'smooth',
+                    behavior: 'instant',
                     block: 'center',
                     inline: 'center'
                 });
-                window.scrollBy(0, -10);  // Adjust for any fixed headers
-            """, book_reservation_button)
+                """,
+                button
+            )
 
-            time.sleep(2)  # Wait for scroll to complete
+            time.sleep(1)
 
-            # Try JavaScript click first
-            self.driver.execute_script("arguments[0].click();", book_reservation_button)
+            # Re-find the element after scrolling
+            button = WebDriverWait(self.driver, 10).until(
+                EC.visibility_of_element_located(
+                    self.BOOK_RESERVATION_BUTTON
+                )
+            )
 
-            self.logger.info("Book Reservation button clicked successfully")
+            # Move mouse directly onto the button and click
+            ActionChains(self.driver).move_to_element(button).click().perform()
+
+            self.logger.info(
+                "✅ Book Reservation button clicked successfully"
+            )
 
         except Exception as e:
-            self.logger.error(f"Failed to click Book Reservation: {str(e)}")
+            self.logger.error(
+                f"Failed to click Book Reservation: {e}"
+            )
             raise
 
     def fill_booking_modal(self):
@@ -643,25 +834,122 @@ class PackageBookingFlow(BasePage):
         except TimeoutException:
             self.logger.info("Continuing with booking flow...")
             
-    def complete_booking_with_payment(self):
-        """Complete booking including payment flow"""
-        self.logger.info("=== Completing Booking with Payment ===")
+    def complete_booking_with_payment(self, payment_method):
+        """Complete payment verification based on selected method."""
 
-        # Initialize payment page and complete payment
-        payment_page = PaymentPage(self.driver)
+        payment_method = payment_method.lower()
 
-        # Click proceed to payment
-        payment_page.proceed_to_payment()
+        if payment_method == "flutterwave":
+            return self.verify_flutterwave_payment()
 
-        # Complete Flutterwave payment
-        payment_success = payment_page.complete_payment_flow()
+        elif payment_method == "paystack":
+            return self.verify_paystack_payment()
 
-        if payment_success:
-            self.logger.success("🎉 Package booking with payment completed successfully!")
-            return True
+        elif payment_method == "bank":
+            return self.complete_bank_transfer_flow()
+
         else:
-            self.logger.error("❌ Payment flow failed")
-            return False
+            raise ValueError(
+                f"Unsupported payment method: {payment_method}"
+            )
+        
+    def verify_flutterwave_payment(self):
+        """Verify Flutterwave checkout URL."""
+
+        WebDriverWait(self.driver, 20).until(
+            lambda driver:
+            "checkout-v2.dev-flutterwave.com/v3/hosted/pay"
+            in driver.current_url
+        )
+
+        self.logger.info(
+            "✅ Flutterwave checkout page reached"
+        )
+
+        return True
+    
+    def verify_paystack_payment(self):
+        """Verify Paystack checkout URL."""
+
+        WebDriverWait(self.driver, 20).until(
+            lambda driver:
+            "checkout.paystack.com"
+            in driver.current_url
+        )
+
+        self.logger.info(
+            "✅ Paystack checkout page reached"
+        )
+
+        return True
+    
+    def complete_bank_transfer_flow(self):
+        """Complete and verify bank transfer payment flow."""
+
+        self.logger.info("Starting bank transfer flow")
+
+        # Assert bank details
+        WebDriverWait(self.driver, 15).until(
+            EC.visibility_of_element_located(self.BANK_NAME)
+        )
+
+        WebDriverWait(self.driver, 15).until(
+            EC.visibility_of_element_located(self.ACCOUNT_NUMBER)
+        )
+
+        WebDriverWait(self.driver, 15).until(
+            EC.visibility_of_element_located(self.AMOUNT)
+        )
+
+        self.logger.info(
+            "✅ Bank Name, Account Number and Amount displayed"
+        )
+
+        # Pay with transfer
+        pay_with_transfer = WebDriverWait(
+            self.driver, 15
+        ).until(
+            EC.element_to_be_clickable(self.PAY_WITH_TRANSFER)
+        )
+
+        self.driver.execute_script(
+            "arguments[0].scrollIntoView({block: 'center'});",
+            pay_with_transfer
+        )
+
+        pay_with_transfer.click()
+
+        self.logger.info("Clicked Pay with transfer")
+
+        # I've sent the money
+        sent_money = WebDriverWait(
+            self.driver, 15
+        ).until(
+            EC.element_to_be_clickable(self.IVE_SENT_MONEY)
+        )
+
+        sent_money.click()
+
+        self.logger.info("Clicked I've sent the money")
+
+        # Verify success modal
+        success_modal = WebDriverWait(
+            self.driver, 15
+        ).until(
+            EC.visibility_of_element_located(
+                self.TRANSFER_SUCCESS_MESSAGE
+            )
+        )
+
+        assert success_modal.is_displayed(), (
+            "Bank transfer success modal should be displayed"
+        )
+
+        self.logger.info(
+            "✅ Bank transfer success modal displayed"
+        )
+
+        return True
         
     def wait_for_booking_modal(self, timeout=10):
         """Wait until booking modal is visible"""
@@ -673,3 +961,52 @@ class PackageBookingFlow(BasePage):
         except TimeoutException:
             return False
 
+    def navigate_to_packages(self):
+        """Navigate to Packages from the main navigation."""
+        self.logger.info("Navigating to Packages from navbar")
+
+        packages_link = WebDriverWait(self.driver, 15).until(
+            EC.element_to_be_clickable(self.PACKAGES_MENU)
+        )
+
+        packages_link.click()
+
+        WebDriverWait(self.driver, 15).until(
+            lambda driver: "/packages" in driver.current_url.lower()
+        )
+
+        self.logger.info(
+            f"Successfully navigated to Packages: {self.driver.current_url}"
+        )
+
+        return self
+    
+    def select_first_package(self):
+        """Select the first available package."""
+        self.logger.info("Selecting first package")
+
+        package = WebDriverWait(self.driver, 15).until(
+            EC.element_to_be_clickable(self.FIRST_PACKAGE)
+        )
+
+        self.javascript.scroll_to_element(package)
+        package.click()
+
+        self.logger.info("First package selected")
+
+        return self
+    
+    def verify_package_detail_loaded(self):
+        """Verify that the package detail page has loaded."""
+        self.logger.info("Verifying package detail page")
+
+        WebDriverWait(self.driver, 15).until(
+            lambda driver: "/packages/" in driver.current_url.lower()
+            and driver.current_url.rstrip("/").split("/")[-1].isdigit()
+        )
+
+        self.logger.info(
+            f"Package detail page loaded: {self.driver.current_url}"
+        )
+
+        return True

@@ -7,7 +7,6 @@ from src.pages.ui.auth_flow import AuthFlow
 from src.pages.ui.home_page import HomePage
 from src.core.test_base import TestBase
 
-
 class TestAuthFlowSmoke(TestBase):
     """
     Smoke Tests for Geo Travel Authentication Flow
