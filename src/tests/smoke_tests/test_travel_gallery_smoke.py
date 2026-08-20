@@ -89,7 +89,12 @@ class TestTravelGallery(TestBase):
             # Step 6: Go back to gallery
             self.travel_gallery.logger.step(6, "Going back to gallery")
             self.driver.back()
-            time.sleep(2)
+
+            WebDriverWait(self.driver, 15).until(
+                lambda driver: "gallery" in driver.current_url.lower()
+            )
+
+            assert self.travel_gallery.verify_gallery_page_loaded()
             
             # Step 7: Verify back on gallery page
             self.travel_gallery.logger.step(7, "Verifying back on gallery page")
@@ -194,7 +199,11 @@ class TestTravelGallery(TestBase):
             # Step 10: Go back to gallery
             self.travel_gallery.logger.step(10, "Going back to gallery")
             self.driver.back()
-            time.sleep(2)
+            WebDriverWait(self.driver, 15).until(
+                lambda driver: "gallery" in driver.current_url.lower()
+            )
+
+            assert self.travel_gallery.verify_gallery_page_loaded()
             
             # Step 11: Verify back on gallery page
             self.travel_gallery.logger.step(11, "Verifying back on gallery page")
@@ -244,7 +253,11 @@ class TestTravelGallery(TestBase):
                 
                 # Go back to gallery
                 self.driver.back()
-                time.sleep(2)
+                WebDriverWait(self.driver, 15).until(
+                    lambda driver: "gallery" in driver.current_url.lower()
+                )
+    
+                assert self.travel_gallery.verify_gallery_page_loaded()
                 
                 # Verify back on gallery page
                 assert "gallery" in self.driver.current_url, f"Should be back on gallery after tour {i + 1}"

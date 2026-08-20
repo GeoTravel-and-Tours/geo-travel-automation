@@ -5,6 +5,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
+from selenium.common.exceptions import TimeoutException
 from src.core.base_page import BasePage
 import time
 
@@ -17,18 +18,52 @@ class TravelGalleryPage(BasePage):
     
     # ========== LOCATORS ==========
     # Navigation
-    TRAVEL_GALLERY_MENU = (By.XPATH, "//a[@class='py-2 hover:bg-slate-100 transition-all truncate text-base'][normalize-space()='Travel Gallery']")
-    TRAVEL_GALLERY_HEADER = (By.XPATH, "//h3[normalize-space()='Travel Gallery']")
-    
-    # Gallery Page Elements
-    GALLERY_CONTAINER = (By.XPATH, "//main[@data-sentry-component='Page']")
-    FIRST_TOUR_CARD = (By.XPATH, "//main[@data-sentry-component='Page']//div[1]//div[1]//div[2]")
-    TOUR_CARDS = (By.XPATH, "//main[@data-sentry-component='Page']//div[contains(@class, 'cursor-pointer')]")
+    TRAVEL_GALLERY_MENU = (
+        By.XPATH,
+        "//a[normalize-space()='Travel Gallery']"
+    )
+
+    TRAVEL_GALLERY_HEADER = (
+        By.XPATH,
+        "//h3[normalize-space()='Travel Gallery']"
+    )
+
+    # Gallery Page
+    GALLERY_CONTAINER = (
+        By.XPATH,
+        "//main[.//h3[normalize-space()='Travel Gallery']]"
+    )
+
+    TOUR_CARDS = (
+        By.XPATH,
+        "//main[.//h3[normalize-space()='Travel Gallery']]"
+        "//div[contains(@class, 'cursor-pointer')]"
+    )
+
+    FIRST_TOUR_CARD = (
+        By.XPATH,
+        "(//main[.//h3[normalize-space()='Travel Gallery']]"
+        "//div[contains(@class, 'cursor-pointer')])[1]"
+    )
     
     # Tour Detail Page Elements
+    TOUR_DETAIL_CONTAINER = (
+        By.XPATH,
+        "//main[.//img]"
+    )
+
+    TOUR_DETAIL_IMAGES = (
+        By.XPATH,
+        "//main//img"
+    )
     MODAL_CONTAINER = (By.XPATH, "//main[@data-sentry-component='GalleryPage']")
     MODAL_IMAGES = (By.XPATH, "//main[@data-sentry-component='GalleryPage']//img")
     MODAL_CLOSE_BTN = (By.XPATH, "//main[@data-sentry-component='GalleryPage']//button[contains(@class, 'absolute')]")
+    IMAGE_CONTAINERS = (
+        By.XPATH,
+        "//main[.//img]"
+        "//div[contains(@class, 'group') and .//img]"
+    )
     
     # ========== PAGE METHODS ==========
     
@@ -125,26 +160,32 @@ class TravelGalleryPage(BasePage):
             raise
     
     def wait_for_tour_detail_load(self, timeout=15):
-        """Wait for tour detail page to load with images"""
+        """Wait for tour detail/gallery view to load."""
         self.logger.info("Waiting for tour detail to load")
-        
+
         try:
-            # Wait for the gallery page component to be present
             WebDriverWait(self.driver, timeout).until(
-                EC.presence_of_element_located(self.MODAL_CONTAINER)
+                EC.visibility_of_element_located(self.TOUR_DETAIL_CONTAINER)
             )
-            
-            # Wait for images to be present
+
             WebDriverWait(self.driver, timeout).until(
-                EC.presence_of_all_elements_located(self.MODAL_IMAGES)
+                lambda driver: len(
+                    driver.find_elements(*self.TOUR_DETAIL_IMAGES)
+                ) > 0
             )
-            
+
             self.logger.info("Tour detail loaded with images")
             return True
-            
-        except Exception as e:
-            self.logger.error(f"Failed to load tour detail: {e}")
-            return False
+
+        except TimeoutException as e:
+            self.logger.error(
+                f"Tour detail did not load. "
+                f"Current URL: {self.driver.current_url}"
+            )
+            raise AssertionError(
+                f"Tour detail page did not load. "
+                f"Current URL: {self.driver.current_url}"
+            ) from e
     
     def verify_gallery_has_tours(self):
         """Verify that gallery page has at least one tour card"""
@@ -163,33 +204,41 @@ class TravelGalleryPage(BasePage):
             return 0
         
     def click_tour_image(self, image_index=0):
-        """Hover over image and click the eye icon to view"""
-        self.logger.info(f"Clicking view button on image {image_index + 1}")
-        
-        try:
-            # Get the image container that has the overlay button
-            image_containers = WebDriverWait(self.driver, 10).until(
-                EC.presence_of_all_elements_located((By.XPATH, "//div[contains(@class, 'relative')]//div[contains(@class, 'group')]"))
+        """Hover over a gallery image and click its view button."""
+        self.logger.info(
+            f"Clicking view button on image {image_index + 1}"
+        )
+
+        containers = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_all_elements_located(self.IMAGE_CONTAINERS)
+        )
+
+        if len(containers) <= image_index:
+            raise AssertionError(
+                f"No image container found at index {image_index}. "
+                f"Found {len(containers)} containers."
             )
-            
-            assert len(image_containers) > image_index, f"No image container at index {image_index} found"
-            
-            # Hover over the image container to reveal the eye button
-            container = image_containers[image_index]
-            ActionChains(self.driver).move_to_element(container).perform()
-            time.sleep(1)
-            
-            # Click the eye button
-            eye_button = container.find_element(By.XPATH, ".//button[contains(@class, 'bg-white/90')]")
-            eye_button.click()
-            time.sleep(1)
-            
-            self.logger.info(f"Clicked view button on image {image_index + 1}")
-            return self
-            
-        except Exception as e:
-            self.logger.error(f"Failed to click view button: {e}")
-            raise
+
+        container = containers[image_index]
+
+        self.javascript.scroll_to_element(container)
+
+        ActionChains(self.driver).move_to_element(container).perform()
+
+        eye_button = WebDriverWait(self.driver, 10).until(
+            lambda driver: container.find_element(
+                By.XPATH,
+                ".//button"
+            )
+        )
+
+        eye_button.click()
+
+        self.logger.info(
+            f"Clicked view button on image {image_index + 1}"
+        )
+
+        return self
         
     def close_image_viewer(self):
         """Close the image viewer modal"""
