@@ -1,0 +1,33 @@
+2026-08-22 05:41:36 - GeoTravelGlobalLogger - WARNING  - [logger.py:360] - ⚠️ Invalid token provided to set_auth_token()
+2026-08-22 05:41:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Retrieved credentials from environment for: geo.qa.bot@gmail.com
+2026-08-22 05:41:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Attempting login with email: geo.qa.bot@gmail.com
+2026-08-22 05:41:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 _request START - Current self.headers: {'Content-Type': 'application/json', 'Accept': 'application/json', 'X-Client-Type': 'retail'}
+2026-08-22 05:41:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 _request - kwargs headers: {}
+2026-08-22 05:41:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 _request FINAL headers being sent: {'Content-Type': 'application/json', 'Accept': 'application/json', 'X-Client-Type': 'retail'}
+2026-08-22 05:41:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Request: POST https://api.stg.gowithgeo.com/api/auth/login
+2026-08-22 05:41:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Response: 200
+2026-08-22 05:41:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - Token extracted via cookies (length: 167, valid)
+2026-08-22 05:41:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - ✅ Auth token set from cookies (Cookie header)
+2026-08-22 05:41:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - SUCCESS: ✅ Login successful - token set via cookies
+2026-08-22 05:41:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - SUCCESS: ✅ Authenticated successfully (token length: 167)
+2026-08-22 05:41:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - ✅ Auth token set from cookies (Cookie header)
+2026-08-22 05:41:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - ✅ Auth token set from cookies (Cookie header)
+2026-08-22 05:41:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - === Testing UNAUTHENTICATED PRIVATE - Future Departure (>30 days) ===
+2026-08-22 05:41:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 _request START - Current self.headers: {'Content-Type': 'application/json', 'Accept': 'application/json', 'X-Client-Type': 'retail'}
+2026-08-22 05:41:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 _request - kwargs headers: {}
+2026-08-22 05:41:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 _request FINAL headers being sent: {'Content-Type': 'application/json', 'Accept': 'application/json', 'X-Client-Type': 'retail'}
+2026-08-22 05:41:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Request: GET https://api.stg.gowithgeo.com/api/package/all
+2026-08-22 05:41:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Response: 200
+2026-08-22 05:41:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 📦 Selected package: Testing Packages Creation! (ID: 12)
+2026-08-22 05:41:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 📅 Selected departure: 2026-10-04 (>30 days away)
+2026-08-22 05:41:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 _request START - Current self.headers: {'Content-Type': 'application/json', 'Accept': 'application/json', 'X-Client-Type': 'retail', 'Cookie': 'retail_access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTUxLCJ1c2VyVHlwZSI6IlJFVEFJTCIsImlhdCI6MTc4NzM3NzI5NiwiZXhwIjoxNzg3NDIwNDk2fQ.2YmsS6Tfy_7ZsZvIHhBYzAmPpNCj-teDeirG5e_RN6w'}
+2026-08-22 05:41:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 _request - kwargs headers: {}
+2026-08-22 05:41:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 _request FINAL headers being sent: {'Content-Type': 'application/json', 'Accept': 'application/json', 'X-Client-Type': 'retail', 'Cookie': 'retail_access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTUxLCJ1c2VyVHlwZSI6IlJFVEFJTCIsImlhdCI6MTc4NzM3NzI5NiwiZXhwIjoxNzg3NDIwNDk2fQ.2YmsS6Tfy_7ZsZvIHhBYzAmPpNCj-teDeirG5e_RN6w'}
+2026-08-22 05:41:36 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Request: GET https://api.stg.gowithgeo.com/api/package/user/booked-packages
+2026-08-22 05:41:37 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Response: 200
+2026-08-22 05:41:37 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 📦 Payload: {'package': 12, 'full_name': 'Unauth Test User 5896', 'email': 'unauth6627@test.com', 'phone': '+234790768658', 'pricing_text': 'For two', 'payment_mode': 'DEAL_PRICE', 'adults': 1, 'children': 1, 'infants': 0, 'paymentMethod': 'paystack', 'departure_date': '2026-10-04', 'return_date': '2026-10-11'}
+2026-08-22 05:41:37 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 _request START - Current self.headers: {'Content-Type': 'application/json', 'Accept': 'application/json', 'X-Client-Type': 'retail'}
+2026-08-22 05:41:37 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 _request - kwargs headers: {}
+2026-08-22 05:41:37 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - 🔍 _request FINAL headers being sent: {'Content-Type': 'application/json', 'Accept': 'application/json', 'X-Client-Type': 'retail'}
+2026-08-22 05:41:37 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Request: POST https://api.stg.gowithgeo.com/api/package/book
+2026-08-22 05:41:37 - GeoTravelGlobalLogger - INFO     - [logger.py:345] - API Response: 404
