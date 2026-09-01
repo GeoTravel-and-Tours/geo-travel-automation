@@ -1,4 +1,26 @@
-# src/pages/home_page.py
+"""
+src/pages/ui/home_page.py
+
+Page Object for the Geo Travel homepage.
+
+Covers:
+    1. Warm-up & load    - ping the site once to wake a sleeping Heroku
+                            dyno, then wait (with retries) for the
+                            homepage to load and validate its content.
+    2. Logo check        - verify the site logo is visible, with a
+                            fallback locator and failure screenshot.
+    3. Health check       - a broader "is this actually a working
+                            React/Next.js page and not an error page"
+                            check, used as a general smoke check.
+    4. Geo Travel identity - confirm the loaded page is genuinely a Geo
+                            Travel page via a confidence-score heuristic
+                            (delegated to ``PageInfoUtils.validate_geo_travel_page``).
+
+Tests typically call ``wait_for_homepage_load()`` first (which itself
+calls ``warm_up_site()``), then ``is_logo_visible()`` and/or
+``is_page_loaded_correctly()`` / ``validate_as_geo_travel_page()`` as
+additional assertions.
+"""
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -9,7 +31,18 @@ import time
 
 class HomePage(BasePage):
     """
-    Geo Travel Home Page
+    Geo Travel Home Page.
+
+    Locators cover the logo (with a fallback selector), search box, and
+    top-level layout landmarks (nav/header/footer). ``GEO_TRAVEL_KEYWORDS``
+    is a word list used elsewhere (via ``PageInfoUtils``) for the
+    confidence-score content validation referenced throughout this class.
+
+    NOTE: unlike the other page objects in this package, this class calls
+    ``pytest.fail(...)`` directly from ``wait_for_homepage_load`` -
+    coupling this Page Object to the pytest test framework rather than
+    only raising/returning like the rest of the class (and the rest of
+    this package) does.
     """
 
     # ===== GEO TRAVEL SPECIFIC LOCATORS =====
@@ -47,7 +80,12 @@ class HomePage(BasePage):
     ]
 
     def warm_up_site(self):
-        """Ping the site once to wake up a sleeping Heroku dyno."""
+        """Ping the site once to wake up a sleeping Heroku dyno.
+
+        Best-effort only: failures are logged as a warning and swallowed
+        rather than raised, since this is just a preparatory step before
+        the real homepage load check.
+        """
         self.logger.info("🏁 Warming up site before homepage load...")
         try:
             self.open()
@@ -55,10 +93,45 @@ class HomePage(BasePage):
             time.sleep(5)  # give the app a few seconds to boot
         except Exception as e:
             self.logger.warning(f"Warm-up page failed: {e}")
-            
+
     def wait_for_homepage_load(self, timeout=15, max_retries=3):
-        """Wait for homepage to load with retries, keyword validation, and automatic error capturing"""
-        
+        """Wait for the homepage to load, retrying on Heroku sleep or low-confidence content.
+
+        On each attempt: waits for page load and a visible ``<body>``,
+        checks for the Heroku "Application Error" sleeping-dyno page
+        (retrying with backoff if found), then validates the page is
+        genuinely a Geo Travel page via
+        ``self.pageinfo.validate_geo_travel_page()`` - a confidence score
+        of at least 60% is required to pass. On the final failed attempt,
+        captures a screenshot/HTML report before failing.
+
+        FIXME: in the final-attempt validation-failure branch (not the
+        exception branch), the assertion raised is
+        ``AssertionError(f"...: {e}")`` - but ``e`` is never defined
+        anywhere in that branch (it only exists in the separate
+        ``except Exception as e:`` block below). This raises
+        ``NameError: name 'e' is not defined`` instead of the intended
+        ``AssertionError`` whenever the homepage loads successfully but
+        content validation keeps failing across all retries.
+
+        Args:
+            timeout (int): Seconds to wait for page-load conditions per
+                attempt. Defaults to 15.
+            max_retries (int): Max number of attempts before giving up.
+                Defaults to 3.
+
+        Returns:
+            bool: True once validation passes; False if the loop
+                completes without an explicit return (unreachable in
+                practice - every path through the loop either returns
+                True, raises, or calls ``pytest.fail``/continues, and the
+                final iteration always hits one of those).
+
+        Raises:
+            AssertionError: On the final attempt if content validation
+                still fails (though see the FIXME above - this currently
+                manifests as ``NameError`` instead).
+        """
         # First, warm up the site
         self.warm_up_site()
         
@@ -103,6 +176,9 @@ class HomePage(BasePage):
                         if result["html"]:
                             self.logger.error(f"📄 Error report saved: {result['html']}")
 
+                        # FIXME: `e` is not defined in this branch - see the FIXME
+                        # in the docstring above. This raises NameError instead of
+                        # the intended AssertionError.
                         raise AssertionError(f"Homepage failed after {max_retries} attempts: {e}")
 
                     time.sleep(5 * attempt)
@@ -132,7 +208,14 @@ class HomePage(BasePage):
     def is_logo_visible(self):
         """
         Verify the logo is visible on the page.
-        Optional full-page screenshot is taken only on failure for reporting.
+
+        Tries ``LOGO_PRIMARY`` first, then falls back to the looser
+        ``LOGO_FALLBACK`` locator. A full-page screenshot is captured
+        only if both selectors fail, for failure-report purposes.
+
+        Returns:
+            bool: True as soon as either locator confirms the logo is
+                visible, False if neither does.
         """
         for name, locator in [("Primary", self.LOGO_PRIMARY), ("Fallback", self.LOGO_FALLBACK)]:
             try:
@@ -160,7 +243,19 @@ class HomePage(BasePage):
         return False
 
     def is_page_loaded_correctly(self):
-        """Check if homepage loaded properly - FIXED FOR REACT/Next.js"""
+        """Run a broad health check tailored to React/Next.js pages.
+
+        Combines three "critical" checks (has a title, has a body/React
+        structure, isn't an error page) with three "optional" checks
+        (React-specific content, interactive elements, navigation) that
+        are reported but don't affect the overall pass/fail result.
+
+        Returns:
+            tuple[bool, dict]: ``(critical_passed, checks)`` where
+                ``critical_passed`` is True only if all three critical
+                checks pass, and ``checks`` is a dict of every check name
+                (critical and optional) to its bool result.
+        """
         self.logger.info("Performing page health check")
 
         try:
@@ -202,7 +297,13 @@ class HomePage(BasePage):
         return critical_passed, checks
 
     def _check_react_page_structure(self):
-        """Check React/Next.js page structure"""
+        """Check for basic React/Next.js DOM structure and non-empty body.
+
+        Returns:
+            bool: True if at least one structural indicator AND at least
+                one JS-based "body is populated" check both pass, False
+                otherwise (including on error).
+        """
         try:
             nextjs_indicators = [
                 len(self.driver.find_elements(By.TAG_NAME, "body")) > 0,
@@ -224,7 +325,13 @@ class HomePage(BasePage):
             return False
 
     def _check_react_content(self):
-        """Check for React-specific content"""
+        """Check for React/Next.js markers or common content elements.
+
+        Returns:
+            bool: True if any Sentry/Next.js data attribute or common
+                element (h1/h2/a/button/img/input) is found, False
+                otherwise.
+        """
         try:
             react_components = self.driver.find_elements(By.CSS_SELECTOR, "[data-sentry-component]")
             if len(react_components) > 0:
@@ -252,7 +359,12 @@ class HomePage(BasePage):
             return False
 
     def _check_interactive_elements(self):
-        """Check for interactive elements in React app"""
+        """Check for any interactive elements (buttons, links, inputs, etc.).
+
+        Returns:
+            bool: True if at least one interactive element is found,
+                False otherwise (including on error).
+        """
         try:
             interactive_elements = [
                 (By.TAG_NAME, "button"),
@@ -271,7 +383,12 @@ class HomePage(BasePage):
             return False
 
     def _check_navigation(self):
-        """Check for navigation elements"""
+        """Check for any navigation-like elements (nav, links, role=navigation).
+
+        Returns:
+            bool: True if at least one navigation indicator is found,
+                False otherwise (including on error).
+        """
         try:
             nav_indicators = [
                 (By.TAG_NAME, "a"),
@@ -288,7 +405,19 @@ class HomePage(BasePage):
             return False
 
     def _check_not_error_page(self):
-        """Enhanced error page check"""
+        """Check the page isn't showing an obvious error state.
+
+        Looks for error keywords in the title, known error-element
+        selectors, and (if available) an HTTP status code >= 400.
+
+        NOTE: fails open - if the check itself raises, this returns True
+        (i.e. "not an error page") rather than False, so an exception
+        here won't block ``is_page_loaded_correctly`` from passing.
+
+        Returns:
+            bool: False if any error indicator is found, True otherwise
+                (including when the check itself errors).
+        """
         try:
             # Check for common error keywords in the page title
             title = self.driver.title.lower()
@@ -322,7 +451,23 @@ class HomePage(BasePage):
             return True
 
     def validate_as_geo_travel_page(self, min_confidence=60.0):
-        """Validate that this is actually a Geo Travel page"""
+        """Validate that the current page is genuinely a Geo Travel page.
+
+        Delegates the actual scoring to
+        ``self.pageinfo.validate_geo_travel_page()`` (see
+        ``GEO_TRAVEL_KEYWORDS`` above) and compares against
+        ``min_confidence``.
+
+        Args:
+            min_confidence (float): Minimum confidence score (0-100)
+                required to consider the page valid. Defaults to 60.0.
+
+        Returns:
+            tuple[bool, dict]: ``(is_valid, validation_results)`` - the
+                pass/fail bool and the full results dict from
+                ``validate_geo_travel_page`` (including the confidence
+                score and whatever detail it provides).
+        """
         validation_results = self.pageinfo.validate_geo_travel_page()
         is_valid = validation_results["confidence_score"] >= min_confidence
         

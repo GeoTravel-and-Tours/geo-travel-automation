@@ -1,4 +1,19 @@
-# configs/environment.py
+"""Central environment/configuration hub for the whole framework.
+
+Loads ``.env`` via ``python-dotenv`` and exposes a single class,
+``EnvironmentConfig``, that every other module in this list (and most
+page objects/API clients) reads from: which environment to target
+(dev/qa/staging/production), the resulting base URLs, which browser to
+drive and how to configure it, API timeouts/retry settings, and
+per-environment token-extraction rules. It also provides health-check
+helpers (``is_api_accessible``, ``is_environment_accessible``, etc.)
+used by fixtures to skip tests against an environment that's down.
+
+Nothing here is instantiated - all state lives on class attributes and
+all methods are ``@classmethod``s, so callers use ``EnvironmentConfig``
+directly (e.g. ``EnvironmentConfig.get_base_url()``) rather than
+creating an instance.
+"""
 
 import os
 import requests
@@ -18,9 +33,38 @@ load_dotenv()
 
 
 class EnvironmentConfig:
-    """Configuration for cross-browser testing and API testing"""
-    
-    
+    """Class-attribute-based configuration for UI and API testing.
+
+    State (all class-level, no instances are created):
+
+    - ``ENVIRONMENTS``: base/API/partners-API URLs per named
+      environment (dev/qa/staging/production).
+    - ``BROWSERS``: Selenium driver/options classes and
+      webdriver-manager classes per supported browser.
+    - ``TEST_ENV``, ``BROWSER``, ``HEADLESS``, ``WINDOW_SIZE``,
+      ``TIMEOUT``: read once from environment variables at import time
+      (via ``os.getenv``), controlling which environment/browser a
+      test run targets.
+    - ``API_BASE_URL``, ``API_TIMEOUT``, ``API_MAX_RETRIES``,
+      ``API_CONNECT_TIMEOUT``, ``API_READ_TIMEOUT``: API-specific
+      timing/retry knobs, also read from environment variables.
+    - ``API_HEALTH_ENDPOINTS``: named endpoints used by the
+      comprehensive health check.
+    - ``TOKEN_EXTRACTION_CONFIG``: per-environment rules (response
+      field names, cookie names, JSON nesting path) that
+      ``TokenExtractor`` uses to pull an auth token out of a login
+      response.
+    - ``PARTNERS_VERIFIED_EMAIL`` / ``PARTNERS_VERIFIED_PASSWORD``:
+      credentials for a known-verified Partners test account, read
+      from environment variables.
+
+    Callers across ``src/core`` (``BaseAPI``, ``PartnersBaseAPI``,
+    ``BasePage``, ``DriverFactory``) and the page objects/tests rely on
+    this class as the single source of truth for environment-dependent
+    values, rather than reading ``os.environ`` themselves.
+    """
+
+
     # Environment URLs
     ENVIRONMENTS = {
         "dev": {
@@ -125,16 +169,49 @@ class EnvironmentConfig:
     
     @classmethod
     def get_base_url(cls, environment=None):
+        """Look up the app's UI base URL for an environment.
+
+        Args:
+            environment (str, optional): Environment name (dev, qa,
+                staging, production). Defaults to ``cls.TEST_ENV``.
+
+        Returns:
+            str | None: The base URL, or None if ``environment`` isn't
+            a recognized key in ``ENVIRONMENTS``.
+        """
         env = environment or cls.TEST_ENV
         return cls.ENVIRONMENTS.get(env, {}).get("base_url")
 
     @classmethod
     def get_browser_config(cls, browser=None):
+        """Look up the Selenium driver/options/manager classes for a browser.
+
+        Args:
+            browser (str, optional): Browser name ("chrome", "firefox",
+                "edge"). Defaults to ``cls.BROWSER``.
+
+        Returns:
+            dict: The matching entry from ``BROWSERS``, or the
+            "chrome" entry if ``browser`` isn't recognized.
+        """
         browser = browser or cls.BROWSER
         return cls.BROWSERS.get(browser, cls.BROWSERS["chrome"])
-    
+
     @classmethod
     def get_browser_capabilities(cls, browser=None):
+        """Get extra WebDriver capabilities needed for a given browser.
+
+        Currently only Edge needs anything special (accepting insecure
+        certs, auto-accepting unexpected prompts, and normal page-load
+        strategy) - other browsers get an empty dict.
+
+        Args:
+            browser (str, optional): Browser name. Defaults to
+                ``cls.BROWSER``.
+
+        Returns:
+            dict: Capability overrides for the browser (possibly empty).
+        """
         browser = browser or cls.BROWSER
         capabilities = {}
 
@@ -149,6 +226,24 @@ class EnvironmentConfig:
 
     @classmethod
     def get_browser_options(cls, browser=None):
+        """Build a fully-configured Options object for the given browser.
+
+        Applies common flags (headless mode, window size) and then
+        browser-specific hardening/compatibility flags - notably a
+        large block of Edge-only flags to work around Edge-specific
+        issues (certificate errors, extensions/background throttling
+        interfering with test timing, etc.), and Firefox preferences to
+        disable the automation-detection flag and HTTP/disk/memory
+        caching (so tests see fresh content instead of cached pages).
+
+        Args:
+            browser (str, optional): Browser name. Defaults to
+                ``cls.BROWSER``.
+
+        Returns:
+            selenium.webdriver.*.Options: A populated options instance
+            ready to pass into the corresponding WebDriver constructor.
+        """
         browser_config = cls.get_browser_config(browser)
         options = browser_config["options_class"]()
 
@@ -198,7 +293,13 @@ class EnvironmentConfig:
     
     @classmethod
     def get_environment_metadata(cls):
-        """Get comprehensive environment metadata for reporting"""
+        """Collect a snapshot of the current run's environment settings.
+
+        Returns:
+            dict: Environment name, browser, headless flag, window
+            size, timeout, and resolved base/API URLs - intended for
+            inclusion in test reports.
+        """
         return {
             "environment": cls.TEST_ENV.upper(),
             "browser": cls.BROWSER.upper(),
@@ -212,26 +313,49 @@ class EnvironmentConfig:
     # ========== API-SPECIFIC METHODS ==========
     @classmethod
     def get_api_base_url(cls, environment=None):
-        """Get API base URL for the specified environment"""
+        """Resolve the main API base URL, honoring an explicit override.
+
+        Args:
+            environment (str, optional): Environment name. Defaults to
+                ``cls.TEST_ENV``. Ignored if ``API_BASE_URL`` is set.
+
+        Returns:
+            str | None: ``cls.API_BASE_URL`` if the ``API_BASE_URL``
+            env var is set (lets a run point at an arbitrary API host
+            regardless of ``environment``); otherwise the
+            environment's configured ``api_base_url``.
+        """
         env = environment or cls.TEST_ENV
-        
+
         # If API_BASE_URL is explicitly set in environment, use it
         if cls.API_BASE_URL:
             return cls.API_BASE_URL
-            
+
         # Otherwise use the environment-specific API URL
         return cls.ENVIRONMENTS.get(env, {}).get("api_base_url")
-    
+
     @classmethod
     def get_partners_api_base_url(cls, environment=None):
-        """Get Partners API base URL for the specified environment"""
+        """Resolve the Partners API base URL, honoring an explicit override.
+
+        Args:
+            environment (str, optional): Environment name. Defaults to
+                ``cls.TEST_ENV``. Ignored if ``PARTNERS_API_BASE_URL``
+                is set.
+
+        Returns:
+            str | None: The ``PARTNERS_API_BASE_URL`` env var if set
+            (read fresh on every call, unlike ``API_BASE_URL`` which is
+            cached as a class attribute); otherwise the environment's
+            configured ``partners_api_base_url``.
+        """
         env = environment or cls.TEST_ENV
-        
+
         # If PARTNERS_API_BASE_URL is explicitly set in environment, use it
         partners_api_url = os.getenv("PARTNERS_API_BASE_URL")
         if partners_api_url:
             return partners_api_url
-            
+
         # Otherwise use the environment-specific Partners API URL
         return cls.ENVIRONMENTS.get(env, {}).get("partners_api_base_url")
     
@@ -270,49 +394,91 @@ class EnvironmentConfig:
         """
         Override token extraction configuration for an environment.
         Useful for environment-specific customizations.
-        
+
         Args:
             environment: Environment name
             config_updates: Dictionary of config updates to merge
+
+        Returns:
+            None. NOTE: if ``environment`` isn't already a key in
+            ``TOKEN_EXTRACTION_CONFIG``, this silently does nothing -
+            no error is raised and ``config_updates`` is dropped.
         """
         if environment in cls.TOKEN_EXTRACTION_CONFIG:
             cls.TOKEN_EXTRACTION_CONFIG[environment].update(config_updates)
-    
+
     # Partners API Verified Test Account
     PARTNERS_VERIFIED_EMAIL = os.getenv("PARTNERS_VERIFIED_EMAIL")
     PARTNERS_VERIFIED_PASSWORD = os.getenv("PARTNERS_VERIFIED_PASSWORD")
-    
+
     @classmethod
     def get_verified_partners_account(cls):
-        """Get verified partners account from environment variables"""
+        """Return a known-verified Partners test account's credentials.
+
+        Returns:
+            dict: ``{"email": ..., "password": ...}`` built from
+            ``PARTNERS_VERIFIED_EMAIL`` / ``PARTNERS_VERIFIED_PASSWORD``.
+
+        Raises:
+            ValueError: If either environment variable is unset/empty.
+        """
         if not cls.PARTNERS_VERIFIED_EMAIL or not cls.PARTNERS_VERIFIED_PASSWORD:
             raise ValueError(
                 "Partners verified account credentials not found in environment variables. "
                 "Please set PARTNERS_VERIFIED_EMAIL and PARTNERS_VERIFIED_PASSWORD in .env file"
             )
-        
+
         return {
             "email": cls.PARTNERS_VERIFIED_EMAIL,
             "password": cls.PARTNERS_VERIFIED_PASSWORD,
         }
-    
+
     @classmethod
     def validate_partners_credentials(cls):
-        """Validate that partners credentials are properly set"""
+        """Sanity-check that the verified Partners credentials look valid.
+
+        Only checks presence and a basic "@" substring in the email -
+        not a full email format validation.
+
+        Returns:
+            bool: True if both fields are non-empty and the email
+            contains "@", False otherwise.
+
+        Raises:
+            ValueError: Propagated from ``get_verified_partners_account``
+                if the credentials aren't set at all.
+        """
         credentials = cls.get_verified_partners_account()
-        
+
         if not credentials["email"] or not credentials["password"]:
             return False
-            
+
         # Basic validation - email format
         if "@" not in credentials["email"]:
             return False
-            
+
         return True
 
     @classmethod
     def get_api_credentials(cls):
-        """Get API test credentials"""
+        """Return generic API test credentials.
+
+        FIXME: references ``cls.API_TEST_EMAIL`` / ``cls.API_TEST_PASSWORD``,
+        which are never defined as class attributes on
+        ``EnvironmentConfig`` (they only exist as ``os.getenv()`` reads
+        inside ``src/pages/api/auth_api.py``). Calling this method as
+        written raises ``AttributeError`` rather than returning
+        credentials - it needs its own
+        ``os.getenv("API_TEST_EMAIL")``/``os.getenv("API_TEST_PASSWORD")``
+        class attributes (or reuse of whatever ``auth_api.py`` reads)
+        before it can work.
+
+        Returns:
+            dict: Intended to be ``{"email": ..., "password": ...}``.
+
+        Raises:
+            AttributeError: Always, currently, per the FIXME above.
+        """
         return {
             "email": cls.API_TEST_EMAIL,
             "password": cls.API_TEST_PASSWORD
@@ -320,7 +486,30 @@ class EnvironmentConfig:
 
     @classmethod
     def is_api_accessible(cls, endpoint=None, environment=None, max_attempts=3, timeout=10):
-        """Check if API endpoint is accessible with retry logic"""
+        """Check whether an API endpoint responds with a non-5xx status.
+
+        Uses a ``requests.Session`` with its own urllib3-level retry
+        policy (3 retries on 500/502/503/504) layered underneath this
+        method's own attempt loop, so a single call here can trigger
+        up to ``max_attempts`` * (that policy's retries) actual HTTP
+        attempts in the worst case. TLS verification is disabled
+        (``verify=False``) since lower environments may use
+        self-signed/staging certificates.
+
+        Args:
+            endpoint (str, optional): Path to check, e.g.
+                "/api/auth/login". Defaults to "/api/auth/login".
+            environment (str, optional): Environment to check against.
+                Defaults to ``cls.TEST_ENV``.
+            max_attempts (int): Number of check attempts before giving
+                up. Defaults to 3.
+            timeout (int): Per-request timeout in seconds. Defaults to 10.
+
+        Returns:
+            bool: True as soon as a response with status < 500 is
+            received; False if no API base URL is configured, or if
+            every attempt errors out or returns a 5xx status.
+        """
         logger = GeoLogger("APICheck")
 
         api_base_url = cls.get_api_base_url(environment)
@@ -346,7 +535,10 @@ class EnvironmentConfig:
             try:
                 logger.info(f"API health check attempt {attempt}/{max_attempts} for {full_url}")
 
-                # For GET endpoints, use GET; for others, use HEAD to check availability
+                # For GET endpoints, use GET; for others, use HEAD to check availability.
+                # NOTE: this allowlist is hardcoded and separate from
+                # API_HEALTH_ENDPOINTS - a new health-checked endpoint that
+                # doesn't support HEAD would need to be added here too.
                 if endpoint in ["/api/auth/login", "/api/package/all", ]:
                     response = session.get(full_url, timeout=timeout, verify=False)
                 else:
@@ -373,7 +565,21 @@ class EnvironmentConfig:
 
     @classmethod
     def wait_for_api_environment(cls, environment=None, timeout=60, check_interval=5):
-        """Wait for API environment to become available"""
+        """Poll ``is_api_accessible`` until the API responds or time runs out.
+
+        Args:
+            environment (str, optional): Environment to wait for.
+                Defaults to ``cls.TEST_ENV``.
+            timeout (int): Overall time budget in seconds. Defaults to 60.
+            check_interval (int): Unused directly (wait time between
+                polls is instead computed as ``3 * attempt``, growing
+                each iteration) - kept as a parameter for API
+                compatibility/callers that pass it explicitly.
+
+        Returns:
+            bool: True once ``is_api_accessible`` succeeds; False if
+            ``timeout`` seconds elapse without success.
+        """
         logger = GeoLogger("APICheck")
         
         env = environment or cls.TEST_ENV
@@ -398,7 +604,16 @@ class EnvironmentConfig:
 
     @classmethod
     def check_api_health_comprehensive(cls, environment=None):
-        """Comprehensive API health check across multiple endpoints"""
+        """Check accessibility of every endpoint in ``API_HEALTH_ENDPOINTS``.
+
+        Args:
+            environment (str, optional): Environment to check.
+                Defaults to ``cls.TEST_ENV``.
+
+        Returns:
+            dict: Maps each service name (e.g. "auth", "flights") to a
+            dict of ``{"healthy": bool, "endpoint": full URL}``.
+        """
         logger = GeoLogger("APICheck")
         env = environment or cls.TEST_ENV
         
@@ -432,7 +647,22 @@ class EnvironmentConfig:
 
     @classmethod
     def should_skip_api_tests(cls, environment=None):
-        """Determine if API tests should be skipped based on environment health"""
+        """Decide whether API tests should be skipped for this environment.
+
+        Uses only the auth endpoint as a minimal health signal (not the
+        full ``check_api_health_comprehensive`` sweep), on the
+        assumption that if login is reachable the API is usable enough
+        to test against.
+
+        Args:
+            environment (str, optional): Environment to check.
+                Defaults to ``cls.TEST_ENV``.
+
+        Returns:
+            bool: True if tests should be skipped (auth endpoint
+            unreachable, or the health check itself raised), False if
+            the environment looks healthy enough to proceed.
+        """
         logger = GeoLogger("APICheck")
         env = environment or cls.TEST_ENV
         
@@ -455,9 +685,19 @@ class EnvironmentConfig:
     def is_environment_accessible(cls, environment=None, max_attempts=3, timeout=10, check_type="ui"):
         """
         Enhanced environment check that supports both UI and API
-        
+
         Args:
+            environment: Environment name to check. Defaults to ``cls.TEST_ENV``.
+            max_attempts: Max check attempts to pass through to the
+                underlying UI/API check(s).
+            timeout: Per-attempt timeout in seconds to pass through.
             check_type: "ui" for frontend, "api" for backend, "both" for both
+
+        Returns:
+            bool: Result of the requested check(s). For "both", True
+            only if both the UI and API checks succeed. False (and a
+            logged error) if ``check_type`` isn't one of the three
+            recognized values.
         """
         logger = GeoLogger("EnvironmentCheck")
         
@@ -477,7 +717,23 @@ class EnvironmentConfig:
 
     @classmethod
     def _is_ui_accessible(cls, environment, max_attempts, timeout):
-        """Original UI accessibility check (moved from existing method)"""
+        """Check whether the UI base URL responds with a non-5xx status.
+
+        Same shape as ``is_api_accessible``: a session-level urllib3
+        retry policy plus its own attempt loop with linear backoff
+        (``5 * attempt`` seconds), and TLS verification disabled for
+        lower environments.
+
+        Args:
+            environment (str): Environment name to resolve a base URL for.
+            max_attempts (int): Number of check attempts before giving up.
+            timeout (int): Per-request timeout in seconds.
+
+        Returns:
+            bool: True once a response with status < 500 is received;
+            False if no base URL is configured for ``environment``, or
+            every attempt errors out or returns a 5xx status.
+        """
         logger = GeoLogger("EnvironmentCheck")
         base_url = cls.get_base_url(environment)
         

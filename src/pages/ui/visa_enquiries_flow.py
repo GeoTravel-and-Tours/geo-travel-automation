@@ -1,4 +1,27 @@
-# src/pages/ui/visa_enquiries_flow.py
+"""
+src/pages/ui/visa_enquiries_flow.py
+
+Page Object for the Geo Travel Visa Enquiries flow.
+
+Covers the full flow end to end:
+    1. Navigation        - click "Visa" in the nav menu and click
+                            "Get Started" to open the application form
+                            (with retry-on-failure and a page refresh
+                            between attempts).
+    2. Personal details   - fill first/last name, email, and phone with
+                             fixed test data.
+    3. Dropdown selections - country of origin, passport availability,
+                             destination country (random), and visa type
+                             (random).
+    4. Travel date         - pick a day from the date picker.
+    5. Message & submit    - fill the additional-message textarea, then
+                             submit or cancel the application.
+
+Tests typically chain ``navigate_to_visa()`` -> ``click_get_started()`` ->
+``fill_personal_details(...)`` -> the various ``select_*`` dropdown
+methods -> ``select_travel_date()`` -> ``fill_message(...)`` ->
+``submit_application()``.
+"""
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -11,15 +34,39 @@ import time
 import random
 from selenium.common.exceptions import StaleElementReferenceException
 
-    
+
 
 from utils.page_info import PageInfoUtils
 
 
 class VisaPage(BasePage):
-    """Page Object for Visa Enquiries functionality"""
-    
+    """Page Object for the Visa Enquiries application form.
+
+    Locators are grouped by section: menu/navigation, personal
+    information fields, dropdowns (country of origin, passport
+    availability, destination country, visa type - each paired with a
+    ``*_OPTION_TEMPLATE`` locator that gets ``.format()``-ed with the
+    option text to click), the travel date input, the message textarea,
+    action buttons, and success/confirmation elements. Self-contained -
+    no coupling to other page objects.
+
+    NOTE: this module imports ``from utils.page_info import PageInfoUtils``
+    (no ``src.`` prefix) - inconsistent with the ``from src.utils.logger
+    import GeoLogger`` import two lines above. It only resolves because
+    pytest.ini sets ``pythonpath = src``, which puts ``src`` itself on
+    sys.path and makes ``src/utils`` importable as a bare top-level
+    ``utils`` package; it would break if that pytest.ini setting ever
+    changed. The import is also unused in this file - ``self.pageinfo``
+    (a ``PageInfoUtils`` instance) already comes from ``BasePage``.
+    """
+
     def __init__(self, driver):
+        """Initialize the page object.
+
+        Args:
+            driver (WebDriver): Active Selenium WebDriver instance, passed
+                through to ``BasePage``.
+        """
         super().__init__(driver)
     
     # ========== LOCATORS ==========
@@ -67,18 +114,47 @@ class VisaPage(BasePage):
     
     
     def get_future_date(self, days=1):
+        """Get the day-of-month (as a zero-padded string) N days from today.
+
+        Args:
+            days (int): Number of days ahead of today. Defaults to 1.
+
+        Returns:
+            str: Two-digit day-of-month, e.g. "05". Note this only
+                returns the day, not the full date - it doesn't roll over
+                month/year boundaries, so it's only meaningful when the
+                date picker is already showing the current/target month.
+        """
         return (datetime.today() + timedelta(days=days)).strftime("%d")
-    
+
     # ========== PAGE METHODS ==========
-    
+
     def open(self, base_url):
-        """Open the application and navigate to Visa page"""
+        """Open the application homepage directly via ``driver.get``.
+
+        Args:
+            base_url (str): Full URL of the homepage to load.
+
+        Returns:
+            VisaPage: ``self``, for method chaining.
+        """
         self.logger.info("Opening application homepage")
         self.driver.get(base_url)
         return self
-    
+
     def navigate_to_visa(self):
-        """Navigate to Visa page from homepage"""
+        """Click "Visa" in the nav menu and verify the Visa page loaded.
+
+        Returns:
+            VisaPage: ``self``, for method chaining.
+
+        Raises:
+            AssertionError: If the URL doesn't contain "visa" after
+                navigating.
+            Exception: Re-raised for any other navigation failure. The
+                clicked nav element is stashed on
+                ``self._last_interacted_element`` for debugging.
+        """
         self.logger.info("Navigating to Visa page")
         visa_menu_btn = None
         try:
@@ -96,7 +172,27 @@ class VisaPage(BasePage):
             raise
     
     def click_get_started(self, retries=3, delay=2):
-        """Click Get Started button to open visa application form with retry on failure"""
+        """Click "Get Started" to open the visa application form, retrying on failure.
+
+        On failure, refreshes the page before the next attempt - works
+        around occasional cases where the button is present but not yet
+        interactive after page load.
+
+        NOTE: if all retries are exhausted, this method falls through
+        without returning or raising anything, so it implicitly returns
+        None instead of ``self`` (unlike its success path) or raising an
+        error. A caller chaining ``.click_get_started().fill_personal_details(...)``
+        would get an ``AttributeError`` on None rather than a clear
+        failure signal.
+
+        Args:
+            retries (int): Max number of attempts. Defaults to 3.
+            delay (int): Seconds to wait between retries. Defaults to 2.
+
+        Returns:
+            VisaPage or None: ``self`` on success; None if every retry
+                failed (see NOTE above).
+        """
         self.logger.info("Clicking 'Get Started' button")
 
         attempt = 0
@@ -130,22 +226,45 @@ class VisaPage(BasePage):
 
     
     def fill_personal_details(self, first_name, last_name, email, phone, timeout=30):
-        """Fill personal information section"""
+        """Fill the personal information section (first/last name, email, phone).
+
+        FIXME: the ``first_name``, ``last_name``, ``email``, and ``phone``
+        arguments are accepted but never used - the body hardcodes
+        "QA Bot" / "GEO" / "geo.qa.bot@gmail.com" / "07080702920"
+        regardless of what's passed in. Callers supplying their own
+        values will see them silently ignored.
+
+        Args:
+            first_name (str): Intended first name (currently ignored -
+                see FIXME above).
+            last_name (str): Intended last name (currently ignored).
+            email (str): Intended email address (currently ignored).
+            phone (str): Intended phone number (currently ignored).
+            timeout (int): Seconds to wait for the first/last name fields
+                specifically (the email/phone fields use a fixed 10s
+                regardless of this value). Defaults to 30.
+
+        Returns:
+            VisaPage: ``self``, for method chaining.
+
+        Raises:
+            Exception: Re-raised if any field can't be filled.
+        """
         self.logger.info("Filling personal details")
-        
+
         try:
             # First Name
             self.element.type(self.FIRST_NAME_INPUT, "QA Bot", timeout)
-            
+
             # Last Name
             self.element.type(self.LAST_NAME_INPUT, "GEO", timeout)
-            
+
             # Email
             self.element.type(self.EMAIL_INPUT, "geo.qa.bot@gmail.com", timeout=10)
 
             # Phone
             self.element.type(self.PHONE_INPUT, "07080702920", timeout=10)
-            
+
             self.logger.info("Personal details filled successfully")
             return self
             
@@ -154,7 +273,25 @@ class VisaPage(BasePage):
             raise
     
     def select_country_origin(self, country):
-        """Select country of origin from dropdown"""
+        """Open the country-of-origin dropdown and select the given country.
+
+        Matches the option via ``COUNTRY_OPTION_TEMPLATE`` formatted with
+        ``country.lower()`` - this assumes the option text in the DOM is
+        itself lowercase (a pattern used consistently elsewhere in this
+        app's dropdowns, e.g. flight_booking_flow.py's literal 'nigeria'
+        / 'mr.' / 'male' option text).
+
+        Args:
+            country (str): Country name to select (e.g. "Nigeria").
+
+        Returns:
+            VisaPage: ``self``, for method chaining.
+
+        Raises:
+            Exception: Re-raised if the dropdown or matching option can't
+                be found/clicked. The element in progress at failure time
+                is stashed on ``self._last_interacted_element``.
+        """
         self.logger.info(f"Selecting country of origin: {country}")
         dropdown_btn = None
         option_btn = None
@@ -183,7 +320,20 @@ class VisaPage(BasePage):
             raise
     
     def select_passport_availability(self, option="yes"):
-        """Select passport availability option"""
+        """Open the passport-availability dropdown and select an option.
+
+        Args:
+            option (str): Option value to select, matched via
+                ``PASSPORT_OPTION_TEMPLATE`` (e.g. "yes"/"no"). Defaults
+                to "yes".
+
+        Returns:
+            VisaPage: ``self``, for method chaining.
+
+        Raises:
+            Exception: Re-raised if the dropdown or matching option can't
+                be found/clicked.
+        """
         self.logger.info(f"Selecting passport availability: {option}")
         dropdown_btn = None
         option_element_btn = None
@@ -212,11 +362,31 @@ class VisaPage(BasePage):
             raise
     
     def select_travel_date(self, date_text=None):
-        """Select travel date from date picker"""
+        """Open the date picker and click the first available day greater than 10.
+
+        FIXME: ``date_text`` is computed (from ``date_text`` or
+        ``get_future_date(1)``) but then never actually used to target a
+        specific date - the loop below just clicks whichever enabled day
+        button has a value > 10, ignoring ``date_text`` entirely. So
+        passing a specific ``date_text`` has no effect on which date gets
+        picked.
+
+        Args:
+            date_text (str, optional): Intended target date (currently
+                ignored - see FIXME above). Defaults to
+                ``get_future_date(1)`` when None.
+
+        Returns:
+            VisaPage: ``self``, for method chaining.
+
+        Raises:
+            Exception: Re-raised if the date input can't be opened or
+                clicked.
+        """
         self.logger.info("Selecting travel date")
         date_text = self.get_future_date(1) if date_text is None else date_text
         date_input_btn = None
-        
+
         try:
             date_input = self.waiter.wait_for_clickable(self.TRAVEL_DATE_INPUT)
             self.javascript.scroll_to_element(date_input)
@@ -247,7 +417,21 @@ class VisaPage(BasePage):
             raise
 
     def select_destination_country(self):
-        """Select any destination country from the dropdown"""
+        """Open the destination-country dropdown and pick a random option.
+
+        Retries up to 3 times if the chosen option element goes stale
+        between being selected and clicked (re-fetching and re-choosing
+        randomly each time), since the listbox can re-render its options.
+
+        Returns:
+            VisaPage: ``self``, for method chaining.
+
+        Raises:
+            Exception: If no option could be clicked after 3 attempts due
+                to staleness, or if any other step fails. The element in
+                progress at failure time is stashed on
+                ``self._last_interacted_element``.
+        """
         self.logger.info("Selecting any destination country")
         dropdown_btn = None
         chosen_option_btn = None
@@ -288,7 +472,20 @@ class VisaPage(BasePage):
 
 
     def select_visa_type(self):
-        """Select any visa type from the dropdown"""
+        """Open the visa-type dropdown and pick a random option.
+
+        Same stale-element retry pattern as ``select_destination_country``.
+        Note both methods query the generic ``//div[@role='listbox']//span``
+        XPath rather than a locator scoped to this specific dropdown -
+        relies on only one listbox being open in the DOM at a time.
+
+        Returns:
+            VisaPage: ``self``, for method chaining.
+
+        Raises:
+            Exception: If no option could be clicked after 3 attempts due
+                to staleness, or if any other step fails.
+        """
         self.logger.info("Selecting any visa type")
         dropdown_btn = None
         chosen_option_btn = None
@@ -330,9 +527,21 @@ class VisaPage(BasePage):
 
     
     def fill_message(self, message):
-        """Fill additional message"""
+        """Type into the additional-message textarea.
+
+        Args:
+            message (str): Message text to append (the field isn't
+                cleared first, unlike most other fill methods in this
+                class).
+
+        Returns:
+            VisaPage: ``self``, for method chaining.
+
+        Raises:
+            Exception: Re-raised if the textarea can't be found/filled.
+        """
         self.logger.info("Filling additional message")
-        
+
         try:
             textarea = self.waiter.wait_for_visible(self.MESSAGE_TEXTAREA, timeout=10)
             textarea.send_keys(message)
@@ -345,7 +554,17 @@ class VisaPage(BasePage):
             raise
     
     def submit_application(self):
-        """Submit the visa application"""
+        """Click "Submit application" and give the app a moment to respond.
+
+        Returns:
+            VisaPage: ``self``, for method chaining.
+
+        Raises:
+            Exception: Re-raised if the submit button can't be
+                found/clicked. The clicked button is stashed on
+                ``self._last_interacted_element`` for debugging on
+                failure.
+        """
         self.logger.info("Submitting visa application")
         submit_btn = None
         
@@ -365,7 +584,15 @@ class VisaPage(BasePage):
             raise
     
     def cancel_application(self):
-        """Cancel the visa application"""
+        """Scroll to and click the "Cancel" button.
+
+        Returns:
+            VisaPage: ``self``, for method chaining.
+
+        Raises:
+            Exception: Re-raised if the cancel button can't be
+                found/clicked.
+        """
         self.logger.info("Cancelling visa application")
         cancel_btn = None
         
@@ -384,23 +611,40 @@ class VisaPage(BasePage):
             raise
     
     def is_form_visible(self):
-        """Check if visa application form is visible"""
+        """Check if the visa application form section is visible.
+
+        Returns:
+            bool: True if visible, False if not found or an error occurred.
+        """
         try:
             form = self.pageinfo.find_element(*self.FORM_SECTION)
             return form.is_displayed()
         except:
             return False
-    
+
     def is_success_message_displayed(self):
-        """Check if success message is displayed after submission"""
+        """Check if a success message is displayed after submission.
+
+        Returns:
+            bool: True if visible within 10s, False on timeout or any
+                other error.
+        """
         try:
             success_element = self.waiter.wait_for_visible(self.SUCCESS_MESSAGE, timeout=10)
             return success_element.is_displayed()
         except:
             return False
-    
+
     def get_form_fields_status(self):
-        """Get status of all form fields"""
+        """Snapshot visibility/enabled/value state for each personal-info field.
+
+        Returns:
+            dict: Keyed by field name ("first_name", "last_name",
+                "email", "phone", "message"), each mapping to
+                ``{"visible": bool, "enabled": bool, "value": str}``.
+                A field that can't be found gets all-False/empty values
+                rather than raising.
+        """
         fields_status = {}
         
         field_locators = [
@@ -429,7 +673,19 @@ class VisaPage(BasePage):
         return fields_status
     
     def wait_for_form_load(self, timeout=15, max_retries=2):
-        """Wait for visa application form to load"""
+        """Wait for the visa application form to load, retrying if it doesn't.
+
+        Args:
+            timeout (int): Accepted for interface consistency; the inner
+                waits use their own fixed 10s timeout regardless of this
+                value.
+            max_retries (int): Number of attempts before giving up.
+                Defaults to 2.
+
+        Returns:
+            bool: True once the form section and first-name field are
+                confirmed, False if all attempts failed.
+        """
         self.logger.info("Waiting for visa form to load")
         
         for attempt in range(max_retries):

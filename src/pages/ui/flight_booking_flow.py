@@ -1,4 +1,31 @@
-# src/pages/ui/flight_booking_flow.py
+"""
+src/pages/ui/flight_booking_flow.py
+
+Page Object for the Geo Travel one-way flight booking flow.
+
+Covers the full flow end to end:
+    1. Search           - select "One Way" as the trip type, pick a
+                           departure and destination airport (hardcoded
+                           to Heathrow -> Schiphol via
+                           ``perform_basic_flight_search``), and pick a
+                           departure date (tomorrow, by default).
+    2. Results           - verify search results rendered and select a
+                           flight by index.
+    3. Passenger details  - fill the passenger info form with fixed test
+                           data (name/title/gender/phone/email).
+    4. Payment            - check the payment section is reachable and
+                           click the Flutterwave option.
+
+Most of the airport/dropdown-selection methods use multiple fallback
+CSS/XPath strategies and retry loops, because the underlying dropdown
+widgets proved unreliable to automate directly - see the NOTE on the
+class docstring below for why this differs from package_booking_flow.py.
+
+Tests typically call ``perform_basic_flight_search()`` (which itself
+chains trip-type -> from-airport -> to-airport -> date), then
+``select_flight()`` -> ``fill_passenger_information()`` ->
+``save_passenger_info_and_continue()`` -> ``select_payment_method()``.
+"""
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -15,10 +42,28 @@ from datetime import datetime, timedelta
 
 class FlightBookingFlow(BasePage):
     """
-    Geo Travel Flight Booking Flow
-    Handles flight search, selection, passenger info, and payment process
+    Geo Travel Flight Booking Flow.
+
+    Handles flight search, selection, passenger info, and the start of
+    the payment process. Locators are grouped by step (search form, trip
+    type, airport selection, date selection, search results, passenger
+    info, payment) under the "UPDATED PAGE LOCATORS" heading - many
+    airport/dropdown locators intentionally use loose, flexible
+    XPath/CSS (e.g. matching on partial text) rather than a single
+    precise selector, with fallback selector lists tried in sequence in
+    the corresponding methods.
+
+    NOTE: unlike ``package_booking_flow.py`` (which imports and, per its
+    own docstring, is meant to delegate to ``PaymentPage`` from
+    payment_flow.py for the checkout step), this class does NOT import or
+    use ``PaymentPage`` at all. Its own ``select_payment_method`` and
+    ``is_payment_page_accessible`` reimplement a much more limited
+    Flutterwave-only flow inline, and - unlike
+    ``PaymentPage.complete_payment_flow`` or
+    ``PackageBookingFlow.verify_flutterwave_payment`` - never actually
+    verifies the browser reaches the Flutterwave hosted checkout URL.
     """
-    
+
     # ===== UPDATED PAGE LOCATORS =====
     
     # Page indicator
@@ -38,9 +83,15 @@ class FlightBookingFlow(BasePage):
 
     # Airport Options - MORE FLEXIBLE
     LONDON_HEATHROW_OPTION = (By.XPATH, "//*[contains(text(), 'London') or contains(text(), 'Heathrow')]")
+    # NOTE: trailing "\" line-continuation below is a harmless leftover from
+    # editing (the assignment above already completes on this line) - it just
+    # continues the logical line into the blank line that follows.
     AMSTERDAM_SCHIPHOL_OPTION = (By.XPATH, "//*[contains(text(), 'Amsterdam') or contains(text(), 'Schiphol')]")\
-    
+
     # Date Selection
+    # NOTE: uses raw "xpath" string instead of the By.XPATH constant used by
+    # every other locator in this file - works because By.XPATH == "xpath",
+    # but inconsistent style.
     DEPARTURE_DATE_FIELD = ("xpath", "//div[contains(@class,'cursor-pointer') and .//p[text()='Departure Date']]")
     AVAILABLE_DATES = (By.CSS_SELECTOR, "button:not([disabled])")
     
@@ -63,12 +114,20 @@ class FlightBookingFlow(BasePage):
     MONTH_SELECT = (By.XPATH, "//select[@aria-label='Choose the Month']")
     PHONE_INPUT = (By.XPATH, "//input[@placeholder='Phone number']")
     EMAIL_INPUT = (By.XPATH, "//input[@placeholder='Enter your email address']")
+    # NOTE: PASSPORT_INPUT, COUNTRY_ORIGIN_DROPDOWN, NIGERIA_OPTION,
+    # ISSUING_COUNTRY_DROPDOWN, PASSPORT_EXPIRY_FIELD, DOB_FIELD,
+    # YEAR_SELECT, and MONTH_SELECT are all defined but never referenced by
+    # any method below - fill_passenger_information() only fills full
+    # name/title/gender/phone/email. If the live passenger form actually
+    # requires passport/DOB/country-of-origin fields, this flow would fail
+    # to complete a real booking; these locators look like leftovers from
+    # an unfinished or since-simplified form.
     PASSPORT_INPUT = (By.XPATH, "//input[@placeholder='Enter your passport number']")
     COUNTRY_ORIGIN_DROPDOWN = (By.XPATH, "//div[contains(., 'Select country of origin')]")
     NIGERIA_OPTION = (By.XPATH, "//span[normalize-space()='nigeria']")
     ISSUING_COUNTRY_DROPDOWN = (By.XPATH, "//div[contains(., 'Select issuing country')]")
     PASSPORT_EXPIRY_FIELD = (By.XPATH, "//div[contains(@id, 'headlessui-popover-button')]//div")
-    
+
     # Save and Continue
     SAVE_CONTINUE_BUTTON = (By.XPATH, "//button[normalize-space()='Save changes & Continue']")
     
@@ -81,10 +140,21 @@ class FlightBookingFlow(BasePage):
     ERROR_ELEMENTS = (By.XPATH, "//div[contains(@class, 'error') or contains(@class, 'Error')]")
 
     def __init__(self, driver):
+        """Initialize the page object.
+
+        Args:
+            driver (WebDriver): Active Selenium WebDriver instance, passed
+                through to ``BasePage``.
+        """
         super().__init__(driver)
 
     def is_flight_search_form_visible(self):
-        """Verify flight search form is visible on the page"""
+        """Check if the flight search form is present and displayed.
+
+        Returns:
+            bool: True if the form is visible, False if not found,
+                hidden, or an error occurred.
+        """
         try:
             forms = self.driver.find_elements(*self.FLIGHT_SEARCH_FORM)
             if forms and forms[0].is_displayed():
@@ -96,6 +166,23 @@ class FlightBookingFlow(BasePage):
             return False
 
     def select_one_way_trip(self, trip_type="One Way"):
+        """Open the trip-type dropdown and select the given trip type.
+
+        Tries a list of alternative dropdown-button selectors and, once
+        opened, a list of alternative label spellings for the requested
+        type (see ``TRIP_TYPE_ALIASES``) - both loops exist because the
+        trip-type widget's exact markup/labels proved inconsistent to
+        target with a single selector.
+
+        Args:
+            trip_type (str): Trip type to select - one of "one way",
+                "round trip", "multi city" (case-insensitive), or any
+                other string to try verbatim. Defaults to "One Way".
+
+        Returns:
+            bool: True if both the dropdown was opened and a matching
+                option was clicked, False otherwise.
+        """
         log = self.logger
 
         log.info(f"Selecting trip type: {trip_type}")
@@ -168,7 +255,24 @@ class FlightBookingFlow(BasePage):
 
 
     def select_from_airport(self, airport_name="Heathrow"):
-        """Select departure airport - AGGRESSIVE FALLBACK APPROACH"""
+        """Select the departure ("From") airport, trying multiple fallback strategies.
+
+        Opens the FROM dropdown (primary locator, or one of several
+        alternative selectors if that fails), types ``airport_name`` into
+        whatever search input appears, then clicks a matching option -
+        matched loosely against ``airport_name`` plus the hardcoded
+        keywords "london"/"heathrow" as a safety net for this default
+        route.
+
+        Args:
+            airport_name (str): Airport/city name to search for and
+                select. Defaults to "Heathrow".
+
+        Returns:
+            bool: True if an option was found and clicked, False if any
+                stage (dropdown, search input, or option) couldn't be
+                resolved.
+        """
         self.logger.info(f"Selecting from airport: {airport_name}")
 
         try:
@@ -284,7 +388,16 @@ class FlightBookingFlow(BasePage):
             return False
 
     def select_from_airport_with_retry(self, airport_name, max_retries=3):
-        """Select departure airport with retry mechanism"""
+        """Call ``select_from_airport`` repeatedly until it succeeds or retries run out.
+
+        Args:
+            airport_name (str): Airport/city name to select.
+            max_retries (int): Max number of attempts. Defaults to 3.
+
+        Returns:
+            bool: True as soon as an attempt succeeds, False if every
+                attempt fails.
+        """
         for attempt in range(max_retries):
             try:
                 self.logger.info(f"Attempt {attempt + 1}/{max_retries} to select departure airport")
@@ -303,7 +416,25 @@ class FlightBookingFlow(BasePage):
         return False
 
     def select_to_airport(self, airport_name="Schiphol"):
-        """Select destination airport - IMPROVED WITH BETTER HANDLING"""
+        """Select the destination ("To") airport, with extensive fallback handling.
+
+        Similar shape to ``select_from_airport`` but with extra handling
+        for the TO dropdown sometimes starting disabled until the FROM
+        airport is chosen (polls up to 10s for it to become enabled,
+        falling back to a JS click if it's still reported disabled), and
+        a final fallback of pressing Enter to accept whatever option is
+        currently highlighted if no option element can be matched
+        directly.
+
+        Args:
+            airport_name (str): Airport/city name to search for and
+                select. Defaults to "Schiphol".
+
+        Returns:
+            bool: True if an option was selected (directly, or inferred
+                via the Enter-key fallback), False if every strategy
+                failed.
+        """
         self.logger.info(f"Selecting to airport: {airport_name}")
         
         try:
@@ -492,8 +623,21 @@ class FlightBookingFlow(BasePage):
 
     def select_departure_date(self):
         """
-        Selects the departure date dynamically.
-        :param days_ahead: Number of days from today (default 1 = tomorrow)
+        Open the departure date picker and select tomorrow's date.
+
+        FIXME: the docstring inherited from an earlier version references
+        a ``days_ahead`` parameter, but this method takes no parameters
+        at all and always hardcodes "tomorrow" (``timedelta(days=1)``) -
+        there's no way to select a different offset. Also note the first
+        ``departure_field = self.pageinfo.find_element(...)`` result
+        below is immediately discarded and re-fetched via
+        ``WebDriverWait`` on the next line - the first call does nothing
+        useful.
+
+        Returns:
+            bool: True if a date was clicked (tomorrow's date if found,
+                otherwise the first available enabled day), False on any
+                failure.
         """
         try:
             self.logger.info("Selecting departure date...")
@@ -529,7 +673,22 @@ class FlightBookingFlow(BasePage):
             return False
 
     def perform_basic_flight_search(self):
-        """Perform complete flight search flow - SIMPLIFIED AND FIXED"""
+        """Run the full one-way search flow: trip type, both airports, and date.
+
+        NOTE: ``from_city``/``to_city`` are hardcoded to "Heathrow" and
+        "Schiphol" rather than accepted as parameters, so this method
+        always searches the same fixed route.
+
+        Chains ``select_one_way_trip`` -> ``select_from_airport_with_retry``
+        -> ``select_to_airport`` -> ``select_departure_date``, then
+        confirms both airport fields show a selection via
+        ``verify_search_form_filled``.
+
+        Returns:
+            bool: True if every step succeeded and the form is
+                confirmed filled, False if any step failed (details
+                logged, no exception propagated to the caller).
+        """
         from_city = "Heathrow"
         to_city = "Schiphol"
 
@@ -573,7 +732,15 @@ class FlightBookingFlow(BasePage):
             return False
 
     def verify_search_form_filled(self):
-        """Verify that the search form has been properly filled - SIMPLIFIED"""
+        """Verify neither the FROM nor TO dropdown still shows placeholder text.
+
+        Considers a field "filled" if its text doesn't contain "select"
+        or "------" (the widget's placeholder patterns).
+
+        Returns:
+            bool: True if both FROM and TO appear filled, False if
+                either still shows a placeholder or an error occurred.
+        """
         try:
             time.sleep(2)
             
@@ -603,7 +770,17 @@ class FlightBookingFlow(BasePage):
             return False
 
     def is_search_session_initialized(self, search_term="searchId=", timeout=30):
-        """Check if search session is properly initialized"""
+        """Poll the current URL until it contains ``search_term``.
+
+        Args:
+            search_term (str): Substring expected to appear in the URL
+                once search results have loaded. Defaults to "searchId=".
+            timeout (int): Max seconds to wait. Defaults to 30.
+
+        Returns:
+            bool: True if found in time, False on timeout or any other
+                error.
+        """
         try:
             current_url = self.driver.current_url
             self.logger.info(f"Checking for '{search_term}' in {current_url}")
@@ -626,7 +803,19 @@ class FlightBookingFlow(BasePage):
             return False
 
     def are_search_results_displayed(self):
-        """Check if flight search results are displayed"""
+        """Check that a search session started and flight-like results rendered.
+
+        First confirms via ``is_search_session_initialized``, then looks
+        for result containers whose text mentions flight-related keywords
+        (flight/airline/depart/arrive/price/₦), falling back to a generic
+        check for any Sentry-tracked dynamic component if no keyword
+        match is found.
+
+        Returns:
+            bool: True if a session was initialized AND either flight
+                keyword matches or dynamic components were found, False
+                otherwise.
+        """
         try:
             self.logger.info("Checking for search results...")
 
@@ -660,7 +849,20 @@ class FlightBookingFlow(BasePage):
             return False
         
     def select_flight(self, flight_index=0):
-        """Select a flight by clicking 'View flight details' button"""
+        """Click "View flight details" for the flight at the given index.
+
+        Falls back to index 0 if ``flight_index`` is out of range, rather
+        than failing. Uses a JS click after scrolling, since the button
+        may be behind other elements.
+
+        Args:
+            flight_index (int): Zero-based index of the flight to select.
+                Defaults to 0.
+
+        Returns:
+            bool: True if a button was clicked, False if no results/
+                buttons were found or an error occurred.
+        """
         try:
             self.logger.info(f"Selecting flight at index {flight_index}")
 
@@ -697,7 +899,18 @@ class FlightBookingFlow(BasePage):
             return False
 
     def fill_passenger_information(self):
-        """Fill passenger information form with test data"""
+        """Fill the passenger info form with fixed test data (no parameters).
+
+        Fills full name, title ("mr."), gender ("male"), phone, and
+        email - all hardcoded rather than accepted as arguments, so this
+        is only suitable for test/staging use. Does not fill
+        passport/DOB/country-of-origin fields (see the NOTE on those
+        locators above).
+
+        Returns:
+            bool: True if every field was filled successfully, False on
+                any error.
+        """
         try:
             # Full Name
             full_name_input = WebDriverWait(self.driver, 10).until(
@@ -745,7 +958,11 @@ class FlightBookingFlow(BasePage):
             return False
 
     def save_passenger_info_and_continue(self):
-        """Save passenger information and continue to next step"""
+        """Scroll to and click "Save changes & Continue".
+
+        Returns:
+            bool: True if clicked successfully, False on any error.
+        """
         try:
             save_button = WebDriverWait(self.driver, 10).until(
                 EC.element_to_be_clickable(self.SAVE_CONTINUE_BUTTON)
@@ -758,7 +975,12 @@ class FlightBookingFlow(BasePage):
             return False
 
     def is_payment_page_accessible(self):
-        """Check if payment page is accessible"""
+        """Check if the payment section is visible on the page.
+
+        Returns:
+            bool: True if visible within 10s, False on timeout or any
+                other error.
+        """
         try:
             payment_section = WebDriverWait(self.driver, 10).until(
                 EC.visibility_of_element_located(self.PAYMENT_SECTION)
@@ -768,7 +990,18 @@ class FlightBookingFlow(BasePage):
             return False
 
     def select_payment_method(self):
-        """Select payment method from available options"""
+        """Click the Flutterwave payment option.
+
+        NOTE: this only clicks the option - it does not wait for or
+        verify that the browser actually reaches the Flutterwave hosted
+        checkout URL (contrast with ``PaymentPage.complete_payment_flow``
+        or ``PackageBookingFlow.verify_flutterwave_payment``, both of
+        which explicitly wait for the checkout URL). See the class-level
+        NOTE about this flow not using ``PaymentPage``.
+
+        Returns:
+            bool: True if the option was clicked, False on any error.
+        """
         try:
             flutterwave_option = WebDriverWait(self.driver, 10).until(
                 EC.element_to_be_clickable(self.FLUTTERWAVE_OPTION)
@@ -779,7 +1012,15 @@ class FlightBookingFlow(BasePage):
             return False
 
     def is_page_loaded(self, timeout=15):
-        """Check if flight booking page is fully loaded and ready for interaction"""
+        """Check if the document has reached ``readyState == "complete"``.
+
+        Args:
+            timeout (int): Seconds to wait. Defaults to 15.
+
+        Returns:
+            bool: True if loaded in time, False on timeout or any other
+                error.
+        """
         try:
             WebDriverWait(self.driver, timeout).until(
                 lambda d: d.execute_script("return document.readyState") == "complete"
@@ -794,7 +1035,15 @@ class FlightBookingFlow(BasePage):
             return False
         
     def debug_ui_elements(self):
-        """Debug method to see all available UI elements"""
+        """Log every visible button/input on the page and capture a screenshot.
+
+        Diagnostic helper only (not part of the normal flow) - useful
+        when a locator stops matching and you need to see what's
+        actually rendered.
+
+        Returns:
+            bool: Always True.
+        """
         self.logger.info("=== COMPREHENSIVE UI DEBUG ===")
 
         # Wait for page to load

@@ -1,37 +1,132 @@
-# src/pages/api/flight_api.py
+"""
+src/pages/api/flight_api.py
+
+API client for the /api/flight endpoints of the Geo Travel backend
+covering the flight search/booking flow: submitting a search, polling
+for results, initiating and inspecting bookings, quoting, and
+validating passenger emails.
+
+(See flight_utils_api.py for the separate airports/airlines reference
+data endpoints.)
+"""
 
 from ...core.base_api import BaseAPI
 
 class FlightAPI(BaseAPI):
-    
+    """API client for the /api/flight resource (search, booking, quotes).
+
+    All methods hit endpoints under the ``/api/flight/*`` prefix.
+
+    NOTE: several methods below (``get_search_results``,
+    ``get_booked_flights``, ``get_quote``) build their query string by
+    interpolating values directly into the endpoint via an f-string,
+    instead of passing a ``params=`` dict to ``self.get`` the way the
+    other API clients in this package do. This means the values are not
+    URL-encoded, so a value containing characters like spaces or ``&``
+    could produce a malformed request.
+    """
+
     def search_request(self, search_data):
-        """POST /api/flight/search-request"""
+        """Submit a flight search.
+
+        POST /api/flight/search-request
+
+        Args:
+            search_data (dict): Search criteria (e.g. origin,
+                destination, dates, passenger counts) sent as the JSON
+                request body.
+
+        Returns:
+            requests.Response: The raw response from the request.
+        """
         endpoint = "/api/flight/search-request"
         return self.post(endpoint, json=search_data)
-    
+
     def get_search_results(self, search_id):
-        """GET /api/flight/search"""
+        """Fetch results for a previously submitted flight search.
+
+        GET /api/flight/search
+
+        Args:
+            search_id: Identifier returned by ``search_request()``,
+                passed as the ``search_id`` query parameter.
+
+        Returns:
+            requests.Response: The raw response from the request.
+        """
         endpoint = f"/api/flight/search?search_id={search_id}"
         return self.get(endpoint)
-    
+
     def initiate_booking(self, booking_data):
-        """POST /api/flight/initiate-booking"""
+        """Start a flight booking.
+
+        POST /api/flight/initiate-booking
+
+        Args:
+            booking_data (dict): Booking payload (e.g. selected flight,
+                passenger details) sent as the JSON request body.
+
+        Returns:
+            requests.Response: The raw response from the request.
+        """
         endpoint = "/api/flight/initiate-booking"
         return self.post(endpoint, json=booking_data)
-    
+
     def get_booked_flights(self, limit=10, page=1, category="Upcoming"):
-        """GET /api/flight/user/booked-flights"""
+        """List the current user's booked flights.
+
+        GET /api/flight/user/booked-flights
+
+        Args:
+            limit (int): Max number of results per page. Defaults to 10.
+            page (int): Page number to fetch. Defaults to 1.
+            category (str): Booking category filter (e.g. "Upcoming").
+                Defaults to "Upcoming".
+
+        Returns:
+            requests.Response: The raw response from the request.
+        """
         endpoint = f"/api/flight/user/booked-flights?limit={limit}&page={page}&category={category}"
         return self.get(endpoint)
-    
+
     def create_quote(self, quote_data):
-        """POST /api/flight/quote"""
+        """Create a flight quote.
+
+        POST /api/flight/quote
+
+        Args:
+            quote_data (dict): Quote payload sent as the JSON request
+                body.
+
+        Returns:
+            requests.Response: The raw response from the request.
+        """
         return self.post("/api/flight/quote", json=quote_data)
-    
+
     def get_quote(self, reference):
-        """GET /api/flight/quote"""
+        """Fetch a previously created flight quote.
+
+        GET /api/flight/quote
+
+        Args:
+            reference: Quote reference, passed as the ``reference``
+                query parameter.
+
+        Returns:
+            requests.Response: The raw response from the request.
+        """
         return self.get(f"/api/flight/quote?reference={reference}")
-    
+
     def validate_passenger_email(self, passenger_data):
-        """POST /api/flight/validate-passenger-email"""
+        """Validate a passenger's email address.
+
+        POST /api/flight/validate-passenger-email
+
+        Args:
+            passenger_data (dict): Passenger info (at least the email
+                to validate) sent as the JSON request body.
+
+        Returns:
+            requests.Response: The raw response from the request.
+        """
         return self.post("/api/flight/validate-passenger-email", json=passenger_data)
