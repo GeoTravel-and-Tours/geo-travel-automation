@@ -1,4 +1,4 @@
-# src/pages/api/user_api.py
+# src/pages/api/users_api.py
 
 """API client for the retail ``/api/users/me`` endpoints.
 

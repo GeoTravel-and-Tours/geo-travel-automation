@@ -167,12 +167,6 @@ class BlogsPage(BasePage):
         except Exception as e:
             self.logger.error(f"Failed to navigate to Blogs page: {e}")
             raise
-        # FIXME: unreachable - TimeoutError is a subclass of Exception (via
-        # OSError), so the "except Exception" branch above always catches it
-        # first. This except clause never executes as written.
-        except TimeoutError as te:
-            self.logger.error(f"Timeout while navigating to Blogs page: {te}")
-            raise
 
     def verify_blogs_page_loaded(self):
         """Verify the Blogs listing page has fully loaded.

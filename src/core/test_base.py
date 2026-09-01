@@ -7,15 +7,14 @@ the shared ``smoke_reporting`` reporter - all via pytest's
 ``setup_method``/``teardown_method`` hooks, so individual test methods
 don't need to call any of this explicitly.
 
-FIXME: ``teardown_method`` reads test outcome from
-``self._test_outcome``, which this class never sets itself. That
-attribute is conventionally populated by a ``pytest_runtest_makereport``
-hookwrapper in ``conftest.py`` that stashes the test result onto the
-test instance, but a repo-wide search found no such hook defined
-anywhere - so ``hasattr(self, "_test_outcome")`` is always False in
-practice, and any test class that relies on ``TestBase`` for its
-pass/fail reporting will always report "PASS" via ``smoke_reporting``,
-even for tests that actually failed/raised.
+Pass/fail status is read from ``self._test_outcome_status`` /
+``self._test_outcome_error``, which conftest.py's
+``pytest_runtest_makereport`` hookwrapper stashes onto the test
+instance once it has computed the real result for the "call" phase
+(see that hook for how status/error_message are derived from pytest's
+own report). ``mark_test_failed()`` can additionally force a FAIL
+regardless of what pytest's own report says, for tests that want to
+flag a soft failure without raising.
 """
 
 import time
@@ -37,9 +36,10 @@ class TestBase:
     teardown, determines pass/fail status, captures a screenshot on
     failure, and records the result via ``smoke_reporting``.
 
-    Relies on ``self._test_outcome`` being set by an external pytest
-    hook (see module docstring NOTE) and on ``self.driver`` being set
-    by the subclass/fixture for screenshot capture to work.
+    Relies on ``self._test_outcome_status``/``self._test_outcome_error``
+    being set by conftest.py's ``pytest_runtest_makereport`` hook (see
+    module docstring) and on ``self.driver`` being set by the
+    subclass/fixture for screenshot capture to work.
     """
 
     def setup_method(self, method):
@@ -60,10 +60,12 @@ class TestBase:
     def teardown_method(self, method):
         """Determine the test's outcome, capture a screenshot on failure, and report it.
 
-        Reads the pass/fail result via ``self._test_outcome`` (see the
-        module docstring NOTE about how/whether that attribute gets
-        set), takes a screenshot if the test failed, and forwards the
-        result to ``smoke_reporting.add_test_result``.
+        Reads the pass/fail result stashed by conftest.py's
+        ``pytest_runtest_makereport`` hook (``self._test_outcome_status``/
+        ``self._test_outcome_error``), then lets ``mark_test_failed()``
+        override it to FAIL if it was called during the test, takes a
+        screenshot if the test failed, and forwards the result to
+        ``smoke_reporting.add_test_result``.
 
         Args:
             method (Callable): The test method pytest just ran
@@ -72,25 +74,14 @@ class TestBase:
         """
         duration = time.time() - self.test_start_time
 
-        # Use pytest's internal test result (most reliable)
-        test_status = "PASS"
-        error_message = None
+        test_status = getattr(self, "_test_outcome_status", "PASS")
+        error_message = getattr(self, "_test_outcome_error", None)
 
-        # Access the actual test result from pytest
-        try:
-            # This gets the actual test result from pytest
-            if hasattr(self, "_test_outcome"):
-                outcome = self._test_outcome
-                if hasattr(outcome, "result"):
-                    result = outcome.result
-                    if result and hasattr(result, "failed") and result.failed:
-                        test_status = "FAIL"
-                        if hasattr(result, "exception") and result.exception:
-                            error_message = str(result.exception)
-        except Exception as e:
-            print(f"Error getting test result: {e}")
-            # Fallback: if we can't determine, assume pass
-            test_status = "PASS"
+        # A manual mark_test_failed() call always wins, since pytest's own
+        # report won't show FAIL for a test that didn't raise.
+        if getattr(self, "_test_failed", False):
+            test_status = "FAIL"
+            error_message = getattr(self, "_error_message", error_message)
 
         # Capture screenshot on failure
         screenshot_path = None
@@ -147,11 +138,10 @@ class TestBase:
     def mark_test_failed(self, error_message):
         """Manually flag the current test as failed.
 
-        NOTE: this only sets ``self._test_failed``/``self._error_message``;
-        ``teardown_method`` above never reads those attributes (it
-        determines status solely from ``self._test_outcome``), so
-        calling this method currently has no effect on the reported
-        test status or the recorded error message.
+        Sets ``self._test_failed``/``self._error_message``, which
+        ``teardown_method`` reads and uses to override the reported
+        status to FAIL - useful for a test that wants to record a
+        failure without raising an exception itself.
 
         Args:
             error_message (str): Description of why the test is being

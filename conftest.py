@@ -550,6 +550,13 @@ def pytest_runtest_makereport(item, call):
             else:
                 error_message = str(report.longrepr) if getattr(report, "longrepr", None) else "Test failed"
 
+        # Make the real status available to TestBase.teardown_method (see
+        # src/core/test_base.py), which otherwise has no reliable way to
+        # know the actual pytest outcome from within an xunit-style hook.
+        if getattr(item, "instance", None) is not None:
+            item.instance._test_outcome_status = status
+            item.instance._test_outcome_error = error_message
+
         screenshot_path = None
         html_path = None
         evidence = {}

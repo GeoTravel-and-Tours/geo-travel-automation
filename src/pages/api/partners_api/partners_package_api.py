@@ -1,4 +1,4 @@
-# src/pages/api/Partners_api/partners_package_api.py
+# src/pages/api/partners_api/partners_package_api.py
 
 """API client for the Partners (B2B) ``/api/package`` endpoints.
 

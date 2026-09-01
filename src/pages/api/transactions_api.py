@@ -1,4 +1,4 @@
-# src/pages/api/transaction_api.py
+# src/pages/api/transactions_api.py
 
 """API client for the retail ``/api/transactions`` endpoints.
 

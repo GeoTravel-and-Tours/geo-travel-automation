@@ -1,4 +1,4 @@
-# src/pages/api/Partners_api/partners_flight_api.py
+# src/pages/api/partners_api/partners_flight_api.py
 
 """API client for the Partners (B2B) ``/api/flight`` endpoints.
 
@@ -50,12 +50,6 @@ class PartnersFlightAPI(PartnersBaseAPI):
     def _get_flight_headers(self):
         """Build the API key/secret/app-id headers used for flight requests.
 
-        NOTE: this logs the full headers dict at INFO level, which
-        includes ``x-api-secret`` in plaintext. That's convenient for
-        local debugging but means the secret ends up in test logs/CI
-        output - worth tightening (e.g. redact the secret) before this
-        runs anywhere logs are retained or shared.
-
         Returns:
             dict: Headers including ``Content-Type``, ``Accept``,
                 ``x-api-key``, ``x-api-secret``, and ``x-app-id``.
@@ -67,7 +61,8 @@ class PartnersFlightAPI(PartnersBaseAPI):
             'x-api-secret': self.api_secret,
             'x-app-id': self.app_id
         }
-        self.logger.info(f"Flight API Headers: {headers}")  # Debug logging
+        redacted = dict(headers, **{'x-api-secret': '***REDACTED***'})
+        self.logger.debug(f"Flight API Headers: {redacted}")
         return headers
 
     def search_flights(self, search_data):
@@ -82,8 +77,7 @@ class PartnersFlightAPI(PartnersBaseAPI):
         Returns:
             requests.Response: Raw response from the Partners API.
         """
-        headers=self._get_flight_headers()
-        self.logger.info(f"🔍 SENDING THESE HEADERS: {headers}")
+        headers = self._get_flight_headers()
         return self.post(self.endpoints['search'], json=search_data,
                         headers=headers)
 
@@ -100,7 +94,6 @@ class PartnersFlightAPI(PartnersBaseAPI):
             requests.Response: Raw response from the Partners API.
         """
         headers = self._get_flight_headers()
-        self.logger.info(f"🔍 SENDING THESE HEADERS: {headers}")
         return self.post(self.endpoints['book'], json=booking_data,
                         headers=headers)
 

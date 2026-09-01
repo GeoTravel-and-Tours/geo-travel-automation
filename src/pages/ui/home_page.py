@@ -105,15 +105,6 @@ class HomePage(BasePage):
         of at least 60% is required to pass. On the final failed attempt,
         captures a screenshot/HTML report before failing.
 
-        FIXME: in the final-attempt validation-failure branch (not the
-        exception branch), the assertion raised is
-        ``AssertionError(f"...: {e}")`` - but ``e`` is never defined
-        anywhere in that branch (it only exists in the separate
-        ``except Exception as e:`` block below). This raises
-        ``NameError: name 'e' is not defined`` instead of the intended
-        ``AssertionError`` whenever the homepage loads successfully but
-        content validation keeps failing across all retries.
-
         Args:
             timeout (int): Seconds to wait for page-load conditions per
                 attempt. Defaults to 15.
@@ -129,8 +120,7 @@ class HomePage(BasePage):
 
         Raises:
             AssertionError: On the final attempt if content validation
-                still fails (though see the FIXME above - this currently
-                manifests as ``NameError`` instead).
+                still fails.
         """
         # First, warm up the site
         self.warm_up_site()
@@ -176,10 +166,10 @@ class HomePage(BasePage):
                         if result["html"]:
                             self.logger.error(f"📄 Error report saved: {result['html']}")
 
-                        # FIXME: `e` is not defined in this branch - see the FIXME
-                        # in the docstring above. This raises NameError instead of
-                        # the intended AssertionError.
-                        raise AssertionError(f"Homepage failed after {max_retries} attempts: {e}")
+                        raise AssertionError(
+                            f"Homepage failed after {max_retries} attempts: "
+                            f"validation confidence too low ({confidence_score:.1f}%)"
+                        )
 
                     time.sleep(5 * attempt)
                     continue

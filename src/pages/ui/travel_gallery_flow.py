@@ -276,15 +276,11 @@ class TravelGalleryPage(BasePage):
     def verify_gallery_has_tours(self):
         """Count the tour cards on the gallery page.
 
-        NOTE: the ``assert count > 0`` below is inside the surrounding
-        ``try``, so it's caught by the broad ``except Exception`` right
-        after it and turned into a logged error + ``return 0`` - it never
-        actually propagates as an AssertionError to the caller. In
-        practice this method always returns an int and never raises.
-
         Returns:
-            int: The number of tour cards found (0 if none, or if an
-                error occurred while checking).
+            int: The number of tour cards found.
+
+        Raises:
+            AssertionError: If no tour cards are found on the page.
         """
         self.logger.info("Verifying gallery has tour cards")
 
@@ -292,13 +288,12 @@ class TravelGalleryPage(BasePage):
             tour_cards = self.driver.find_elements(*self.TOUR_CARDS)
             count = len(tour_cards)
             self.logger.info(f"Found {count} tour cards")
-
-            assert count > 0, "No tour cards found on gallery page"
-            return count
-
         except Exception as e:
-            self.logger.error(f"Failed to verify tour cards: {e}")
-            return 0
+            self.logger.error(f"Failed to look up tour cards: {e}")
+            raise
+
+        assert count > 0, "No tour cards found on gallery page"
+        return count
 
     def click_tour_image(self, image_index=0):
         """Hover over a gallery image container and click its "view" button.

@@ -63,14 +63,6 @@ class PackageAPI(BaseAPI):
 
         POST /api/package/book
 
-        NOTE: this method is defined twice in this class (see the second
-        ``book_package`` further below, under "User Booked Packages"),
-        with identical bodies. The second definition silently shadows
-        this one at class-creation time, so it's effectively dead code
-        rather than a behavior difference - but it's worth cleaning up
-        since a future edit to only one copy would create a real
-        divergence.
-
         Args:
             booking_data (dict): Package booking payload (e.g. package
                 id, traveller details, price option).
@@ -154,25 +146,6 @@ class PackageAPI(BaseAPI):
             requests.Response: Raw response from the API.
         """
         return self.get(f"/api/package/deal/{deal_id}")
-
-    def book_package(self, booking_data):
-        """Book a package.
-
-        POST /api/package/book
-
-        NOTE: duplicate of the ``book_package`` method defined earlier in
-        this class under "Package Booking" - see that copy's docstring.
-        This later definition is the one that actually wins, since Python
-        keeps the last method assignment on the class.
-
-        Args:
-            booking_data (dict): Package booking payload (e.g. package
-                id, traveller details, price option).
-
-        Returns:
-            requests.Response: Raw response from the API.
-        """
-        return self.post("/api/package/book", json=booking_data)
 
     # User Booked Packages
     def get_user_booked_packages(self, **params):

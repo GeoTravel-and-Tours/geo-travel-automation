@@ -120,6 +120,8 @@ class EnvironmentConfig:
     API_BASE_URL = os.getenv("API_BASE_URL")
     API_TIMEOUT = int(os.getenv("API_TIMEOUT", "30"))
     API_MAX_RETRIES = int(os.getenv("API_MAX_RETRIES", "3"))
+    API_TEST_EMAIL = os.getenv("API_TEST_EMAIL")
+    API_TEST_PASSWORD = os.getenv("API_TEST_PASSWORD")
     
     # API Timeout Configuration
     API_CONNECT_TIMEOUT = int(os.getenv("API_CONNECT_TIMEOUT", "10"))
@@ -400,12 +402,19 @@ class EnvironmentConfig:
             config_updates: Dictionary of config updates to merge
 
         Returns:
-            None. NOTE: if ``environment`` isn't already a key in
-            ``TOKEN_EXTRACTION_CONFIG``, this silently does nothing -
-            no error is raised and ``config_updates`` is dropped.
+            None.
+
+        Raises:
+            ValueError: If ``environment`` isn't already a key in
+                ``TOKEN_EXTRACTION_CONFIG``, so a typo'd environment
+                name doesn't silently drop ``config_updates``.
         """
-        if environment in cls.TOKEN_EXTRACTION_CONFIG:
-            cls.TOKEN_EXTRACTION_CONFIG[environment].update(config_updates)
+        if environment not in cls.TOKEN_EXTRACTION_CONFIG:
+            raise ValueError(
+                f"Unknown environment '{environment}' - expected one of "
+                f"{list(cls.TOKEN_EXTRACTION_CONFIG.keys())}"
+            )
+        cls.TOKEN_EXTRACTION_CONFIG[environment].update(config_updates)
 
     # Partners API Verified Test Account
     PARTNERS_VERIFIED_EMAIL = os.getenv("PARTNERS_VERIFIED_EMAIL")
@@ -463,21 +472,10 @@ class EnvironmentConfig:
     def get_api_credentials(cls):
         """Return generic API test credentials.
 
-        FIXME: references ``cls.API_TEST_EMAIL`` / ``cls.API_TEST_PASSWORD``,
-        which are never defined as class attributes on
-        ``EnvironmentConfig`` (they only exist as ``os.getenv()`` reads
-        inside ``src/pages/api/auth_api.py``). Calling this method as
-        written raises ``AttributeError`` rather than returning
-        credentials - it needs its own
-        ``os.getenv("API_TEST_EMAIL")``/``os.getenv("API_TEST_PASSWORD")``
-        class attributes (or reuse of whatever ``auth_api.py`` reads)
-        before it can work.
-
         Returns:
-            dict: Intended to be ``{"email": ..., "password": ...}``.
-
-        Raises:
-            AttributeError: Always, currently, per the FIXME above.
+            dict: ``{"email": ..., "password": ...}`` read from the
+            ``API_TEST_EMAIL``/``API_TEST_PASSWORD`` environment
+            variables.
         """
         return {
             "email": cls.API_TEST_EMAIL,
@@ -571,30 +569,29 @@ class EnvironmentConfig:
             environment (str, optional): Environment to wait for.
                 Defaults to ``cls.TEST_ENV``.
             timeout (int): Overall time budget in seconds. Defaults to 60.
-            check_interval (int): Unused directly (wait time between
-                polls is instead computed as ``3 * attempt``, growing
-                each iteration) - kept as a parameter for API
-                compatibility/callers that pass it explicitly.
+            check_interval (int): Base seconds to wait between polls,
+                growing linearly each iteration (``check_interval *
+                attempt``). Defaults to 5.
 
         Returns:
             bool: True once ``is_api_accessible`` succeeds; False if
             ``timeout`` seconds elapse without success.
         """
         logger = GeoLogger("APICheck")
-        
+
         env = environment or cls.TEST_ENV
         api_base_url = cls.get_api_base_url(env)
         start_time = time.time()
         attempt = 1
-        
+
         logger.info(f"Waiting for API environment: {api_base_url}")
-        
+
         while time.time() - start_time < timeout:
             if cls.is_api_accessible(environment=env, max_attempts=1):
                 logger.success(f"API environment {env} is now accessible")
                 return True
-            
-            wait_time = 3 * attempt  # Shorter intervals for API
+
+            wait_time = check_interval * attempt
             logger.info(f"Waiting for API environment... (attempt {attempt}, waiting {wait_time}s)")
             time.sleep(wait_time)
             attempt += 1

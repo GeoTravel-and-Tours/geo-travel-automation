@@ -94,18 +94,8 @@ class PartnersBaseAPI:
           backoff (1s, 2s, 4s, ...) up to ``max_retries`` attempts,
           re-raising the last timeout once attempts are exhausted.
         - ``ConnectionError``/``ChunkedEncodingError``: retried with
-          linear backoff (5s, 10s, 15s, ...). NOTE: on the final
-          attempt this branch does not re-raise or return - it just
-          logs and lets the loop end, so exhausting retries on one of
-          these errors makes this method return ``None`` instead of
-          raising. ``_request`` (below) treats a ``None`` response as
-          a generic ``ValueError``, so the original exception/traceback
-          is lost in that case.
-
-        FIXME: ``ReadTimeout`` is listed in both ``except`` clauses
-        above; since the first matching ``except`` wins, a
-        ``ReadTimeout`` is always handled by the first branch and the
-        mention of it in the second tuple is dead code.
+          linear backoff (5s, 10s, 15s, ...), re-raising the last
+          exception once attempts are exhausted.
 
         Args:
             method (str): HTTP method, e.g. "GET", "POST".
@@ -115,15 +105,18 @@ class PartnersBaseAPI:
                 ``requests.Session.request``.
 
         Returns:
-            requests.Response | None: The response from the first
-            successful attempt, or ``None`` if retries were exhausted
-            on a connection/chunked-encoding error (see NOTE above).
+            requests.Response: The response from the first successful
+            attempt.
 
         Raises:
             requests.exceptions.ReadTimeout: Re-raised if every attempt
                 times out.
             requests.exceptions.ConnectTimeout: Re-raised if every
                 attempt fails to connect in time.
+            requests.exceptions.ConnectionError: Re-raised if every
+                attempt fails to connect.
+            requests.exceptions.ChunkedEncodingError: Re-raised if
+                every attempt hits a chunked-encoding error.
         """
         url = f"{self.base_url}{endpoint}"
 
@@ -185,17 +178,22 @@ class PartnersBaseAPI:
                     raise last_exception
 
             except (requests.exceptions.ConnectionError,
-        requests.exceptions.ChunkedEncodingError,
-        requests.exceptions.ReadTimeout) as e:
-                # Linear backoff (5s, 10s, 15s...). Note: does not raise
-                # or return on the final attempt - see method docstring.
-                wait_time = 5 * (attempt + 1)  # 5s, 10s, 15s
-                self.logger.warning(f"Server connection issue, retry in {wait_time}s...")
-                time.sleep(wait_time)
-                self.logger.error(f"Partners API Request failed: {str(e)}")
+                    requests.exceptions.ChunkedEncodingError) as e:
+                last_exception = e
+                if attempt < max_retries - 1:
+                    wait_time = 5 * (attempt + 1)  # Linear backoff: 5s, 10s, 15s
+                    self.logger.warning(f"Server connection issue, retry in {wait_time}s...")
+                    time.sleep(wait_time)
+                else:
+                    self.logger.error(f"Partners API Request failed: {str(e)}")
+                    raise last_exception
 
     def _request(self, method, endpoint, **kwargs):
         """Send a request via ``_request_with_retry`` and guard against ``None``.
+
+        ``_request_with_retry`` always either returns a response or
+        raises once its retries are exhausted; this ``None`` check is a
+        defensive fallback in case that ever changes.
 
         Args:
             method (str): HTTP method, e.g. "GET", "POST".
@@ -206,9 +204,8 @@ class PartnersBaseAPI:
             requests.Response: The response, guaranteed non-None.
 
         Raises:
-            ValueError: If ``_request_with_retry`` returned ``None``
-                (retries exhausted on a connection-level error without
-                raising - see that method's docstring).
+            ValueError: If ``_request_with_retry`` unexpectedly
+                returned ``None``.
         """
         # Use retry logic
         response = self._request_with_retry(method, endpoint, max_retries=3, **kwargs)

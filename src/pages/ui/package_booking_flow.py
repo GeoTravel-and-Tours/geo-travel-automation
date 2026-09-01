@@ -575,12 +575,6 @@ class PackageBookingFlow(BasePage):
     def is_price_option_available(self, timeout=10):
         """Check whether at least one package price option is available.
 
-        FIXME: references ``self.PRICE_OPTIONS``, which is not defined
-        anywhere on this class (only ``PRICE_OPTION_BY_TYPE``, a dict
-        keyed by option type, exists). As written this method raises
-        ``AttributeError`` rather than returning a bool - fix by
-        iterating ``self.PRICE_OPTION_BY_TYPE.values()`` instead.
-
         Args:
             timeout (int): Seconds to wait for each price option locator
                 before moving to the next. Defaults to 10.
@@ -590,7 +584,7 @@ class PackageBookingFlow(BasePage):
                 displayed, False if none are found within the timeout.
         """
 
-        for index, locator in enumerate(self.PRICE_OPTIONS, start=1):
+        for index, locator in enumerate(self.PRICE_OPTION_BY_TYPE.values(), start=1):
             try:
                 price_option = WebDriverWait(self.driver, timeout).until(
                     EC.presence_of_element_located(locator)

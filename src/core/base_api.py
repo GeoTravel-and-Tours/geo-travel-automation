@@ -115,6 +115,27 @@ class BaseAPI:
         except Exception as e:
             self.logger.debug(f"Could not set session cookie: {e}")
 
+    @staticmethod
+    def _redact_headers(headers):
+        """Return a copy of ``headers`` with secret-bearing values masked.
+
+        Used before logging outgoing/merged headers so live
+        ``Authorization``/``Cookie`` tokens never reach plaintext
+        logs/CI output.
+
+        Args:
+            headers (dict): Headers to redact.
+
+        Returns:
+            dict: Shallow copy with ``Authorization``/``Cookie`` values
+            replaced by a fixed ``"***REDACTED***"`` marker.
+        """
+        redacted = dict(headers)
+        for key in ("Authorization", "Cookie"):
+            if key in redacted:
+                redacted[key] = "***REDACTED***"
+        return redacted
+
     def _request(self, method, endpoint, **kwargs):
         """Send an HTTP request against ``{base_url}{endpoint}`` with retries.
 
@@ -126,20 +147,6 @@ class BaseAPI:
         ``self.last_response`` in addition to returning it, so callers
         (and test fixtures) can inspect the most recent response
         without threading it through every call site.
-
-        NOTE: the "DEBUG" log lines below log the full outgoing header
-        dict (including any ``Authorization``/``Cookie`` values holding
-        live auth tokens) at INFO level on every request. This is
-        useful for troubleshooting but means tokens end up in plain
-        text in logs/CI output - worth tightening (e.g. redact or drop
-        to DEBUG level) before relying on these logs anywhere sensitive.
-
-        FIXME: the "Authorization header snuck in" safety check below
-        guards on ``self._debug_token_source``, but that attribute is
-        never set anywhere in this class (``set_auth_token`` sets
-        ``self.token_source``, not ``self._debug_token_source``). As
-        written, ``hasattr(self, '_debug_token_source')`` is always
-        False, so this check never fires even when it should.
 
         Args:
             method (str): HTTP method, e.g. "GET", "POST".
@@ -161,21 +168,19 @@ class BaseAPI:
         """
         url = f"{self.base_url}{endpoint}"
 
-        # DEBUG: Log what's coming in
-        self.logger.info(f"🔍 _request START - Current self.headers: {self.headers}")
-        self.logger.info(f"🔍 _request - kwargs headers: {kwargs.get('headers', {})}")
+        self.logger.debug(f"🔍 _request START - Current self.headers: {self._redact_headers(self.headers)}")
+        self.logger.debug(f"🔍 _request - kwargs headers: {self._redact_headers(kwargs.get('headers', {}))}")
 
         headers = self.headers.copy()
         if 'headers' in kwargs:
             headers.update(kwargs.pop('headers'))
 
-        # DEBUG: Log final headers
-        self.logger.info(f"🔍 _request FINAL headers being sent: {headers}")
+        self.logger.debug(f"🔍 _request FINAL headers being sent: {self._redact_headers(headers)}")
 
-        # Check if Authorization header snuck in
-        if 'Authorization' in headers and hasattr(self, '_debug_token_source') and self._debug_token_source == "cookies":
+        # Check if Authorization header snuck in when the token was set via cookies
+        if 'Authorization' in headers and getattr(self, 'token_source', None) == "cookies":
             self.logger.error(f"❌ CRITICAL: Authorization header present when token_source is cookies!")
-            self.logger.error(f"❌ Headers: {headers}")
+            self.logger.error(f"❌ Headers: {self._redact_headers(headers)}")
             self.logger.error(f"❌ Stack trace:", exc_info=True)
 
         self.logger.info(f"API Request: {method} {url}")

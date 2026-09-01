@@ -16,14 +16,9 @@ class FlightAPI(BaseAPI):
     """API client for the /api/flight resource (search, booking, quotes).
 
     All methods hit endpoints under the ``/api/flight/*`` prefix.
-
-    NOTE: several methods below (``get_search_results``,
-    ``get_booked_flights``, ``get_quote``) build their query string by
-    interpolating values directly into the endpoint via an f-string,
-    instead of passing a ``params=`` dict to ``self.get`` the way the
-    other API clients in this package do. This means the values are not
-    URL-encoded, so a value containing characters like spaces or ``&``
-    could produce a malformed request.
+    Query parameters are passed via ``params=`` to ``self.get`` (rather
+    than interpolated into the endpoint string) so ``requests`` handles
+    URL-encoding.
     """
 
     def search_request(self, search_data):
@@ -54,8 +49,7 @@ class FlightAPI(BaseAPI):
         Returns:
             requests.Response: The raw response from the request.
         """
-        endpoint = f"/api/flight/search?search_id={search_id}"
-        return self.get(endpoint)
+        return self.get("/api/flight/search", params={"search_id": search_id})
 
     def initiate_booking(self, booking_data):
         """Start a flight booking.
@@ -86,8 +80,10 @@ class FlightAPI(BaseAPI):
         Returns:
             requests.Response: The raw response from the request.
         """
-        endpoint = f"/api/flight/user/booked-flights?limit={limit}&page={page}&category={category}"
-        return self.get(endpoint)
+        return self.get(
+            "/api/flight/user/booked-flights",
+            params={"limit": limit, "page": page, "category": category},
+        )
 
     def create_quote(self, quote_data):
         """Create a flight quote.
@@ -115,7 +111,7 @@ class FlightAPI(BaseAPI):
         Returns:
             requests.Response: The raw response from the request.
         """
-        return self.get(f"/api/flight/quote?reference={reference}")
+        return self.get("/api/flight/quote", params={"reference": reference})
 
     def validate_passenger_email(self, passenger_data):
         """Validate a passenger's email address.

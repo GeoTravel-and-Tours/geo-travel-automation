@@ -35,10 +35,6 @@ import random
 from selenium.common.exceptions import StaleElementReferenceException
 
 
-
-from utils.page_info import PageInfoUtils
-
-
 class VisaPage(BasePage):
     """Page Object for the Visa Enquiries application form.
 
@@ -50,14 +46,8 @@ class VisaPage(BasePage):
     action buttons, and success/confirmation elements. Self-contained -
     no coupling to other page objects.
 
-    NOTE: this module imports ``from utils.page_info import PageInfoUtils``
-    (no ``src.`` prefix) - inconsistent with the ``from src.utils.logger
-    import GeoLogger`` import two lines above. It only resolves because
-    pytest.ini sets ``pythonpath = src``, which puts ``src`` itself on
-    sys.path and makes ``src/utils`` importable as a bare top-level
-    ``utils`` package; it would break if that pytest.ini setting ever
-    changed. The import is also unused in this file - ``self.pageinfo``
-    (a ``PageInfoUtils`` instance) already comes from ``BasePage``.
+    ``self.pageinfo`` (a ``PageInfoUtils`` instance) comes from
+    ``BasePage``.
     """
 
     def __init__(self, driver):
@@ -178,25 +168,22 @@ class VisaPage(BasePage):
         around occasional cases where the button is present but not yet
         interactive after page load.
 
-        NOTE: if all retries are exhausted, this method falls through
-        without returning or raising anything, so it implicitly returns
-        None instead of ``self`` (unlike its success path) or raising an
-        error. A caller chaining ``.click_get_started().fill_personal_details(...)``
-        would get an ``AttributeError`` on None rather than a clear
-        failure signal.
-
         Args:
             retries (int): Max number of attempts. Defaults to 3.
             delay (int): Seconds to wait between retries. Defaults to 2.
 
         Returns:
-            VisaPage or None: ``self`` on success; None if every retry
-                failed (see NOTE above).
+            VisaPage: ``self``, for method chaining.
+
+        Raises:
+            Exception: The last attempt's exception, if every retry
+                failed.
         """
         self.logger.info("Clicking 'Get Started' button")
 
         attempt = 0
         get_started_btn = None
+        last_exception = None
         while attempt < retries:
             try:
                 get_started_btn = self.waiter.wait_for_clickable(self.GET_STARTED_BUTTON, timeout=30)
@@ -204,7 +191,7 @@ class VisaPage(BasePage):
                 self.javascript.scroll_to_element(get_started_btn)
 
                 get_started_btn.click()
-                get_started_btn = get_started_btn  # store for last interacted element
+                self._last_interacted_element = get_started_btn
                 self.waiter.wait_for_present(self.FORM_SECTION, timeout=10)
 
                 self.logger.info("Visa application form opened")
@@ -212,6 +199,7 @@ class VisaPage(BasePage):
 
             except Exception as e:
                 attempt += 1
+                last_exception = e
                 self._last_interacted_element = get_started_btn
                 self.logger.warning(f"Attempt {attempt} failed: {e}")
                 if attempt < retries:
@@ -221,25 +209,20 @@ class VisaPage(BasePage):
                     self.waiter.wait_for_clickable(self.GET_STARTED_BUTTON, timeout=30)
                     time.sleep(delay)  # wait a bit before retrying
 
-        # If we reach here, all retries failed
+        # All retries failed - raise rather than silently returning None,
+        # so a chained call fails clearly instead of with an AttributeError.
         self.logger.error(f"Failed to click Get Started button after {retries} attempts")
+        raise last_exception
 
     
     def fill_personal_details(self, first_name, last_name, email, phone, timeout=30):
         """Fill the personal information section (first/last name, email, phone).
 
-        FIXME: the ``first_name``, ``last_name``, ``email``, and ``phone``
-        arguments are accepted but never used - the body hardcodes
-        "QA Bot" / "GEO" / "geo.qa.bot@gmail.com" / "07080702920"
-        regardless of what's passed in. Callers supplying their own
-        values will see them silently ignored.
-
         Args:
-            first_name (str): Intended first name (currently ignored -
-                see FIXME above).
-            last_name (str): Intended last name (currently ignored).
-            email (str): Intended email address (currently ignored).
-            phone (str): Intended phone number (currently ignored).
+            first_name (str): First name to enter.
+            last_name (str): Last name to enter.
+            email (str): Email address to enter.
+            phone (str): Phone number to enter.
             timeout (int): Seconds to wait for the first/last name fields
                 specifically (the email/phone fields use a fixed 10s
                 regardless of this value). Defaults to 30.
@@ -254,20 +237,20 @@ class VisaPage(BasePage):
 
         try:
             # First Name
-            self.element.type(self.FIRST_NAME_INPUT, "QA Bot", timeout)
+            self.element.type(self.FIRST_NAME_INPUT, first_name, timeout)
 
             # Last Name
-            self.element.type(self.LAST_NAME_INPUT, "GEO", timeout)
+            self.element.type(self.LAST_NAME_INPUT, last_name, timeout)
 
             # Email
-            self.element.type(self.EMAIL_INPUT, "geo.qa.bot@gmail.com", timeout=10)
+            self.element.type(self.EMAIL_INPUT, email, timeout=10)
 
             # Phone
-            self.element.type(self.PHONE_INPUT, "07080702920", timeout=10)
+            self.element.type(self.PHONE_INPUT, phone, timeout=10)
 
             self.logger.info("Personal details filled successfully")
             return self
-            
+
         except Exception as e:
             self.logger.error(f"Failed to fill personal details: {e}")
             raise
@@ -362,26 +345,25 @@ class VisaPage(BasePage):
             raise
     
     def select_travel_date(self, date_text=None):
-        """Open the date picker and click the first available day greater than 10.
+        """Open the date picker and click the target day-of-month.
 
-        FIXME: ``date_text`` is computed (from ``date_text`` or
-        ``get_future_date(1)``) but then never actually used to target a
-        specific date - the loop below just clicks whichever enabled day
-        button has a value > 10, ignoring ``date_text`` entirely. So
-        passing a specific ``date_text`` has no effect on which date gets
-        picked.
+        Tries to click the day-of-month button matching ``date_text``
+        (or ``get_future_date(1)`` when not given) first; if that exact
+        day isn't found among the enabled buttons (e.g. it's disabled,
+        or the calendar isn't showing the expected month), falls back
+        to the first enabled day greater than 10 as a "safely in the
+        future" heuristic.
 
         Args:
-            date_text (str, optional): Intended target date (currently
-                ignored - see FIXME above). Defaults to
-                ``get_future_date(1)`` when None.
+            date_text (str, optional): Target day-of-month (e.g. "15").
+                Defaults to ``get_future_date(1)`` when None.
 
         Returns:
             VisaPage: ``self``, for method chaining.
 
         Raises:
             Exception: Re-raised if the date input can't be opened or
-                clicked.
+                no matching date button is found/clicked.
         """
         self.logger.info("Selecting travel date")
         date_text = self.get_future_date(1) if date_text is None else date_text
@@ -393,24 +375,37 @@ class VisaPage(BasePage):
             date_input.click()
             date_input_btn = date_input
             time.sleep(2)
-            
-            # Find and click the first available future date
+
             available_dates = self.driver.find_elements(
                 By.CSS_SELECTOR, "button:not([disabled])"
             )
+
+            target_day = int(date_text)
+            selected = False
             for date in available_dates:
-                if date.text.isdigit() and 1 <= int(date.text) <= 31:
-                    # Pick a date in the future (assuming today is lower number)
-                    if int(date.text) > 10:
+                if date.text.isdigit() and int(date.text) == target_day:
+                    date.click()
+                    self.logger.info(f"Selected travel date: {date.text}")
+                    selected = True
+                    break
+
+            if not selected:
+                self.logger.warning(
+                    f"Target day {target_day} not found among enabled dates; "
+                    f"falling back to the first enabled day > 10"
+                )
+                for date in available_dates:
+                    if date.text.isdigit() and 1 <= int(date.text) <= 31 and int(date.text) > 10:
                         date.click()
                         self.logger.info(f"Selected travel date: {date.text}")
+                        selected = True
                         break
 
             time.sleep(2)  # Wait for date selection to process
-            
+
             self.logger.info("Date picker opened successfully")
             return self
-            
+
         except Exception as e:
             self._last_interacted_element = date_input_btn
             self.logger.error(f"Failed to select travel date: {e}")

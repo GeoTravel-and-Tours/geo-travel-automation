@@ -29,22 +29,13 @@ class DashboardPage(BasePage):
     """
     Geo Travel Dashboard Page (after successful login).
 
-    Locators cover the dashboard's own elements (logout, "Book new
-    flight", site logo); the dashboard-content indicators themselves are
-    borrowed from ``AuthFlow.DASHBOARD_INDICATORS`` via ``self.auth_flow``
-    rather than being redefined here.
+    Locators cover the dashboard's own elements ("Book new flight",
+    site logo); the dashboard-content indicators (and logout button)
+    are borrowed from ``AuthFlow`` via ``self.auth_flow`` rather than
+    being redefined here.
     """
 
     # ===== DASHBOARD LOCATORS =====
-    # NOTE: ":contains('Logout')" is a jQuery/Sizzle pseudo-class, not valid
-    # native CSS - browsers reject it as an invalid selector. Since it's one
-    # branch of a comma-separated selector list, this likely makes the whole
-    # LOGOUT_BUTTON selector throw rather than gracefully falling back to the
-    # first two branches. It also isn't referenced by any method below.
-    LOGOUT_BUTTON = (
-        By.CSS_SELECTOR,
-        "[href*='logout'], .logout-btn, button:contains('Logout')",
-    )
     BOOK_FLIGHT_BUTTON = (By.XPATH, ".//button[normalize-space()='Book new flight']")
     DASHBOARD_LOGO = (By.CSS_SELECTOR, "img[alt='Full Logo']")
 
@@ -63,20 +54,17 @@ class DashboardPage(BasePage):
     def wait_for_dashboard_load(self, timeout=10):
         """Wait for the dashboard to render after login.
 
-        FIXME: ``self.auth_flow.DASHBOARD_INDICATORS`` is a *list* of
-        locator tuples, but both ``self.waiter.wait_for_visible(...)`` and
-        ``self.validator.is_element_present(...)`` are written to accept a
-        single ``(By, value)`` locator tuple (they pass it straight into
-        ``EC.visibility_of_element_located`` / ``driver.find_element(*locator)``).
-        Passing the whole list here is very likely a bug that raises at
-        runtime instead of checking each indicator - contrast with
-        ``AuthFlow._wait_for_any_dashboard_indicator``, which correctly
-        iterates over the list one locator at a time.
+        ``self.auth_flow.DASHBOARD_INDICATORS`` is a *list* of locator
+        tuples, so it's checked via
+        ``AuthFlow._wait_for_any_dashboard_indicator`` (which iterates
+        the list one locator at a time) rather than being passed
+        straight into helpers that expect a single ``(By, value)``
+        tuple.
 
         Args:
-            timeout (int): Accepted for interface consistency, but note
-                the inner waits below use their own hardcoded values
-                rather than this parameter.
+            timeout (int): Seconds to wait for a dashboard indicator
+                before falling back to the logo/"Book new flight"
+                checks.
 
         Returns:
             bool: True once the dashboard is considered loaded (even if
@@ -88,13 +76,11 @@ class DashboardPage(BasePage):
 
         try:
             # Wait for dashboard indicators
-            self.waiter.wait_for_visible(
-                self.auth_flow.DASHBOARD_INDICATORS, timeout=10
-            )
+            self.auth_flow._wait_for_any_dashboard_indicator(timeout=timeout)
 
             # Check for user-specific elements
             if (
-                self.validator.is_element_present(self.auth_flow.DASHBOARD_INDICATORS)
+                self.auth_flow._wait_for_any_dashboard_indicator(timeout=1)
                 or self.validator.is_element_present(self.DASHBOARD_LOGO)
                 or self.validator.is_element_present(self.BOOK_FLIGHT_BUTTON)
             ):

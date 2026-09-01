@@ -1,4 +1,4 @@
-# src/pages/api/Partners_api/organization_api.py
+# src/pages/api/partners_api/organization_api.py
 
 """API client for the Partners (B2B) ``/api/org`` endpoints.
 

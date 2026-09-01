@@ -262,25 +262,32 @@ class ContactPage(BasePage):
             raise
     
     def submit_form(self, max_retries=3):
-        """Scroll to and click the Submit button.
-
-        FIXME: ``max_retries`` is accepted but never used - there is no
-        retry loop here, so passing anything other than the default has
-        no effect. Likely a retry mechanism was planned but not finished.
+        """Scroll to and click the Submit button, retrying on failure.
 
         Args:
-            max_retries (int): Currently unused. Defaults to 3.
+            max_retries (int): Max number of attempts before giving up.
+                Defaults to 3.
 
         Raises:
-            Exception: Re-raised (via ``wait_for_clickable``) if the
-                button never becomes clickable.
+            Exception: The last attempt's exception, if every retry
+                failed.
         """
         self.logger.info("Submitting contact form")
 
-        submit_btn = self.waiter.wait_for_clickable(self.SUBMIT_BUTTON, timeout=10)
-        self.javascript.scroll_to_element(submit_btn)
-        submit_btn.click()
-        self.logger.debug("Submit button clicked")
+        last_exception = None
+        for attempt in range(1, max_retries + 1):
+            try:
+                submit_btn = self.waiter.wait_for_clickable(self.SUBMIT_BUTTON, timeout=10)
+                self.javascript.scroll_to_element(submit_btn)
+                submit_btn.click()
+                self.logger.debug("Submit button clicked")
+                return
+            except Exception as e:
+                last_exception = e
+                self.logger.warning(f"Submit attempt {attempt}/{max_retries} failed: {e}")
+
+        self.logger.error(f"Failed to submit contact form after {max_retries} attempts")
+        raise last_exception
 
     def is_success_displayed(self, timeout=10):
         """Check if the "Thank you for reaching out" success title is displayed.
