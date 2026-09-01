@@ -1,4 +1,23 @@
-# src/pages/ui/contact_flow.py
+"""
+src/pages/ui/contact_flow.py
+
+Page Object for the Geo Travel "Contact Support" flow.
+
+Covers:
+    1. Navigation    - click "Contact" in the nav menu and confirm the
+                        contact page loaded.
+    2. Contact form  - fill name/email/phone/message, pick a support type
+                        from the dropdown (random by default, or a caller
+                        supplied value), accept the privacy checkbox, and
+                        submit.
+    3. Confirmation  - verify the "Thank you for reaching out" success
+                        message.
+    4. Related links - navigate to the FAQ page and the Privacy Statement
+                        footer link.
+
+Tests typically chain ``navigate_to_contact()`` -> ``fill_contact_form(...)``
+-> ``submit_form()`` -> ``is_success_displayed()``.
+"""
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -10,9 +29,21 @@ import time
 
 
 class ContactPage(BasePage):
-    """Page Object for Contact Support functionality"""
-    
+    """Page Object for the Contact Support form, FAQ link, and privacy link.
+
+    Locators are grouped by section: navigation, form fields, the support
+    type dropdown (plus a template locator used to match an option by its
+    lower-cased text), the privacy checkbox, and the success/FAQ/footer
+    elements. Self-contained - no coupling to other page objects.
+    """
+
     def __init__(self, driver):
+        """Initialize the page object.
+
+        Args:
+            driver (WebDriver): Active Selenium WebDriver instance, passed
+                through to ``BasePage``.
+        """
         super().__init__(driver)
     
     # ========== LOCATORS ==========
@@ -42,6 +73,10 @@ class ContactPage(BasePage):
     )
 
     # Available support types
+    # NOTE: this list must exactly match the dropdown's live option text
+    # (matched case-insensitively via SUPPORT_TYPE_OPTION_BY_TEXT) - recent
+    # git history shows this list flip-flopping between "Other" and
+    # "Others", so double check the live UI copy before changing it again.
     SUPPORT_TYPES = [
         "General Inquiry",
         "Account & Login Issues",
@@ -75,35 +110,72 @@ class ContactPage(BasePage):
     # ========== PAGE METHODS ==========
     
     def open(self, base_url):
-        """Open the application homepage"""
+        """Open the application homepage directly via ``driver.get``.
+
+        Args:
+            base_url (str): Full URL of the homepage to load.
+
+        Returns:
+            ContactPage: ``self``, for method chaining.
+        """
         self.logger.info("Opening application homepage")
         self.driver.get(base_url)
         return self
-    
+
     def navigate_to_contact(self):
-        """Navigate to Contact page from homepage"""
+        """Click "Contact" in the nav menu and verify the contact page loaded.
+
+        Returns:
+            ContactPage: ``self``, for method chaining.
+
+        Raises:
+            AssertionError: If the URL doesn't contain "contact" after
+                navigating.
+            Exception: Re-raised for any other navigation failure.
+        """
         self.logger.info("Navigating to Contact page")
-        
+
         try:
             contact_menu = WebDriverWait(self.driver, 15).until(
                 EC.element_to_be_clickable(self.CONTACT_MENU)
             )
             contact_menu.click()
-            
+
             # Wait for page to load
             self.waiter.wait_for_present(self.CONTACT_PAGE_TITLE, timeout=15)
-            
+
             assert "contact" in self.driver.current_url.lower(), "URL should contain 'contact'"
-            
+
             self.logger.info("Successfully navigated to Contact page")
             return self
-            
+
         except Exception as e:
             self.logger.error(f"Failed to navigate to Contact page: {e}")
             raise
-    
+
     def fill_contact_form(self, name, email, phone, message, support_type=None):
-        """Fill contact form with dynamic data"""
+        """Fill out the full contact form, including support type and privacy consent.
+
+        If ``support_type`` isn't given, a random value from
+        ``SUPPORT_TYPES`` is chosen and matched against the dropdown
+        options case-insensitively (see ``SUPPORT_TYPE_OPTION_BY_TEXT``).
+        Also checks the privacy checkbox if it isn't already checked.
+
+        Args:
+            name (str): Full name to enter.
+            email (str): Email address to enter.
+            phone (str): Phone number to enter.
+            message (str): Message body to enter.
+            support_type (str, optional): One of ``SUPPORT_TYPES`` to
+                select. If None, a random type is chosen.
+
+        Returns:
+            ContactPage: ``self``, for method chaining.
+
+        Raises:
+            Exception: Re-raised if any field or dropdown interaction
+                fails.
+        """
         self.logger.info(f"Filling contact form with name: {name}")
         
         try:
@@ -190,19 +262,38 @@ class ContactPage(BasePage):
             raise
     
     def submit_form(self, max_retries=3):
-        """Submit contact form"""
+        """Scroll to and click the Submit button.
+
+        FIXME: ``max_retries`` is accepted but never used - there is no
+        retry loop here, so passing anything other than the default has
+        no effect. Likely a retry mechanism was planned but not finished.
+
+        Args:
+            max_retries (int): Currently unused. Defaults to 3.
+
+        Raises:
+            Exception: Re-raised (via ``wait_for_clickable``) if the
+                button never becomes clickable.
+        """
         self.logger.info("Submitting contact form")
-        
+
         submit_btn = self.waiter.wait_for_clickable(self.SUBMIT_BUTTON, timeout=10)
         self.javascript.scroll_to_element(submit_btn)
         submit_btn.click()
         self.logger.debug("Submit button clicked")
-        
-    
+
     def is_success_displayed(self, timeout=10):
-        """Check if success message is displayed"""
+        """Check if the "Thank you for reaching out" success title is displayed.
+
+        Args:
+            timeout (int): Seconds to wait for the title. Defaults to 10.
+
+        Returns:
+            bool: True if visible in time, False on timeout or any other
+                error.
+        """
         self.logger.info("Checking success message")
-        
+
         try:
             success = WebDriverWait(self.driver, timeout).until(
                 EC.visibility_of_element_located(self.SUCCESS_TITLE)
@@ -211,20 +302,32 @@ class ContactPage(BasePage):
             return success.is_displayed()
         except:
             return False
-    
+
     def get_success_message_text(self):
-        """Get success message text"""
+        """Get the combined success title and message text.
+
+        Returns:
+            str: ``"{title} - {message}"``, or "" if either element isn't
+                found.
+        """
         try:
             title = self.driver.find_element(*self.SUCCESS_TITLE).text
             message = self.driver.find_element(*self.SUCCESS_MESSAGE).text
             return f"{title} - {message}"
         except:
             return ""
-    
+
     def click_read_faqs(self):
-        """Click Read FAQs button"""
+        """Scroll to and click the "Read FAQs" link.
+
+        Returns:
+            ContactPage: ``self``, for method chaining.
+
+        Raises:
+            Exception: Re-raised if the link can't be found/clicked.
+        """
         self.logger.info("Clicking Read FAQs")
-        
+
         try:
             faq_btn = self.waiter.wait_for_clickable(self.READ_FAQS_BTN, timeout=10)
             self.javascript.scroll_to_element(faq_btn)
@@ -239,19 +342,31 @@ class ContactPage(BasePage):
             raise
     
     def verify_faq_page_loaded(self):
-        """Verify FAQ page loaded"""
+        """Verify the FAQ page (reached via "Read FAQs") has loaded.
+
+        Returns:
+            bool: True if the FAQ page title is visible, False on
+                timeout or any other error.
+        """
         self.logger.info("Verifying FAQ page loaded")
-        
+
         try:
             title = self.waiter.wait_for_visible(self.FAQ_PAGE_TITLE, timeout=10)
             return title.is_displayed()
         except:
             return False
-    
+
     def click_privacy_statement(self):
-        """Click Privacy Statement link"""
+        """Scroll to and click the "Privacy Statement" footer link.
+
+        Returns:
+            ContactPage: ``self``, for method chaining.
+
+        Raises:
+            Exception: Re-raised if the link can't be found/clicked.
+        """
         self.logger.info("Clicking Privacy Statement")
-        
+
         try:
             privacy = self.waiter.wait_for_clickable(self.PRIVACY_STATEMENT, timeout=10)
             self.javascript.scroll_to_element(privacy)
@@ -266,7 +381,14 @@ class ContactPage(BasePage):
             raise
         
     def get_support_types(self):
-        """Get all available support types from dropdown"""
+        """Open the support type dropdown and read the visible option labels.
+
+        Closes the dropdown afterwards by clicking the page body.
+
+        Returns:
+            list[str]: The text of each option found, or an empty list on
+                any failure.
+        """
         self.logger.info("Getting available support types")
         
         try:

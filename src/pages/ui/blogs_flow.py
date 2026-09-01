@@ -1,4 +1,25 @@
-# src/pages/ui/blogs_flow.py
+"""
+src/pages/ui/blogs_flow.py
+
+Page Object for the Geo Travel Blogs section.
+
+Covers the full flow end to end:
+    1. Navigation      - click "Blogs" in the nav menu, wait for the
+                          listing page to load, and verify it via URL and
+                          page-source checks.
+    2. Blog selection   - open the first blog's detail page and wait for
+                          its title/content to render.
+    3. Comments         - fill and submit the "Leave a Comment" form, then
+                          verify the success toast, check the comment
+                          count, and wait for the toast to disappear.
+    4. Related content  - scroll to and verify the "More like this"
+                          section links to other blog posts.
+
+Tests typically chain ``navigate_to_blogs()`` -> ``click_first_blog()`` ->
+``wait_for_blog_detail_load()`` -> ``fill_comment(...)`` ->
+``submit_comment()`` -> assertion helpers like
+``is_success_message_displayed()``.
+"""
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -11,13 +32,30 @@ import time
 
 
 class BlogsPage(BasePage):
-    """Page Object for Blogs functionality"""
-    
+    """Page Object for the Blogs listing, detail, and comment functionality.
+
+    Locators are grouped by section: nav/listing (``BLOGS_MENU`` etc.),
+    blog cards on the listing page, the blog detail container, the
+    comment form and its success toast, and the "More like this" related
+    posts section. No cross-file page-object coupling (unlike
+    package_booking_flow.py's use of PaymentPage) - this flow is
+    self-contained.
+    """
+
     def __init__(self, driver):
+        """Initialize the page object.
+
+        Args:
+            driver (WebDriver): Active Selenium WebDriver instance, passed
+                through to ``BasePage``.
+        """
         super().__init__(driver)
     
     # ========== LOCATORS ==========
     # Navigation
+    # NOTE: matches on an exact, full utility-class string rather than a
+    # stable attribute/test id - fragile if the class list changes at all
+    # (e.g. Tailwind class reordering or an added responsive variant).
     BLOGS_MENU = (By.XPATH, "//a[@class='py-2 hover:bg-slate-100 transition-all truncate text-base'][normalize-space()='Blogs']")
     BLOGS_HEADER = (By.XPATH, "//h3[normalize-space()='Blogs']")
     BLOGS_CONTAINER = (By.XPATH, "//div[@class='bg-white p-3 rounded-lg border border-gray-100/70 shadow-sm']")
@@ -70,48 +108,81 @@ class BlogsPage(BasePage):
     # ========== PAGE METHODS ==========
     
     def open(self, base_url):
-        """Open the application homepage"""
+        """Open the application homepage directly via ``driver.get``.
+
+        Args:
+            base_url (str): Full URL of the homepage to load.
+
+        Returns:
+            BlogsPage: ``self``, for method chaining.
+        """
         self.logger.info("Opening application homepage")
         self.driver.get(base_url)
         return self
-    
+
     def navigate_to_blogs(self):
-        """Navigate to Blogs page from homepage"""
+        """Click "Blogs" in the nav menu and verify the listing page loaded.
+
+        Verification checks both the URL (contains "blogs") and the page
+        source (contains "Blogs") after the header/container locators
+        become present.
+
+        NOTE: the two ``wait_for_present`` calls use a 300s timeout - far
+        longer than the 10-15s used elsewhere in this class - which looks
+        like a leftover from debugging a slow-loading environment rather
+        than an intentional wait budget.
+
+        Returns:
+            BlogsPage: ``self``, for method chaining.
+
+        Raises:
+            AssertionError: If the URL or page source doesn't confirm the
+                Blogs page loaded.
+            Exception: Re-raised for any other navigation failure.
+        """
         self.logger.info("Navigating to Blogs page")
-        
+
         try:
             # Click Blogs menu
             blogs_menu = WebDriverWait(self.driver, 15).until(
                 EC.element_to_be_clickable(self.BLOGS_MENU)
             )
             blogs_menu.click()
-            
+
             # Wait for page to load
             self.waiter.wait_for_present(self.BLOGS_HEADER, timeout=300)
             self.waiter.wait_for_present(self.BLOGS_CONTAINER, timeout=300)
-            
+
             # Verify URL contains blogs
             assert "blogs" in self.driver.current_url.lower(), "URL should contain 'blogs'"
             self.logger.info("Successfully navigated to Blogs page")
-            
+
             # Verify page source contains blogs
             assert "Blogs" in self.driver.page_source, "Page source should contain 'Blogs'"
             self.logger.info("Blogs page source verified")
-            
+
             self.logger.info("Successfully navigated to Blogs page")
             return self
-            
+
         except Exception as e:
             self.logger.error(f"Failed to navigate to Blogs page: {e}")
             raise
+        # FIXME: unreachable - TimeoutError is a subclass of Exception (via
+        # OSError), so the "except Exception" branch above always catches it
+        # first. This except clause never executes as written.
         except TimeoutError as te:
             self.logger.error(f"Timeout while navigating to Blogs page: {te}")
             raise
-    
+
     def verify_blogs_page_loaded(self):
-        """Verify Blogs page is fully loaded"""
+        """Verify the Blogs listing page has fully loaded.
+
+        Returns:
+            bool: True if the header is visible and the container is
+                present, False on any failure (logged rather than raised).
+        """
         self.logger.info("Verifying Blogs page loaded")
-        
+
         try:
             # Check header is visible
             header = self.waiter.wait_for_visible(self.BLOGS_HEADER, timeout=15)
@@ -130,6 +201,15 @@ class BlogsPage(BasePage):
             return False
     
     def click_first_blog(self):
+        """Click the "Read article" link of the first blog card and wait for navigation.
+
+        Returns:
+            BlogsPage: ``self``, for method chaining.
+
+        Raises:
+            TimeoutException: If the link never becomes clickable or the
+                URL doesn't update to include "/blogs/" in time.
+        """
         self.logger.info("Clicking first blog")
 
         first_blog = WebDriverWait(self.driver, 15).until(
@@ -148,9 +228,21 @@ class BlogsPage(BasePage):
         )
 
         return self
-    
+
     def wait_for_blog_detail_load(self, timeout=15):
-        """Wait for blog detail page to load."""
+        """Wait for the blog detail page's URL, title, and content to load.
+
+        Args:
+            timeout (int): Seconds to wait for each condition. Defaults
+                to 15.
+
+        Returns:
+            bool: True once URL, title, and content are all confirmed.
+
+        Raises:
+            AssertionError: If any condition times out, wrapping the
+                original ``TimeoutException``.
+        """
         self.logger.info("Waiting for blog detail page")
 
         try:
@@ -180,7 +272,21 @@ class BlogsPage(BasePage):
             ) from e
     
     def fill_comment(self, name, email, message):
-        """Fill comment form"""
+        """Scroll to the comment section and fill in name, email, and message.
+
+        Args:
+            name (str): Commenter's full name.
+            email (str): Commenter's email address.
+            message (str): Comment body text.
+
+        Returns:
+            BlogsPage: ``self``, for method chaining (e.g. with
+                ``submit_comment``).
+
+        Raises:
+            Exception: Re-raised if the comment section or any field
+                can't be located/filled in time.
+        """
         self.logger.info(f"Filling comment form with name: {name}")
         
         try:
@@ -212,7 +318,15 @@ class BlogsPage(BasePage):
             raise
     
     def submit_comment(self):
-        """Submit comment"""
+        """Click Submit and wait for the success toast to appear.
+
+        Returns:
+            BlogsPage: ``self``, for method chaining.
+
+        Raises:
+            Exception: Re-raised if the submit button can't be clicked or
+                the success toast never appears in time.
+        """
         self.logger.info("Submitting comment")
         
         try:
@@ -231,9 +345,17 @@ class BlogsPage(BasePage):
             raise
     
     def is_success_message_displayed(self, timeout=10):
-        """Check if success toast message is displayed"""
+        """Check if the comment-submitted success toast is displayed.
+
+        Args:
+            timeout (int): Seconds to wait for the toast. Defaults to 10.
+
+        Returns:
+            bool: True if the toast became visible in time, False on
+                timeout or any other error.
+        """
         self.logger.info("Checking success toast message")
-        
+
         try:
             # Wait for toast to appear
             success = WebDriverWait(self.driver, timeout).until(
@@ -244,7 +366,11 @@ class BlogsPage(BasePage):
             return False
 
     def get_success_message_text(self):
-        """Get success toast message text"""
+        """Get the success toast's text content.
+
+        Returns:
+            str: The toast's text, or "" if it isn't present/found.
+        """
         try:
             success = self.driver.find_element(*self.SUCCESS_MESSAGE)
             return success.text
@@ -252,9 +378,17 @@ class BlogsPage(BasePage):
             return ""
 
     def wait_for_toast_disappear(self, timeout=10):
-        """Wait for success toast to disappear"""
+        """Wait for the success toast to become invisible.
+
+        Args:
+            timeout (int): Seconds to wait. Defaults to 10.
+
+        Returns:
+            bool: True if the toast disappeared in time, False on
+                timeout or any other error.
+        """
         self.logger.info("Waiting for toast to disappear")
-        
+
         try:
             WebDriverWait(self.driver, timeout).until(
                 EC.invisibility_of_element_located(self.SUCCESS_TOAST)
@@ -265,7 +399,12 @@ class BlogsPage(BasePage):
             return False
     
     def get_comments_count(self):
-        """Get number of comments displayed"""
+        """Parse the comment count out of the "Comments (N)" header text.
+
+        Returns:
+            int: The parsed count, or 0 if the header isn't found or
+                doesn't contain a parenthesized number.
+        """
         self.logger.info("Getting comments count")
         
         try:
@@ -284,9 +423,16 @@ class BlogsPage(BasePage):
             return 0
     
     def scroll_to_comments(self):
-        """Scroll to comments section"""
+        """Scroll the comments header into view.
+
+        Returns:
+            BlogsPage: ``self``, for method chaining.
+
+        Raises:
+            Exception: Re-raised if the header can't be located.
+        """
         self.logger.info("Scrolling to comments section")
-        
+
         try:
             comments = self.waiter.wait_for_present(self.COMMENTS_HEADER, timeout=10)
             self.javascript.scroll_to_element(comments)
@@ -298,9 +444,16 @@ class BlogsPage(BasePage):
             raise
     
     def scroll_to_more_like_this(self):
-        """Scroll to More like this section"""
+        """Scroll the "More like this" section into view.
+
+        Returns:
+            BlogsPage: ``self``, for method chaining.
+
+        Raises:
+            Exception: Re-raised if the section can't be located.
+        """
         self.logger.info("Scrolling to More like this section")
-        
+
         try:
             more_section = self.waiter.wait_for_present(self.MORE_LIKE_THIS, timeout=10)
             self.javascript.scroll_to_element(more_section)
@@ -312,6 +465,16 @@ class BlogsPage(BasePage):
             raise
     
     def verify_more_like_this(self):
+        """Verify the "More like this" section is visible and has related blog links.
+
+        Returns:
+            BlogsPage: ``self``, for method chaining.
+
+        Raises:
+            AssertionError: If no related blog links are found.
+            TimeoutException: If the section never becomes visible or the
+                related links never appear.
+        """
         self.logger.info("Verifying More like this section")
 
         section = WebDriverWait(self.driver, 10).until(
@@ -333,6 +496,14 @@ class BlogsPage(BasePage):
         return self
     
     def verify_related_blogs_exist(self):
+        """Count the related blog links in the "More like this" section.
+
+        Returns:
+            int: The number of related blog links found (0 means none).
+
+        Raises:
+            TimeoutException: If no related links appear within 10s.
+        """
         self.logger.info("Verifying related blogs exist")
 
         related_blogs = WebDriverWait(self.driver, 10).until(

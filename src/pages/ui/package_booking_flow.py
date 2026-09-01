@@ -1,4 +1,25 @@
-# src/pages/package_booking_flow.py
+"""
+src/pages/ui/package_booking_flow.py
+
+Page Object for the "Package" booking journey on the Geo Travel web app.
+
+Covers the full flow end to end:
+    1. Search & navigation  - open the Packages tab, pick a trip type,
+       destination country and travel date, then run the search.
+    2. Package selection    - open a package's detail page and choose a
+       price option (couple / single / group).
+    3. Booking form         - open the reservation modal, fill in
+       traveller details and submit.
+    4. Login & checkout     - authenticate, accept terms, and land on the
+       payment method selection screen.
+    5. Payment verification - confirm the flow reached the correct
+       checkout destination for Flutterwave, Paystack, or bank transfer.
+
+Methods are intended to be chained in roughly the order above (most
+navigation/search methods return ``self`` for that purpose); tests
+typically call ``handle_booking_flow`` for steps 3-4 once a package's
+price option has been selected.
+"""
 
 import random
 from selenium.webdriver.support.ui import WebDriverWait
@@ -12,10 +33,19 @@ import time
 
 class PackageBookingFlow(BasePage):
     """
-    Page Object Model for Package Booking Flow
-    Handles the complete package booking process from search to payment
+    Page Object Model for the Package Booking Flow.
+
+    Handles the complete package booking process from search to payment:
+    searching/filtering packages, selecting a price option, filling out
+    the booking modal, logging in, accepting terms, choosing a payment
+    method, and verifying the flow reaches the correct payment
+    destination (Flutterwave, Paystack, or bank transfer).
+
+    All locators are grouped near the top of the class by the step of the
+    flow they belong to (search, package selection, booking form, modals,
+    login, payment). Methods below follow the same grouping.
     """
-    
+
     # ===== LOCATORS =====
     # Navigation & Search
     PACKAGES_MENU = (
@@ -51,10 +81,15 @@ class PackageBookingFlow(BasePage):
         By.XPATH,
         "//div[@role='option']//span[normalize-space()='group']"
     )
+    # NOTE: matches the first element with this class combo on the page,
+    # not a dedicated test id - fragile if the page layout changes.
     COUNTRY_SELECTOR = (By.XPATH, "//div[contains(@class,'h-full relative')]")
     COUNTRY_INPUT = (By.XPATH, "//input[@placeholder='Enter country']")
+    # NOTE: hardcoded to "NIGERIA" - only works for tests that search that country.
     COUNTRY_SEARCH_RESULT = (By.XPATH, "//h6[contains(text(),'NIGERIA')]")
     TRAVEL_DATE_SELECTOR = (By.CSS_SELECTOR, "div[class='w-full flex items-center px-3.5 min-h-12 h-full py-2 rounded-md border border-gray-300 cursor-pointer justify-between']")
+    # Old CSS nth-child selector kept for reference; replaced by the XPath
+    # below because nth-child paths break easily when markup shifts.
     # SEARCH_PACKAGES_BUTTON = (By.CSS_SELECTOR, "body > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > form:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > button:nth-child(1)")
     SEARCH_PACKAGES_BUTTON = (By.XPATH, "(//button[@class='active:scale-95 transition-all items-center gap-2 justify-center whitespace-nowrap rounded-md text-sm font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-mainblue disabled:pointer-events-none disabled:opacity-50 cursor-pointer bg-mainblue text-white hover:bg-mainblue/80 h-10 px-4 py-2 hidden md:flex'])[1]")
 
@@ -177,13 +212,26 @@ class PackageBookingFlow(BasePage):
     )
 
     def __init__(self, driver):
-        """Initialize PackageBookingFlow with driver"""
+        """Initialize the page object.
+
+        Args:
+            driver (WebDriver): Active Selenium WebDriver instance, passed
+                straight through to ``BasePage`` which wires up the shared
+                element/js/logging/wait helpers used by this class.
+        """
         super().__init__(driver)
 
     # ===== SEARCH & NAVIGATION METHODS =====
-    
+
     def click_package(self):
-        """Click on Package button in navigation"""
+        """Click the "Package" entry point button in the navigation.
+
+        Returns:
+            WebElement: The clicked button element.
+
+        Raises:
+            Exception: Re-raised if the button cannot be found/clicked.
+        """
         self.logger.info("Clicking Package button")
         try:
             click_btn = self.element.click(self.PACKAGE_BUTTON)
@@ -194,7 +242,16 @@ class PackageBookingFlow(BasePage):
             raise
 
     def select_trip_type(self):
-        """Select trip type as group"""
+        """Open the trip-type dropdown and select "group".
+
+        Returns:
+            PackageBookingFlow: ``self``, to allow method chaining with
+                the other search-step methods (e.g. ``select_country``).
+
+        Raises:
+            Exception: Re-raised if the dropdown or option never becomes
+                clickable within the wait timeout.
+        """
         self.logger.info("Selecting trip type as 'group'")
         try:
             # Wait for dropdown to be clickable
@@ -221,7 +278,27 @@ class PackageBookingFlow(BasePage):
             raise
 
     def select_country(self, country_name):
-        """Select country from dropdown"""
+        """Open the country selector, type a country name, and pick it from results.
+
+        Note the search-result locator (``COUNTRY_SEARCH_RESULT``) is
+        currently hardcoded to match "NIGERIA" regardless of the
+        ``country_name`` passed in, so this only reliably works for that
+        destination until the locator is made dynamic.
+
+        Args:
+            country_name (str): Country to type into the search input
+                (e.g. "Nigeria").
+
+        Returns:
+            PackageBookingFlow: ``self``, for method chaining.
+
+        Raises:
+            Exception: Re-raised if any step (opening the selector,
+                typing, or picking a result) times out or fails. The
+                element involved at the point of failure is stashed on
+                ``self._last_interacted_element`` for screenshot/debug
+                purposes.
+        """
         self.logger.info(f"Selecting country: {country_name}")
         country_selector_btn = None
         country_input_btn = None
@@ -270,7 +347,19 @@ class PackageBookingFlow(BasePage):
             raise
 
     def select_travel_date(self):
-        """Open travel date selector and pick a date"""
+        """Open the travel date calendar and pick a day.
+
+        Picks the first enabled day-of-month button whose value is greater
+        than 10 as a cheap heuristic for "a date safely in the future"
+        without needing to parse the calendar's month/year state.
+
+        Returns:
+            PackageBookingFlow: ``self``, for method chaining.
+
+        Raises:
+            Exception: Re-raised if the date selector can't be opened or
+                no matching date button is found/clicked.
+        """
         self.logger.info("Opening travel date selector")
         travel_date_btn = None
         date_btn = None
@@ -301,7 +390,14 @@ class PackageBookingFlow(BasePage):
 
 
     def search_packages(self):
-        """Click search packages button"""
+        """Submit the package search form.
+
+        Returns:
+            WebElement: The clicked search button.
+
+        Raises:
+            Exception: Re-raised if the button can't be clicked.
+        """
         self.logger.info("Clicking Search Packages button")
         try:
             search_btn = self.element.click(self.SEARCH_PACKAGES_BUTTON)
@@ -312,7 +408,22 @@ class PackageBookingFlow(BasePage):
             raise
     
     def is_search_session_initialized(self, search_term="packages", timeout=30):
-        """Check if search session is properly initialized with configurable search term"""
+        """Poll the current URL until it contains ``search_term``.
+
+        Used after submitting a search to confirm the app actually
+        navigated to a results URL rather than staying on the form
+        (e.g. due to a validation error).
+
+        Args:
+            search_term (str): Substring expected to appear in the URL
+                once the search has taken effect. Defaults to "packages".
+            timeout (int): Max seconds to wait for the URL to update.
+                Defaults to 30.
+
+        Returns:
+            bool: True if ``search_term`` appeared in the URL in time,
+                False on timeout or any other error.
+        """
         try:
             current_url = self.driver.current_url
             self.logger.info(f"Checking for '{search_term}' in {current_url} (waiting up to {timeout}s)...")
@@ -337,6 +448,12 @@ class PackageBookingFlow(BasePage):
     # ===== PACKAGE SELECTION METHODS =====
 
     def click_view_package(self):
+        """Scroll to and click the first "View package" button on a results page.
+
+        Raises:
+            Exception: Re-raised if the button never appears or becomes
+                clickable within the wait timeout.
+        """
         self.logger.info("Clicking View Package button")
 
         try:
@@ -362,7 +479,19 @@ class PackageBookingFlow(BasePage):
             raise
     
     def click_view_package_after_packageNavBar(self):
-        """Click on View Package button"""
+        """Variant of ``click_view_package`` used after navigating via the
+        Packages nav bar link, where the button sits further down the page.
+
+        Scrolls an extra 100px past the element (instead of centering it)
+        before clicking, which this page layout needs to clear a sticky
+        nav bar that would otherwise overlap the button.
+
+        Returns:
+            WebElement: The clicked "View package" button.
+
+        Raises:
+            Exception: Re-raised if the button can't be found/clicked.
+        """
         self.logger.info("Clicking View Package button")
         try:
             # Scroll further down (500 pixels past the element)
@@ -379,7 +508,26 @@ class PackageBookingFlow(BasePage):
             raise
     
     def select_price_option(self, option_type="couple"):
-        """Select a package price option by its type."""
+        """Select a package price option by type and confirm it visually applied.
+
+        After clicking, waits for the option's CSS class to include
+        ``border-mainblue/50``, which is how the UI highlights the
+        currently-selected card - this is the only way to confirm the
+        click actually registered as a selection rather than a no-op.
+
+        Args:
+            option_type (str): One of "couple", "single", "group"
+                (case-insensitive). Defaults to "couple".
+
+        Returns:
+            bool: True if the option was selected and the UI confirmed
+                it, False if selection failed (exception is swallowed
+                and logged rather than raised).
+
+        Raises:
+            ValueError: If ``option_type`` isn't a recognized key in
+                ``PRICE_OPTION_BY_TYPE``.
+        """
         self.logger.info(
             f"Selecting price option: {option_type}"
         )
@@ -425,7 +573,22 @@ class PackageBookingFlow(BasePage):
             return False
         
     def is_price_option_available(self, timeout=10):
-        """Check whether at least one package price option is available."""
+        """Check whether at least one package price option is available.
+
+        FIXME: references ``self.PRICE_OPTIONS``, which is not defined
+        anywhere on this class (only ``PRICE_OPTION_BY_TYPE``, a dict
+        keyed by option type, exists). As written this method raises
+        ``AttributeError`` rather than returning a bool - fix by
+        iterating ``self.PRICE_OPTION_BY_TYPE.values()`` instead.
+
+        Args:
+            timeout (int): Seconds to wait for each price option locator
+                before moving to the next. Defaults to 10.
+
+        Returns:
+            bool: True if at least one price option is present and
+                displayed, False if none are found within the timeout.
+        """
 
         for index, locator in enumerate(self.PRICE_OPTIONS, start=1):
             try:
@@ -446,7 +609,14 @@ class PackageBookingFlow(BasePage):
         return False
 
     def click_packages_nav_link(self):
-        """Click on Packages link in navigation bar to see all packages"""
+        """Click the "Packages" link in the nav bar to view all packages.
+
+        Returns:
+            WebElement: The clicked nav link.
+
+        Raises:
+            Exception: Re-raised if the link can't be clicked.
+        """
         self.logger.info("Clicking 'Packages' link in navigation")
         try:
             packages_link = self.element.click(self.PACKAGES_NAV_LINK)
@@ -457,7 +627,15 @@ class PackageBookingFlow(BasePage):
             raise
 
     def verify_all_packages_page_loaded(self, timeout=15):
-        """Verify we're on the All Packages page"""
+        """Verify the All Packages listing page has loaded.
+
+        Args:
+            timeout (int): Seconds to wait for the page indicator element.
+                Defaults to 15.
+
+        Returns:
+            bool: True if the page loaded in time, False on timeout.
+        """
         self.logger.info("Verifying All Packages page loaded")
         try:
             WebDriverWait(self.driver, timeout).until(
@@ -472,7 +650,27 @@ class PackageBookingFlow(BasePage):
     # ===== BOOKING FLOW METHODS =====
 
     def handle_booking_flow(self, email, password, payment_method="flutterwave"):
-        """Complete booking flow including payment method selection."""
+        """Run the full reservation-to-payment sequence in one call.
+
+        Orchestrates, in order: click "Book a reservation", fill and
+        submit the booking modal, log in and select a payment method via
+        ``handle_second_modal``, then assert the flow is ready for
+        payment. Assumes a package price option has already been
+        selected (see ``select_price_option``) before this is called.
+
+        Args:
+            email (str): Login email for the account used to complete
+                the booking.
+            password (str): Login password for that account.
+            payment_method (str): Payment method to select - one of the
+                keys supported by ``handle_second_modal`` (currently only
+                "flutterwave" is wired up; see the ``payment_locators``
+                note there). Defaults to "flutterwave".
+
+        Raises:
+            AssertionError: If the flow does not end in a state ready
+                for payment.
+        """
 
         self.logger.info(
             f"Starting complete booking flow with {payment_method} payment"
@@ -502,7 +700,30 @@ class PackageBookingFlow(BasePage):
         password,
         payment_method="flutterwave"
     ):
-        """Handle login, terms and payment-method-specific flow."""
+        """Log in, accept terms, and select a payment method.
+
+        Steps: click Login, enter credentials and sign in, wait for the
+        login modal to close, tick the terms checkbox (if not already
+        checked), click "Proceed to payment", then click the option for
+        ``payment_method``.
+
+        Args:
+            email (str): Login email.
+            password (str): Login password.
+            payment_method (str): Which payment option to click. Only
+                "flutterwave" is currently active in ``payment_locators``
+                below - "paystack" and "bank" are commented out pending
+                those methods being enabled end-to-end, so passing them
+                raises ``ValueError`` even though locators exist for them.
+                Defaults to "flutterwave".
+
+        Returns:
+            bool: True once the payment method has been clicked.
+
+        Raises:
+            ValueError: If ``payment_method`` isn't an active key in
+                ``payment_locators``.
+        """
 
         self.logger.info(
             f"Handling booking flow with {payment_method.upper()}"
@@ -608,7 +829,13 @@ class PackageBookingFlow(BasePage):
         return True
         
     def verify_payment_ready(self):
-        """Verify that the booking flow is complete and ready for payment"""
+        """Verify the "Proceed to payment" button is present and enabled.
+
+        Returns:
+            bool: True if the button is present and enabled, False if
+                it's missing, disabled, or an error occurred while
+                checking.
+        """
         self.logger.info("Verifying booking flow is complete and ready for payment")
 
         try:
@@ -629,7 +856,17 @@ class PackageBookingFlow(BasePage):
             return False
 
     def click_book_reservation(self):
-        """Scroll to and click the Book a reservation button."""
+        """Scroll to and click the "Book a reservation" button.
+
+        Uses ``ActionChains.move_to_element().click()`` rather than a
+        plain ``.click()`` so the mouse genuinely hovers the button
+        before clicking, which is more robust for buttons with
+        hover-triggered CSS transitions than a direct element click.
+
+        Raises:
+            Exception: Re-raised if the button never appears/becomes
+                visible or the click fails.
+        """
         self.logger.info("Clicking Book Reservation button")
 
         try:
@@ -676,7 +913,22 @@ class PackageBookingFlow(BasePage):
             raise
 
     def fill_booking_modal(self):
-        """Fills out the booking modal form with test data"""
+        """Fill out and submit the booking modal with fixed test data.
+
+        Fills full name, email, and phone directly; the travel date is
+        set via the calendar widget (see ``select_date_from_calendar``)
+        since it doesn't accept direct text input. Waits for the
+        "Proceed to checkout" button to become enabled before clicking it.
+
+        Note: traveller details (name/email/phone/date) are hardcoded
+        test values, not parameters - this method is intended for use
+        against a test/staging environment only.
+
+        Raises:
+            Exception: Re-raised if the modal never appears or any field
+                can't be filled. The element in progress at failure time
+                is stashed on ``self._last_interacted_element``.
+        """
         self.logger.info("Filling booking modal form")
 
         # Wait for modal to be fully loaded
@@ -752,9 +1004,18 @@ class PackageBookingFlow(BasePage):
             raise
         
     def select_date_from_calendar(self, date_string):
-        """
-        Select date from calendar popup
-        Date format: "05/11/2025" (day/month/year)
+        """Select a specific day from an open calendar popup.
+
+        Looks for a button matching the day number from ``date_string``
+        (month/year are not used to navigate the calendar - this assumes
+        the calendar is already showing the right month). Falls back to
+        clicking the first enabled day button if the exact day can't be
+        found, so a valid date is still picked even if the initial
+        target is unavailable (e.g. disabled or on a different month).
+
+        Args:
+            date_string (str): Date in "DD/MM/YYYY" format, e.g.
+                "05/11/2025".
         """
         self.logger.info(f"Selecting date from calendar: {date_string}")
 
@@ -796,7 +1057,15 @@ class PackageBookingFlow(BasePage):
                     break
 
     def wait_for_proceed_button_enabled(self, timeout=10):
-        """Waits for the Proceed to checkout button to become enabled"""
+        """Poll the "Proceed to checkout" button until it's enabled.
+
+        Args:
+            timeout (int): Max seconds to poll. Defaults to 10.
+
+        Returns:
+            bool: True once the button is enabled, False if it never
+                became enabled (or errored) within the timeout.
+        """
         self.logger.info("Waiting for Proceed button to become enabled...")
         
         start_time = time.time()
@@ -820,7 +1089,12 @@ class PackageBookingFlow(BasePage):
         return False
 
     def wait_for_booking_confirmation(self):
-        """Waits for booking confirmation or next page load"""
+        """Wait for the URL to reflect a checkout/confirmation/success step.
+
+        Best-effort only: on timeout it logs and returns without raising,
+        so callers should follow up with their own assertions if reaching
+        one of these URLs is actually required.
+        """
         self.logger.info("Waiting for booking confirmation...")
 
         try:
@@ -835,7 +1109,19 @@ class PackageBookingFlow(BasePage):
             self.logger.info("Continuing with booking flow...")
             
     def complete_booking_with_payment(self, payment_method):
-        """Complete payment verification based on selected method."""
+        """Dispatch to the right payment verification method.
+
+        Args:
+            payment_method (str): "flutterwave", "paystack", or "bank"
+                (case-insensitive).
+
+        Returns:
+            bool: True if the corresponding verification succeeded.
+
+        Raises:
+            ValueError: If ``payment_method`` isn't one of the supported
+                values.
+        """
 
         payment_method = payment_method.lower()
 
@@ -854,7 +1140,18 @@ class PackageBookingFlow(BasePage):
             )
         
     def verify_flutterwave_payment(self):
-        """Verify Flutterwave checkout URL."""
+        """Wait for the browser to reach the Flutterwave hosted checkout URL.
+
+        Note: the URL checked is the dev/sandbox Flutterwave domain
+        (``checkout-v2.dev-flutterwave.com``), so this only passes
+        against a non-production payment environment.
+
+        Returns:
+            bool: True once the checkout URL is reached.
+
+        Raises:
+            TimeoutException: If the URL isn't reached within 20s.
+        """
 
         WebDriverWait(self.driver, 20).until(
             lambda driver:
@@ -869,7 +1166,14 @@ class PackageBookingFlow(BasePage):
         return True
     
     def verify_paystack_payment(self):
-        """Verify Paystack checkout URL."""
+        """Wait for the browser to reach the Paystack hosted checkout URL.
+
+        Returns:
+            bool: True once the checkout URL is reached.
+
+        Raises:
+            TimeoutException: If the URL isn't reached within 20s.
+        """
 
         WebDriverWait(self.driver, 20).until(
             lambda driver:
@@ -884,7 +1188,20 @@ class PackageBookingFlow(BasePage):
         return True
     
     def complete_bank_transfer_flow(self):
-        """Complete and verify bank transfer payment flow."""
+        """Run and verify the bank-transfer payment path.
+
+        Asserts bank name, account number, and amount are displayed,
+        clicks "Pay with transfer", then "I've sent the money", and
+        verifies the resulting success modal is shown.
+
+        Returns:
+            bool: True on success.
+
+        Raises:
+            AssertionError: If the success modal isn't displayed.
+            TimeoutException: If any expected element doesn't appear in
+                time.
+        """
 
         self.logger.info("Starting bank transfer flow")
 
@@ -952,7 +1269,14 @@ class PackageBookingFlow(BasePage):
         return True
         
     def wait_for_booking_modal(self, timeout=10):
-        """Wait until booking modal is visible"""
+        """Wait until the booking modal background becomes visible.
+
+        Args:
+            timeout (int): Max seconds to wait. Defaults to 10.
+
+        Returns:
+            bool: True if the modal appeared in time, False on timeout.
+        """
         try:
             WebDriverWait(self.driver, timeout).until(
                 EC.visibility_of_element_located(self.MODAL_BACKGROUND)
@@ -962,7 +1286,15 @@ class PackageBookingFlow(BasePage):
             return False
 
     def navigate_to_packages(self):
-        """Navigate to Packages from the main navigation."""
+        """Click the Packages nav item and wait for the URL to update.
+
+        Returns:
+            PackageBookingFlow: ``self``, for method chaining.
+
+        Raises:
+            TimeoutException: If the nav link never becomes clickable or
+                the URL doesn't update to include "/packages" in time.
+        """
         self.logger.info("Navigating to Packages from navbar")
 
         packages_link = WebDriverWait(self.driver, 15).until(
@@ -982,7 +1314,15 @@ class PackageBookingFlow(BasePage):
         return self
     
     def select_first_package(self):
-        """Select the first available package."""
+        """Scroll to and click the first package card in a results list.
+
+        Returns:
+            PackageBookingFlow: ``self``, for method chaining.
+
+        Raises:
+            TimeoutException: If no package card becomes clickable in
+                time.
+        """
         self.logger.info("Selecting first package")
 
         package = WebDriverWait(self.driver, 15).until(
@@ -997,7 +1337,17 @@ class PackageBookingFlow(BasePage):
         return self
     
     def verify_package_detail_loaded(self):
-        """Verify that the package detail page has loaded."""
+        """Verify the URL matches a package detail page (``/packages/<id>``).
+
+        Considers the page loaded once the URL contains "/packages/" and
+        ends in a numeric ID segment.
+
+        Returns:
+            bool: True once the detail page URL pattern is matched.
+
+        Raises:
+            TimeoutException: If the URL never matches within 15s.
+        """
         self.logger.info("Verifying package detail page")
 
         WebDriverWait(self.driver, 15).until(
