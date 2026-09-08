@@ -1,0 +1,228 @@
+{
+    "test_suite_name": "Unified UI Smoke + API TEST REPORT",
+    "total_tests": 156,
+    "passed_tests": 151,
+    "failed_tests": 5,
+    "skipped_tests": 0,
+    "success_rate": 96.8,
+    "duration": 887.227822,
+    "start_time": "2026-09-08 09:24:41",
+    "end_time": "2026-09-08 09:39:28",
+    "suites_run": [
+        "smoke",
+        "api"
+    ],
+    "suite_details": {
+        "smoke": {
+            "report": {
+                "test_suite_name": "Unified UI Smoke + API TEST REPORT",
+                "total_tests": 76,
+                "passed_tests": 73,
+                "failed_tests": 3,
+                "skipped_tests": 0,
+                "success_rate": 96.05263157894737,
+                "duration": 714.578929,
+                "start_time": "2026-09-08 09:24:42",
+                "end_time": "2026-09-08 09:36:36",
+                "failed_tests_details": [
+                    {
+                        "test_name": "src/tests/smoke_tests/test_flight_booking_smoke.py::TestFlightBookingSmoke::test_flight_search_form_visible",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Flight search form not visible\nassert False\n +  where False = is_flight_search_form_visible()\n +    where is_flight_search_form_visible = <src.pages.ui.flight_booking_flow.FlightBookingFlow object at 0x7f9322017310>.is_flight_search_form_visible\n +      where <src.pages.ui.flight_booking_flow.FlightBookingFlow object at 0x7f9322017310> = <test_flight_booking_smoke.TestFlightBookingSmoke object at 0x7f9321f72980>.flight_booking",
+                        "screenshot_path": "reports/screenshots/failures/FlightBookingSmoke_test_flight_search_form_visible_20260908_092904.png",
+                        "duration": 16.413952112197876,
+                        "timestamp": "09:29:04",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_smoke_tests_test_flight_booking_smoke.py_TestFlightBookingSmoke_test_flight_search_form_visible_092904.log"
+                        },
+                        "log_path": "reports/logs/src_tests_smoke_tests_test_flight_booking_smoke.py_TestFlightBookingSmoke_test_flight_search_form_visible_092904.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_flight_booking_smoke.py_TestFlightBookingSmoke_test_flight_search_form_visible_092904.log",
+                        "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-09-08_09-24-40/screenshots/FlightBookingSmoke_test_flight_search_form_visible_20260908_092904.png",
+                        "suite": "smoke"
+                    },
+                    {
+                        "test_name": "src/tests/smoke_tests/test_package_booking_smoke.py::TestPackageBookingSmoke::test_complete_package_booking_flow",
+                        "status": "FAIL",
+                        "error_message": "ValueError: Unsupported payment method: paystack",
+                        "screenshot_path": "reports/screenshots/failures/PackageBookingSmoke_test_complete_package_booking__20260908_093257.png",
+                        "duration": 62.4813437461853,
+                        "timestamp": "09:32:58",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_complete_package_booking_flow_093257.log"
+                        },
+                        "log_path": "reports/logs/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_complete_package_booking_flow_093257.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_complete_package_booking_flow_093257.log",
+                        "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-09-08_09-24-40/screenshots/PackageBookingSmoke_test_complete_package_booking__20260908_093257.png",
+                        "suite": "smoke"
+                    },
+                    {
+                        "test_name": "src/tests/smoke_tests/test_package_booking_smoke.py::TestPackageBookingSmoke::test_all_packages_booking_flow",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: Failed to select COUPLE price option\nassert False",
+                        "screenshot_path": "reports/screenshots/failures/PackageBookingSmoke_test_all_packages_booking_flow_20260908_093317.png",
+                        "duration": 18.706450939178467,
+                        "timestamp": "09:33:17",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_all_packages_booking_flow_093317.log"
+                        },
+                        "log_path": "reports/logs/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_all_packages_booking_flow_093317.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_all_packages_booking_flow_093317.log",
+                        "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-09-08_09-24-40/screenshots/PackageBookingSmoke_test_all_packages_booking_flow_20260908_093317.png",
+                        "suite": "smoke"
+                    }
+                ],
+                "skipped_tests_details": []
+            },
+            "timestamp": "2026-09-08 09:36:36"
+        },
+        "api": {
+            "report": {
+                "test_suite_name": "API SMOKE TEST",
+                "total_tests": 80,
+                "passed_tests": 78,
+                "failed_tests": 2,
+                "skipped_tests": 0,
+                "success_rate": 97.5,
+                "duration": 171.726987,
+                "start_time": "2026-09-08 09:36:37",
+                "end_time": "2026-09-08 09:39:28",
+                "failed_tests_details": [
+                    {
+                        "test_name": "src/tests/api_tests/test_misc_api.py::TestMiscAPIs::test_refresh_token",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: assert 404 in [200, 400, 401]\n +  where 404 = <Response [404]>.status_code",
+                        "screenshot_path": null,
+                        "duration": 0.336162805557251,
+                        "timestamp": "09:37:36",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_api_tests_test_misc_api.py_TestMiscAPIs_test_refresh_token_093736.log",
+                            "response_file": "reports/failed_responses/src_tests_api_tests_test_misc_api.py_TestMiscAPIs_test_refresh_token_093736.json"
+                        },
+                        "log_path": "reports/logs/src_tests_api_tests_test_misc_api.py_TestMiscAPIs_test_refresh_token_093736.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_misc_api.py_TestMiscAPIs_test_refresh_token_093736.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_api_tests_test_misc_api.py_TestMiscAPIs_test_refresh_token_093736.json",
+                        "suite": "api"
+                    },
+                    {
+                        "test_name": "src/tests/api_tests/test_package_api.py::TestPackageAPI::test_authenticated_booking_private_future_departure",
+                        "status": "FAIL",
+                        "error_message": "AssertionError: assert 404 == 200\n +  where 404 = <Response [404]>.status_code",
+                        "screenshot_path": null,
+                        "duration": 1.9601068496704102,
+                        "timestamp": "09:38:12",
+                        "skip_reason": null,
+                        "category": "Unknown Error",
+                        "evidence": {
+                            "log_path": "reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_private_future_departure_093812.log",
+                            "response_file": "reports/failed_responses/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_private_future_departure_093812.json"
+                        },
+                        "log_path": "reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_private_future_departure_093812.log",
+                        "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_private_future_departure_093812.log",
+                        "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_private_future_departure_093812.json",
+                        "suite": "api"
+                    }
+                ],
+                "skipped_tests_details": []
+            },
+            "timestamp": "2026-09-08 09:39:28"
+        }
+    },
+    "all_failed_tests": [
+        {
+            "test_name": "src/tests/smoke_tests/test_flight_booking_smoke.py::TestFlightBookingSmoke::test_flight_search_form_visible",
+            "status": "FAIL",
+            "error_message": "AssertionError: Flight search form not visible\nassert False\n +  where False = is_flight_search_form_visible()\n +    where is_flight_search_form_visible = <src.pages.ui.flight_booking_flow.FlightBookingFlow object at 0x7f9322017310>.is_flight_search_form_visible\n +      where <src.pages.ui.flight_booking_flow.FlightBookingFlow object at 0x7f9322017310> = <test_flight_booking_smoke.TestFlightBookingSmoke object at 0x7f9321f72980>.flight_booking",
+            "screenshot_path": "reports/screenshots/failures/FlightBookingSmoke_test_flight_search_form_visible_20260908_092904.png",
+            "duration": 16.413952112197876,
+            "timestamp": "09:29:04",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_smoke_tests_test_flight_booking_smoke.py_TestFlightBookingSmoke_test_flight_search_form_visible_092904.log"
+            },
+            "log_path": "reports/logs/src_tests_smoke_tests_test_flight_booking_smoke.py_TestFlightBookingSmoke_test_flight_search_form_visible_092904.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_flight_booking_smoke.py_TestFlightBookingSmoke_test_flight_search_form_visible_092904.log",
+            "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-09-08_09-24-40/screenshots/FlightBookingSmoke_test_flight_search_form_visible_20260908_092904.png",
+            "suite": "smoke"
+        },
+        {
+            "test_name": "src/tests/smoke_tests/test_package_booking_smoke.py::TestPackageBookingSmoke::test_complete_package_booking_flow",
+            "status": "FAIL",
+            "error_message": "ValueError: Unsupported payment method: paystack",
+            "screenshot_path": "reports/screenshots/failures/PackageBookingSmoke_test_complete_package_booking__20260908_093257.png",
+            "duration": 62.4813437461853,
+            "timestamp": "09:32:58",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_complete_package_booking_flow_093257.log"
+            },
+            "log_path": "reports/logs/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_complete_package_booking_flow_093257.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_complete_package_booking_flow_093257.log",
+            "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-09-08_09-24-40/screenshots/PackageBookingSmoke_test_complete_package_booking__20260908_093257.png",
+            "suite": "smoke"
+        },
+        {
+            "test_name": "src/tests/smoke_tests/test_package_booking_smoke.py::TestPackageBookingSmoke::test_all_packages_booking_flow",
+            "status": "FAIL",
+            "error_message": "AssertionError: Failed to select COUPLE price option\nassert False",
+            "screenshot_path": "reports/screenshots/failures/PackageBookingSmoke_test_all_packages_booking_flow_20260908_093317.png",
+            "duration": 18.706450939178467,
+            "timestamp": "09:33:17",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_all_packages_booking_flow_093317.log"
+            },
+            "log_path": "reports/logs/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_all_packages_booking_flow_093317.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_smoke_tests_test_package_booking_smoke.py_TestPackageBookingSmoke_test_all_packages_booking_flow_093317.log",
+            "screenshot_url": "https://geotravel-and-tours.github.io/geo-travel-automation/2026-09-08_09-24-40/screenshots/PackageBookingSmoke_test_all_packages_booking_flow_20260908_093317.png",
+            "suite": "smoke"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_misc_api.py::TestMiscAPIs::test_refresh_token",
+            "status": "FAIL",
+            "error_message": "AssertionError: assert 404 in [200, 400, 401]\n +  where 404 = <Response [404]>.status_code",
+            "screenshot_path": null,
+            "duration": 0.336162805557251,
+            "timestamp": "09:37:36",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_api_tests_test_misc_api.py_TestMiscAPIs_test_refresh_token_093736.log",
+                "response_file": "reports/failed_responses/src_tests_api_tests_test_misc_api.py_TestMiscAPIs_test_refresh_token_093736.json"
+            },
+            "log_path": "reports/logs/src_tests_api_tests_test_misc_api.py_TestMiscAPIs_test_refresh_token_093736.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_misc_api.py_TestMiscAPIs_test_refresh_token_093736.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_api_tests_test_misc_api.py_TestMiscAPIs_test_refresh_token_093736.json",
+            "suite": "api"
+        },
+        {
+            "test_name": "src/tests/api_tests/test_package_api.py::TestPackageAPI::test_authenticated_booking_private_future_departure",
+            "status": "FAIL",
+            "error_message": "AssertionError: assert 404 == 200\n +  where 404 = <Response [404]>.status_code",
+            "screenshot_path": null,
+            "duration": 1.9601068496704102,
+            "timestamp": "09:38:12",
+            "skip_reason": null,
+            "category": "Unknown Error",
+            "evidence": {
+                "log_path": "reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_private_future_departure_093812.log",
+                "response_file": "reports/failed_responses/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_private_future_departure_093812.json"
+            },
+            "log_path": "reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_private_future_departure_093812.log",
+            "log_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/logs/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_private_future_departure_093812.log",
+            "response_file_url": "https://geotravel-and-tours.github.io/geo-travel-automation/reports/failed_responses/src_tests_api_tests_test_package_api.py_TestPackageAPI_test_authenticated_booking_private_future_departure_093812.json",
+            "suite": "api"
+        }
+    ],
+    "all_skipped_tests": []
+}
