@@ -1,378 +1,378 @@
-name: Geotravel QA Automation
+# name: Geotravel QA Automation
 
-on:
-  push:
-    branches:
-      - main
-  workflow_dispatch:
-  schedule:
-    - cron: "0 5 * * *"
+# on:
+#   push:
+#     branches:
+#       - main
+#   workflow_dispatch:
+#   schedule:
+#     - cron: "0 5 * * *"
 
-jobs:
-  run-tests:
-    name: 🧪 Run Tests
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pages: write
-      id-token: write
+# jobs:
+#   run-tests:
+#     name: 🧪 Run Tests
+#     runs-on: ubuntu-latest
+#     permissions:
+#       contents: write
+#       pages: write
+#       id-token: write
 
-    steps:
-      # --- Setup ---
-      - name: 📥 Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # Fetch all history for all branches
+#     steps:
+#       # --- Setup ---
+#       - name: 📥 Checkout code
+#         uses: actions/checkout@v4
+#         with:
+#           fetch-depth: 0  # Fetch all history for all branches
 
-      - name: 🐍 Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.10"
+#       - name: 🐍 Set up Python
+#         uses: actions/setup-python@v5
+#         with:
+#           python-version: "3.10"
 
-      - name: 📦 Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+#       - name: 📦 Install dependencies
+#         run: |
+#           python -m pip install --upgrade pip
+#           pip install -r requirements.txt
 
-      - name: ⚙️ Load environment variables
-        run: |
-          echo "TEST_ENV=${{ secrets.TEST_ENV }}" >> $GITHUB_ENV
-          echo "BROWSER=${{ secrets.BROWSER }}" >> $GITHUB_ENV
-          echo "HEADLESS=${{ secrets.HEADLESS }}" >> $GITHUB_ENV
-          echo "TEST_USER_EMAIL=${{ secrets.TEST_USER_EMAIL }}" >> $GITHUB_ENV
-          echo "TEST_USER_PASSWORD=${{ secrets.TEST_USER_PASSWORD }}" >> $GITHUB_ENV
-          echo "API_TEST_EMAIL=${{ secrets.API_TEST_EMAIL }}" >> $GITHUB_ENV
-          echo "API_TEST_PASSWORD=${{ secrets.API_TEST_PASSWORD }}" >> $GITHUB_ENV
-          echo "SLACK_WEBHOOK_URL=${{ secrets.SLACK_WEBHOOK_URL }}" >> $GITHUB_ENV
-          echo "PROJECT_NAME=${{ secrets.PROJECT_NAME }}" >> $GITHUB_ENV
-          echo "ENVIRONMENT=${{ secrets.ENVIRONMENT }}" >> $GITHUB_ENV
-          echo "PARTNERS_VERIFIED_EMAIL=${{ secrets.PARTNERS_VERIFIED_EMAIL }}" >> $GITHUB_ENV
-          echo "PARTNERS_VERIFIED_PASSWORD=${{ secrets.PARTNERS_VERIFIED_PASSWORD }}" >> $GITHUB_ENV
+#       - name: ⚙️ Load environment variables
+#         run: |
+#           echo "TEST_ENV=${{ secrets.TEST_ENV }}" >> $GITHUB_ENV
+#           echo "BROWSER=${{ secrets.BROWSER }}" >> $GITHUB_ENV
+#           echo "HEADLESS=${{ secrets.HEADLESS }}" >> $GITHUB_ENV
+#           echo "TEST_USER_EMAIL=${{ secrets.TEST_USER_EMAIL }}" >> $GITHUB_ENV
+#           echo "TEST_USER_PASSWORD=${{ secrets.TEST_USER_PASSWORD }}" >> $GITHUB_ENV
+#           echo "API_TEST_EMAIL=${{ secrets.API_TEST_EMAIL }}" >> $GITHUB_ENV
+#           echo "API_TEST_PASSWORD=${{ secrets.API_TEST_PASSWORD }}" >> $GITHUB_ENV
+#           echo "SLACK_WEBHOOK_URL=${{ secrets.SLACK_WEBHOOK_URL }}" >> $GITHUB_ENV
+#           echo "PROJECT_NAME=${{ secrets.PROJECT_NAME }}" >> $GITHUB_ENV
+#           echo "ENVIRONMENT=${{ secrets.ENVIRONMENT }}" >> $GITHUB_ENV
+#           echo "PARTNERS_VERIFIED_EMAIL=${{ secrets.PARTNERS_VERIFIED_EMAIL }}" >> $GITHUB_ENV
+#           echo "PARTNERS_VERIFIED_PASSWORD=${{ secrets.PARTNERS_VERIFIED_PASSWORD }}" >> $GITHUB_ENV
       
-      - name: 🏷️ Set timestamp for reporting
-        run: |
-          TIMESTAMP=$(date +"%Y-%m-%d_%H-%M-%S")
-          echo "RUN_TIMESTAMP=$TIMESTAMP" >> $GITHUB_ENV
-          echo "GH_PAGES_TIMESTAMP=$TIMESTAMP" >> $GITHUB_ENV
-          echo "FOLDER_TIMESTAMP=$TIMESTAMP" >> $GITHUB_ENV
+#       - name: 🏷️ Set timestamp for reporting
+#         run: |
+#           TIMESTAMP=$(date +"%Y-%m-%d_%H-%M-%S")
+#           echo "RUN_TIMESTAMP=$TIMESTAMP" >> $GITHUB_ENV
+#           echo "GH_PAGES_TIMESTAMP=$TIMESTAMP" >> $GITHUB_ENV
+#           echo "FOLDER_TIMESTAMP=$TIMESTAMP" >> $GITHUB_ENV
 
-      # --- Run Tests ---
-      - name: 🧪 Run test suites
-        run: |
-          echo "Running test suites with timestamp: $RUN_TIMESTAMP..."
-          python scripts/run_scheduled_tests.py --suite smoke api
-          # python scripts/run_scheduled_tests.py --suite smoke api partners_api
-        continue-on-error: true
+#       # --- Run Tests ---
+#       - name: 🧪 Run test suites
+#         run: |
+#           echo "Running test suites with timestamp: $RUN_TIMESTAMP..."
+#           python scripts/run_scheduled_tests.py --suite smoke api
+#           # python scripts/run_scheduled_tests.py --suite smoke api partners_api
+#         continue-on-error: true
 
-      # --- Fetch existing gh-pages content ---
-      - name: 📥 Fetch existing runs from gh-pages
-        run: |
-          echo "Fetching existing test runs from gh-pages branch..."
+#       # --- Fetch existing gh-pages content ---
+#       - name: 📥 Fetch existing runs from gh-pages
+#         run: |
+#           echo "Fetching existing test runs from gh-pages branch..."
           
-          # Create directory
-          mkdir -p gh-pages-content
+#           # Create directory
+#           mkdir -p gh-pages-content
           
-          # Check if gh-pages branch exists
-          if git fetch origin gh-pages 2>/dev/null; then
-            echo "✓ Found gh-pages branch"
+#           # Check if gh-pages branch exists
+#           if git fetch origin gh-pages 2>/dev/null; then
+#             echo "✓ Found gh-pages branch"
             
-            # Create a temporary directory for existing content
-            mkdir -p gh-pages-existing
+#             # Create a temporary directory for existing content
+#             mkdir -p gh-pages-existing
             
-            # Checkout gh-pages content without switching branches
-            git archive --format=tar origin/gh-pages | tar -x -C gh-pages-existing 2>/dev/null || true
+#             # Checkout gh-pages content without switching branches
+#             git archive --format=tar origin/gh-pages | tar -x -C gh-pages-existing 2>/dev/null || true
             
-            # Copy existing timestamp folders (except current one to avoid conflicts)
-            if [ -d "gh-pages-existing" ]; then
-              for dir in gh-pages-existing/20*/; do
-                if [ -d "$dir" ]; then
-                  dirname=$(basename "$dir")
-                  # Only copy if not the current run and doesn't already exist
-                  if [ "$dirname" != "$RUN_TIMESTAMP" ] && [ ! -d "gh-pages-content/$dirname" ]; then
-                    echo "  • Copying existing run: $dirname"
-                    cp -r "$dir" "gh-pages-content/" 2>/dev/null || true
-                  fi
-                fi
-              done
+#             # Copy existing timestamp folders (except current one to avoid conflicts)
+#             if [ -d "gh-pages-existing" ]; then
+#               for dir in gh-pages-existing/20*/; do
+#                 if [ -d "$dir" ]; then
+#                   dirname=$(basename "$dir")
+#                   # Only copy if not the current run and doesn't already exist
+#                   if [ "$dirname" != "$RUN_TIMESTAMP" ] && [ ! -d "gh-pages-content/$dirname" ]; then
+#                     echo "  • Copying existing run: $dirname"
+#                     cp -r "$dir" "gh-pages-content/" 2>/dev/null || true
+#                   fi
+#                 fi
+#               done
               
-              # Clean up
-              rm -rf gh-pages-existing
-            fi
-          else
-            echo "✗ No existing gh-pages branch found (first run?)"
-          fi
+#               # Clean up
+#               rm -rf gh-pages-existing
+#             fi
+#           else
+#             echo "✗ No existing gh-pages branch found (first run?)"
+#           fi
           
-          echo "Done fetching existing runs."
+#           echo "Done fetching existing runs."
 
-      # --- Prepare Files for GitHub Pages ---
-      - name: 📁 Prepare files for GitHub Pages
-        run: |
-          # Create timestamp
-          TIMESTAMP="$RUN_TIMESTAMP"
+#       # --- Prepare Files for GitHub Pages ---
+#       - name: 📁 Prepare files for GitHub Pages
+#         run: |
+#           # Create timestamp
+#           TIMESTAMP="$RUN_TIMESTAMP"
           
-          # Ensure directory exists (don't delete everything!)
-          mkdir -p gh-pages-content
+#           # Ensure directory exists (don't delete everything!)
+#           mkdir -p gh-pages-content
           
-          # Create/CLEAR only the current run folder
-          RUN_DIR="gh-pages-content/$TIMESTAMP"
-          rm -rf "$RUN_DIR" || true
-          mkdir -p "$RUN_DIR"
+#           # Create/CLEAR only the current run folder
+#           RUN_DIR="gh-pages-content/$TIMESTAMP"
+#           rm -rf "$RUN_DIR" || true
+#           mkdir -p "$RUN_DIR"
           
-          # Copy files
-          mkdir -p "$RUN_DIR/screenshots"
-          mkdir -p "$RUN_DIR/logs"
-          mkdir -p "$RUN_DIR/api_failed_responses"
-          mkdir -p "$RUN_DIR/reports"
+#           # Copy files
+#           mkdir -p "$RUN_DIR/screenshots"
+#           mkdir -p "$RUN_DIR/logs"
+#           mkdir -p "$RUN_DIR/api_failed_responses"
+#           mkdir -p "$RUN_DIR/reports"
           
-          # Copy screenshots
-          if [ -d "reports/screenshots/failures" ]; then
-            mkdir -p "$RUN_DIR/screenshots/failures"
-            cp reports/screenshots/failures/* "$RUN_DIR/screenshots/failures/" 2>/dev/null || true
-          fi
+#           # Copy screenshots
+#           if [ -d "reports/screenshots/failures" ]; then
+#             mkdir -p "$RUN_DIR/screenshots/failures"
+#             cp reports/screenshots/failures/* "$RUN_DIR/screenshots/failures/" 2>/dev/null || true
+#           fi
           
-          # Copy API responses
-          if [ -d "reports/failed_responses" ]; then
-            cp reports/failed_responses/* "$RUN_DIR/api_failed_responses/" 2>/dev/null || true
-          fi
+#           # Copy API responses
+#           if [ -d "reports/failed_responses" ]; then
+#             cp reports/failed_responses/* "$RUN_DIR/api_failed_responses/" 2>/dev/null || true
+#           fi
           
-          # Copy logs - should copy test-specific logs from reports/logs/
-          if [ -d "reports/logs" ]; then
-              cp reports/logs/* "$RUN_DIR/logs/" 2>/dev/null || true
-          fi
+#           # Copy logs - should copy test-specific logs from reports/logs/
+#           if [ -d "reports/logs" ]; then
+#               cp reports/logs/* "$RUN_DIR/logs/" 2>/dev/null || true
+#           fi
           
-          # Copy reports
-          if [ -d "reports" ]; then
-            cp reports/*.html reports/*.json "$RUN_DIR/reports/" 2>/dev/null || true
-          fi
+#           # Copy reports
+#           if [ -d "reports" ]; then
+#             cp reports/*.html reports/*.json "$RUN_DIR/reports/" 2>/dev/null || true
+#           fi
           
-          # Create simple index for this run
-          echo "<!DOCTYPE html>" > "$RUN_DIR/index.html"
-          echo "<html><head><title>Test Results - $TIMESTAMP</title>" >> "$RUN_DIR/index.html"
-          echo "<style>body{font-family:Arial;margin:20px;} h1{color:#2e61e6;} ul{list-style:none;padding:0;} li{margin:5px 0;} a{color:#2e61e6;}</style>" >> "$RUN_DIR/index.html"
-          echo "</head><body>" >> "$RUN_DIR/index.html"
-          echo "<h1>Test Results - $TIMESTAMP</h1>" >> "$RUN_DIR/index.html"
+#           # Create simple index for this run
+#           echo "<!DOCTYPE html>" > "$RUN_DIR/index.html"
+#           echo "<html><head><title>Test Results - $TIMESTAMP</title>" >> "$RUN_DIR/index.html"
+#           echo "<style>body{font-family:Arial;margin:20px;} h1{color:#2e61e6;} ul{list-style:none;padding:0;} li{margin:5px 0;} a{color:#2e61e6;}</style>" >> "$RUN_DIR/index.html"
+#           echo "</head><body>" >> "$RUN_DIR/index.html"
+#           echo "<h1>Test Results - $TIMESTAMP</h1>" >> "$RUN_DIR/index.html"
           
-          # Add screenshots list
-          echo "<h2>Screenshots</h2><ul>" >> "$RUN_DIR/index.html"
-          for file in "$RUN_DIR/screenshots/failures"/*; do
-            [ -f "$file" ] && filename=$(basename "$file") && echo "<li><a href='screenshots/failures/$filename'>$filename</a></li>" >> "$RUN_DIR/index.html"
-          done
-          echo "</ul>" >> "$RUN_DIR/index.html"
+#           # Add screenshots list
+#           echo "<h2>Screenshots</h2><ul>" >> "$RUN_DIR/index.html"
+#           for file in "$RUN_DIR/screenshots/failures"/*; do
+#             [ -f "$file" ] && filename=$(basename "$file") && echo "<li><a href='screenshots/failures/$filename'>$filename</a></li>" >> "$RUN_DIR/index.html"
+#           done
+#           echo "</ul>" >> "$RUN_DIR/index.html"
           
-          # Add logs list
-          echo "<h2>Logs</h2><ul>" >> "$RUN_DIR/index.html"
-          for file in "$RUN_DIR/logs"/*; do
-            [ -f "$file" ] && filename=$(basename "$file") && echo "<li><a href='logs/$filename'>$filename</a></li>" >> "$RUN_DIR/index.html"
-          done
-          echo "</ul>" >> "$RUN_DIR/index.html"
+#           # Add logs list
+#           echo "<h2>Logs</h2><ul>" >> "$RUN_DIR/index.html"
+#           for file in "$RUN_DIR/logs"/*; do
+#             [ -f "$file" ] && filename=$(basename "$file") && echo "<li><a href='logs/$filename'>$filename</a></li>" >> "$RUN_DIR/index.html"
+#           done
+#           echo "</ul>" >> "$RUN_DIR/index.html"
           
-          # Add API responses list
-          echo "<h2>API Responses</h2><ul>" >> "$RUN_DIR/index.html"
-          for file in "$RUN_DIR/api_failed_responses"/*; do
-            [ -f "$file" ] && filename=$(basename "$file") && echo "<li><a href='api_failed_responses/$filename'>$filename</a></li>" >> "$RUN_DIR/index.html"
-          done
-          echo "</ul>" >> "$RUN_DIR/index.html"
+#           # Add API responses list
+#           echo "<h2>API Responses</h2><ul>" >> "$RUN_DIR/index.html"
+#           for file in "$RUN_DIR/api_failed_responses"/*; do
+#             [ -f "$file" ] && filename=$(basename "$file") && echo "<li><a href='api_failed_responses/$filename'>$filename</a></li>" >> "$RUN_DIR/index.html"
+#           done
+#           echo "</ul>" >> "$RUN_DIR/index.html"
           
-          # Add reports list
-          echo "<h2>Reports</h2><ul>" >> "$RUN_DIR/index.html"
-          for file in "$RUN_DIR/reports"/*; do
-            [ -f "$file" ] && filename=$(basename "$file") && echo "<li><a href='reports/$filename'>$filename</a></li>" >> "$RUN_DIR/index.html"
-          done
-          echo "</ul>" >> "$RUN_DIR/index.html"
+#           # Add reports list
+#           echo "<h2>Reports</h2><ul>" >> "$RUN_DIR/index.html"
+#           for file in "$RUN_DIR/reports"/*; do
+#             [ -f "$file" ] && filename=$(basename "$file") && echo "<li><a href='reports/$filename'>$filename</a></li>" >> "$RUN_DIR/index.html"
+#           done
+#           echo "</ul>" >> "$RUN_DIR/index.html"
           
-          echo "<p>Made with ❤️ by Only1JohnN</p></body></html>" >> "$RUN_DIR/index.html"
+#           echo "<p>Made with ❤️ by Only1JohnN</p></body></html>" >> "$RUN_DIR/index.html"
 
-      # --- Create Main Index ---
-      - name: 🏠 Create main index
-        run: |
-          TIMESTAMP="$RUN_TIMESTAMP"
+#       # --- Create Main Index ---
+#       - name: 🏠 Create main index
+#         run: |
+#           TIMESTAMP="$RUN_TIMESTAMP"
           
-          echo "<!DOCTYPE html>" > gh-pages-content/index.html
-          echo "<html><head><title>GeoTravel Tests</title>" >> gh-pages-content/index.html
-          echo "<style>body{font-family:Arial;margin:0;padding:0;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh;}" >> gh-pages-content/index.html
-          echo ".container{max-width:800px;margin:0 auto;padding:40px 20px;}" >> gh-pages-content/index.html
-          echo ".card{background:white;border-radius:15px;padding:30px;box-shadow:0 10px 30px rgba(0,0,0,0.2);text-align:center;}" >> gh-pages-content/index.html
-          echo "h1{color:#2e61e6;margin-bottom:10px;}" >> gh-pages-content/index.html
-          echo ".btn{display:inline-block;padding:12px 24px;background:#2e61e6;color:white;text-decoration:none;border-radius:8px;margin:10px;}" >> gh-pages-content/index.html
-          echo ".btn:hover{background:#1a4dc7;}" >> gh-pages-content/index.html
-          echo ".footer{margin-top:40px;color:#666;}" >> gh-pages-content/index.html
-          echo "</style></head><body>" >> gh-pages-content/index.html
-          echo "<div class='container'><div class='card'>" >> gh-pages-content/index.html
-          echo "<h1>🚀 GeoTravel Test Results</h1>" >> gh-pages-content/index.html
-          echo "<p>All test artifacts in one place</p>" >> gh-pages-content/index.html
-          echo "<div style='background:#f8f9fa;padding:25px;border-radius:10px;margin:30px 0;border-left:4px solid #2e61e6;'>" >> gh-pages-content/index.html
-          echo "<h3>Latest Run: $TIMESTAMP</h3>" >> gh-pages-content/index.html
-          echo "<a href='$TIMESTAMP/' class='btn'>📂 View Latest Results</a>" >> gh-pages-content/index.html
-          echo "</div>" >> gh-pages-content/index.html
-          echo "<div class='footer'>" >> gh-pages-content/index.html
-          echo "<p>Made with ❤️ by Only1JohnN</p>" >> gh-pages-content/index.html
-          echo "<p>Simple file access</p>" >> gh-pages-content/index.html
-          echo "</div></div></div></body></html>" >> gh-pages-content/index.html
+#           echo "<!DOCTYPE html>" > gh-pages-content/index.html
+#           echo "<html><head><title>GeoTravel Tests</title>" >> gh-pages-content/index.html
+#           echo "<style>body{font-family:Arial;margin:0;padding:0;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh;}" >> gh-pages-content/index.html
+#           echo ".container{max-width:800px;margin:0 auto;padding:40px 20px;}" >> gh-pages-content/index.html
+#           echo ".card{background:white;border-radius:15px;padding:30px;box-shadow:0 10px 30px rgba(0,0,0,0.2);text-align:center;}" >> gh-pages-content/index.html
+#           echo "h1{color:#2e61e6;margin-bottom:10px;}" >> gh-pages-content/index.html
+#           echo ".btn{display:inline-block;padding:12px 24px;background:#2e61e6;color:white;text-decoration:none;border-radius:8px;margin:10px;}" >> gh-pages-content/index.html
+#           echo ".btn:hover{background:#1a4dc7;}" >> gh-pages-content/index.html
+#           echo ".footer{margin-top:40px;color:#666;}" >> gh-pages-content/index.html
+#           echo "</style></head><body>" >> gh-pages-content/index.html
+#           echo "<div class='container'><div class='card'>" >> gh-pages-content/index.html
+#           echo "<h1>🚀 GeoTravel Test Results</h1>" >> gh-pages-content/index.html
+#           echo "<p>All test artifacts in one place</p>" >> gh-pages-content/index.html
+#           echo "<div style='background:#f8f9fa;padding:25px;border-radius:10px;margin:30px 0;border-left:4px solid #2e61e6;'>" >> gh-pages-content/index.html
+#           echo "<h3>Latest Run: $TIMESTAMP</h3>" >> gh-pages-content/index.html
+#           echo "<a href='$TIMESTAMP/' class='btn'>📂 View Latest Results</a>" >> gh-pages-content/index.html
+#           echo "</div>" >> gh-pages-content/index.html
+#           echo "<div class='footer'>" >> gh-pages-content/index.html
+#           echo "<p>Made with ❤️ by Only1JohnN</p>" >> gh-pages-content/index.html
+#           echo "<p>Simple file access</p>" >> gh-pages-content/index.html
+#           echo "</div></div></div></body></html>" >> gh-pages-content/index.html
       
-      # --- Auto-generate README for gh-pages ---
-      - name: 📝 Auto-generate README for gh-pages
-        run: |
-          # Create gh-pages-content directory if it doesn't exist
-          mkdir -p gh-pages-content
+#       # --- Auto-generate README for gh-pages ---
+#       - name: 📝 Auto-generate README for gh-pages
+#         run: |
+#           # Create gh-pages-content directory if it doesn't exist
+#           mkdir -p gh-pages-content
 
-          # Check if template exists, if not create a basic one
-          if [ ! -f "scripts/README_TEMPLATE.md" ]; then
-            echo "# GeoTravel QA Test Results (GitHub Pages)" > gh-pages-content/README.md
-            echo "" >> gh-pages-content/README.md
-            echo "*Template not found. This is an auto-generated README.*" >> gh-pages-content/README.md
-            echo "" >> gh-pages-content/README.md
-            echo "<!-- AUTO-GENERATED:START -->" >> gh-pages-content/README.md
-            echo "<!-- AUTO-GENERATED:END -->" >> gh-pages-content/README.md
-          else
-            # Copy template README
-            cp scripts/README_TEMPLATE.md gh-pages-content/README.md
-          fi
+#           # Check if template exists, if not create a basic one
+#           if [ ! -f "scripts/README_TEMPLATE.md" ]; then
+#             echo "# GeoTravel QA Test Results (GitHub Pages)" > gh-pages-content/README.md
+#             echo "" >> gh-pages-content/README.md
+#             echo "*Template not found. This is an auto-generated README.*" >> gh-pages-content/README.md
+#             echo "" >> gh-pages-content/README.md
+#             echo "<!-- AUTO-GENERATED:START -->" >> gh-pages-content/README.md
+#             echo "<!-- AUTO-GENERATED:END -->" >> gh-pages-content/README.md
+#           else
+#             # Copy template README
+#             cp scripts/README_TEMPLATE.md gh-pages-content/README.md
+#           fi
           
-          # Generate dynamic content
-          DYNAMIC_CONTENT="## 📊 Test Results Status\n\n"
-          DYNAMIC_CONTENT+="### 🕒 Latest Run\n"
-          DYNAMIC_CONTENT+="- **Timestamp:** \`$RUN_TIMESTAMP\`\n"
-          DYNAMIC_CONTENT+="- **Link:** [$RUN_TIMESTAMP]($RUN_TIMESTAMP/)\n"
+#           # Generate dynamic content
+#           DYNAMIC_CONTENT="## 📊 Test Results Status\n\n"
+#           DYNAMIC_CONTENT+="### 🕒 Latest Run\n"
+#           DYNAMIC_CONTENT+="- **Timestamp:** \`$RUN_TIMESTAMP\`\n"
+#           DYNAMIC_CONTENT+="- **Link:** [$RUN_TIMESTAMP]($RUN_TIMESTAMP/)\n"
 
-          # Count artifacts for latest run
-          LATEST_DIR="gh-pages-content/$RUN_TIMESTAMP"
-          if [ -d "$LATEST_DIR" ]; then
-              REPORTS_COUNT=$(find "$LATEST_DIR/reports" -maxdepth 1 -type f 2>/dev/null | wc -l)
-              API_FAIL_COUNT=$(find "$LATEST_DIR/api_failed_responses" -maxdepth 1 -type f 2>/dev/null | wc -l)
-              LOGS_COUNT=$(find "$LATEST_DIR/logs" -maxdepth 1 -type f 2>/dev/null | wc -l)
-              SCREENSHOTS_COUNT=$(find "$LATEST_DIR/screenshots/failures" -maxdepth 1 -type f 2>/dev/null | wc -l)
+#           # Count artifacts for latest run
+#           LATEST_DIR="gh-pages-content/$RUN_TIMESTAMP"
+#           if [ -d "$LATEST_DIR" ]; then
+#               REPORTS_COUNT=$(find "$LATEST_DIR/reports" -maxdepth 1 -type f 2>/dev/null | wc -l)
+#               API_FAIL_COUNT=$(find "$LATEST_DIR/api_failed_responses" -maxdepth 1 -type f 2>/dev/null | wc -l)
+#               LOGS_COUNT=$(find "$LATEST_DIR/logs" -maxdepth 1 -type f 2>/dev/null | wc -l)
+#               SCREENSHOTS_COUNT=$(find "$LATEST_DIR/screenshots/failures" -maxdepth 1 -type f 2>/dev/null | wc -l)
               
-              DYNAMIC_CONTENT+="- **Reports:** $REPORTS_COUNT\n"
-              DYNAMIC_CONTENT+="- **API Response Dumps:** $API_FAIL_COUNT\n"
-              DYNAMIC_CONTENT+="- **Test Logs:** $LOGS_COUNT\n"
-              if [ $SCREENSHOTS_COUNT -gt 0 ]; then
-                  DYNAMIC_CONTENT+="- **Screenshots:** $SCREENSHOTS_COUNT\n"
-              fi
+#               DYNAMIC_CONTENT+="- **Reports:** $REPORTS_COUNT\n"
+#               DYNAMIC_CONTENT+="- **API Response Dumps:** $API_FAIL_COUNT\n"
+#               DYNAMIC_CONTENT+="- **Test Logs:** $LOGS_COUNT\n"
+#               if [ $SCREENSHOTS_COUNT -gt 0 ]; then
+#                   DYNAMIC_CONTENT+="- **Screenshots:** $SCREENSHOTS_COUNT\n"
+#               fi
               
-              # Determine run status
-              if [ $API_FAIL_COUNT -gt 0 ] || [ $SCREENSHOTS_COUNT -gt 0 ]; then
-                  DYNAMIC_CONTENT+="- **Status:** ⚠️ Had failures\n"
-              else
-                  DYNAMIC_CONTENT+="- **Status:** ✅ All tests passed\n"
-              fi
-          fi
+#               # Determine run status
+#               if [ $API_FAIL_COUNT -gt 0 ] || [ $SCREENSHOTS_COUNT -gt 0 ]; then
+#                   DYNAMIC_CONTENT+="- **Status:** ⚠️ Had failures\n"
+#               else
+#                   DYNAMIC_CONTENT+="- **Status:** ✅ All tests passed\n"
+#               fi
+#           fi
 
-          DYNAMIC_CONTENT+="\n### 📂 Recent Runs (Last 10)\n"
+#           DYNAMIC_CONTENT+="\n### 📂 Recent Runs (Last 10)\n"
 
-          # Count total runs found
-          TOTAL_RUNS=0
-          RUN_LIST=""
+#           # Count total runs found
+#           TOTAL_RUNS=0
+#           RUN_LIST=""
 
-          # Get all timestamped folders
-          for dir in $(ls -d gh-pages-content/20*/ 2>/dev/null | sort -r); do
-              name=$(basename "$dir")
-              REPORTS_COUNT=$(find "$dir/reports" -maxdepth 1 -type f 2>/dev/null | wc -l)
-              LOGS_COUNT=$(find "$dir/logs" -maxdepth 1 -type f 2>/dev/null | wc -l)
-              API_FAIL_COUNT=$(find "$dir/api_failed_responses" -maxdepth 1 -type f 2>/dev/null | wc -l)
-              SCREENSHOTS_COUNT=$(find "$dir/screenshots/failures" -maxdepth 1 -type f 2>/dev/null | wc -l)
+#           # Get all timestamped folders
+#           for dir in $(ls -d gh-pages-content/20*/ 2>/dev/null | sort -r); do
+#               name=$(basename "$dir")
+#               REPORTS_COUNT=$(find "$dir/reports" -maxdepth 1 -type f 2>/dev/null | wc -l)
+#               LOGS_COUNT=$(find "$dir/logs" -maxdepth 1 -type f 2>/dev/null | wc -l)
+#               API_FAIL_COUNT=$(find "$dir/api_failed_responses" -maxdepth 1 -type f 2>/dev/null | wc -l)
+#               SCREENSHOTS_COUNT=$(find "$dir/screenshots/failures" -maxdepth 1 -type f 2>/dev/null | wc -l)
               
-              # Determine status emoji
-              STATUS_EMOJI="✅"
-              if [ $API_FAIL_COUNT -gt 0 ] || [ $SCREENSHOTS_COUNT -gt 0 ]; then
-                  STATUS_EMOJI="⚠️"
-              fi
+#               # Determine status emoji
+#               STATUS_EMOJI="✅"
+#               if [ $API_FAIL_COUNT -gt 0 ] || [ $SCREENSHOTS_COUNT -gt 0 ]; then
+#                   STATUS_EMOJI="⚠️"
+#               fi
               
-              # Format: timestamp|reports|logs|api_failures|screenshots|status
-              RUN_LIST+="$name|$REPORTS_COUNT|$LOGS_COUNT|$API_FAIL_COUNT|$SCREENSHOTS_COUNT|$STATUS_EMOJI\n"
-              TOTAL_RUNS=$((TOTAL_RUNS + 1))
-          done
+#               # Format: timestamp|reports|logs|api_failures|screenshots|status
+#               RUN_LIST+="$name|$REPORTS_COUNT|$LOGS_COUNT|$API_FAIL_COUNT|$SCREENSHOTS_COUNT|$STATUS_EMOJI\n"
+#               TOTAL_RUNS=$((TOTAL_RUNS + 1))
+#           done
 
-          # Process the list
-          COUNT=0
-          while IFS='|' read -r name reports_count logs_count api_fail_count screenshots_count status_emoji; do
-              # Skip empty lines
-              [ -z "$name" ] && continue
+#           # Process the list
+#           COUNT=0
+#           while IFS='|' read -r name reports_count logs_count api_fail_count screenshots_count status_emoji; do
+#               # Skip empty lines
+#               [ -z "$name" ] && continue
               
-              if [ $COUNT -ge 10 ]; then
-                  break
-              fi
+#               if [ $COUNT -ge 10 ]; then
+#                   break
+#               fi
               
-              # Build run description
-              DESC=""
-              if [ $reports_count -gt 0 ]; then
-                  DESC+="$reports_count reports"
-              fi
-              if [ $logs_count -gt 0 ]; then
-                  [ -n "$DESC" ] && DESC+=", "
-                  DESC+="$logs_count logs"
-              fi
-              if [ $api_fail_count -gt 0 ]; then
-                  [ -n "$DESC" ] && DESC+=", "
-                  DESC+="$api_fail_count API dumps"
-              fi
-              if [ $screenshots_count -gt 0 ]; then
-                  [ -n "$DESC" ] && DESC+=", "
-                  DESC+="$screenshots_count screenshots"
-              fi
+#               # Build run description
+#               DESC=""
+#               if [ $reports_count -gt 0 ]; then
+#                   DESC+="$reports_count reports"
+#               fi
+#               if [ $logs_count -gt 0 ]; then
+#                   [ -n "$DESC" ] && DESC+=", "
+#                   DESC+="$logs_count logs"
+#               fi
+#               if [ $api_fail_count -gt 0 ]; then
+#                   [ -n "$DESC" ] && DESC+=", "
+#                   DESC+="$api_fail_count API dumps"
+#               fi
+#               if [ $screenshots_count -gt 0 ]; then
+#                   [ -n "$DESC" ] && DESC+=", "
+#                   DESC+="$screenshots_count screenshots"
+#               fi
               
-              if [ -z "$DESC" ]; then
-                  DESC="no artifacts"
-              fi
+#               if [ -z "$DESC" ]; then
+#                   DESC="no artifacts"
+#               fi
               
-              if [ "$name" = "$RUN_TIMESTAMP" ]; then
-                  # Current run - bold
-                  DYNAMIC_CONTENT+="- **[$name]($name/)** – $DESC $status_emoji\n"
-              else
-                  # Previous runs - normal
-                  DYNAMIC_CONTENT+="- [$name]($name/) – $DESC $status_emoji\n"
-              fi
+#               if [ "$name" = "$RUN_TIMESTAMP" ]; then
+#                   # Current run - bold
+#                   DYNAMIC_CONTENT+="- **[$name]($name/)** – $DESC $status_emoji\n"
+#               else
+#                   # Previous runs - normal
+#                   DYNAMIC_CONTENT+="- [$name]($name/) – $DESC $status_emoji\n"
+#               fi
               
-              COUNT=$((COUNT + 1))
-          done < <(echo -e "$RUN_LIST")
+#               COUNT=$((COUNT + 1))
+#           done < <(echo -e "$RUN_LIST")
 
-          if [ $TOTAL_RUNS -eq 0 ]; then
-              DYNAMIC_CONTENT+="*No test runs found yet.*\n"
-          fi
+#           if [ $TOTAL_RUNS -eq 0 ]; then
+#               DYNAMIC_CONTENT+="*No test runs found yet.*\n"
+#           fi
 
-          DYNAMIC_CONTENT+="\n_Last updated: $(date -u)_\n"
+#           DYNAMIC_CONTENT+="\n_Last updated: $(date -u)_\n"
           
-          # Insert dynamic content into template
-          awk -v dynamic="$DYNAMIC_CONTENT" '
-          /<!-- AUTO-GENERATED:START -->/ {print; print ""; print dynamic; skip=1}
-          /<!-- AUTO-GENERATED:END -->/ {skip=0}
-          !skip {print}
-          ' gh-pages-content/README.md > gh-pages-content/README.tmp
+#           # Insert dynamic content into template
+#           awk -v dynamic="$DYNAMIC_CONTENT" '
+#           /<!-- AUTO-GENERATED:START -->/ {print; print ""; print dynamic; skip=1}
+#           /<!-- AUTO-GENERATED:END -->/ {skip=0}
+#           !skip {print}
+#           ' gh-pages-content/README.md > gh-pages-content/README.tmp
           
-          mv gh-pages-content/README.tmp gh-pages-content/README.md
+#           mv gh-pages-content/README.tmp gh-pages-content/README.md
 
-      # --- README generation complete ---
-      - name: ✅ Verify README generation
-        run: |
-          echo "Verifying README generation..."
-          if [ ! -f "gh-pages-content/README.md" ]; then
-            echo "❌ ERROR: README.md was not generated"
-            exit 1
-          fi
-          echo "✅ README.md successfully generated"
-          echo "Preview (first 15 lines):"
-          head -15 gh-pages-content/README.md
-          echo ""
-          echo "Total runs found in gh-pages-content:"
-          ls -d gh-pages-content/20*/ 2>/dev/null | wc -l || echo "0"
+#       # --- README generation complete ---
+#       - name: ✅ Verify README generation
+#         run: |
+#           echo "Verifying README generation..."
+#           if [ ! -f "gh-pages-content/README.md" ]; then
+#             echo "❌ ERROR: README.md was not generated"
+#             exit 1
+#           fi
+#           echo "✅ README.md successfully generated"
+#           echo "Preview (first 15 lines):"
+#           head -15 gh-pages-content/README.md
+#           echo ""
+#           echo "Total runs found in gh-pages-content:"
+#           ls -d gh-pages-content/20*/ 2>/dev/null | wc -l || echo "0"
 
-      # --- Deploy to GitHub Pages ---
-      - name: 🚀 Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./gh-pages-content
-          publish_branch: gh-pages
-          allow_empty_commit: true
-          force_orphan: false
-          keep_files: true
+#       # --- Deploy to GitHub Pages ---
+#       - name: 🚀 Deploy to GitHub Pages
+#         uses: peaceiris/actions-gh-pages@v3
+#         with:
+#           github_token: ${{ secrets.GITHUB_TOKEN }}
+#           publish_dir: ./gh-pages-content
+#           publish_branch: gh-pages
+#           allow_empty_commit: true
+#           force_orphan: false
+#           keep_files: true
 
-      # --- Show URL ---
-      - name: 🔗 Show published URL
-        run: |
-          echo ""
-          echo "✅ DEPLOYMENT COMPLETE!"
-          echo ""
-          echo "🌐 View at: https://${{ github.repository_owner }}.github.io/${GITHUB_REPOSITORY#*/}/"
-          echo ""
-          echo "📁 Latest run: $RUN_TIMESTAMP"
-          echo "📄 README updated with latest runs"
+#       # --- Show URL ---
+#       - name: 🔗 Show published URL
+#         run: |
+#           echo ""
+#           echo "✅ DEPLOYMENT COMPLETE!"
+#           echo ""
+#           echo "🌐 View at: https://${{ github.repository_owner }}.github.io/${GITHUB_REPOSITORY#*/}/"
+#           echo ""
+#           echo "📁 Latest run: $RUN_TIMESTAMP"
+#           echo "📄 README updated with latest runs"
